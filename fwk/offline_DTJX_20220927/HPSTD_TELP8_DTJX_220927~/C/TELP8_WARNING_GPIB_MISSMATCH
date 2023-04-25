@@ -1,5 +1,0 @@
-Unexpected status byte of "Cassette mapping done" has     
-been returned, instead of "Recieve file name ready"       
-  - Press [Continue] to apply the present product file.   
-  - Press [Retry] to correct the missmatch of the settings
-    between prober and framework.                          

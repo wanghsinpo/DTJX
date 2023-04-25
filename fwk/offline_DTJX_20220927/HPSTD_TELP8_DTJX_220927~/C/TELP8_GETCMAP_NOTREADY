@@ -1,5 +1,0 @@
-Unexpected status byte of "Recieve file name ready"     
-has been returned, instead of "Cassette mapping done".  
-  - Correct either of "GPIB / Recieve Parameter" setting
-    of the prober, or "Main / System Setting / Prober / 
-    Set Product File" setting of framework.             

@@ -1,6 +1,0 @@
-#!/bin/sh
-# Dmhwidgets demo program "catalog" \
-exec dmh84 -f "$0" "$@"
-package require Dmhwidgets
-cd [file join [file dirname $dmhwidgets::library] demos]
-source catalog

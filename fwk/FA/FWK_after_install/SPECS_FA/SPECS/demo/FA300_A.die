@@ -1,14 +1,0 @@
-#Die	FA300_A	1	04/02/2009	00:00:00	root	Description for this Die spec.
-
-$Type: Die
-$Name: FA300_A
-$Vers: 1
-$Desc: Description for this Die spec.
-$Date: 04/02/2009
-$Time: 00:00:00
-$User: root
-$---- --------- ----------- - - ---------------
- BODY                                          
-      `RX`      0,19150         TR07MOD        
-$---- --------- ----------- - - ---------------
-

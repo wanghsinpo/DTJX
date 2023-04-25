@@ -1,9 +1,0 @@
-#RECIPE KEY	PRODUCT	PROCESS	STEP	Prober RCP	WAF	DIE	MOD	TST	PRB	LMS	TCO	TPL	Limit File	MEASLIBS	USER1	USER2	USER3	USER4	USER5	USER6	USER7	USER8	USER9	USER10	USER11	USER12	USER13	USER14	USER15	USER16	USER17
-clock1	CMS300	CMOS	LOT1	CMS300	FA300_A	FA300_A		FA300_A	FA300_A					measure/MeasLib1,measure/MeasLib2,measure/MeasLib3,measure/MeasLib4,measure/MeasLib5,measure/MeasLib6																	
-clock2	CMS300	CMOS	LOT1	CMS300	FA300_A	FA300_A		FA300_A	FA300_A					measure/DEMO																	
-clock3	CMS300	CMOS	LOT1	CMS300								FA300_A.tpl	FA300_A.lim	measure/MeasLib1,measure/MeasLib2,measure/MeasLib3,measure/MeasLib4,measure/MeasLib5,measure/MeasLib6																	
-clock4	CMS300	CMOS	LOT1	CMS300								FA300_A.tpl	FA300_A.lim	measure/DEMO																	
-clock5	CMS300	CMOS	LOT1	CMS300								FA300_A.tpl		measure/MeasLib1,measure/MeasLib2,measure/MeasLib3,measure/MeasLib4,measure/MeasLib5,measure/MeasLib6																	
-clock6	CMS300	CMOS	LOT1	CMS300								FA300_A.tpl		measure/DEMO																	
-GSX1	CMS300	CMOS	C1	CMS300							/opt/SPECS/demo/KIC915	KIC915																			
-clock7	CMS300	CMOS	LOT1	CMS300	FA300_A	FA300_A		FA300_A	FA300_A																						

@@ -1,9 +1,0 @@
-Prober reports a wafer alignment error.  You can 
-choose one of the following actions on the prober
-console.                                         
-
- o Align wafer.                                  
-
- o Load the next wafer.                          
-
- o Finish the lot.                               

@@ -1,8 +1,0 @@
-slotmap,,,
-status,color,description,category
-0,yellow,UNDEFINED,BAD
-1,white,EMPTY,EMPTY
-2,orange,NOT EMPTY,BAD
-3,green,NORMAL,GOOD
-4,purple,DOUBLE SLOTTED,BAD
-5,red,CROSS SLOTTED,BAD

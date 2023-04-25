@@ -1,4 +1,0 @@
-The settings of prober and framework is not compatible.
-Correct either of "GPIB / Recieve Parameter" setting   
-of the prober, or "Main / System Setting / Prober /    
-Set Product File" setting of framework.                

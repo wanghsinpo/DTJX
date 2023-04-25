@@ -1,9 +1,0 @@
-alarms,,,,,,,,
-spname,ALID,idTSN,setCEID,clearCEID,category,isEnabled,isSet,ALTX
-tester,7000,U4,7000,7001,0,1,0,CustomAlarm
-tester,7002,U4,7002,7003,0,1,0,EquipNotResponding
-tester,7006,U4,7006,7007,0,1,0,HWInitError
-tester,7008,U4,7008,7009,0,1,0,OCRIDError
-tester,7012,U4,7012,7013,0,1,0,ProberSetup
-tester,7016,U4,7016,7017,0,1,0,WaferHandling
-tester,7020,U4,7020,7021,0,1,0,UnexpectedMaterial
