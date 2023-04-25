@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="mh_eval_cmds_"></A>
+<TITLE>mh_eval Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ mh_eval - Evaluate Tcl code <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh::mh_eval <I>tcl_code</B></I> <P>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command is similar to the usual Tcl <B>eval</B> except that it always returns a two element list result.  The first element of the list is the Tcl error code obtained from executing the <B>tcl_code</B>.  The second element of the list is the usual result of execution.  If called with the correct number of arguments, <B>mh_eval</B> will not return an error.   For example: <PRE>
+mh_eval "set pi 3.1415"
+0 3.1415
+<P>
+mh_eval "an error"
+1 {invalid command name "an"
+    while executing
+"an error"}
+<P>
+</PRE>
+<P>
+The command is typically used during interprocess communication with other Tcl applications.  The command makes it easy to support the functionality of Remote Procedure Calls with an asynchronous messaging system such as the Distributed Message Hub from Hume Integration Software.  The  <B><a href="../mann/mbx_RPC.html">mbx_RPC</a></B> command is an example. <P>
+The <B><I>tcl_code</B></I> argument is executed at the topmost global level. You do not need to declare references to data items as <B>global</B>, but at the same time, you need to be careful about littering your application with unintended global data items, or creating subtle errors from accessing the same data items in multiple usages. <P>
+<P>
+The command is found in the <b>::dmh</b> namespace.  During initialization
+of the <b>dmh</b> package,
+the command is imported into the global namespace for compatibility with
+the <a href="../man1/dmh_inspect.html">inspect</a> application
+unless the environment variable <B>NO_DDE_IMPORT</b> is set.
+<P>
+This command is nearly equivalent to: <PRE>
+proc mh_eval {msg} {
+    set rc [catch [concat uplevel #0 [list $msg]] result]
+    return [list $rc $result] 
+    }
+</PRE>
+However, the compiled version provides better performance, and
+a complete stack backtrace in the event of an error result.
+<P>
+<H2>SEE ALSO</H2>
+ <a href="catch.html">catch</a>,&nbsp; <a href="mbx_RPC.html">mbx_RPC</a>,&nbsp;
+<a href="send.html">send</a>,&nbsp; <a href="uplevel.html">uplevel</a> <P>
+<H2>AUTHOR</H2>
+ Ed Hume, Hume Integration Software <P>
+<H2>KEYWORDS</H2>
+ RPC, evaluate 
+</BODY>
+</HTML>

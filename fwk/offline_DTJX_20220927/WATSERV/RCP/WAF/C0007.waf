@@ -1,0 +1,33 @@
+#Wafer	C0007	1	10/22/2020	10:26:39	wat	Description for this Wafer spec.
+
+$Type: Wafer
+$Name: C0007
+$Vers: 1
+$Desc: Description for this Wafer spec.
+$Date: 10/22/2020
+$Time: 10:26:39
+$User: wat
+$--------- ------------------- ------------- - - -----------------------------------------------------
+ ATTRIBUTE                                                                                            
+           SIZE=REAL,"mm"      200.000000        Wafer diameter                                       
+           STEPX=REAL,"um"     25297.000000      Die step index size                                  
+           STEPY=REAL,"um"     32089.000000      Die step index size                                  
+           FLAT=INTEGER,"deg"  180               Flat orientation                                     
+           ALIGNDIEX=INTEGER   0                 Alignment die index position relative to wafer origin
+           ALIGNDIEY=INTEGER   0                 Alignment die index position relative to wafer origin
+           ALIGNMODX=REAL,"um" 0.000000          Alignment module position relative to die origin     
+           ALIGNMODY=REAL,"um" 0.000000          Alignment module position relative to die origin     
+           CENTERDIEX=INTEGER  0                 Index of die nearest to center of wafer              
+           CENTERDIEY=INTEGER  0                 Index of die nearest to center of wafer              
+           OFFSETDIEX=REAL     -12000.000000     Offset of die center from die coordinate origin      
+           OFFSETDIEY=REAL     10000.000000      Offset of die center from die coordinate origin      
+           COORDINATE=INTEGER  1                 Die index coordinate                                 
+           WAFERSHAPE=INTEGER  1                                                                      
+ BODY                                                                                                 
+           `C0007`             0,2                                                                    
+           `C0007`             -2,0                                                                   
+           `C0007`             0,-2                                                                   
+           `C0007`             3,0                                                                    
+           `C0007`             0,0                                                                    
+$--------- ------------------- ------------- - - -----------------------------------------------------
+

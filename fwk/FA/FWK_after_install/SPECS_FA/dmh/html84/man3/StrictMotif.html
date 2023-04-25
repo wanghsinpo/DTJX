@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_StrictMotif_Tk_4_0"></A>
+<TITLE>Tk_StrictMotif Tk Library Procedures 4.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_StrictMotif - Return value of tk_strictMotif variable <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+int
+<B>Tk_StrictMotif</B>(<I>tkwin</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tk_Window <I>tkwin</I></B> (in)
+<DD>Token for window.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+This procedure returns the current value of the <B>tk_strictMotif</B>
+variable in the interpreter associated with <I>tkwin</I>'s application.
+The value is returned as an integer that is either 0 or 1.
+1 means that strict Motif compliance has been requested, so anything
+that is not part of the Motif specification should be avoided.
+0 means that ``Motif-like'' is good enough, and extra features
+are welcome.
+<P>
+This procedure uses a link to the Tcl variable to provide much
+faster access to the variable's value than could be had by calling
+<B>Tcl_GetVar</B>.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+Motif compliance, tk_strictMotif variable
+
+</BODY>
+</HTML>

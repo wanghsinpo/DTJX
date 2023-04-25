@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="event_Tk_8_3"></A>
+<TITLE>event Tk Built-In Commands 8.3</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ event - Miscellaneous event facilities: define virtual events and generate events <P>
+<H2>SYNOPSIS</H2>
+ <B>event<I> option </B></I>?<I>arg arg ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>event</B> command provides several facilities for dealing with window system events, such as defining virtual events and synthesizing events.  The command has several different forms, determined by the first argument.  The following forms are currently supported: 
+<DT><B>event add &lt;&lt;<I>virtual&gt;&gt; sequence </B></I>?<I>sequence ...</I>?
+<DD>Associates the virtual event <I>virtual</I> with the physical event sequence(s) given by the <I>sequence</I> arguments, so that the virtual event will trigger whenever any one of the <I>sequence</I>s occurs. <I>Virtual</I> may be any string value and <I>sequence</I> may have any of the values allowed for the <I>sequence</I> argument to the <B>bind</B> command. If <I>virtual</I> is already defined, the new physical event sequences add to the existing sequences for the event. 
+<DT><B>event delete &lt;&lt;<I>virtual&gt;&gt; </B></I>?<I>sequence</I> <I>sequence ...</I>?
+<DD>Deletes each of the <I>sequence</I>s from those associated with the virtual event given by <I>virtual</I>. <I>Virtual</I> may be any string value and <I>sequence</I> may have any of the values allowed for the <I>sequence</I> argument to the <B>bind</B> command. Any <I>sequence</I>s not currently associated with <I>virtual</I> are ignored. If no <I>sequence</I> argument is provided, all physical event sequences are removed for <I>virtual</I>, so that the virtual event will not trigger anymore. 
+<DT><B>event generate <I>window event </B></I>?<I>option value option value ...</I>?
+<DD>Generates a window event and arranges for it to be processed just as if it had come from the window system. <I>Window</I> gives the path name of the window for which the event will be generated; it may also be an identifier (such as returned by <B>winfo id</B>) as long as it is for a window in the current application. <I>Event</I> provides a basic description of the event, such as <B>&lt;Shift-Button-2&gt;</B> or <B>&lt;&lt;Paste&gt;&gt;</B>. If <I>Window</I> is empty the whole screen is meant, and coordinates are relative to the screen. <I>Event</I> may have any of the forms allowed for the <I>sequence</I> argument of the <B>bind</B> command except that it must consist of a single event pattern, not a sequence. <I>Option-value</I> pairs may be used to specify additional attributes of the event, such as the x and y mouse position;  see EVENT FIELDS below.  If the <B>-when</B> option is not specified, the event is processed immediately:  all of the handlers for the event will complete before the <B>event generate</B> command returns. If the <B>-when</B> option is specified then it determines when the event is processed.  Certain events, such as key events, require that the window has focus to receive the event properly. 
+<DT><B>event info </B>?&lt;&lt;<I>virtual<B>&gt;&gt;</B></I>?
+<DD>Returns information about virtual events. If the <B>&lt;&lt;<I>virtual&gt;&gt;</B></I> argument is omitted, the return value is a list of all the virtual events that are currently defined. If <B>&lt;&lt;<I>virtual&gt;&gt;</B></I> is specified then the return value is a list whose elements are the physical event sequences currently defined for the given virtual event;  if the virtual event is not defined then an empty string is returned. <P>
+<P>
+<H2>EVENT FIELDS</H2>
+ <P>
+The following options are supported for the <B>event generate</B> command.  These correspond to the ``%'' expansions allowed in binding scripts for the <B>bind</B> command. 
+<DT><B>-above<I> window</B></I>
+<DD><I>Window</I> specifies the <I>above</I> field for the event, either as a window path name or as an integer window id. Valid for <B>Configure</B> events. Corresponds to the <B>%a</B> substitution for binding scripts. 
+<DT><B>-borderwidth<I> size</B></I>
+<DD><I>Size</I> must be a screen distance;  it specifies the <I>border_width</I> field for the event. Valid for <B>Configure</B> events. Corresponds to the <B>%B</B> substitution for binding scripts. 
+<DT><B>-button<I> number</B></I>
+<DD><I>Number</I> must be an integer;  it specifies the <I>detail</I> field for a <B>ButtonPress</B> or <B>ButtonRelease</B> event, overriding any button  number provided in the base <I>event</I> argument. Corresponds to the <B>%b</B> substitution for binding scripts. 
+<DT><B>-count<I> number</B></I>
+<DD><I>Number</I> must be an integer;  it specifies the <I>count</I> field for the event.  Valid for <B>Expose</B> events. Corresponds to the <B>%c</B> substitution for binding scripts. 
+<DT><B>-delta<I> number</B></I>
+<DD><I>Number</I> must be an integer;  it specifies the <I>delta</I> field for the <B>MouseWheel</B> event.  The <I>delta</I> refers to the direction and magnitude the mouse wheel was rotated.  Note the value is not a screen distance but are units of motion in the mouse wheel. Typically these values are multiples of 120.  For example, 120 should scroll the text widget up 4 lines and -240 would scroll the text widget down 8 lines.  Of course, other widgets may define different behaviors for mouse wheel motion.  This field corresponds to the <B>%D</B> substitution for binding scripts. 
+<DT><B>-detail<I> detail</B></I>
+<DD><I>Detail</I> specifies the <I>detail</I> field for the event and must be one of the following: <DL>
+<PRE>
+<B>NotifyAncestor	NotifyNonlinearVirtual
+NotifyDetailNone	NotifyPointer
+NotifyInferior	NotifyPointerRoot
+NotifyNonlinear	NotifyVirtual</B>
+</PRE>
+Valid for <B>Enter</B>, <B>Leave</B>, <B>FocusIn</B> and <B>FocusOut</B> events. Corresponds to the <B>%d</B> substitution for binding scripts. </DL>
+
+<DT><B>-focus<I> boolean</B></I>
+<DD><I>Boolean</I> must be a boolean value;  it specifies the <I>focus</I> field for the event. Valid for <B>Enter</B> and <B>Leave</B> events. Corresponds to the <B>%f</B> substitution for binding scripts. 
+<DT><B>-height<I> size</B></I>
+<DD><I>Size</I> must be a screen distance;  it specifies the <I>height</I> field for the event.  Valid for <B>Configure</B> events. Corresponds to the <B>%h</B> substitution for binding scripts. 
+<DT><B>-keycode<I> number</B></I>
+<DD><I>Number</I>  must be an integer;  it specifies the <I>keycode</I> field for the event. Valid for <B>KeyPress</B> and <B>KeyRelease</B> events. Corresponds to the <B>%k</B> substitution for binding scripts. 
+<DT><B>-keysym<I> name</B></I>
+<DD><I>Name</I> must be the name of a valid keysym, such as <B>g</B>, <B>space</B>, or <B>Return</B>;  its corresponding keycode value is used as the <I>keycode</I> field for event, overriding any detail specified in the base <I>event</I> argument. Valid for <B>KeyPress</B> and <B>KeyRelease</B> events. Corresponds to the <B>%K</B> substitution for binding scripts. 
+<DT><B>-mode<I> notify</B></I>
+<DD><I>Notify</I> specifies the <I>mode</I> field for the event and must be one of <B>NotifyNormal</B>, <B>NotifyGrab</B>, <B>NotifyUngrab</B>, or <B>NotifyWhileGrabbed</B>. Valid for <B>Enter</B>, <B>Leave</B>, <B>FocusIn</B>, and <B>FocusOut</B> events. Corresponds to the <B>%m</B> substitution for binding scripts.   
+<DT><B>-override<I> boolean</B></I>
+<DD><I>Boolean</I> must be a boolean value;  it specifies the <I>override_redirect</I> field for the event. Valid for <B>Map</B>, <B>Reparent</B>, and <B>Configure</B> events. Corresponds to the <B>%o</B> substitution for binding scripts. 
+<DT><B>-place<I> where</B></I>
+<DD><I>Where</I> specifies the <I>place</I> field for the event;  it must be either <B>PlaceOnTop</B> or <B>PlaceOnBottom</B>. Valid for <B>Circulate</B> events. Corresponds to the <B>%p</B> substitution for binding scripts. 
+<DT><B>-root<I> window</B></I>
+<DD><I>Window</I> must be either a window path name or an integer window identifier;  it specifies the <I>root</I> field for the event. Valid for <B>KeyPress</B>, <B>KeyRelease</B>, <B>ButtonPress</B>, <B>ButtonRelease</B>, <B>Enter</B>, <B>Leave</B>, and <B>Motion</B> events. Corresponds to the <B>%R</B> substitution for binding scripts. 
+<DT><B>-rootx<I> coord</B></I>
+<DD><I>Coord</I> must be a screen distance;  it specifies the <I>x_root</I> field for the event. Valid for <B>KeyPress</B>, <B>KeyRelease</B>, <B>ButtonPress</B>, <B>ButtonRelease</B>, <B>Enter</B>, <B>Leave</B>, and <B>Motion</B> events.  Corresponds to the <B>%X</B> substitution for binding scripts. 
+<DT><B>-rooty<I> coord</B></I>
+<DD><I>Coord</I> must be a screen distance;  it specifies th <I>y_root</I> field for the event. Valid for <B>KeyPress</B>, <B>KeyRelease</B>, <B>ButtonPress</B>, <B>ButtonRelease</B>, <B>Enter</B>, <B>Leave</B>, and <B>Motion</B> events. Corresponds to the <B>%Y</B> substitution for binding scripts. 
+<DT><B>-sendevent<I> boolean</B></I>
+<DD><B>Boolean</B> must be a boolean value;  it specifies the <I>send_event</I> field for the event.  Valid for all events.  Corresponds to the <B>%E</B> substitution for binding scripts. 
+<DT><B>-serial<I> number</B></I>
+<DD><I>Number</I> must be an integer;  it specifies the <I>serial</I> field for the event.  Valid for all events. Corresponds to the <B>%#</B> substitution for binding scripts. 
+<DT><B>-state<I> state</B></I>
+<DD><I>State</I> specifies the <I>state</I> field for the event. For <B>KeyPress</B>, <B>KeyRelease</B>, <B>ButtonPress</B>, <B>ButtonRelease</B>, <B>Enter</B>, <B>Leave</B>, and <B>Motion</B> events it must be an integer value. For <B>Visibility</B> events it must be one of <B>VisibilityUnobscured</B>,  <B>VisibilityPartiallyObscured</B>, or <B>VisibilityFullyObscured</B>. This option overrides any modifiers such as <B>Meta</B> or <B>Control</B> specified in the base <I>event</I>. Corresponds to the <B>%s</B> substitution for binding scripts. 
+<DT><B>-subwindow<I> window</B></I>
+<DD><I>Window</I> specifies the <I>subwindow</I> field for the event, either as a path name for a Tk widget or as an integer window identifier. Valid for <B>KeyPress</B>, <B>KeyRelease</B>, <B>ButtonPress</B>, <B>ButtonRelease</B>, <B>Enter</B>, <B>Leave</B>, and <B>Motion</B> events. Similar to <B>%S</B> substitution for binding scripts. 
+<DT><B>-time<I> integer</B></I>
+<DD><I>Integer</I> must be an integer value;  it specifies the <I>time</I> field for the event. Valid for <B>KeyPress</B>, <B>KeyRelease</B>, <B>ButtonPress</B>, <B>ButtonRelease</B>, <B>Enter</B>, <B>Leave</B>, <B>Motion</B>, and <B>Property</B> events. Corresponds to the <B>%t</B> substitution for binding scripts. 
+<DT><B>-warp<I> boolean</B></I>
+<DD><I>boolean</I> must be a boolean value;  it specifies whether the screen pointer should be warped as well. Valid for <B>KeyPress</B>, <B>KeyRelease</B>, <B>ButtonPress</B>, <B>ButtonRelease</B>, and <B>Motion</B> events.  The pointer will only warp to a window if it is mapped. 
+<DT><B>-width<I> size</B></I>
+<DD><I>Size</I> must be a screen distance;  it specifies the <I>width</I> field for the event. Valid for <B>Configure</B> events. Corresponds to the <B>%w</B> substitution for binding scripts. 
+<DT><B>-when<I> when</B></I>
+<DD><I>When</I> determines when the event will be processed;  it must have one of the following values: <DL>
+
+<DT><B>now</B>
+<DD>Process the event immediately, before the command returns. This also happens if the <B>-when</B> option is omitted. 
+<DT><B>tail</B>
+<DD>Place the event on Tcl's event queue behind any events already queued for this application. 
+<DT><B>head</B>
+<DD>Place the event at the front of Tcl's event queue, so that it will be handled before any other events already queued. 
+<DT><B>mark</B>
+<DD>Place the event at the front of Tcl's event queue but behind any other events already queued with <B>-when mark</B>. This option is useful when generating a series of events that should be processed in order but at the front of the queue. </DL>
+
+<DT><B>-x<I> coord</B></I>
+<DD><I>Coord</I> must be a screen distance;  it specifies the <I>x</I> field for the event. Valid for <B>KeyPress</B>, <B>KeyRelease</B>, <B>ButtonPress</B>, <B>ButtonRelease</B>, <B>Motion</B>, <B>Enter</B>, <B>Leave</B>, <B>Expose</B>, <B>Configure</B>, <B>Gravity</B>, and <B>Reparent</B> events. Corresponds to the <B>%x</B> substitution for binding scripts. If <I>Window</I> is empty the coordinate is relative to the screen, and this option corresponds to the <B>%X</B> substitution for binding scripts. 
+<DT><B>-y<I> coord</B></I>
+<DD><I>Coord</I> must be a screen distance;  it specifies the <I>y</I> field for the event. Valid for <B>KeyPress</B>, <B>KeyRelease</B>, <B>ButtonPress</B>, <B>ButtonRelease</B>, <B>Motion</B>, <B>Enter</B>, <B>Leave</B>, <B>Expose</B>, <B>Configure</B>, <B>Gravity</B>, and <B>Reparent</B> events. Corresponds to the <B>%y</B> substitution for binding scripts. If <I>Window</I> is empty the coordinate is relative to the screen, and this option corresponds to the <B>%Y</B> substitution for binding scripts. <P>
+Any options that are not specified when generating an event are filled  with the value 0, except for <I>serial</I>, which is filled with the  next X event serial number.   <P>
+<P>
+<H2>VIRTUAL EVENT EXAMPLES</H2>
+ <P>
+In order for a virtual event binding to trigger, two things must happen.  First, the virtual event must be defined with the <B>event add</B> command.  Second, a binding must be created for the virtual event with the <B>bind</B> command. Consider the following virtual event definitions: <PRE>
+event add &lt;&lt;Paste&gt;&gt; &lt;Control-y&gt;
+event add &lt;&lt;Paste&gt;&gt; &lt;Button-2&gt;
+event add &lt;&lt;Save&gt;&gt; &lt;Control-X&gt;&lt;Control-S&gt;
+event add &lt;&lt;Save&gt;&gt; &lt;Shift-F12&gt;
+</PRE>
+In the <B>bind</B> command, a virtual event can be bound like any other builtin event type as follows: <PRE>
+bind Entry &lt;&lt;Paste&gt;&gt; {%W insert [selection get]}
+</PRE>
+The double angle brackets are used to specify that a virtual event is being bound.  If the user types Control-y or presses button 2, or if a <B>&lt;&lt;Paste&gt;&gt;</B> virtual event is synthesized with <B>event generate</B>, then the <B>&lt;&lt;Paste&gt;&gt;</B> binding will be invoked. <P>
+If a virtual binding has the exact same sequence as a separate physical binding, then the physical binding will take precedence. Consider the following example: <PRE>
+event add &lt;&lt;Paste&gt;&gt; &lt;Control-y&gt; &lt;Meta-Control-y&gt;
+bind Entry &lt;Control-y&gt; {puts Control-y}
+bind Entry &lt;&lt;Paste&gt;&gt; {puts Paste}
+</PRE>
+When the user types Control-y the <B>&lt;Control-y&gt;</B> binding will be invoked, because a physical event is considered more specific than a virtual event, all other things being equal. However, when the user types Meta-Control-y the <B>&lt;&lt;Paste&gt;&gt;</B> binding will be invoked, because the <B>Meta</B> modifier in the physical pattern associated with the  virtual binding is more specific than the <B>&lt;Control-y</B>&gt; sequence for the physical event. <P>
+Bindings on a virtual event may be created before the virtual event exists. Indeed, the virtual event never actually needs to be defined, for instance, on platforms where the specific virtual event would meaningless or ungeneratable. <P>
+When a definition of a virtual event changes at run time, all windows will respond immediately to the new definition. Starting from the preceding example, if the following code is executed: <PRE>
+bind &lt;Entry&gt; &lt;Control-y&gt; {}
+event add &lt;&lt;Paste&gt;&gt; &lt;Key-F6&gt;
+</PRE>
+the behavior will change such in two ways.  First, the shadowed <B>&lt;&lt;Paste&gt;&gt;</B> binding will emerge. Typing Control-y will no longer invoke the <B>&lt;Control-y&gt;</B> binding,  but instead invoke the virtual event <B>&lt;&lt;Paste&gt;&gt;</B>.  Second, pressing the F6 key will now also invoke the <B>&lt;&lt;Paste&gt;&gt;</B> binding. <P>
+<P>
+<H2>SEE ALSO</H2>
+ bind <P>
+<P>
+<H2>KEYWORDS</H2>
+ event, binding, define, handle, virtual event 
+</BODY>
+</HTML>

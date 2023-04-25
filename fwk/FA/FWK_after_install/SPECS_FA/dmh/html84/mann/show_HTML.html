@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>show_HTML Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ humelib::show_HTML - render HTML data <BR>
+ humelib::show_HTML_file - render an HTML data file 
+<H2>SYNOPSIS</H2>
+ <B>package require Humelib</B><BR>
+ <B>humelib::show_HTML <I>html_data</I> {<I>title</I> {Online Help}}</B><BR>
+ <B>humelib::show_HTML_file <I>pathname</I> {<I>title</I> {Online Help}}</B>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+<P>
+These commands use the HTML rendering code
+that was written in 1995 by the Tcl group at Sun Microsystems that became
+Scriptics and Ajuba. The code
+does a great job in presenting simple documents with basic markups, but
+it does not compare to state-of-the-art browsers that properly handle
+frames, and more sophisticated features.
+<P>
+These commands are part of the <B>Humelib</B> package and can be 
+imported from the namespace <B>humelib</B>.
+<P>
+Use of the HTML rendering code is subject to terms and conditions
+similar to the use of Tcl.  See the file html_library.terms in the
+Humelib package directory. 
+<H2>EXAMPLE</H2>
+<PRE>
+package require Humelib
+namespace import -force humelib::*
+show_HTML_file /hume/components/dcc/dc_user_guide.html
+</PRE>
+<H2>AUTHOR</H2>
+ Hume Integration Software, www.hume.com  <P>
+<H2>SEE ALSO</H2>
+ An alternative is to <A href="exec.html">exec</A> a full-featured web
+browser.
+<H2>KEYWORDS</H2>
+ HTML, hypertext
+</BODY>
+</HTML>

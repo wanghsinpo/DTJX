@@ -1,0 +1,4 @@
+./scripts/tel/nobind_pwc_tel.script
+./scripts/tel/nobind_pwc_cascading_tel.script
+./scripts/tel/nobind_noreader_true_pwc_tel.script 
+./scripts/tel/nobind_reader_pass_false_pwc_tel.script

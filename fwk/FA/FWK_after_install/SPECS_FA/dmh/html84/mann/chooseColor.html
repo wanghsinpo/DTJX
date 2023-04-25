@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="tk_chooseColor_Tk_4_2"></A>
+<TITLE>tk_chooseColor Tk Built-In Commands 4.2</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ tk_chooseColor - pops up a dialog box for the user to select a color. <P>
+<P>
+<H2>SYNOPSIS</H2>
+ <B>tk_chooseColor </B>?<I>option value ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The procedure <B>tk_chooseColor</B> pops up a dialog box for the user to select a color. The following <I>option-value</I> pairs are possible as command line arguments: 
+<DT><B>-initialcolor</B> <I>color</I>
+<DD>Specifies the color to display in the color dialog when it pops up. <I>color</I> must be in a form acceptable to the <B>Tk_GetColor</B> function. 
+<DT><B>-parent</B> <I>window</I>
+<DD>Makes <I>window</I> the logical parent of the color dialog. The color dialog is displayed on top of its parent window. 
+<DT><B>-title</B> <I>titleString</I>
+<DD>Specifies a string to display as the title of the dialog box. If this option is not specified, then a default title will be displayed. <P>
+If the user selects a color, <B>tk_chooseColor</B> will return the name of the color in a form acceptable to <B>Tk_GetColor</B>.  If the user cancels the operation, both commands will return the empty string. <P>
+<H2>EXAMPLE</H2>
+ <PRE>
+button .b -bg [tk_chooseColor -initialcolor gray -title "Choose color"]
+</PRE>
+<P>
+<P>
+<H2>KEYWORDS</H2>
+ color selection dialog 
+</BODY>
+</HTML>

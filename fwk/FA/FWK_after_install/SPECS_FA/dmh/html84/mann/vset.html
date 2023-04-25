@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="vset_cmds_"></A>
+<TITLE>vset Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ vset - assign a list of values to a list of names <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh::vset <I>values names</B></I>  <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+Each variable named in the list <B><I>names</B></I>, is given the corresponding value in the list <B><I>values</B></I>.  If there are more names than values, the extra names are assigned the value of an empty string. The command is an efficient and understandable  alternative to scanning a list repeatedly using lindex to parse its elements.  For example: <PRE>
+vset "green black pink" "foreground background highlight"
+puts "the background color is $background"
+</PRE>
+<P>
+The command is a functional subset of the rset command.  The latter command is able to recurse nested lists, and parse arbitrarily complex data structures. 
+<P>
+Prior to Tcl version 8.4, this command was provided with the Hume DMH package
+with the name <B>lset</B>.  The command has been renamed to avoid conflicts
+with the new core command.
+<H2>AUTHOR</H2>
+ Ed Hume, Hume Integration Software <P>
+<H2>SEE ALSO</H2>
+ <a href="foreach.html">foreach</a>,&nbsp; <a href="lindex.html">lindex</a>,&nbsp; <a href="rset.html">rset<a> <P>
+<H2>KEYWORDS  </H2>
+ list, vset, rset 
+</BODY>
+</HTML>

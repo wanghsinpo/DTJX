@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="comm_tk_"></A>
+<TITLE>comm Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ comm - serial port communication for Tcl/Tk scripts <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh::comm</B> <I>portname</I> <I>rs232_device</I> <P>
+<B>dmh::comm</B> <I>portname</I> <I>terminal_server_port</I> <P>
+<I>portname</I> <B>close</B> <P>
+<I>portname</I> <B>get</B> <I>n_chars</I> <I>seconds</I> <P>
+<I>portname</I> <B>getl</B> <I>n_bytes</I> <I>seconds</I> <P>
+<I>portname</I> <B>put</B> <I>message</I> <P>
+<I>portname</I> <B>putl</B> <I>code_list</I> <P>
+<I>portname</I> <B>receive</B> <I>callback </I>?<I>msg_start</I>? ?<I>msg_stop</I>? <P>
+<I>portname</I> <B>recvbin</B> <I>callback </I>?<I>start_codes</I>? ?<I>stop_codes</I>? <P>
+<I>portname</I> <B>reset</B> <P>
+<I>portname</I> <B>tracewin</B> <P>
+<HR>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>comm</B> command is used to manage communications over an RS-232 serial port.  The command can also be used for serial communication with a TCP/IP socket connection.  The latter is typically used to connect to a terminal server which in turn has serial port hardware connected to a remote device.  Text and binary messages may be exchanged. <P>
+<P>
+<H2>COMMAND SUMMARY</H2>
+ <P>
+
+<DT><B>comm</B> <I>portname</I> ?<I>rs232_device</I>?
+<DD>The <B>comm</B> command creates a communication connection to the RS-232 port specified by <I>rs232_device</I>. A new Tcl command, and a new global data array are created with the name <I>portname</I>.   <DL>
+<P>
+The global array of the name <I>portname</I> is used to store configuration parameters for the port connection and related data.  Do not try to use the same name in your application as a global scalar variable.  You may add your own data elements to the array, if you avoid naming conflicts with this software. Also, do not use the variable name <B>comm</B>. This name is used dynamically to indicate which port has received the current message. <P>
+If the optional <I>rs232_device</I> is not specified, it defaults to COM1 on NT, /dev/ttyS0 on Linux, /dev/tty0 on AIX, /dev/ser1 on QNX, otherwise /dev/tty01. </DL>
+
+<DT><B>comm</B> <I>portname</I> <I>terminal_server_port</I>
+<DD>This variation of the comm command creates a communication connection to an RS-232 port on a terminal server.  The <I>terminal_server_port</I> is of the form <I>hostname_or_IP_addr</I>:<I>socket_num</I>.  Optionally, the <I>terminal_server_port</I> ends with <B>,S</B> to indicate a server connection.  The latter is used in testing, but not to connect to real terminal servers.  The software assumes a binary passthrough IP socket connection to the terminal server.  Usually, you need to separately configure the terminal server so the port does not perform telnet control character mappings or other canonical processing.  For example: <DL>
+<PRE>
+comm barcode2 /dev/tty0
+comm bonder1 xyplex6:2100
+comm test_server myhost:5003,S
+</PRE>
+<P>
+If a terminal server connection is lost, the default configuration of the software tries to reconnect periodically.  Refer to the  <B>active_reconnect</B> and <B>T5</B> configuration options below. </DL>
+
+<DT><I>portname</I> <B>close</B>
+<DD>The <B>close</B> subcommand is used to discontinue communication. The subcommand erases the global array associated with the connection, and removes the <I>portname</I> as a command. The command does not wait for any active communication to complete. 
+<DT><I>portname</I> <B>get</B> <I>n_chars</I> <I>seconds</I> 
+<DD>The <B>get</B> subcommand is used to receive a specified number of characters,
+<I>n_chars</I>,  within a timeout interval specified by the <I>seconds</I> parameter.  
+The return value is a Tcl string containing the received 8 bit characters, or an empty string if
+all of the requested data is not received within the interval.  
+While receiving, the application continues to dispatch events.
+You are not allowed to nest calls to <B>get</B> or <B>getl</B>.  
+The parameter <I>n_chars</I> must be between 1 and 1000.
+Recent versions of Tcl are able to represent binary codes in string data, including the
+null byte, so the <b>get</b> command can be used to obtain text or binary data.
+<DT><I>portname</I> <B>getl</B> <I>n_bytes</I> <I>seconds</I> 
+<DD>The <B>getl</B> subcommand is exactly like the <B>get</B> subcommand except that the
+usual return value is a list of integer codes representing the binary sequence of characters
+received.  The codes are formatted using 0xNN hexadecimal notation.
+<DT><I>portname</I> <B>put</B> <I>message</I>
+<DD>The <B>put</B> subcommand sends the text of the <I>message</I> argument out the port.  A newline character or any other delimiter is not automatically sent.  If you want to send newline characters, the Tcl interpreter allows you to encode them in text expressions using using \n.  Also, you may encode arbitrary binary sequences using \xNN notation.  See the man page <a href="../mann/Tcl.html">Tcl</a> for a description of <I>backslash substitution</I>.  The <b>comm</b> command is aware of the internal UTF-8 representation of strings in Tcl, and is able to send and receive any 8 bit character code including the null byte.  Older version of Tcl were not able to imbed the null byte in string data because it was interpreted as a string terminator.
+<DT><I>portname</I> <B>putl</B> <I>code_list</I>
+<DD>The <B>putl</B> subcommand is similar to the <B>put</B> subcommand except that it is called with a list of integer codes representing the binary sequence of characters to be sent.  This subcommand allows you to send any binary codes, for example: <DL>
+<PRE>
+tty1 putl {0 0 0x1b 0x41}
+</PRE>
+<P>
+The above example demonstrates that ordinary decimal or hexadecimal notation may be used for members of the <I>code_list</I> argument. </DL>
+
+<DT><I>portname</I> <B>receive</B> <I>callback </I>?<I>msg_start</I>? ?<I>msg_stop</I>?
+<DD>Use the <B>receive</B> subcommand to isolate and process messages from data received at the port.  Use the <I>msg_start</I> argument to indicate a character or sequence of characters which defines the start of a message, and similarly use the <I>msg_stop</I> argument to  specify the end of a message.  Arbitrary sequences of 8 bit characters may be specified.  Both the <I>msg_start</I>  and <I>msg_stop</I> arguments are optional.  If neither one is specified,  your <I>callback</I> code is executed with whatever data is read at the port.   If only the start sequence is defined, the end of message is determined by the start of a subsequent message.  Similarly, if the <I>msg_start</I> is an empty string, and the <I>msg_stop</I> argument is one or more characters, the start of a message is implied by the end of the previous message. <DL>
+<P>
+When a complete message has been received, your <I>callback</I> Tcl code is executed as follows.  It is treated as a list, concatenated with two arguments, and evaluated at the topmost, global level of the interpreter. This evaluation method allows you to code multiple Tcl statements in your <I>callback</I> or to set up additional procedure arguments that precede the appended ones for your custom procedures. The two arguments are (i) the <I>portname</I>, and (ii) the received message text.  For example: <PRE>
+<P>
+proc my_callback {portname msg} {
+  puts "Port $portname received: $msg"
+  }
+<P>
+tty1 receive my_callback "" "\n"
+<P>
+</PRE>
+<P>
+If your <I>callback</I> argument is an empty string, receiving is stopped. Use the <B>receive</B> or <B>recvbin</B> command again, possibly with a different <I>callback</I> to resume receiving. </DL>
+
+<DT><I>portname</I> <B>recvbin</B> <I>callback </I>?<I>start_codes</I>? ?<I>stop_codes</I>?
+<DD>The <B>recvbin</B> subcommand is the same as the <B>receive</B> subcommand except that the specification sequences for the start and stop of messages are expressed as lists of integers.  This lets you specify binary codes that are awkward to specify using backslash escape sequences. Also, the message argument to the callback is formatted as a list of integer codes.  At any given time, only the <B>receive</B> or the <B>recvbin</B> subcommand is active.  In other words the incoming data is parsed as text messages or binary messages, but not both.  The latest executed subcommand is the one that is active.   <DL>
+<P>
+In Tcl, a common method to convert characters to integers and vice-versa is to use the <a href="../mann/scan.html">scan</a> and <a href="../mann/format.html">format</a> commands: <PRE>
+<P>
+set ch "E"
+# convert character $ch to integer i
+scan $ch %c i
+# and back
+set ch2 [format %c $i]
+if { $ch == $ch2 } { puts "The example works" }
+<P>
+</PRE>
+</DL>
+
+<DT><I>portname</I> <B>reset</B>
+<DD>The <B>reset</B> subcommand clears the state of the  scanning code that is examing the incoming datastream for the start and stop of messages. 
+<DT><I>portname</I> <B>tracewin</B>
+<DD>The <B>tracewin</B> subcommand creates a trace window for the <I>portname</I> 
+communication activity.  The trace window has a menu with item selections to 
+control the information displayed.  This command is implemented as a Tcl 
+procedure which can be dynamically loaded by the interpreter after the 
+<B>comm</B> command is first used.  This is explained in the section below, 
+entitled AUTOLOAD LIBRARY.  The recommended order of setting up a port with 
+a tracing window is (1) use the <B>comm</B> command to create the <I>portname</I> object, 
+(2) optionally set the TRACE value in the <I>portname</I> global array to 
+display the desired level of trace detail, (3) use the <B>tracewin</B> 
+subcommand to create the trace window, and (4) begin communication by 
+using the <B>put</B>, <B>putl</B>, <B>receive</B> and/or <B>recvbin</B> subcommands. 
+<P>
+The trace window has a menu item that brings up a Replay Window.
+The Replay Window allows you to send or receive any data
+that has been previously sent or received.
+It also allows you to save and load Replay session files.
+The re-receive feature is especially useful for you to debug
+and develop your  interface software without needing to
+communicate with the actual  equipment; the re-receive action
+simulates reception of the selected messages.
+The Tcl source code  for the <B>tracewin</B> subcommand
+and for the Replay Window is provided.
+You may wish to customize it or write your own version(s).
+For example, you may wish to add menu items that cause custom
+messages to be sent, or add menu items to display application status.
+<P>
+<H2>CONFIGURATION OPTIONS</H2>
+ <P>
+When you create a port communication object, <I>portname</I>, a global array is created with the name <I>portname</I>. Many of the elements of this array are actually configuration parameters, that you may inspect or modify.  We suggest using the <a href="../man1/dmh_inspect.html">inspect</a> application during development for this purpose. <P>
+The software is designed to react and utilize your updated configuration values immediately.  For example, if you change the <B>BAUD</B> parameter, the RS-232 hardware is reconfigured on the fly, even if you are in the middle of passing a message. <P>
+The remainder of this section is a description of the available configuraton options in alphabetical order. <P>
+
+<DT><B>active_reconnect</B>, type: boolean, default: 1
+<DD>For a terminal server client, this option specifies whether the client should periodically attempt to reconnect to the terminal server if a connection is established and then lost.  The retry interval is specified by T5.  The value of T5 should probably be set to a larger value than the default if you have dozens of connections on your workstation. Also, a connection attempt may make your process unresponsive for several minutes if the network, external node, or server is unresponsive.  You may wish to make T5 larger if you have more than one connection in your process. This option does not apply to RS-232 connections. 
+<DT><B>BAUD</B>, type: integer, default: 9600
+<DD>This parameter sets the baud rate for the serial communication port.  The values 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, and 57600 are supported by this software.  Your tty device driver and hardware combination will limit the actual obtainable values.  Typically the BAUD parameter has no effect on Terminal Servers which are configured directly at the Terminal Server hardware.  Baud rate changes may be made at any time, and may disrupt any active message exchange. 
+<DT><B>CTSRTS</B>, type: boolean, default: 0
+<DD>Setting this value to 1 turns on CTS/RTS hardware handshaking. This option is not POSIX standard, and may not be available on your platform or for your hardware.  This option is available on AIX, SunOS, and Windows NT when the hardware supports it. 
+<DT><B>DATABITS</B>, type: integer, default: 8
+<DD>This parameters sets the number of data bits for the serial communication port.
+Possible values are 7 or 8.
+This parameter has no effect on Terminal Servers which are configured directly at the Terminal Server hardware.
+Changes may be made at any time, and may disrupt any active message exchange.
+<DT><B>PARITY</B>, type: string, default: "none"
+<DD>Setting this value to "none", "even", or "odd" causes the port to be reconfigured to the specified parity. 
+<DT><B>STOPBITS</B>, type: integer, default: 1
+<DD>Setting this value to 1 or 2 sets the number of stop bits for the serial communication port.
+This parameter has no effect on Terminal Servers which are configured directly at the Terminal Server hardware.
+Changes may be made at any time, and may disrupt any active message exchange.
+<DT><B>T5</B>, type: milliseconds, default: 10000
+<DD>Connect Separation timeout.  Specifies the delay between connection attempts for an IP terminal server connection. This option does not apply to RS-232 connections. 
+<DT><B>TRACE</B>, type: unsigned (bits), default 0
+<DD>Turns on diagnostic output. The display window created using the <B>tracewin</B> 
+subcommand provides an interactive menu to set the TRACE option and a 
+viewing window for the diagnostic output.  
+However, it is possible to utilize the diagnostic output directly using 
+the <a href="../mann/trace.html">trace</a> command.  We have used this feature 
+on a dial-up connection, when running dmh_wish with the -notk option and 
+not using X-Windows. Diagnostic output can be written to four global variables 
+<I>portname</I>(<B>trace</B>), <I>portname</I>(<B>rtrace</B>), 
+<I>portname</I>(<B>last_recv</B>), and <I>portname</I>(<B>last_send</B>).
+The <B>TRACE</B> parameter is used as a bitfield.  
+By setting specific bits, the corresponding output, tabulated below, is turned on. <P>
+<PRE>
+<P>
+General Tracing: Output to <I>portname</I>(<B>trace</B>)
+<P>
+Bit        Output Description
+<P>
+0x0001     Read and write calls
+0x0002     Changing of port communication parameters 
+<P>
+<P>
+Receive Tracing: Output to <I>portname</I>(<B>rtrace</B>)
+<P>
+Bit        Description for Received Data
+<P>
+0x0100     Parsing of data to isolate messages
+0x0200     Received messages 
+0x0400     Dispatch of callback code
+<P>
+Replay Tracing: Used for input to Replay Window
+<P>
+Bit        Description
+<P>
+0x0040     Reception data traced to <I>portname</I>(<B>last_recv</B>)
+0x0080     Send data traced to <I>portname</I>(<B>last_send</B>)
+<P>
+</PRE>
+
+<DT><B>XONXOFF</B>, type: boolean, default: 0
+<DD>Setting this value to 1 turns on software XON/XOFF handshaking. <P>
+<P>
+<P>
+<P>
+<H2>SEE ALSO</H2>
+<P>
+The usual file commands <a href="../mann/open.html">open</a> and 
+<a href="../mann/puts.html">puts</a> may be adequate for text-based 
+communication that is delimited by newlines. <P>
+<P>
+<H2>AUTHOR</H2>
+ Hume Integration Software.  This is licensed and supported software,  (C)Copyright 1995, 2005 All Rights Reserved. <P>
+<H2>KEYWORDS</H2>
+ tty termio serial communication <P>
+
+</BODY>
+</HTML>

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_GetJoinStyle_Tk_"></A>
+<TITLE>Tk_GetJoinStyle Tk Library Procedures</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_GetJoinStyle, Tk_NameOfJoinStyle - translate between strings and join styles <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+int
+<B>Tk_GetJoinStyle(<I>interp, string, joinPtr)</B></I>
+<P>
+CONST char *
+<B>Tk_NameOfJoinStyle(<I>join)</B></I>
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter to use for error reporting.
+<P><DT><B>CONST char <I>*string</I></B> (in)
+<DD>String containing name of join style: one of ``bevel'', ``miter'',
+or ``round''.
+<P><DT><B>int <I>*joinPtr</I></B> (out)
+<DD>Pointer to location in which to store X join style corresponding to
+<I>string</I>.
+<P><DT><B>int <I>join</I></B> (in)
+<DD>Join style: one of <B>JoinBevel</B>, <B>JoinMiter</B>, <B>JoinRound</B>.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tk_GetJoinStyle</B> places in <I>*joinPtr</I> the X join style
+corresponding to <I>string</I>, which will be one of
+<B>JoinBevel</B>, <B>JoinMiter</B>, or <B>JoinRound</B>.
+Join styles are typically used in X graphics contexts to indicate
+how adjacent line segments should be joined together.
+See the X documentation for information on what each style
+implies.
+<P>
+Under normal circumstances the return value is <B>TCL_OK</B> and
+<I>interp</I> is unused.
+If <I>string</I> doesn't contain a valid join style
+or an abbreviation of one of these names, then an error message is
+stored in <I>interp-&gt;result</I>, <B>TCL_ERROR</B> is returned, and
+<I>*joinPtr</I> is unmodified.
+<P>
+<B>Tk_NameOfJoinStyle</B> is the logical inverse of <B>Tk_GetJoinStyle</B>.
+Given a join style such as <B>JoinBevel</B> it returns a
+statically-allocated string corresponding to <I>join</I>.
+If <I>join</I> isn't a legal join style, then
+``unknown join style'' is returned.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+bevel, join style, miter, round
+
+</BODY>
+</HTML>

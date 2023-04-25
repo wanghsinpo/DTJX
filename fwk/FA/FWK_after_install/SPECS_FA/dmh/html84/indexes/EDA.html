@@ -1,0 +1,2458 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Ed Hume">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <meta name="Description" content="A high-level software component for deploying SEMI Standard Interface A.">
+   <meta name="KeyWords" content="Tcl, Hume, EDA, SEMI, Interface A, XML, SOAP, HTTP, 300mm">
+   <title>The Hume Interface A Component</title>
+</head>
+<body>
+
+<center>
+<h2>
+The Interface A Component for SEMI Equipment Data Acquisition</h2></center>
+
+<center><b>Licensed and Supported Software</b>
+<br><b>(C) Copyright 2004, Hume Integration Software</b>
+<br><b>All Rights Reserved</b></center>
+
+<h3>
+<a NAME="Introduction"></a><b>Introduction</b></h3>
+Hume Integration has developed a series of high-level application components
+which build upon the high performance and portable architectural framework
+provided by the Hume Datahub and the DMH message system. The Interface
+A Component provides the software features needed to implement the SEMI
+standard Interface A for Equipment Data Acquisition (EDA). This standard
+is described in SEMI document PR8/3563. Interface A is designed to support
+the concurrent flow of equipment data to multiple host applications. In
+contrast, current standards for SECS-II are designed for data exchange
+between a single equipment and a single host.
+<p>The component software consists of prototype applications to demonstrate
+both the equipment and equipment client roles described in the standard,
+along with Tcl language source code. The source code is customized and
+extended in order to deploy a production application for particular equipment.
+The EDA component software can be integrated with a SECS/GEM interface
+that has been developed using any vendor's toolset or with a SECS/GEM interface
+developed using the Hume Datahub SDK.
+<h3>
+<a NAME="Installation"></a><b>Installation</b></h3>
+For convenience, two prototype EDA applications are delivered as standalone
+single file applications using <a href="http://www.equi4.com/starkit.html">Starkit</a>
+technology:
+<ul>
+<li>
+<b>edaequip</b> (edaequip.exe on Windows platforms) - An application which
+implements the Equipment or server role of Interface A.</li>
+
+<li>
+<b>edaclient</b> (edaclient.exe on Windows platforms) - An application
+which implements the Host role of Interface A - the receiver of equipment
+data.</li>
+</ul>
+To install these programs, simply copy the executable files to a directory
+of your choice such as folder on the Windows Desktop. On both applications
+there is a Save menu action under the File menu. This action causes multiple
+files of SQL statements to be written to the program's working directory
+in order to save the current configuration of the application. So the Save
+action cannot be used if the programs are running from a read-only directory
+such as on a DVD drive.
+<p>The terminology of client and server can be somewhat confusing with
+Interface A since both sides of the interface implement the HTTP server
+protocol to receive data from the other side, and both sides use the HTTP
+client protocol to initiate messages. The Equipment role is deemed the
+server since this side of Interface A serves process data and events to
+multiple clients.
+<p>For development, the EDA software extends the software base provided
+by the Hume Datahub SDK with new capabilities for using XML, SOAP, HTTP,
+and SEMI standard EDA messages. The component software also uses other
+packages found in the Hume Datahub SDK that are optionally installed. If
+you use the Hume Package Installation tool to install the EDA component,
+you are guided in selecting the needed prerequisites. The following software
+packages are needed:
+<ul>
+<li>
+The Hume Datahub SDK core software.</li>
+
+<li>
+The Incr Tcl, Incr Tk, and Iwidgets packages option which extends the core
+software to include Object-Oriented programming commands.</li>
+
+<li>
+The Humelib package which is a library shared by the Hume Components.</li>
+
+<li>
+The Tcl xml version 2.6 package. This package is a patched and re-arranged
+version of the freely available xml and expat packages from Zveno Pty Ltd.
+Hume Integration has fixed memory leaks and made the package compatible
+with Starkits.</li>
+
+<li>
+Last but not least, the EDA component is installed to create the additional
+package library directory <b>eda1.0</b>.</li>
+</ul>
+
+<h3>
+<a NAME="applications"></a><b>Demonstration Applications</b></h3>
+The standalone applications, <b>edaequip</b> and <b>edaclient</b>, can
+be used to demonstrate, exercise, and/or test various aspects of the Interface
+A standard for Equipment Data Acquisition. The <b>edaequip</b> application
+can be configured to concurrently operate with any number of clients. Menu
+functions are provided to initiate sending all of the basic EDA message
+types to the clients. The <b>edaequip</b> application is able to receive
+and process all standard EDA messages initiated by the client including
+those for Data Collection Plan management. The data exchanged and diagnostic
+status information can be displayed and optionally saved to files. The
+server's configuration including the names of Data Collection Plans can
+be saved and re-used in future sessions.
+<p>The <b>edaclient</b> application is designed to initiate messages to
+a single equipment instance at a time. You are expected to run multiple
+instances of the application, typically on multiple computer systems, to
+exercise the equipment's ability to support multiple simultaneous clients.
+Because the <b>edaclient</b> receives messages through an HTTP interface,
+it can actually receive EDA messages from any number of equipment servers
+simultaneously. So it is possible to use a single instance of the <b>edaclient</b>
+application, and in sequence activate Data Collection Plans with multiple
+equipment instances, and then collect the resultant data messages at the
+single <b>edaclient</b> instance.
+<p>As described in the standard, SEMI envisions that equipment supporting
+Interface A will also support a SECS interface. The two kinds of equipment
+interfaces are not necessarily interdependent - there is no need to deploy
+a SECS interface in order to have a fully functional Interface A. We think
+that there are situations where deploying only Interface A without a SECS
+interface makes sense, and the vision of Interface A only existing as a
+complement to the SECS interface will be revised. Opinions aside, the demonstration
+programs feature Interface A capability without SECS interfaces. The programs
+are intended to inspire confidence in the evaluator that Interface A technology
+is tangible, and that well designed, working software tools to deploy the
+new standard are available from Hume Integration Software. For the equipment
+provider, the Hume developed Interface A server software can be integrated
+into a controller system which may feature a SECS interface based on any
+software tools, not just the SECS/GEM software available from Hume. For
+the equipment integrator, the Hume developed Interface A client software
+provides all of the needed integration elements including HTTP protocol
+support, a full-fledged XML parser, and connectivity solutions for a wide
+variety of programming environments across various operating system platforms.
+<h3>
+<a NAME="edaequip"></a><b>The Edaequip Application</b></h3>
+You can start running the equipment server application without any prior
+configuration or command line arguments.&nbsp; If you have used the Save
+menu action in a prior session, the program starts with the configuration
+that was previously saved.&nbsp; When you first start the program, two
+windows are created.&nbsp; The larger window that appears on top is a user
+interface for the EDA Equipment Server functionality.&nbsp; It has fields
+to configure the Interface A properties and also features displays of exchanged
+EDA messages and status information.&nbsp; The smaller window which starts
+iconified is a user interface for the <a href="http://www.hume.com/lnkdatahub.html">Hume
+Datahub</a> features.&nbsp; It is not necessary to interact with this smaller
+window except when shutting down the program.&nbsp; Closing the large EDA
+window does not stop the execution of the EDA interface or exit the program.&nbsp;
+This behavior demonstrates that the EDA software can be used with or without
+the Hume written user interface.&nbsp; The program exits when the smaller
+Datahub window is closed.
+<p>The edaequip program embeds a functional HTTP (web) server.&nbsp;&nbsp;
+If you configure an actual directory name for the <b>httpd root directory</b>,
+that directory and its contents are served by the web server and can be
+browsed by standard web browsers from anywhere on your network.&nbsp; Its
+ok to configure a non-existent directory for the httpd root directory to
+avoid serving real files; the EDA interface will still function.&nbsp;
+In most cases you will not configure the <b>httpd interface</b> value -
+the entryfield is usually left blank.&nbsp; If you have multiple network
+cards, you can choose which network interface to serve by specifying its
+hostname or IP address as the <b>httpd interface</b> value.&nbsp; You can
+also configure the httpd interface to the special value <b>localhost</b>.&nbsp;
+The <b>localhost</b> hostname makes the EDA server interface visible only
+to software running on your own computer system, and your system will not
+be reachable from the network.
+<p>An important web server parameter is the <b>httpd port</b> integer value.&nbsp;
+The value <b>80</b> is the default for the HTTP protocol. A particular
+port can be used by only one server at a time. In other words, unique port
+values need to be assigned to every TCP/IP socket server on a computer
+system. There is no problem having multiple instances of servers running
+as long as they serve unique ports. Application software is usually assigned
+port values greater than 1024 to avoid conflicts with system software.
+You will not be able to use the value <b>80</b> if you do not have system
+level privileges on the computer system.&nbsp; In that case, it is recommended
+that a value greater than 5000 be used after examining the /etc/services
+file or reviewing the output of the operating system <b>netstat</b> command
+for possible conflicts.
+<p>The web server feature in not enabled until you press the <b>Enable
+</b>button.&nbsp;
+This gives you a chance to configure a suitable directory and port before
+going online.&nbsp; An Interface A client connects to your web server by
+specifying a URL that appears to be a document reference.&nbsp; You are
+able to specify an arbitrary document name for the <b>Url Document</b>
+configuration value; the default value is EDA.xml.&nbsp; When you press
+the <b>Enable</b> button, the status field labeled <b>Served Url</b> located
+just below the button shows the actual served URL that the client can use
+to connect to your EDA server instance.&nbsp; You may change the httpd
+root directory, the httpd port, or the Url Document at any time by editing
+the field values and then pressing the <b>Enable</b> button again to have
+your new values take effect.&nbsp; The change is nearly instantaneous.
+<p>Interface A has the notions of <b>To</b> and <b>From</b> address designations
+in the EDA message headers.&nbsp; For both the <b>edaequip</b> and the
+<b>edaclient</b>
+program, you are able to configure unique values used as your own From
+address when initiating messages.&nbsp;&nbsp; Unless you have a reason
+otherwise, we suggest you configure these fields to be the URL value that
+is used to connect to your program instance.&nbsp; In fact, if you delete
+the current value so that the field is blank, the value gets set to your
+URL value when your HTTP server interface is enabled.
+<p>The edaequip user interface also provides entry fields to configure
+the data items making up the <b>Equipment ID</b> structure, namely <b>Supplier</b>,
+<b>Model</b>
+and <b>ImmutableID</b>.&nbsp; From the standpoint of the current software,
+these are just arbitrary strings that are passed in messages.
+<p>The <b>edaequip</b> application implements the simple retry behavior
+specified in the standard when it is not able to successfully transfer
+a message to a client.&nbsp; HTTP is a synchronous protocol; there is a
+reply expected in response to every message sent.&nbsp; The <b>Reply Timeout</b>
+is the interval of time allowed for a client response to be received successfully.&nbsp;
+If a response is not received, the logic will attempt a resend after delaying
+for the configurable <b>Retry Interval</b> value.&nbsp; There is also a
+<b>Retry
+Max Attempts</b> integer value that is configured to set the number of
+attempts to be used when failure is encountered.&nbsp; You are able to
+specify different values of these timeout and retry parameters for each
+client, or you may specify that the shared default values are used for
+a client by setting that client's values to the special value 0. The configured
+values in the framed window labeled <b>Default Sending Configuration</b>
+are the values used as default values for all clients that do not have
+their own non-zero configured values.
+<p>EDA Event Data messages have a Locator data element which is intended
+to help identify the context of the data.&nbsp; You are able to configure
+the Locator data element using the entryfield labeled <b>Event Location</b>.
+<p>For demonstration purposes, the <b>edaequip</b> application relies on
+manual configuration of a set of <b>Data Collection Plans</b>.&nbsp; The
+program logic creates example plan names if you have not configured and
+saved your own set.&nbsp; A real Interface A application is integrated
+with the equipment controller(s) and the list of defined Data Collection
+Plans is determined programmatically.&nbsp; The standard EDA messages do
+not show the client descriptions of the defined plans - the client only
+sees the plan names.&nbsp; Also, the standard message definitions cannot
+properly handle plan names that imbed white space.
+<p>The main part of the <b>edaequip</b> user interface is a tabbed notebook
+window.&nbsp; If the mouse selection button is clicked on the tab labeled
+<b>Clients</b>
+a different window pane is shown where the configuration of clients is
+displayed in a table.&nbsp; New client records can be added by pressing
+the <b>Add...</b> button.&nbsp; The <b>To Address</b> of each client record
+must be unique because this is how the clients are distinguished when client
+messages are received.&nbsp; An implication of this behavior is that you
+must configure each client application instance to have a unique header
+From Address in order to have them all successfully communicate with your
+<b>edaequip</b>
+instance.&nbsp; You can optionally specify a proxy host and proxy port
+if these are needed to reach the client HTTP server for messages initiated
+by the <b>edaequip</b>.&nbsp; The editing dialog allows you to choose either
+the <b>ok</b> or <b>disabled</b> state value for a client.&nbsp; If the
+state value is set to <b>ok</b>, it means that messages can be sent to
+the client.&nbsp; If the state value is set to <b>disabled</b> it means
+that the logic should not attempt to send any messages to the client.&nbsp;
+You cannot configure the state values of
+<b>busy</b> or <b>down</b>.&nbsp;
+These values are set by the running software to manage sending to the client.&nbsp;
+The state of <b>down</b> is assigned after the retry and timeout periods
+have been exhausted when attempting to send a message.&nbsp; The logic
+does not attempt to send further messages to a client whose state value
+is <b>down</b>.&nbsp; The client remains in the <b>down</b> state until
+that client has sent a message to the server, or until the user has reconfigured
+the client state value.
+<p>If you wish to save the current server configuration, use the <b>Save</b>
+menu action under the <b>File</b> menu.&nbsp; Your configuration will be
+saved as files of SQL statements in the current working directory.&nbsp;
+A saved configuration is loaded&nbsp; automatically at the next program
+start.
+<p>The edaequip has other features to vary the displayed trace data of
+messages sent and received, or to save the displayed data to the file system.&nbsp;
+There are also menu items to send example messages to clients.&nbsp; You
+are encouraged to explore these features.&nbsp; The EdaEnabled, EdaDisabled,
+and EdaError messages are broadcast messages - they are sent to every client
+that is not down or disabled.&nbsp; The other message types are sent to
+a single selected client.
+<br>&nbsp;
+<h3>
+<a NAME="edaclient"></a><b>Host/Client Application</b></h3>
+The execution and runtime configuration of the <b>edaclient</b> application
+is quite similar to that of the <b>edaequip</b> application.&nbsp; You
+do not need to perform any configuration or know any command line arguments
+before starting the program.&nbsp; With the client application, there is
+only a single EDA user interface window created, and when this window is
+closed, the application exits.
+<p>The entryfields in the window frame labeled <b>Equipment Target Configuration</b>
+are used to specify the <b>Url</b> and other items for your chosen EDA
+server.&nbsp; Before you press the <b>Enable</b> button to have your HTTP
+server go online, you will need to review the configuration of the <b>httpd
+port</b> and make sure it is a unique and acceptable value, and make sure
+that you are satisfied with the other web server parameters.
+<br>&nbsp;
+<h3>
+<a NAME="development"></a><b>Interface A Development</b></h3>
+The EDA software is composed of a small number of Incr Tcl classes. You
+can develop custom applications by deriving new classes that have selected
+methods replaced by your logic, as well as having additional methods. You
+can use the Hume DMH message system to control and utilize your classes
+from another application process through the exchange of DMH messages.
+You do not need to use Tcl/Tk to provide a user interface. You can deploy
+a user interface using the software tools of your choice, and use the DMH
+message system to interact with the Incr Tcl classes for their non-visual
+Interface A functionality.
+<p>Here is an overview of the classes, the class names are linked to detailed
+information.
+<dl>
+<dt>
+<a href="#eda_class">eda</a></dt>
+
+<dd>
+The <b>eda</b> class is comprised of software that is common for both the
+equipment and the equipment client roles. For example, parsing XML and
+using an httpd server are done by both roles.</dd>
+
+<dt>
+<a href="#edaequip_class">edaequip</a></dt>
+
+<dd>
+The <b>edaequip</b> class has the logic needed to deploy the EDA equipment
+role. The class uses in-memory SQL tables to manage multiple clients.</dd>
+
+<dt>
+<a href="#edaclient_class">edaclient</a></dt>
+
+<dd>
+The <b>edaclient</b> class is designed to communicate with EDA equipment
+and play the client (host) EDA role.</dd>
+
+<dt>
+<a href="#edatrace_class">Edatrace</a></dt>
+
+<dd>
+This class provides the aggregate GUI widget that displays trace information
+in two scrolled text fields, one for Send &amp; Reply tracing, and one
+for Receive tracing. The colors and fonts used are all configurable. The
+widget also provides the ability to save the displayed information to the
+file system.</dd>
+
+<dt>
+<a href="../mann/ehttp.html">ehttp</a></dt>
+
+<dd>
+The <b>ehttp</b> class is used to execute the client-side of the HTTP protocol,
+either version 1.0 or 1.1. The class has diagnostic and tracing features
+that the EDA software makes use of.</dd>
+
+<dt>
+<a href="../mann/ehttpd.html">ehttpd</a></dt>
+
+<dd>
+The <b>ehttpd</b> class is used to provide the server-side of the HTTP
+protocol. It can serve common file types such as HTML pages and image files.
+The class has a URL callback feature that enables having custom software
+such as the EDA software provide the data of a requested document. The
+class also has excellent tracing and diagnostic features to support embedded
+use.</dd>
+</dl>
+
+<hr WIDTH="100%">
+<hr WIDTH="100%">
+<h3>
+<a NAME="API"></a>Incr Tcl Class Reference</h3>
+
+<hr WIDTH="100%">
+<br><a NAME="eda_class"></a><font size=+1><b>eda</b> -&nbsp; A base class
+for equipment or client EDA</font>
+<p><b>Synopsis</b>
+<blockquote>none - instantiate edaclient or edaequip instead</blockquote>
+<b>Description</b>
+<blockquote>This is a base class that has data and methods which are used
+for both the EDA server and client roles.</blockquote>
+<b>Options (Public Variables)</b>
+<ul>
+<dl>
+<dt>
+<b>http_version</b></dt>
+
+<dd>
+The class can be told to use either HTTP 1.0 or 1.1 by setting this variable
+to the desired version. The EDA standard specifies 1.1 and this is the
+default.</dd>
+
+<dt>
+<b>httpd_addr</b></dt>
+
+<dd>
+You can optionally specify which network interface should be used for the
+HTTP server function either as a TCP/IP hostname or as an IP address. Use
+this option to specify the desired interface when you have more than one
+TCP/IP network address, or you want to restrict the serving to your own
+system by specifying localhost. When the field is blank, the default behavior
+is operating system dependent but usually makes the server visible on the
+first TCP/IP network interface and on the localhost interface. For some
+operating systems, the served port is reachable on all network interfaces.</dd>
+
+<dt>
+<b>httpd_doc</b></dt>
+
+<dd>
+This item is the document name that is served by the HTTP server for the
+purpose of being a target for EDA communication. The document does not
+have to exist. The default value is EDA.xml</dd>
+
+<dt>
+<b>httpd_port</b></dt>
+
+<dd>
+This is the TCP/IP port value that is used to receive EDA messages. The
+value 80 is the default for the HTTP protocol. A particular port can be
+used by only one server at a time. In other words, unique port values need
+to be assigned to every TCP/IP socket server on a computer system. There
+is no problem having multiple instances of servers running as long as they
+serve unique ports. Application software such as the <b>edaclient</b> is
+usually assigned port values greater than 1024 to avoid conflicts with
+system software.</dd>
+
+<dt>
+<b>httpd_root</b></dt>
+
+<dd>
+The root of the file system to be served. A non-existent directory can
+be named if you do not wish to serve documents. Do not specify a directory
+containing private data files, or having private files in any subdirectory.</dd>
+
+<dt>
+<b>soap_nsid</b></dt>
+
+<dd>
+The SOAP namespace identifier used for outgoing messages.&nbsp; Defaults
+to "soap".&nbsp; The value "SOAP-ENV" is also commonly used.</dd>
+
+<dt>
+<b>TRACE</b></dt>
+
+<dd>
+This field is used as a bitfield to control the output of diagnostic information.
+The bit values have the following meanings:</dd>
+
+<dl>
+<dt>
+0x0001</dt>
+
+<dd>
+status messages</dd>
+
+<dt>
+0x0100</dt>
+
+<dd>
+Received HTTP header data</dd>
+
+<dt>
+0x0800</dt>
+
+<dd>
+Received HTTP query data</dd>
+
+<dt>
+0x1000</dt>
+
+<dd>
+Sent HTTP header data</dd>
+
+<dt>
+0x8000</dt>
+
+<dd>
+Sent HTTP content data</dd>
+</dl>
+</dl>
+</ul>
+<b>Class Methods</b>
+<ul>
+<dl>
+<dt>
+<b>boolean <i>value</i></b></dt>
+
+<dd>
+This method maps any of the allowed boolean formats in Tcl such as <b>true</b>
+or <b>1</b> to the values <b>1</b> or <b>0</b> which are useable for EDA
+boolean values. It can also be used in the opposite direction to map any
+of the allowed EDA boolean values to <b>1</b> or <b>0</b>.</dd>
+
+<dt>
+<b>dateTime {<i>ts16</i> {}}</b></dt>
+
+<dd>
+When called with no argument, the method returns a <a href="http://www.w3.org/TR/xmlschema-2/#dateTime">standard
+dateTime</a> value for the current time. The method can also convert a
+<a href="../mann/localtime.html">localtime 16</a> value to an XML dateTime
+value.</dd>
+
+<dt>
+<b>fmtEqIDMessageBody <i>type SupModId</i> {<i>nv_args</i> {}} {<i>sanitize</i>
+1}</b></dt>
+
+<dd>
+The method returns a formatted XML string for the EDA message structures
+that contain an EquipmentID as the first item. The <i>type</i> argument
+is the message type such as <b>IsEdaEnabled</b>. The <i>SupModId</i> is
+a list of three elements, the Supplier, Model, and ImmuteableID. The <i>nv_args</i>
+is an optional argument to pass in a list of alternating tagnames and values
+to be appended to the message after the EquipmentID. If the <i>nv_args</i>
+contains nested tagnames and values, then the <i>sanitize</i> argument
+must be set to 0 to prevent escaping the nested tag angle brackets as if
+they were intended to be simply part of the data value.</dd>
+
+<dt>
+<b>fmtEquipmentID <i>SupModID</i></b></dt>
+
+<dd>
+The calling argument is a list of three elements, the Supplier, Model,
+and ImmutableID. The return value is a formatted XML string for an EquipmentID
+data structure.</dd>
+
+<dt>
+<b>fmtFault <i>faultcode faultstring</i> {<i>detail</i> {}}</b></dt>
+
+<dd>
+This method returns a formatted XML string for a SOAP Fault data structure.</dd>
+
+<dt>
+<b>fmtMessageHeader <i>To From</i> {<i>CorrelationId</i> {}}</b></dt>
+
+<dd>
+This method returns a formatted XML string for the MessageHeader structure.</dd>
+
+<dt>
+<b>fmtSoapEnvelope <i>header body</i></b></dt>
+
+<dd>
+This method returns a formatted XML string where the EDA message header
+and body are wrapped in SOAP Header and SOAP Body tags and then wrapped
+together in a SOAP Envelope tag.&nbsp; The identifier used for the SOAP
+namespace is the configurable value of <b>soap_nsid</b>.</dd>
+
+<dt>
+<b>getFrom</b></dt>
+
+<dd>
+This method returns the default <b>From</b> header data element which is
+the result of executing <b>getURL</b>.</dd>
+
+<dt>
+<b>getURL</b></dt>
+
+<dd>
+This method returns the served URL for the HTTP receiving interface.</dd>
+
+<dt>
+<b>httpd_doc_set</b></dt>
+
+<dd>
+This method is called automatically when you configure the httpd_doc value.
+It updates the HTTP server so that the desired document is served.</dd>
+
+<dt>
+<b>httpd_enable <i>on</i></b></dt>
+
+<dd>
+This call is used to enable or disable the HTTP server interface depending
+on if the <i>on</i> argument is <b>1</b> or <b>0</b>.</dd>
+
+<dt>
+<b>httpd_respond</b></dt>
+
+<dd>
+This method is replaced in derived classes. The method is executed by the
+HTTP server logic as a callback when there is a request for the EDA URL.</dd>
+
+<dt>
+<b>httpd_trace</b></dt>
+
+<dd>
+This method is replaced in derived classes. The method is executed by the
+HTTP server logic to pass trace information.</dd>
+
+<dt>
+<b>SOAPhttpHeader <i>action</i></b></dt>
+
+<dd>
+This method supplies the SOAPAction header string that appears as an HTTP
+header for the specified message type.</dd>
+
+<dt>
+<b>tsdiff <i>ts_start</i> {<i>ts_end</i> {}}</b></dt>
+
+<dd>
+Returns a floating point value for the number of seconds between two XML
+dateTime values or between the current time and a single dateTime value.
+The input format for XML dateTime values is restricted to the format provided
+by the <b>dateTime</b> method.</dd>
+
+<dt>
+<b>xml_desanitize <i>xml</i></b></dt>
+
+<dd>
+This method replaces &amp; escape sequences which are used with XML to
+pass characters which have special meaning such as <b>&lt;</b> back to
+the non-escaped characters. The method is called by the <b>xml_sanitize</b>
+method so that you can call the <b>xml_sanitize</b> method more than once
+without converting &amp;amp; to &amp;amp;amp; etc.</dd>
+
+<dt>
+<b>xml_desoap <i>cache</i> {<i>update_struct</i> 1} {<i>copy_struct</i>
+0}</b></dt>
+
+<dd>
+The method <b>xml_parse</b> described next is used to parse an XML string
+into an array. After parsing, the <b>xml_desoap</b> method can be called
+to remove the SOAP tags from the parsed result, to determine the EDA message
+type and write it as the array element __msgtype__, and to update the array
+element __struct__ which describes the message structure. The revised __struct__
+element describes the simplified message structure that remains after the
+SOAP tags have been removed. If the optional argument <i>copy_struct</i>
+is set true, and the <i>update_struct</i> argument is true, the original
+message structure before the SOAP tags removal is copied to the array element
+__struct0__. The return value of the <b>xml_desoap</b> method is 1 if the
+input <i>xml</i> was standard and had the expected SOAP tags. The return
+value is 0 if the SOAP tags were not found. In this description, SOAP tags
+refers to the tags, &lt;soap>:Envelope, &lt;soap>:Header, and &lt;soap>:Body
+where &lt;soap> is the namespace identifier used for the SOAP namespace.&nbsp;&nbsp;
+To understand this method and <b>xml_parse</b> in detail, it is suggested
+that you interactively execute them from the command prompt, and examine
+the result array <i>cache</i> using the <a href="../mann/info_data.html">info_data</a>
+command. The method <b>xtest8</b> is an example of using the parsing calls
+which features output to the console.</dd>
+
+<dt>
+<b>xml_parse <i>xml</i></b></dt>
+
+<dd>
+This method is called to parse an XML formatted string into an array. The
+name of the array is the return value of the method call. When you are
+done using the result array, you must <a href="../mann/unset.html">unset</a>
+it to recover the memory used for the array. Elements are added to the
+array which show the nesting of XML tags as the tag names concatenated
+with periods. For example, parsing the IsEdaEnabled message results in
+an array element with a subscript that is similar to <b>soap:Envelope.soap:Body.IsEdaEnabled.EquipmentID.Supplier</b>
+along with other similar array elements. The <b>xml_desoap</b> method described
+above removes the SOAP tags and simplifies the parse result so that the
+example subscript becomes <b>IsEdaEnabled.EquipmentID.Supplier</b>. The
+<b>xml_parse</b> method also writes an array element <b>__struct__</b>
+which shows the structure of the XML input. For example, the <b>__struct__</b>
+array element for an IsEdaEnabled message is similar to <b>{soap:Envelope
+{soap:Header {MessageHeader {To} {From}}} {soap:Body {IsEdaEnabled {EquipmentID
+{Supplier} {Model} {ImmutableID}}}}}</b>.</dd>
+
+<p><br>XML can have tag sequences that are repeated more than once. For
+example, there could be multiple values for the same measured parameter
+in an EdaData message. The parsing logic converts repeated values to a
+Tcl list of values. You can determine how many instances of a tagged value
+are in the input message by looking at the <a href="../mann/llength.html">list
+length</a> of the output array value, or by analyzing the <b>__struct__</b>
+array element value.
+<p>EDA <b>Param</b> elements defined by the standard have the property
+that a tag for the type of data element (eg., <b>IntVal</b>, <b>FloatVal</b>,
+...) is part of the tag sequence leading to the characters representing
+the element's value. The standard proscribes:
+<blockquote>...&lt;Value>&lt;FloatVal>43.56&lt;/FloatVal>&lt;/Value>...</blockquote>
+This property means that you cannot know the tag sequence leading to a
+value without knowing the data type tag being used. Fundamentally with
+XML strings all the data is passed as character string data, so this obsession
+with data type seems to be an anachronism. Hume Integration to the rescue
+- the <b>xml_parse</b> method has logic to rearrange <b>Value</b> tag sequences
+so that the array element for the <b>Value</b> tag shows the value and
+a new tag <b>ValueType</b> shows the tag used to indicate the data type.
+The parse result is as if the standard was:
+<blockquote>...&lt;Value>43.56&lt;/Value>&lt;ValueType>FloatVal&lt;/ValueType>...</blockquote>
+This means that you can use the array of parse results, and find <b>Param</b>
+values at the same subscript irrespective of whether the sender tagged
+the value as <b>FloatVal</b>,
+<b>DoubleVal</b>, <b>IntVal</b>, or some
+other storage type.
+<dt>
+<b>xml_sanitize</b></dt>
+
+<dd>
+This method is used by the methods that create formatted XML messages to
+escape characters such as &lt; and &amp; which may occur in your data and
+have special meaning to XML.</dd>
+
+<dt>
+<b>xtest8</b></dt>
+
+<dd>
+The eda class has several methods such as this one which test or demonstrate
+various aspects of the XML parsing logic. It is suggested that the developer
+look over the source code and interactively execute some of these methods.</dd>
+</dl>
+</ul>
+
+<hr WIDTH="100%">
+<br><a NAME="edaclient_class"></a><font size=+1><b>edaclient</b> -&nbsp;
+The Interface A Equipment Client (Host Role) Class</font>
+<p><b>Synopsis</b>
+<blockquote><b>package require edaclient</b>
+<br><b>edaclient::supervisor</b>
+<br><b>edaclient <i>objname</i> [-<i>option_name option_value</i>]*</b>
+<br><b><i>objname</i> <i>methodname</i> [<i>method_argument</i>]*</b></blockquote>
+<b>Description</b>
+<blockquote>This class is designed to target a single equipment URL at
+a time playing the Interface A client (host) role. You can have multiple
+instances of the class running in the same Tcl process to target multiple
+equipment instances simultaneously. The <b>edaclient</b> class inherits
+from the <b>eda</b> class so the options and methods of the <b>eda</b>
+class are useable for an <b>edaclient</b> instance.</blockquote>
+<b>Options (Public Variables)</b>
+<ul>
+<dl>
+<dt>
+<b>client_From</b></dt>
+
+<dd>
+This value specifies the string value that is used in the EDA message headers
+as the
+<b>From</b> field for this client instance. If the value is left
+as an empty string, the logic will use the instance's receiving URL.</dd>
+
+<dt>
+<b>eq_SupModId</b></dt>
+
+<dd>
+This value is a three element list specifying the target equipment's
+<b>EquipmentID</b>
+data structure fields, the <b>Supplier</b>, the <b>Model</b>, and the
+<b>ImmutableID</b>.</dd>
+
+<dt>
+<b>eq_To</b></dt>
+
+<dd>
+This value specifies the message header <b>To</b> value which is used when
+sending messages to the target equipment.</dd>
+
+<dt>
+<b>eq_autofix_config</b></dt>
+
+<dd>
+This option value is used as a boolean to determine whether the <b>eq_To</b>,
+and the <b>eq_SupModId</b> values should be automatically corrected with
+values that are parsed from received messages. The default value is 1.</dd>
+
+<dt>
+<b>eq_reply_timeout</b></dt>
+
+<dd>
+The interval of time specified in milliseconds allowed for a reply from
+the target equipment for a successful send-and-reply transaction. Defaults
+to 20000.</dd>
+
+<dt>
+<b>eq_url</b></dt>
+
+<dd>
+The URL of the target equipment. You must have this value configured correctly
+in order to communicate with the target equipment. The default value is
+<b>http://localhost:80/EDA.xml</b>.</dd>
+</dl>
+</ul>
+<b>Class Methods</b>
+<ul>
+<dl>
+<dt>
+<b>getFrom</b></dt>
+
+<dd>
+This method replaces the base eda version to allow for the user configuring
+the client_From option.</dd>
+
+<dt>
+<b>http_trace</b></dt>
+
+<dd>
+This method is called by the <b>ehttp</b> software to pass back trace information.
+If the Tk GUI exists, the method passes the data into the <b>Edatrace</b>
+widget.</dd>
+
+<dt>
+<b>httpd_respond</b></dt>
+
+<dd>
+This method is called by the <b>ehttpd</b> software when an EDA message
+is received. The logic oversees parsing the message and calling a message
+specific method of the name <b>rsp_<i>msgtype</i></b> to pass the message
+data into the application.</dd>
+
+<dt>
+<b>httpd_trace</b></dt>
+
+<dd>
+This method is called by the <b>ehttpd</b> software to pass back trace
+information. If the Tk GUI exists, the method passes the data into the
+<b>Edatrace</b> widget.</dd>
+
+<dt>
+<b>rsp_EdaData <i>cache To From</i></b></dt>
+
+<dd>
+This method gets called when an EdaData message is received from the target
+equipment. The XML message has been parsed, the SOAP tags have been removed,
+and the parse results are found in the array whose name is passed as the
+<i>cache</i> argument.</dd>
+
+<dt>
+<b>rsp_EdaDisabled <i>cache To From</i></b></dt>
+
+<dd>
+Similar to <b>rsp_EdaData</b>, above.</dd>
+
+<dt>
+<b>rsp_EdaEnabled <i>cache To From</i></b></dt>
+
+<dd>
+Similar to <b>rsp_EdaData</b>, above.</dd>
+
+<dt>
+<b>rsp_EdaError <i>cache To From</i></b></dt>
+
+<dd>
+Similar to <b>rsp_EdaData</b>, above.</dd>
+
+<dt>
+<b>supervisor</b></dt>
+
+<dd>
+This method is called to start any interfaces that are configured for starting
+in the <a href="#eda_client_startup">eda_client_startup</a> table. If no
+rows are found in the table, a row is added with default data. This logic
+is so the <b>edaclient</b> application starts an interface if its data
+file does not exist.</dd>
+
+<dt>
+<b>tracewin</b></dt>
+
+<dd>
+This method is invoked to create and show the Tk interface window for the
+client.</dd>
+
+<dt>
+<b>xact_ActivatePlan <i>PlanID UntilDeactivated</i></b></dt>
+
+<dd>
+This method does a roundtrip send-and-reply transaction to activate a Data
+Collection Plan. The return value is a two element list, return code and
+value. In the usual success case, the return code is 0 and the value is
+the <i>IsActivated</i> value from the reply message. See <b>xact_generic</b>
+below, for error return codes.</dd>
+
+<dt>
+<b>xact_DeactivatePlan {<i>PlanID</i> ALL}</b></dt>
+
+<dd>
+This method does a send-and-reply transaction to deactivate a Data Collection
+Plan. The return value is a two element list, return code and value. In
+the usual success case, the return code is 0 and the value is the <i>DeactivatedPlanIds</i>
+value from the reply message. See <b>xact_generic</b> below, for error
+return codes.</dd>
+
+<dt>
+<b>xact_GetActivePlanIds</b></dt>
+
+<dd>
+This method does a send-and-reply transaction to query the activated Data
+Collection Plans for this client. The return value is a two element list,
+return code and value. In the usual success case, the return code is 0
+and the value is the <i>ActivePlanIds</i> value from the reply message.
+See <b>xact_generic</b> below, for error return codes.</dd>
+
+<dt>
+<b>xact_GetDefinedPlanIds</b></dt>
+
+<dd>
+This method does a send-and-reply transaction to query the defined Data
+Collection Plans. The return value is a two element list, return code and
+value. In the usual success case, the return code is 0 and the value is
+the <i>DefinedPlanIds</i> value from the reply message. See <b>xact_generic</b>
+below, for error return codes.</dd>
+
+<dt>
+<b>xact_IsEdaEnabled</b></dt>
+
+<dd>
+This method does a send-and-reply transaction to ask if EDA is enabled.
+The return value is a two element list, return code and value. In the usual
+success case, the return code is 0 and the value is the <i>IsEnabled</i>
+value from the reply message. See <b>xact_generic</b> below, for error
+return codes.</dd>
+
+<dt>
+<b>xact_generic <i>action resulttag</i> {<i>nv_args</i> {}}</b></dt>
+
+<dd>
+This method oversees the generic transaction of sending an EDA command
+message, obtaining a reply within a timeout interval, and parsing a desired
+result item from the reply message. The return value is a two element list;
+an integer code, and a string value. If the transaction succeeds, the code
+is 0 and the string value is the <i>resulttag</i> value. A non-zero code
+indicates failure, and the string value has a diagnostic message. Here
+are the possible failure codes:</dd>
+
+<dl>
+<dt>
+1</dt>
+
+<dd>
+ehttp::geturl has returned an error possibly because of a malformed URL</dd>
+
+<dt>
+2</dt>
+
+<dd>
+A reply was not received or the equipment HTTP server returned an HTTP
+error code</dd>
+
+<dt>
+5</dt>
+
+<dd>
+The reply was not proper XML.</dd>
+
+<dt>
+6</dt>
+
+<dd>
+The reply was not a soap message.</dd>
+
+<dt>
+7</dt>
+
+<dd>
+The soap message reply did not contain the result tag.</dd>
+
+<dt>
+8</dt>
+
+<dd>
+The soap message reply did not contain the result tag and diagnostic error
+information was found in the reply.</dd>
+</dl>
+
+<dt>
+<b>xact_reply_parse</b></dt>
+
+<dd>
+Used by <b>xact_generic</b></dd>
+
+<dt>
+<b>xact_reply_wait</b></dt>
+
+<dd>
+Used by <b>xact_generic</b></dd>
+</dl>
+</ul>
+
+<hr WIDTH="100%">
+<br><a NAME="edaequip_class"></a><font size=+1><b>edaequip</b> -&nbsp;
+The Interface A Equipment class</font>
+<p><b>Synopsis</b>
+<blockquote><b>package require edaequip</b>
+<br><b>edaequip::supervisor</b>
+<br><b>edaequip <i>objname</i> [-<i>option_name option_value</i>]*</b>
+<br><b><i>objname</i> <i>methodname</i> [<i>method_argument</i>]*</b></blockquote>
+<b>Description</b>
+<blockquote>This class is used to provide the equipment role of SEMI Interface
+A. To integrate this software into a production application, pay particular
+attention to the methods whose names start with <b>ii_</b>. This prefix
+has the meaning of <b>integration interface</b>. By coding your own version
+of these methods, you will make your equipment respond to the commands
+that are received through Interface A. In addition, you will need to provide
+for sending data and event messages as determined by the activated Data
+Collection Plans. The methods whose names begin with <b>eg</b> are examples
+of creating different EDA message types that equipment inititates. The
+example application <b>edaequip</b> is able to send an example message
+of every currently defined EDA type. The method
+<b>broadcast</b> is used
+to send the same message to every client. Certain EDA message types are
+broadcast such as the <b>EdaEnabled</b> message. The method
+<b>postmsg</b>
+is used to send an EDA message to a single client. As long as a client's
+Data Collection Plan is still active, your equipment should continue to
+post data messages selected by the plan. If the client becomes unresponsive,
+all of his activated plans will be deactivated. This occurs after a series
+of retry attempts spanning a series of waiting periods, so it is common
+that there may be more than one data message queued for delivery to the
+client. Your logic will know to stop posting messages for a plan from any
+of the following inputs:
+<ol>
+<li>
+The plan is no longer listed in the eda_client_active_dcp table so it was
+deactivated. Your logic could know this by querying the table at the time
+of sending, or by subscribing to changes in the table data.</li>
+
+<li>
+You have customized the <b>ii_DeactivatePlan</b> method and your logic
+was executed when the method was invoked to deactivate the particular plan
+for the particular client.</li>
+</ol>
+</blockquote>
+<b>Options (Public Variables)</b>
+<ul>
+<dl>
+<dt>
+<b>eq_From</b></dt>
+
+<dd>
+This value specifies the string value that is used in the EDA message headers
+as the From field for this equipment instance. If the value is left as
+an empty string, the logic will use the instance's receiving URL.</dd>
+
+<dt>
+<b>ImmutableID</b></dt>
+
+<dd>
+This string value should be set to a unique value. It is part of the EquipmentID
+data structure.</dd>
+
+<dt>
+<b>IsEnabled</b></dt>
+
+<dd>
+This variable is used as a boolean to determine whether the Interface A
+is enabled by the stock <b>ii_IsEdaEnabled</b> method. Its value is provided
+in response to the <b>IsEdaEnabled</b> client request. An integrator can
+choose to update this variable's value or to customize the
+<b>ii_IsEdaEnabled</b>
+method.</dd>
+
+<dt>
+<b>Locator_default</b></dt>
+
+<dd>
+Certain EdaData messages have a Locator value which is intended to be an
+identifier for an equipment component based on its position in the tool
+hierarchy. See paragraph 7.7.3.3.1 in the standard PR8/3563. This option
+provides a configured value which can be used as a default value.</dd>
+
+<dt>
+<b>log_period</b></dt>
+
+<dd>
+The log_period is a configurable interval of time specified in milliseconds
+for completed messages to be held in the eda_send_log table. There needs
+to be a provision for deleting aged messages from this table so that memory
+usage remains bounded. The <b>edaequip</b> application does not delete
+logged messages, it is designed for the user to delete them by pressing
+a button on the GUI. A real application needs to have programmed deletion
+of the logged messages, and using this value with the Tcl <a href="../mann/after.html">after</a>
+command is suitable.</dd>
+
+<dt>
+<b>Model</b></dt>
+
+<dd>
+This string value gets passed as part of the EquipmentID data structure.</dd>
+
+<dt>
+<b>reply_timeout_default</b></dt>
+
+<dd>
+This value represents the time interval in milliseconds that is allowed
+for successfully receiving a reply from a client. The value is a default
+value that is used unless there is a non-zero configured value for the
+particular client.</dd>
+
+<dt>
+<b>retry_interval_default</b></dt>
+
+<dd>
+This value represents the time interval in milliseconds that the equipment
+waits before initiating another send attempt when the previous send has
+failed. The value is actually a default value that is used when there is
+not a positive value configured for a client.</dd>
+
+<dt>
+<b>retry_max_default</b></dt>
+
+<dd>
+This value is the maximum number of times the sending logic will retry
+to send a message to a client. The value is a default that is used if there
+is not a positive value configured for the client.</dd>
+
+<dt>
+<b>Supplier</b></dt>
+
+<dd>
+This string value gets passed as part of the EquipmentID data structure.</dd>
+</dl>
+</ul>
+<b>Class Methods</b>
+<ul>
+<dl>
+<dt>
+<b>broadcast <i>msgtype</i> {<i>nv_args</i> {}}</b></dt>
+
+<dd>
+This method is used to send the same message to every client. Standard
+broadcast message types include EdaDisabled, EdaEnabled, and EdaError.
+The methods <b>EdaDisabled</b>, <b>EdaEnabled</b>, and <b>PerformanceWarning</b>
+are examples of using the <b>broadcast</b> method to send these message
+types.</dd>
+
+<dt>
+<b>EdaDisabled</b></dt>
+
+<dd>
+Sends the EdaDisabled message to all clients.</dd>
+
+<dt>
+<b>EdaEnabled</b></dt>
+
+<dd>
+Sends the EdaEnabled message to all clients.</dd>
+
+<dt>
+<b>egEdaErrorBody</b></dt>
+
+<dd>
+Creates an example EdaError message body.</dd>
+
+<dt>
+<b>egEventReportBody</b></dt>
+
+<dd>
+Creates an example Event body.</dd>
+
+<dt>
+<b>EgExEventBody</b></dt>
+
+<dd>
+Creates an example exception event (ExEvent) body. The Interface A standard
+has further muddied the water by adding SOAP faults, HTTP errors, ExEvents,
+and EdaErrors to the E5/E30 notions of alarms and events. The standard
+indicates alarms are to be sent as ExEvent data structures, and EDA interference
+with tool operation is sent as an EdaError. Therefore we offer this guidance.
+If an error condition relates to the equipment and is independent of the
+Interface A software use the ExEvent data structure. Only use the EdaError
+if the error condition directly relates to the Interface A software.</dd>
+
+<dt>
+<b>fmtEdaDataBody <i>Events</i></b></dt>
+
+<dd>
+This method prepares an XML EdaData string by adding the EdaData tags and
+the EquipmentID structure to zero or more Event or ExEvent sequences concatenated
+as a single string argument.</dd>
+
+<dt>
+<b>fmtEdaErrorBody <i>ErrorCode</i> {<i>ErrorType</i> {}} {<i>ErrorDesc</i>
+{}} {<i>ErrorTime</i> {}}</b></dt>
+
+<dd>
+Formats error information into the XML EdaError string. If the optional
+arguments are defaulted, the logic attempts to look up the error description
+in the common array <b>ErrorCodes</b></dd>
+
+<dt>
+<b>fmtEventBody <i>EventID Locator Data</i> {<i>EventTime</i> {}} {<i>Context</i>
+{}} {<i>Extension</i> {}}</b></dt>
+
+<dd>
+Formats event data into an XML Event string.</dd>
+
+<dt>
+<b>fmtEventReportBody <i>EventID name_vals</i></b></dt>
+
+<dd>
+A simpler call to create an XML Event string with some Data Param values.
+The <i>name_vals</i> argument is a list of alternating name and values
+which are formatted as floating point Data Param elements.</dd>
+
+<dt>
+<b>fmtExEvent <i>ErrorCode Locator ExType ExDesc</i> {<i>ExState</i> none}
+{<i>ExTime</i> {}} {<i>Severity</i> {}} {<i>Data</i> {}} {<i>Extension</i>
+{}}</b></dt>
+
+<dd>
+Formats exception event data into an XML ExEvent string.</dd>
+
+<dt>
+<b>fmtParam <i>Name Value</i> {<i>type</i> FloatVal} {<i>Locator</i> {}}
+{<i>MeasTime</i> {}} {<i>Extension</i> {}}</b></dt>
+
+<dd>
+Formats parameter data into an XML Param string.</dd>
+
+<dt>
+<b>fmtResponseBody <i>type</i> {<i>nv_args</i> {}} {<i>Error</i> {}}</b></dt>
+
+<dd>
+Generic logic to format the XML reply for any of the client data management
+commands. The <i>type</i> argument is the response message type such as
+<b>IsEdaEnabledResponse</b>. The caller passes in the name and value items
+for response body as an alternating list,
+<b>nv_args</b>. The caller can
+optionally pass in Error data as a 1, 2, or 4 element list. See the logic
+of <b>fmtResponseError</b>.</dd>
+
+<dt>
+<b>fmtResponseError <i>Error</i> {<i>skip_tag</i> 0}</b></dt>
+
+<dd>
+Formats error item data to create the XML Error structure. The caller can
+pass in varying amounts of data and have the logic supply the remaining
+items. If the <i>Error</i> list length is 1, it is assumed to be an ErrorCode
+and the description is looked up in the ErrorCodes array. If the length
+is 2, the first item is the ErrorCode as before, and the second argument
+is taken as a value to be substituted in the looked-up error description.
+If the list length of <i>Error</i> is 4, the logic assumes the caller is
+passing the fields <b>ErrorTime ErrorType ErrorCode</b> and <b>ErrorDesc</b>
+in that order. The logic ordinarily adds the surrounding XML Error tag,
+but this is suppressed by setting the <i>skip_tag</i> argument to 1.</dd>
+
+<dt>
+<b>getFrom</b></dt>
+
+<dd>
+This method replaces the base class version with provision for the user
+setting eq_From. The result string is used as the From and To header address
+for the equipment instance.</dd>
+
+<dt>
+<b>http_send_callback <i>token</i></b></dt>
+
+<dd>
+This method is called asynchronously by the <b>ehttp</b> software after
+completion of sending or completion by failure.</dd>
+
+<dt>
+<b>http_trace <i>token bit data</i></b></dt>
+
+<dd>
+This method is called by the <b>ehttp</b> software to pass trace information.</dd>
+
+<dt>
+<b>httpd_respond <i>url httpd_cache</i></b></dt>
+
+<dd>
+This method is called by the <b>ehttpd</b> software when an HTTP request
+has been received for the equipment's URL. Inbound EDA commands are received
+by this method. The logic oversees parsing the message and calling a message
+specific method of the name rsp_<i>msgtype</i> to pass the message data
+into the application</dd>
+
+<dt>
+<b>httpd_trace</b></dt>
+
+<dd>
+This method is called by the <b>ehttpd</b> software to pass trace information.</dd>
+
+<dt>
+<b>ii_ActivatePlan <i>From dcp_id persistent</i></b></dt>
+
+<dd>
+This method is called to activate a Data Collection plan for a particular
+client. The response logic has already validated that the plan is defined
+and that the client is configured and valid. The stock version manages
+the state of plans in the SQL table <a href="#eda_client_active_dcp">eda_client_active_dcp</a>.
+The method should return 1 if the plan was successfully activated or 0
+if not.</dd>
+
+<dt>
+<b>ii_DeactivatePlans <i>From plans</i></b></dt>
+
+<dd>
+This method is called to deactivate a list of one of more plans for a client.
+If the client indicated the keyword <b>ALL</b> the response logic has already
+converted this to the list of active plans by calling <b>ii_GetActivePlanIds</b>.
+The method should deactivate the indicated plans and set the return value
+to the list of deactivated plans.</dd>
+
+<dt>
+<b>ii_GetActivePlanIds <i>From</i></b></dt>
+
+<dd>
+This method returns a list of the active plans for the client identified
+by the
+<i>From</i> header value.</dd>
+
+<dt>
+<b>ii_GetDefinedPlanIds</b></dt>
+
+<dd>
+This method returns a list of all of the defined Data Collection Plans.</dd>
+
+<dt>
+<b>ii_IsDefinedPlan <i>dcp_id</i></b></dt>
+
+<dd>
+This method is used to determine if a data collection plan ID is valid.
+The method returns 1 if the plan is defined, else 0.</dd>
+
+<dt>
+<b>ii_IsEdaClientRecognized <i>From</i></b></dt>
+
+<dd>
+This method returns 1 if the client identified by the <i>From</i> header
+value is properly configured and allowed to manage plans. A newly discovered
+client is not allowed to manage plans until his record in the SQL table
+<a href="#eda_client">eda_client</a>
+is updated and his <b>send_state</b> value is set to <b>ok</b>.</dd>
+
+<dt>
+<b>ii_IsEdaEnabled</b></dt>
+
+<dd>
+This method is called to determine the answer to the client request IsEdaEnabled.
+The method should return 1 to indicate that the EDA interface is enabled,
+else 0.</dd>
+
+<dt>
+<b>PerformanceWarning</b></dt>
+
+<dd>
+Creates an example EdaError message for the situation of the EDA activity
+adversely affecting equipment performance.</dd>
+
+<dt>
+<b>postmsg <i>client_id msgtype body</i> {<i>ts_send</i> {}}</b></dt>
+
+<dd>
+This procedure adds the header and soap envelope to an EDA message and
+sends it to a specified client.</dd>
+
+<dt>
+<b>rsp_ActivatePlan <i>cache To From</i></b></dt>
+
+<dd>
+This method is called by httpd_respond to oversee handling of the ActivatePlan
+message.</dd>
+
+<dt>
+<b>rsp_DeactivatePlan <i>cache To From</i></b></dt>
+
+<dd>
+This method is called by httpd_respond to oversee handling of the DeactivatePlan
+message.</dd>
+
+<dt>
+<b>rsp_GetActivePlanIds <i>cache To From</i></b></dt>
+
+<dd>
+This method is called by httpd_respond to oversee handling of the GetActivePlanIds
+message.</dd>
+
+<dt>
+<b>rsp_GetDefinedPlanIds <i>cache To From</i></b></dt>
+
+<dd>
+This method is called by httpd_respond to oversee handling of the GetDefinedPlanIds
+message.</dd>
+
+<dt>
+<b>rsp_IsEdaEnabled <i>cache To From</i></b></dt>
+
+<dd>
+This method is called by httpd_respond to oversee handling of the IsEdaEnabled
+message.</dd>
+
+<dt>
+<b>supervisor</b></dt>
+
+<dd>
+This method is called to start any interfaces that are configured for starting
+in the <a href="#eda_server_startup">eda_server_startup</a> table. If no
+rows are found in the table, a row is added with default data.</dd>
+
+<dt>
+<b>tracewin</b></dt>
+
+<dd>
+This method is invoked to create and show the Tk Interface A GUI for the
+equipment.</dd>
+</dl>
+</ul>
+
+<hr WIDTH="100%">
+<br><a NAME="edatrace_class"></a><font size=+1><b>Edatrace</b> -&nbsp;
+A Tk GUI widget to display EDA trace information</font>
+<p><b>Synopsis</b>
+<blockquote><b>package require eda</b>
+<br><b>Edatrace <i>objname</i> [-<i>option_name option_value</i>]*</b>
+<br><b><i>objname</i> <i>methodname</i> [<i>method_argument</i>]*</b></blockquote>
+<b>Description</b>
+<blockquote>The Edatrace class is used to create the trace information
+display widget that is a prominent feature of the GUI in the <b>edaequip</b>
+and <b>edaclient</b> applications. The widget combines two <a href="../mann/scrolledtext.html">scrolledtext</a>
+widgets with some buttons to enable saving and managing the trace display.
+Most of the options for the scrolledtext widget are also options for this
+widget, which allows you to easily customize colors and fonts.</blockquote>
+<b>Options (Public Variables)</b>
+<ul>
+<dl>
+<dt>
+<b>buttonfont</b></dt>
+
+<dd>
+The font used for the buttons.</dd>
+
+<dt>
+<b>buttonheight</b></dt>
+
+<dd>
+The height of the buttons.</dd>
+
+<dt>
+<b>buttonwidth</b></dt>
+
+<dd>
+The common width of the buttons.</dd>
+
+<dt>
+<b>color_status</b></dt>
+
+<dd>
+The color used to show status data. Defaults to DimGrey.</dd>
+
+<dt>
+<b>color_recvHdr</b></dt>
+
+<dd>
+The color used to show received HTTP header data. Defaults to SlateBlue1.</dd>
+
+<dt>
+<b>color_recvData</b></dt>
+
+<dd>
+The color used to show received HTTP content data. Defaults to blue.</dd>
+
+<dt>
+<b>color_sentHdr</b></dt>
+
+<dd>
+The color used to show sent HTTP header data. Defaults to OliveDrab.</dd>
+
+<dt>
+<b>color_sentData</b></dt>
+
+<dd>
+The color used to show sent HTTP content data. Defaults to green4.</dd>
+
+<dt>
+<b>wanttime</b></dt>
+
+<dd>
+Defaults to true, determines whether the current time is displayed with
+status data.</dd>
+</dl>
+</ul>
+<b>Class Methods</b>
+<ul>
+<dl>
+<dt>
+<b>http_trace <i>statevar bit data</i></b></dt>
+
+<dd>
+This method gets called to add more data to the Send &amp; Reply Trace.</dd>
+
+<dt>
+<b>httpd_trace <i>statevar bit data</i></b></dt>
+
+<dd>
+This method gets called to add more data to the Receive Trace.</dd>
+
+<dt>
+<b>save <i>component</i> {<i>pathname</i> {}} {<i>mode</i> w}</b></dt>
+
+<dd>
+A method invoked by the buttons to save the displayed data.</dd>
+
+<dt>
+<b>saveas <i>component</i> {<i>mode</i> w}</b></dt>
+
+<dd>
+A method invoked by the buttons to save the displayed data.</dd>
+</dl>
+</ul>
+
+<hr WIDTH="100%">
+<h3>
+<b>Table&nbsp;<a NAME="Schema"></a>Schema</b></h3>
+The EDA component software uses high-performance in-memory SQL tables.
+This capability is part of the Hume Datahub toolset. Relational database
+tables are an ideal software mechanism to manage multiple EDA client connections
+and their dynamically associated data such as the activation of various
+Data Collection Plans. The tables are described in alphabetical order.
+<br>
+<hr WIDTH="100%">
+<h4>
+<a NAME="eda_client"></a>eda_client Table - Basic client data</h4>
+This table is used by the equipment server logic to manage basic client
+information such as the URL used to communicate with the client.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>client_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>A unique value which is assigned as a shorthand identifier for the
+client. The stock edaequip application assigns sequential values starting
+with 1000 to newly discovered clients.&nbsp;</td>
+</tr>
+
+<tr>
+<td>comment</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(120)</td>
+
+<td>This field is for manually entered text that can help to identify and
+manage the client</td>
+</tr>
+
+<tr>
+<td>url</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(120)</td>
+
+<td>A URL specification for the document name that is used to communicate
+with the client, such as <b>http://ELVIS:8015/EDA.xml</b></td>
+</tr>
+
+<tr>
+<td>to_address</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(120)</td>
+
+<td>Per the standard, the client software has a <b>To</b> message header
+item. This item is determined by the client; the equipment specifies the
+address in messages to the client.</td>
+</tr>
+
+<tr>
+<td>proxy_host</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(120)</td>
+
+<td>In some deployments HTTP communication with the client must be performed
+using a proxy host. The proxy_host field value should be left as an empty
+string when direct communication without a proxy is wanted.</td>
+</tr>
+
+<tr>
+<td>proxy_port</td>
+
+<td>&nbsp;</td>
+
+<td>integer</td>
+
+<td>A non-zero value should be set when HTTP communication through a proxy
+port is needed.</td>
+</tr>
+
+<tr>
+<td>send_state</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(10)</td>
+
+<td>This field is used to help manage sending messages to the client. The
+following values are used:
+<ul>
+<li>
+<b>ok</b> the client is believed to be online and ready to receive. Sending
+messages to this client is enabled.</li>
+
+<li>
+<b>busy</b> the software is currently in the process of sending or attempting
+to send a message. There may be multiple messages that are queued for sending
+to this client.</li>
+
+<li>
+<b>disabled</b> The client has been manually configured to this state so
+that the software will not attempt to send messages to the client.</li>
+
+<li>
+<b>down</b> There has been an error return or timeout result and the retries
+have been exhausted. There will not be further attempts to send to this
+client.</li>
+
+<li>
+<b>new</b> The software has encountered communication with a client where
+the message header value does not match any of the current values in the
+<b>to_address</b> field. In this event, a new record is added to the table.
+This record is not used for sending until the value is configured to <b>ok</b>.</li>
+</ul>
+</td>
+</tr>
+
+<tr>
+<td>ts_last_response</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(26)</td>
+
+<td>This field is updated after every successful send to the client. The
+value can be used to identify client records that are no longer in use,
+and to confirm proper operation.</td>
+</tr>
+
+<tr>
+<td>reply_timeout</td>
+
+<td>&nbsp;</td>
+
+<td>integer</td>
+
+<td>A non-zero value in this field overrides the default time interval
+in milliseconds allowed for receiving the client's reply to a message.</td>
+</tr>
+
+<tr>
+<td>retry_max</td>
+
+<td>&nbsp;</td>
+
+<td>integer</td>
+
+<td>A non-zero value in this field overrides the default number of retry
+attempts allowed to successfully send a message and receive a reply.</td>
+</tr>
+
+<tr>
+<td>retry_interval</td>
+
+<td>&nbsp;</td>
+
+<td>integer</td>
+
+<td>A non-zero value in this field overrides the default time interval
+in milliseconds that the software waits in the wake of a failed attempt
+before initiating another send.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<h4>
+<a NAME="eda_client_active_dcp"></a>eda_client_active_dcp Table - Activated
+Data Collection Plans</h4>
+This table is used by the equipment server logic to track which Data Collection
+Plans have been activated by the clients using the EDA <b>ActivatePlan</b>
+message. The <b>DeactivatePlan</b> message causes the deletion of the corresponding
+table row.
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>client_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The shorthand identifier for a particular client.</td>
+</tr>
+
+<tr>
+<td>dcp_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The identifier for a particular Data Collection Plan.</td>
+</tr>
+
+<tr>
+<td>persistent</td>
+
+<td>&nbsp;</td>
+
+<td>integer</td>
+
+<td>This field is used as a boolean flag with values of <b>1</b> or <b>0</b>
+to indicate whether the client indicated that plan activation should persist
+until explicitly deactivated. If the value is 1, the client set the <b>UntilDeactivated</b>
+argument in the <b>ActivatePlan</b> command message true.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<h4>
+<a NAME="eda_client_startup"></a>eda_client_startup Table - Configuration
+of Client startup instances</h4>
+This table is used by the <b>edaclient</b> application, not by the equipment
+server logic. The edaclient application has the ability to automatically
+start multiple EDA Equipment client instances at startup. The default data
+creates a single client instance with an interactive GUI (Graphical User
+Interface), and the safer behavior of not going online to receive messages
+or send messages until commanded. At startup, the table data is read from
+the file of SQL statements named eda_client_startup.tab. You can change
+the startup behavior of the <b>edaclient</b> application by editing this
+file. If you develop a custom client application using the edaclient class,
+you do not need to configure data in this table unless you call the edaclient::supervisor
+method.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>objname</td>
+
+<td>PCK</td>
+
+<td>varchar(20)</td>
+
+<td>A unique name to be used for the client object. This is the name of
+an Incr Tcl object of the class <b>edaclient</b>.</td>
+</tr>
+
+<tr>
+<td>auto_start</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Used as a boolean with the value 1 or 0 to determine if the client
+instance should be instantiated when the <b>edaclient</b> application starts.</td>
+</tr>
+
+<tr>
+<td>auto_enable</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Used as a boolean with the value 1 or 0 to determine if the HTTP server
+interface should be started when the client instance is instantiated. If
+the HTTP server interface is started then receiving messages from the equipment
+is enabled.</td>
+</tr>
+
+<tr>
+<td>auto_start_gui</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Used as a boolean with the value 1 or 0 to determine whether the edaclient::tracewin
+should be called when the client instance is instantiated in order to create
+and show the Tcl/Tk GUI.</td>
+</tr>
+
+<tr>
+<td>httpd_addr</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80)</td>
+
+<td>This field corresponds to the httpd interface selection seen on the
+<b>edaclient</b> GUI.You can optionally specify which network interface
+should be served either as a TCP/IP hostname or as an IP address. Use this
+option to specify the desired interface when you have more than one TCP/IP
+network address, or you want to restrict the serving to your own system
+by specifying localhost. When the field is blank, the default behavior
+is operating system dependent but usually makes the server visible on the
+first TCP/IP network interface and on the localhost interface. For some
+operating systems, the served port is reachable on all network interfaces.&nbsp;</td>
+</tr>
+
+<tr>
+<td>httpd_doc</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80)</td>
+
+<td>This field is for the document name that the client serves. It becomes
+the last part of the URL that is configured at the equipment to communicate
+with the client. The name has to be useable and proper as a file name,
+but there does not have to be an actual document of this name on the file
+system.</td>
+</tr>
+
+<tr>
+<td>httpd_port</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>This field holds the TCP/IP port value that the client uses to receive
+EDA messages. The value 80 is the default for the HTTP protocol. A particular
+port can be used by only one server at a time. In other words, unique port
+values need to be assigned to every TCP/IP socket server on a computer
+system. There is no problem having multiple instances of servers running
+as long as they serve unique ports. Application software such as the <b>edaclient</b>
+is usually assigned port values greater than 1024 to avoid conflicts with
+system software.&nbsp;</td>
+</tr>
+
+<tr>
+<td>httpd_root</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(100)</td>
+
+<td>The root of the file system to be served by the <b>edaclient</b> HTTP
+server. A non-existent directory can be named if you do not wish to serve
+documents. Do not specify a directory containing private data files.</td>
+</tr>
+
+<tr>
+<td>eq_autofix_config</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Used as a boolean flag to indicate that the Equipment target URL, header
+address, and EquipmentID values configured for the client should be revised
+with actual values received from messages sent by the equipment.</td>
+</tr>
+
+<tr>
+<td>eq_reply_timeout</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The time interval in milliseconds to allow for successfully receiving
+a reply message from the target equipment.</td>
+</tr>
+
+<tr>
+<td>eq_SupModID</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(300)</td>
+
+<td>A Tcl formatted list of the EquipmentID Supplier, Model, and ImmutableID
+items for the target equipment.</td>
+</tr>
+
+<tr>
+<td>eq_To</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(100)</td>
+
+<td>The message header element used as the <b>To</b> value when sending
+a message to the target equipment.</td>
+</tr>
+
+<tr>
+<td>eq_url</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(300)</td>
+
+<td>The URL used to initiate HTTP communication with the target equipment.</td>
+</tr>
+
+<tr>
+<td>TRACE</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>An integer value used as a bitfield to control the amount of trace
+information displayed during communication with the target equipment. See
+the documentation for the <a href="#edatrace">edatrace</a> class for details.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<h4>
+<a NAME="eda_datacoll_plan"></a>eda_datacoll_plan Table - Data Collection
+Plans</h4>
+The default equipment server logic and the example application use this
+table to determine which Data Collection Plans are defined. It is expected
+that for a real application the developer replaces the <b>ii_GetDefinedPlanIDs</b>
+and the <b>ii_IsDefinedPlan</b> methods with similar methods that reference
+a table of the user's own design, or interact with the equipment through
+some other API.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>dcp_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>An identifier for the Data Collection plan - same as the PlanID argument
+in relevant EDA messages. The value <b>ALL</b> should not be used because
+the standard uses this value to indicate all of the plans. The value should
+not contain embedded spaces since the EDA standard uses space characters
+to delimit list items.</td>
+</tr>
+
+<tr>
+<td>description</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80)</td>
+
+<td>An optional description for the plan. The current standard does not
+allow for passing a description or any other plan metadata such as author
+or version.&nbsp;</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<h4>
+<a NAME="eda_schema"></a>eda_schema Table - Table schema descriptions</h4>
+This table is intended to hold descriptions of the SQL tables and columns
+so that the schema can be referenced during interactive development, and
+a schema description document can be generated programatically.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>tablename</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The name of the SQL table.</td>
+</tr>
+
+<tr>
+<td>colname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The name of a table column.</td>
+</tr>
+
+<tr>
+<td>description</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(1000)</td>
+
+<td>Documentation for the particular table column.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<h4>
+<a NAME="eda_send_log"></a>eda_send_log Table - Logging of sent EDA messages</h4>
+This table is used by the edaequip server logic to show the status of messages
+that have been successfully sent or where sending has ended in failure
+after exhaustion of any retries.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>client_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>Identifies the client record in the <b>eda_client</b> table.</td>
+</tr>
+
+<tr>
+<td>ts_send</td>
+
+<td>PCK</td>
+
+<td>varchar(26)</td>
+
+<td>A high resolution timestamp in the UTC timezone is assigned to identify
+the message when sending is first initiated. See the <a href="../mann/localtime.html">localtime
+16</a> description.</td>
+</tr>
+
+<tr>
+<td>elapsed_secs</td>
+
+<td>&nbsp;</td>
+
+<td>float</td>
+
+<td>This floating point value indicates the time interval in seconds that
+has transpired between the initiation of sending and the successful receipt
+of a reply, or the exhaustion of retries.</td>
+</tr>
+
+<tr>
+<td>msgtype</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(32)</td>
+
+<td>The message type tag such as <b>EdaEnabled</b> or <b>EdaData</b>.</td>
+</tr>
+
+<tr>
+<td>msglen</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The number of characters in the EDA message. This value is the length
+of the transmitted HTTP content and does not include the HTTP header information.</td>
+</tr>
+
+<tr>
+<td>http_rc</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The HTTP protocol return code if the send-and-reply got far enough
+to get a return code. The value of 200 is the usual successful result.
+A value such as 404 ("File not Found") may indicate a configuration error.</td>
+</tr>
+
+<tr>
+<td>try_count</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>This value shows how many tries were attempted before success or retry
+exhaustion.</td>
+</tr>
+
+<tr>
+<td>status</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80)</td>
+
+<td>The value <b>success</b> is used for the usual successful result, otherwise
+a short failure description is found. More detail is available by using
+the trace window features.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<h4>
+<a NAME="eda_send_Q"></a>eda_send_Q Table - In process EDA messages</h4>
+This table is used by the edaequip server logic to queue and manage EDA
+messages that are in the process of being sent to clients.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>client_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>Identifies the client record in the <b>eda_client</b> table.</td>
+</tr>
+
+<tr>
+<td>ts_send</td>
+
+<td>PCK</td>
+
+<td>varchar(26)</td>
+
+<td>A high resolution timestamp in the UTC timezone is assigned to identify
+the message when sending is first initiated. See the <a href="../mann/localtime.html">localtime
+16</a> description.</td>
+</tr>
+
+<tr>
+<td>msgtype</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(32)</td>
+
+<td>The message type tag such as <b>EdaEnabled</b> or <b>EdaData</b>.</td>
+</tr>
+
+<tr>
+<td>ehttp_token</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(24)</td>
+
+<td>A token value returned from the <a href="../mann/ehttp.html">ehttp</a>
+command which identifies state data associated with sending the message.</td>
+</tr>
+
+<tr>
+<td>try_count</td>
+
+<td>&nbsp;</td>
+
+<td>integer</td>
+
+<td>This field is used to keep track of the number of attempts being used
+to send the message.</td>
+</tr>
+
+<tr>
+<td>content</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80000)</td>
+
+<td>The complete text of the EDA message being sent.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<h4>
+<a NAME="eda_server_startup"></a>eda_server_startup Table - Configuration
+of edaequip startup instances</h4>
+This table is used by the <b>edaequip</b> application to configure the
+number and properties of equipment server instances. You can manually configure
+the startup of multiple equipment server instances.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>objname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>A unique name to be used for the object. This is the name of an Incr
+Tcl object of the class <b>edaequip</b>.</td>
+</tr>
+
+<tr>
+<td>auto_start</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Used as a boolean to specify whether the table record should be instantiated
+as an Incr Tcl object when the application starts.</td>
+</tr>
+
+<tr>
+<td>auto_enable</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Used as a boolean to specify whether the httpd receiving interface
+should be enabled when the <b>edqequip</b> object is instantiated.</td>
+</tr>
+
+<tr>
+<td>auto_start_gui</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Used as a boolean to specify whether the Tcl/Tk GUI for the object
+should be created and displayed when the object is instantiated. The GUI
+is created by calling the <b>tracewin</b> method of the <b>edaequip</b>
+class.</td>
+</tr>
+
+<tr>
+<td>eq_From</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(120)</td>
+
+<td>Per the EDA standard, the equipment has an address header element which
+can be configured. If the value is left as an empty string, the logic uses
+the equipment's URL for this item.</td>
+</tr>
+
+<tr>
+<td>httpd_addr</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80)</td>
+
+<td>This field corresponds to the httpd interface selection seen on the
+GUI.You can optionally specify which network interface should be served
+either as a TCP/IP hostname or as an IP address. Use this option to specify
+the desired interface when you have more than one TCP/IP network address,
+or you want to restrict the serving to your own system by specifying localhost.
+When the field is blank, the default behavior is operating system dependent
+but usually makes the server visible on the first TCP/IP network interface
+and on the localhost interface. For some operating systems, the served
+port is reachable on all network interfaces.&nbsp;</td>
+</tr>
+
+<tr>
+<td>httpd_doc</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80)</td>
+
+<td>This field is for the document name that the equipment serves. It becomes
+the last part of the equipment's URL. The name has to suitable for use
+as a file name, but there does not have to be an actual file so named.</td>
+</tr>
+
+<tr>
+<td>httpd_port</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>This field holds the TCP/IP port value that the equipment uses to receive
+EDA messages. The value 80 is the default for the HTTP protocol. A particular
+port can be used by only one server at a time. In other words, unique port
+values need to be assigned to every TCP/IP socket server on a computer
+system. There is no problem having multiple instances of servers running
+as long as they serve unique ports.</td>
+</tr>
+
+<tr>
+<td>httpd_root</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(100)</td>
+
+<td>The root of the file system to be served by the <b>edaequip</b> HTTP
+server. A non-existent directory can be named if you do not wish to serve
+documents. Do not specify a directory containing private data files, or
+having private files in any subdirectory.</td>
+</tr>
+
+<tr>
+<td>Locator_default</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(200)</td>
+
+<td>Certain EDA messages have a Locator value. This field is used to configure
+a default value for the Locator item.</td>
+</tr>
+
+<tr>
+<td>log_period</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The <b>log_period</b> is a configurable interval of time specified
+in milliseconds for completed messages to be held in the <b>eda_send_log</b>
+table. There needs to be a provision for deleting aged messages from this
+table so that memory usage remains bounded. The <b>edaequip</b> application
+does not delete logged messages, it is designed for the user to delete
+them by pressing a button on the GUI. A real application needs to have
+programmed deletion of the logged messages.</td>
+</tr>
+
+<tr>
+<td>reply_timeout_default</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>This value represents the time interval in milliseconds that is allowed
+for successfully receiving a reply from a client. The value is a default
+value that is used unless there is a non-zero configured value for the
+particular client.</td>
+</tr>
+
+<tr>
+<td>retry_interval_default</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>This value represents the time interval in milliseconds that the equipment
+waits before initiating another send attempt when the previous send has
+failed. The value is actually a default value that is used when there is
+not a positive value configured for a client.</td>
+</tr>
+
+<tr>
+<td>retry_max_default</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>This value is the maximum number of times the sending logic will retry
+to send a message to a client. The value is a default that is used if there
+is not a positive value configured for the client.</td>
+</tr>
+
+<tr>
+<td>Supplier</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80)</td>
+
+<td>This field holds the configured value of the Supplier item in the EquipmentID
+data structure.</td>
+</tr>
+
+<tr>
+<td>Model</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80)</td>
+
+<td>This value is for the corresponding item in the EquipmentID data structure.</td>
+</tr>
+
+<tr>
+<td>ImmutableID</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(80)</td>
+
+<td>This value is for the corresponding item in the EquipmentID data structure.</td>
+</tr>
+
+<tr>
+<td>TRACE</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>An integer value used as a bitfield to control the amount of trace
+information displayed during communication with clients. See the documentation
+for the <a href="#edatrace">edatrace</a> class for details.</td>
+</tr>
+</table>
+
+<hr>
+<h3>
+<b>Document&nbsp;<a NAME="Version"></a>Version</b></h3>
+Date of last revision: $Date: 2004/07/06 14:20:10 $
+<p>This document covers the Hume Integration Software developed Interface
+A Component which is available for the Tcl 8.4/Tk 8.4 environment on the
+Windows XP/2000 and UNIX/POSIX platforms.
+</body>
+</html>

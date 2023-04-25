@@ -1,0 +1,33 @@
+#Wafer	WAF_A	1	04/02/2009	00:00:00	root	Wafer Spec of 1QP4A for IdVg Demonstration
+
+$Type: Wafer
+$Name: WAF_A
+$Vers: 1 /opt/SPECS/demo/WAF_A
+$Desc: Wafer Spec of 1QP4A for IdVg Demonstration
+$Date: 04/02/2009
+$Time: 00:00:00
+$User: root
+$--------- ------------------- ------------ - - -
+ ATTRIBUTE                                       
+           SIZE=REAL,"mm"      300.000000        
+           STEPX=REAL,"um"     19788.000000      
+           STEPY=REAL,"um"     19790.000000      
+           FLAT=INTEGER,"deg"  180               
+           ALIGNDIEX=INTEGER   -2                
+           ALIGNDIEY=INTEGER   3                 
+           ALIGNMODX=REAL,"um" 17775.000000      
+           ALIGNMODY=REAL,"um" 19150.000000      
+           CENTERDIEX=INTEGER  0                 
+           CENTERDIEY=INTEGER  0                 
+           OFFSETDIEX=REAL     9894.000000       
+           OFFSETDIEY=REAL     9895.000000       
+           COORDINATE=INTEGER  1                 
+           WAFERSHAPE=INTEGER  0                 
+ BODY                                            
+           `DIE_A`             -7,0              
+           `DIE_A`             -6,0              
+           `DIE_A`             -4,0              
+           `DIE_A`             -1,0              
+           `DIE_A`             3,0               
+$--------- ------------------- ------------ - - -
+

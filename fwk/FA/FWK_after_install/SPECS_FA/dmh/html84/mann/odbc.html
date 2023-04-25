@@ -1,0 +1,409 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.5 [en] (WinNT; I) [Netscape]">
+   <title>odbc Tcl Command</title>
+</head>
+<body>
+<a NAME="odbc_cmds_"></a>
+<hr>
+<h2>
+NAME</h2>
+odbc - Utilize SQL databases from Tcl
+<h2>
+SYNOPSIS</h2>
+<b>dmh::odbc connect</b> <i>cmdname database user password</i>
+<p><b>dmh::odbc help</b>
+<p><b>dmh::odbc sources</b>
+<p><i>cmdname SQL_statement</i>
+<p><i>cmdname process_statement</i>
+<p><i>cmdname</i> <b>auto_commit</b> <b>?{1|0}?</b>
+<p><i>cmdname</i> <b>catalog tables</b>
+<p><i>cmdname</i> <b>disconnect</b>
+<p><i>cmdname</i> <b>get_info</b> <i>infotype</i> ?<i>datatype</i>?
+<p><i>cmdname</i> <b>help</b>
+<p><i>cmdname</i> <b>null_number_map</b> ?<i>value</i>?
+<p><i>cmdname</i> <b>null_string_map</b> ?<i>value</i>?
+<p><i>cmdname</i> <b>schema</b> <i>tablename</i>
+<p><b>dmh::odbc_tabwin</b>&nbsp; ?<i>window</i>? ?<i>cmdname</i>? ?<i>title</i>?
+<p><b>dmh::odbc_table_win</b> <i>cmdname tablename</i>
+<br>&nbsp;
+<p>
+<hr>
+<h2>
+DESCRIPTION</h2>
+This command allows you to utilize SQL databases from within your Tcl application.
+ODBC is an acronym for Open Database Connectivity, a standard programming
+interface defined by Microsoft. Although this standard was created for
+Windows, a compatible version of this command has been implemented by Hume
+Integration for Oracle on POSIX (Unix) platforms. The <b>odbc</b> Tcl command
+is built into the usual Windows <a href="../man1/dmh_wish.html">dmh_wish.exe</a>
+program and is always available. The POSIX Oracle <b>odbc</b> Tcl command
+is available in the separate executable <a href="../man1/dmh_SQLsrv.html#dmh_sql_tcl">dmh83_sql_tcl</a>
+after executing "package require ora_odbc".
+<p>Hume Integration has also developed a Tcl application script,
+<a href="../man1/dmh_SQLsrv.html">dmh_SQLsrv</a>
+which uses the <b>odbc</b> command to provide a Graphical User Interface
+to a persistent database. The <b>dmh_SQLsrv</b> application also can be
+used to process SQL command messages received in a <a href="mbx.html">DMH</a>
+mailbox as part of a distributed application. It is desirable to use the
+DMH message system to queue SQL statements that are intended for a persistent
+database, when the persistent database interface would be a performance
+bottleneck if used directly in a high performance application such as realtime
+data collection. A typical design is to collect data into an in-memory
+<a href="../man1/datahub.html">Datahub</a>
+table, and to update a persistent database using a table subscription that
+feeds SQL messages to a separate
+<b>dmh_SQLsrv</b> process.
+<h2>
+COMMAND SUMMARY</h2>
+In order to use the <b>odbc</b> command on Windows NT, you must install
+the Win32 32 bit ODBC DLL drivers provided by your database vendor. You
+should also have 32 bit ODBC administration support installed on your system.
+If this has been done, you will have an ODBC administration icon on your
+Control Panel window, and/or an ODBC administration icon in a different
+program group. The ODBC administrator is used to configure which databases
+are available on your system when using ODBC drivers.
+<P>
+<dt>
+<b>odbc sources</b></dt>
+<dd>
+The subcommand <b>odbc sources</b> is only supported on Windows. Use this
+command to display which databases are available through ODBC. The command
+returns a list of pairs where each pair is the name and description of
+an ODBC data source. This list is created and maintained using the ODBC
+administrator application.</dd>
+<P>
+<dt>
+<b>odbc connect</b> <i>cmdname database user password</i></dt>
+<dd>
+This command is used to establish a connection to a specified database.
+The <i>cmdname</i> argument is a name that you assign to the connection,
+and it becomes a command name in the Tcl interpreter. The <i>database</i>
+argument is the "Data Source" name that was specified to the ODBC administrator.
+The <i>user</i> and <i>password</i> arguments are the security credentials
+that are passed to the database in order to establish the connection. These
+arguments are configured using the database vendor's program. For example,
+to connect to the Watcom sample database, you could enter</dd>
+
+<pre>odbc connect sql {WSQL 4.0 Sample} admin school</pre>
+In this example, the <i>cmdname</i> is <b>sql</b>. After connecting, the
+<b>sql</b>
+command is used to interact with the database.
+<p>With the POSIX Oracle version, the database can be specified as an empty
+string if it is implicit from the ORACLE_SID environment variable, or specified
+in the <i>user</i> item such as "scott@cim5". If you have problems connecting,
+you should verify that the database and user environment are properly setup
+by using Oracle's sqlplus utility application to connect to the database.
+The user typically needs to set environment variables such as ORACLE_HOME
+and add $ORACLE_HOME/bin to his PATH. Also, for the POSIX Oracle version,
+the API does not support connecting to more
+than one database simultaneously
+from a single process. If you need to work with multiple databases, use
+multiple processes, and integrate them using the DMH messaging system.
+Also, the POSIX Oracle version adds the Tcl command "sql" to the interpreter
+as part of its odbc implementation. Therefore you cannot use the name "sql"
+as the <i>cmdname</i> argument to the odbc connect command.
+<P>
+<dt>
+<b><i>cmdname SQL_statement</i></b></dt>
+<dd>
+Use this subcommand to execute any SQL statement supported by the vendor's
+ODBC interface. The most common statement types are insert, update, delete,
+and select. There is limited support for selecting when you have very large
+database fields in a table. The interface will not ask for more than 64kb
+per field in a table row. The select reply may be considerably larger than
+this as it combines multiple fields in a row, and multiple rows. The format
+of a select reply is explained <a href="#select_reply">below</a>. For other
+types of SQL statements, if the SQL statement is executed successfully,
+an empty string is returned. A command such as a conditional update or
+a conditional delete is considered to have executed successfully even if
+no rows are changed. If the command is faulty or there is an error condition
+with the database connection, a diagnostic message is returned as an error
+result. You can use the Tcl catch command to trap error results.</dd>
+<P>
+<dt>
+<b><i>cmdname process_statement</i></b></dt>
+<dd>
+This subcommand is used to process the data of a select query using specified
+Tcl code. The Tcl code is executed for each row of data, as the data is
+fetched. Only one row of data is in memory at a time so it is feasible
+to work with large tables. If the Tcl code returns an error, return, or
+break result code (see the <a href="return.html">return</a> command) the
+command returns without processing more data rows. For example, you can
+process only the first row of an ordered query by returning the break result
+code. Here is the syntax of the <i>process_statement</i> and examples:</dd>
+
+<br>&nbsp;
+<pre><tt>&nbsp; <b>process</b> <i>select_clause</i> <b>with</b> <i>tclcode
+
+</i>&nbsp; process * from my_table where a>0 with puts
+
+&nbsp; process [join $cols ,] from big_table with [list my_proc $cols]</tt>
+
+</pre>
+The <i>select_clause</i> is any select statement supported by your database
+with the leading
+<b>select</b> keyword removed. You can use <b>order by</b>
+and other standard SQL select options to control the result.
+<p>The current implementation of the process statement will not work properly
+if the <b>with</b> keyword can be found in the <i>select_clause</i>. You
+can execute any of the usual SQL statements in your <i>tclcode</i>, but
+you cannot execute another process statement. You can however use another
+connection to achieve the same result.
+<p>The data values of a row are formatted as a list and appended as a single
+argument to the <i>tclcode</i> for evaluation. If the evaluation returns
+the usual ok code, the next data row is fetched, and the process is repeated.
+If there has not been an error, the reply will show the number of rows
+that have been processed in a format similar to the Select Reply Format
+described <a href="#select_reply">below</a>.
+<p>The process statement is not a standard SQL statement type; it has been
+developed by Hume Integration to leverage the benefits of the Tcl language
+environment without requiring the end user to deal with the complexity
+of SQL cursors.
+<P>
+<dt>
+<b><i>cmdname</i> auto_commit ?{1|0}?</b></dt>
+<dd>
+If <b>auto_commit</b> is set true, the database commits each SQL statement
+as it is executed. This is the default behavior. If <b>auto_commit</b>
+is set false, you are able to use the SQL rollback statement to undo statements
+that have been executed since the last commit. Use this subcommand without
+the <b>1</b> or <b>0</b> value to query the current value of the <b>auto_commit</b>
+property. Use the subcommand with a <b>1</b> or <b>0</b> value to set the
+property true or false.</dd>
+<P>
+<dt>
+<b><i>cmdname</i> catalog tables</b></dt>
+<dd>
+This subcommand returns information on the tables that exist in the database.
+The data is formatted as a select reply; see the explanation <a href="#select_reply">below</a>.
+The returned columns are TABLE_QUALIFIER, TABLE_OWNER, TABLE_NAME, TABLE_TYPE,
+and REMARKS. A table will have a TABLE_TYPE value of "TABLE".</dd>
+<P>
+<dt>
+<b><i>cmdname</i> disconnect</b></dt>
+<dd>
+This subcommand is used to close the database connection. It eliminates
+the Tcl command <i>cmdname</i> as well. 
+</dd>
+<P>
+<dt>
+<i>cmdname</i> <b>get_info</b> <i>infotype</i> ?<i>datatype</i>?
+<dd>This command invokes the SQLGetInfo( ) call to obtain information.
+The information call is poorly supported by most drivers.
+The <i>infotype</i> argument is an integer from the set defined in the 
+header file SQL.h.  The <i>datatype</i> argument is a string which contains
+one of the sequences <B>INT</B>, <B>SMALL</B>, or <B>STRING</B> to indicate
+one of the API choices SQLUINTEGER, SQLUSMALLINT, or a null terminated 
+character string.  Most of the information numeric items are obtainable as <B>INT</B>
+and this is the default value.  When an item is not supported, the typical
+result is the value 0 or an empty string.  Here is a short list of potentially
+useful queries:
+<P>
+<table border="1"><tr> <th>infotype</th><th>name</th><th>datatype</th></tr>
+<tr><td>2</td><td>DATA_SOURCE_NAME</td><td>STRING</td></tr>
+<tr><td>13</td><td>SERVER_NAME</td><td>STRING</td></tr>
+<tr><td>17</td><td>DBMS_NAME</td><td>STRING</td></tr>
+<tr><td>18</td><td>DBMS_VERSION</td><td>STRING</td></tr>
+<tr><td>30</td><td>MAX_COLUMN_NAME_LEN</td><td>SMALL</td></tr>
+<tr><td>100</td><td>MAX_COLUMNS_IN_SELECT</td><td>SMALL</td></tr>
+<tr><td>101</td><td>MAX_COLUMNS_IN_TABLE</td><td>SMALL</td></tr>
+<tr><td>104</td><td>MAX_ROW_SIZE</td><td>INT</td></tr>
+<tr><td>105</td><td>MAX_STATEMENT_LEN</td><td>INT</td></tr>
+</table>
+<p></p>
+</body></html>
+<P>
+<dt>
+<b><i>cmdname</i> help</b></dt>
+<dd>
+This subcommand returns the command synopis; a brief summary of the subcommands
+described here.</dd>
+<P>
+<dt>
+<b><i>cmdname</i> null_number_map ?<i>value</i>?</b></dt>
+<dd>
+This subcommand is used to query or set the value returned in selection
+results for number values that are null. The default is "0". You are able
+to specify any text for the value, not just numeric characters, up to 40
+bytes in length.</dd>
+<P>
+<dt>
+<b><i>cmdname</i> null_string_map ?<i>value</i>?</b></dt>
+<dd>
+This subcommand is used to query or set the value returned in selection
+results for character or date values that are null. The default is an empty
+string. You are able to specify any text for the value, up to 40 bytes
+in length.</dd>
+<P>
+<dt>
+<b><i>cmdname</i> schema <i>tablename</i></b></dt>
+<dd>
+This subcommand returns the schema of a database table formatted as a select
+reply. The <i>tablename</i> can optionally include specification of the
+table owner separated with a period, as in <i>owner</i><b>.</b><i>tablename</i>.
+(With some database products, the owner is referred to as the schema or
+table qualifier.)</dd>
+<p>Each field in the table is returned as a row in a selection result.
+For example:
+<PRE>
+% sql schema a
+select &lt;tablename> {TABLE_QUALIFIER TABLE_OWNER TABLE_NAME \
+&nbsp;column_name DATA_TYPE TYPE_NAME PRECISION LENGTH SCALE RADIX \
+&nbsp;NULLABLE REMARKS} &lt;keylist> 2 {} {{{} admin a a 11 timestamp \
+&nbsp;26 16 6 10 1 {}} {{} admin a b 4 integer 10 4 0 10 1 {}}} {\
+&nbsp;VARCHAR(32767) VARCHAR(128) VARCHAR(128) VARCHAR(128) SMALLINT\
+&nbsp;VARCHAR(128) INTEGER INTEGER SMALLINT SMALLINT SMALLINT VARCHAR(254)}
+<br>
+</PRE>
+<P>
+<DT>
+<b>odbc_tabwin</b>&nbsp; ?<i>window</i>? ?<i>cmdname</i>? ?<i>title</i>?</dt>
+<dd>
+This procedure creates a Tk window which can display the tables in the
+database, and allows for browsing and changing table data.&nbsp; The menu
+also supports creating command entry windows for SQL commands or Tcl commands.&nbsp;
+The <i>window</i> argument defaults to "."; the main window.&nbsp; The
+<i>cmdname</i> argument defaults to "sq1" which is the connection name
+used by the <a href="../man1/dmh_SQLsrv.html">dmh_SQLsrv</a> application.&nbsp;
+The <i>title</i> argument can be used to set the title of the table display
+window.</dd>
+<p>
+<dt>
+<b>odbc_table_win</b> <i>cmdname tablename</i></dt>
+<dd>
+This procedure creates a Tk window which displays the data of an individual
+table.&nbsp; Menu actions are provided to delete or insert rows.</dd>
+</dl>
+<P>
+<hr>
+<h2>
+<a NAME="select_reply"></a>SELECT REPLY FORMAT</h2>
+The result of executing an SQL select statement is the 8 element list described
+next. The first seven elements of this list correspond to the <a href="../man1/datahub.html#TclReplyFormat">Tcl
+Reply Format</a> used by the Hume Datahub for the select command,
+and for certain subscription notications. The additional element of the
+reply contains schema information.&nbsp; The elements of the reply list
+are:
+<br>&nbsp;
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>Element</b></td>
+
+<td><b>Index</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td><i>notification</i></td>
+
+<td>0</td>
+
+<td>This element will be the literal string <b>select</b> for the return
+value of a select or telect query.&nbsp;</td>
+</tr>
+
+<tr>
+<td><i>tablename</i></td>
+
+<td>1</td>
+
+<td>With the <b>odbc</b> software, there may not be a single identifyable
+table that your select statement is based upon. For example, your select
+query may be based on a join between tables or a system catalog. Therefore
+no attempt is made to return the actual tablename, and the <i>tablename</i>
+element will be the literal string <b>&lt;tablename></b>.</td>
+</tr>
+
+<tr>
+<td><i>columns</i></td>
+
+<td>2</td>
+
+<td>This element will be a list of the column names in the same sequence
+as the data items in the <i>data_list</i> element. You may have a column
+that does not have a name, for example, it corresponds to an expression.
+In this case, the text of the column name will be vendor specific. In many
+cases it will be exactly the expression text you had in your select statement.&nbsp;&nbsp;
+Also, it is typical that the column names are all uppercase.</td>
+</tr>
+
+<tr>
+<td><i>key_columns</i></td>
+
+<td>3</td>
+
+<td>This element will be the literal string <b>&lt;keylist></b>. When this
+format is used by the Hume Datahub, a list of the primary keys of
+the table are returned. With an <b>odbc</b> query, the possible use of
+indexes and joins makes it impossible to return an equivalent result.</td>
+</tr>
+
+<tr>
+<td><i>row_count</i></td>
+
+<td>4</td>
+
+<td>This element returns a count of the data rows in the <i>data_list</i>
+element.&nbsp;</td>
+</tr>
+
+<tr>
+<td><i>error_info</i></td>
+
+<td>5</td>
+
+<td>This element is not used by the <b>odbc</b> command. If your query
+has an error such as referring to a column or table that does not exist,
+or a syntax error, a Tcl error result is returned, and the reply is a diagnostic
+message instead of the usual Select Reply Format. The application&nbsp;
+dmh_SQLsrv does use this element. For the dmh_SQLsrv application, the underlying
+error is caught; you always get the Select Reply Format for a select statement,
+and the error message appears as this element. If you have a valid query
+that does not find any data rows, it is not an error, and the <i>error_text</i>
+element is an empty string.&nbsp;</td>
+</tr>
+
+<tr>
+<td><i>data_list</i></td>
+
+<td>6</td>
+
+<td>This element is a list of data rows. Each data row has the elements
+named in the <i>columns</i> element, in the same order. Character strings
+that have imbedded white space are delimited in Tcl fashion using braces
+instead of single quotes. There are as many rows as specified by the <i>row_count</i>
+element.</td>
+</tr>
+
+<tr>
+<td>type_list</td>
+
+<td>7</td>
+
+<td>This element is a list of the data types of the columns. The order
+corresponds to the order of the <i>columns</i> elements. The following
+types are possible, where n and m denote integers: CHAR(n), VARCHAR(n),
+LONG VARCHAR(n), DECIMAL(n,m), NUMERIC(n,m), SMALLINT, INTEGER, REAL, FLOAT,
+DOUBLE PRECISION, DATE, TIME, TIMESTAMP, BINARY(n), VARBINARY(n), LONG
+VARBINARY(n), BIT, TINYINT, BIGINT, and UNKNOWN. Refer to your vendor's
+documentation for information on the field types used for your databases.
+With the Oracle POSIX version, the schema information is only approximate
+and is limited to indicating VARCHAR(n), NUMBER, or DATE - the basic information
+needed to determine if quoted string notation is appropriate for a field
+or not.</td>
+</tr>
+</table>
+
+<h2>
+AUTHOR</h2>
+Hume Integration Software. This is licensed software, (C)Copyright 1996,1999
+all rights reserved.
+<h2>
+KEYWORDS</h2>
+ODBC SQL database
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_PutEnv_Tcl_7_5"></A>
+<TITLE>Tcl_PutEnv Tcl Library Procedures 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_PutEnv - procedures to manipulate the environment <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+int
+<B>Tcl_PutEnv</B>(<I>string</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>CONST char <I>*string</I></B> (in)
+<DD>Info about environment variable in the form NAME=value. The string is
+in native format.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tcl_PutEnv</B> sets an environment variable. The information is
+passed in a single string of the form NAME=value.  This procedure is
+intended to be a stand-in for the UNIX <B>putenv</B> system call. All
+tcl-based applications using <B>putenv</B> should redefine it to
+<B>Tcl_PutEnv</B> so that they will interface properly to the Tcl
+runtime.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+environment, variable
+
+</BODY>
+</HTML>

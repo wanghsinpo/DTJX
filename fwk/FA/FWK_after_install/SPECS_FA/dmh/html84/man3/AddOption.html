@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_AddOption_Tk_"></A>
+<TITLE>Tk_AddOption Tk Library Procedures</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_AddOption - Add an option to the option database <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+void
+<B>Tk_AddOption</B>(<I>tkwin, name, value, priority</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tk_Window <I>tkwin</I></B> (in)
+<DD>Token for window.
+<P><DT><B>CONST char <I>*name</I></B> (in)
+<DD>Multi-element name of option.
+<P><DT><B>CONST char <I>*value</I></B> (in)
+<DD>Value of option.
+<P><DT><B>int <I>priority</I></B> (in)
+<DD>Overall priority level to use for option.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+This procedure is invoked to add an option to the database
+associated with <I>tkwin</I>'s main window.  <I>Name</I>
+contains the option being specified and consists of names and/or
+classes separated by asterisks or dots, in the usual X format.
+<I>Value</I> contains the text string to associate with <I>name</I>;
+this value will be returned in calls to <B>Tk_GetOption</B>.
+<I>Priority</I> specifies the priority of the value; when options are
+queried using <B>Tk_GetOption</B>, the value with the highest priority
+is returned.  <I>Priority</I> must be between 0 and TK_MAX_PRIO.  Some
+common priority values are:
+
+<DT>20
+<DD>Used for default values hard-coded into widgets. 
+<DT>40
+<DD>Used for options specified in application-specific startup files. 
+<DT>60
+<DD>Used for options specified in user-specific defaults files, such as <B>.Xdefaults</B>, resource databases loaded into the X server, or user-specific startup files. 
+<DT>80
+<DD>Used for options specified interactively after the application starts running. <P>
+<P>
+<P>
+<H2>KEYWORDS</H2>
+ class, name, option, add 
+</BODY>
+</HTML>

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="concat_Tcl_8_3"></A>
+<TITLE>concat Tcl Built-In Commands 8.3</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ concat - Join lists together <P>
+<H2>SYNOPSIS</H2>
+ <B>concat<I> </B></I>?<I>arg arg ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command joins each of its arguments together with spaces after trimming leading and trailing spaces from each of them.  If all the arguments are lists, this has the same effect as concatenating them into a single list. It permits any number of arguments.  For example, the command <PRE>
+<B>concat a b {c d e} {f {g h}}</B>
+</PRE>
+will return <PRE>
+<B>a b c d e f {g h}</B>
+</PRE>
+as its result, and <PRE>
+<B>concat " a b {c   " d "  e} f"</B>
+</PRE>
+will return <PRE>
+<B>a b {c d e} f</B>
+</PRE>
+as its result. <P>
+If no <I>arg</I>s are supplied, the result is an empty string. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/append.html">append</a>, <a href="../mann/eval.html">eval</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ concatenate, join, lists 
+</BODY>
+</HTML>

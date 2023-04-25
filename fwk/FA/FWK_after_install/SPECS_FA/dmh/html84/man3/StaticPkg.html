@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_StaticPackage_Tcl_7_5"></A>
+<TITLE>Tcl_StaticPackage Tcl Library Procedures 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_StaticPackage - make a statically linked package available via the <B>load</B> command <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+<B>Tcl_StaticPackage</B>(<I>interp, pkgName, initProc, safeInitProc</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>If not NULL, points to an interpreter into which the package has
+already been loaded (i.e., the caller has already invoked the
+appropriate initialization procedure).  NULL means the package
+hasn't yet been incorporated into any interpreter.
+<P><DT><B>CONST char <I>*pkgName</I></B> (in)
+<DD>Name of the package;  should be properly capitalized (first letter
+upper-case, all others lower-case).
+<P><DT><B>Tcl_PackageInitProc <I>*initProc</I></B> (in)
+<DD>Procedure to invoke to incorporate this package into a trusted
+interpreter.
+<P><DT><B>Tcl_PackageInitProc <I>*safeInitProc</I></B> (in)
+<DD>Procedure to call to incorporate this package into a safe interpreter
+(one that will execute untrusted scripts).   NULL means the package
+can't be used in safe interpreters.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+This procedure may be invoked to announce that a package has been
+linked statically with a Tcl application and, optionally, that it
+has already been loaded into an interpreter.
+Once <B>Tcl_StaticPackage</B> has been invoked for a package, it
+may be loaded into interpreters using the <B>load</B> command.
+<B>Tcl_StaticPackage</B> is normally invoked only by the <B>Tcl_AppInit</B>
+procedure for the application, not by packages for themselves
+(<B>Tcl_StaticPackage</B> should only be invoked for statically
+loaded packages, and code in the package itself should not need
+to know whether the package is dynamically or statically loaded).
+<P>
+When the <B>load</B> command is used later to load the package into
+an interpreter, one of <I>initProc</I> and <I>safeInitProc</I> will
+be invoked, depending on whether the target interpreter is safe
+or not.
+<I>initProc</I> and <I>safeInitProc</I> must both match the
+following prototype:
+<PRE>
+typedef int Tcl_PackageInitProc(Tcl_Interp *<I>interp</I>);
+</PRE>
+The <I>interp</I> argument identifies the interpreter in which the package is to be loaded.  The initialization procedure must return <B>TCL_OK</B> or <B>TCL_ERROR</B> to indicate whether or not it completed successfully; in the event of an error it should set the interpreter's result to point to an error message.  The result or error from the initialization procedure will be returned as the result of the <B>load</B> command that caused the initialization procedure to be invoked. <P>
+<P>
+<H2>KEYWORDS</H2>
+ initialization procedure, package, static linking 
+</BODY>
+</HTML>

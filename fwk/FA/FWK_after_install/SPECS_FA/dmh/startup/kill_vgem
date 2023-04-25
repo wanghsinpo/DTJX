@@ -1,0 +1,36 @@
+#
+# (C) Copyright Keysight Technologies, Inc. 2001-2015.
+# All Rights are reserved.
+#
+# Copying Or Other Reproduction Of This Program Except For Archival Purposes
+# Is Prohibited Without The Prior Written Consent Of Keysight Technologies.
+#
+
+#!/bin/sh
+# This script kills the VGEM processes
+#
+working_mbx=GEMMBX
+#
+# If gemequip is running for the working_mbx, kill it.
+gem_process=`ps -ef | grep gemequip | grep -v grep | awk '{print $2}'`
+if [ "$gem_process" != "" ]
+then
+  kill $gem_process
+fi
+#
+# If a dmh_server is running for the working_mbx, kill it.
+if [ `uname -s` = "HP-UX" ]
+then
+  dmh_process=`ps -ef | grep dmh83_server | grep -v grep | awk '{print $2}'`
+else
+  dmh_process=`ps -ef | grep dmh84_server | grep -v grep | awk '{print $2}'`
+fi
+if [ "$dmh_process" != "" ]
+then
+  kill $dmh_process
+fi
+
+lockf=/opt/SPECS/sys/tmp/pkey_lockf
+if [ -f $lockf ]; then
+  rm -f $lockf
+fi

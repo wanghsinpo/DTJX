@@ -1,0 +1,258 @@
+#!/usr/bin/ksh
+trap "" 23
+
+ECHO=print
+VARTMP=/var/tmp
+DEVNUL=/dev/null
+
+DESTFA=/opt/SPECS_FA
+DIRSRC=$DESTFA/newconfig
+DIRDMH=$DESTFA/dmh
+DIRFAPT=$DESTFA/fapt
+
+TCLSFX=".tcl"
+
+usage()
+{
+    $ECHO "Usage: cp_vgemfiles [-h] [-F] [-vgem|-prober|-fapt]"
+    $ECHO "  Option:"
+    $ECHO "    -h      - Display help"
+    $ECHO "    -F      - Overwrite existing files"
+    $ECHO "    -vgem   - Copy vgem customization files on tester"
+    $ECHO "    -prober - Copy vgem customization files on prober"
+    $ECHO "    -fapt   - Copy facomcore and FACOMCSUB files in fapt"
+}
+
+copy_vgem_tables()
+{
+    FILNAM=$1
+    DIRNAM=`dirname $FILNAM`
+    BASNAM=`basename $FILNAM`
+
+    if [ -d $DIRSRC/$FILNAM ]; then
+        if [ $FORCE -eq 1 ]; then
+            if [ $BCKUP -eq 1 ]; then
+                OLDNAM=$DIRNAM/backup
+                if [ ! -d $DIRDMH/$OLDNAM ]; then
+                    mkdir $DIRDMH/$OLDNAM
+                fi
+                chmod 777 $DIRDMH/$OLDNAM
+                chown root:sys $DIRDMH/$OLDNAM
+
+                rm -fr $DIRDMH/$OLDNAM/${BASNAM}_${MAXNUM}
+                typeset -i INDEX=${MAXNUM}
+                while [ $INDEX -gt 1 ]; do
+                    typeset -i I1=$INDEX-1
+                    typeset -i I2=$INDEX
+                    if [ -d $DIRDMH/$OLDNAM/${BASNAM}_${I1} ]; then
+                        mv $DIRDMH/$OLDNAM/${BASNAM}_${I1} $DIRDMH/$OLDNAM/${BASNAM}_${I2}
+                    fi
+                    INDEX=$INDEX-1
+                done
+
+                if [ -d $DIRDMH/$FILNAM ]; then
+                    mv $DIRDMH/$FILNAM $DIRDMH/$OLDNAM/${BASNAM}_1
+                fi
+            else
+                rm -fr $DIRDMH/$FILNAM
+            fi
+        fi
+
+        if [ ! -d $DIRDMH/$FILNAM ]; then
+            cp -fr $DIRSRC/$FILNAM $DIRDMH/$FILNAM
+            for j in `find $DIRDMH/$FILNAM -type d`; do
+                chmod 555 $j
+                chown root:sys $j
+            done
+            for j in `find $DIRDMH/$FILNAM -type f`; do
+                chmod 444 $j
+                chown root:sys $j
+            done
+        fi
+    fi
+}
+
+copy_vgem_file()
+{
+    FILNAM=$1
+    DIRNAM=`dirname $FILNAM`
+    BASNAM=`basename $FILNAM`
+    FILSFX=$2
+
+    if [ -f $DIRSRC/$FILNAM$FILSFX ]; then
+        if [ $FORCE -eq 1 ]; then
+            if [ $BCKUP -eq 1 ]; then
+                OLDNAM=$DIRNAM/backup
+                if [ ! -d $DIRDMH/$OLDNAM ]; then
+                    mkdir $DIRDMH/$OLDNAM
+                fi
+                chmod 777 $DIRDMH/$OLDNAM
+                chown root:sys $DIRDMH/$OLDNAM
+
+                rm -f $DIRDMH/$OLDNAM/${BASNAM}_${MAXNUM}$FILSFX
+                typeset -i INDEX=${MAXNUM}
+                while [ $INDEX -gt 1 ]; do
+                    typeset -i I1=$INDEX-1
+                    typeset -i I2=$INDEX
+                    if [ -f $DIRDMH/$OLDNAM/${BASNAM}_${I1}$FILSFX ]; then
+                        mv $DIRDMH/$OLDNAM/${BASNAM}_${I1}$FILSFX $DIRDMH/$OLDNAM/${BASNAM}_${I2}$FILSFX
+                    fi
+                    INDEX=$INDEX-1
+                done
+
+                if [ -f $DIRDMH/$FILNAM$FILSFX ]; then
+                    mv $DIRDMH/$FILNAM$FILSFX $DIRDMH/$OLDNAM/${BASNAM}_1$FILSFX
+                fi
+            else
+                rm -f $DIRDMH/$FILNAM$FILSFX
+            fi
+        fi
+
+        if [ ! -f $DIRDMH/$FILNAM$FILSFX ]; then
+            cp -f $DIRSRC/$FILNAM$FILSFX $DIRDMH/$FILNAM$FILSFX
+            chmod 444 $DIRDMH/$FILNAM$FILSFX
+            chown root:sys $DIRDMH/$FILNAM$FILSFX
+        fi
+    fi
+}
+
+copy_fapt_files()
+{
+    FILNAM=$1
+    DIRNAM=`dirname $FILNAM`
+    BASNAM=`basename $FILNAM`
+
+    if [ -d $DIRSRC/$FILNAM ]; then
+        if [ $FORCE -eq 1 ]; then
+            if [ $BCKUP -eq 1 ]; then
+                OLDNAM=$DIRNAM/backup
+                if [ ! -d $DIRFAPT/$OLDNAM ]; then
+                    mkdir $DIRFAPT/$OLDNAM
+                fi
+                chmod 777 $DIRFAPT/$OLDNAM
+                chown root:sys $DIRFAPT/$OLDNAM
+
+                rm -fr $DIRFAPT/$OLDNAM/${BASNAM}_${MAXNUM}
+                typeset -i INDEX=${MAXNUM}
+                while [ $INDEX -gt 1 ]; do
+                    typeset -i I1=$INDEX-1
+                    typeset -i I2=$INDEX
+                    if [ -d $DIRFAPT/$OLDNAM/${BASNAM}_${I1} ]; then
+                        mv $DIRFAPT/$OLDNAM/${BASNAM}_${I1} $DIRFAPT/$OLDNAM/${BASNAM}_${I2}
+                    fi
+                    INDEX=$INDEX-1
+                done
+
+                if [ -d $DIRFAPT/$FILNAM ]; then
+                    mv $DIRFAPT/$FILNAM $DIRFAPT/$OLDNAM/${BASNAM}_1
+                fi
+            else
+                rm -fr $DIRFAPT/$FILNAM
+            fi
+        fi
+
+        if [ ! -d $DIRFAPT/$FILNAM ]; then
+            cp -fr $DIRSRC/$FILNAM $DIRFAPT/$FILNAM
+            for j in `find $DIRFAPT/$FILNAM -type d`; do
+                chmod 555 $j
+                chown root:sys $j
+            done
+            for j in `find $DIRFAPT/$FILNAM -type f`; do
+                chmod 666 $j
+                chown root:sys $j
+            done
+        fi
+    fi
+}
+
+IDSTR=`id -un`
+if [ "$IDSTR" != "root" ]; then
+    $ECHO "ERROR: You must log in as root."
+    exit
+fi
+
+typeset -i MAXNUM=5
+FORCE=0
+BCKUP=1
+CP_ALL=1
+CP_VGEM=0
+CP_PROB=0
+CP_FAPT=0
+while [ $# -gt 0 ]; do
+    case $1 in 
+    -h)
+        usage
+        exit 0
+        ;;
+    -F)
+        FORCE=1
+        shift 1
+        ;;
+    -vgem)
+        CP_ALL=0
+        CP_VGEM=1
+        shift 1
+        ;;
+    -prober)
+        CP_ALL=0
+        CP_PROB=1
+        shift 1
+        ;;
+    -fapt)
+        CP_ALL=0
+        CP_FAPT=1
+        shift 1
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+if [ $# -ne 0 ]; then
+    usage
+    exit -1
+fi
+
+if [ $FORCE -eq 1 ]; then
+    $ECHO "Backup user customized file?"
+    print "Default = 'y'. [quit='q'] : \c"
+    read BCKUP
+
+    if [ "$BCKUP" = "q" ]; then
+        exit 0
+    elif [ "$BCKUP" = "" ] || [ "$BCKUP" = "y" ]; then
+        BCKUP=1
+    elif [ "$BCKUP" = "n" ]; then
+        BCKUP=0
+    else
+        $ECHO "ERROR: Unknown character '$BCKUP'.  Customization canceled."
+        exit -1
+    fi
+fi
+
+TMP_FORCE=$FORCE
+TMP_BCKUP=$BCKUP
+FORCE=1
+BCKUP=1
+copy_vgem_tables vgem/tables
+copy_vgem_file vgem/specs/recipe_parser $TCLSFX
+FORCE=$TMP_FORCE
+BCKUP=$TMP_BCKUP
+
+if [ $CP_ALL -eq 1 ] || [ $CP_VGEM -eq 1 ]; then
+    copy_vgem_tables vgem/specs/tables
+fi
+
+if [ $CP_ALL -eq 1 ] || [ $CP_PROB -eq 1 ]; then
+    copy_vgem_tables vgem/specs/none/tables
+    copy_vgem_tables vgem/specs/tel/tables
+    copy_vgem_tables vgem/specs/tsk/tables
+    copy_vgem_file vgem/specs/tel/proberMessages $TCLSFX
+    copy_vgem_file vgem/specs/tsk/proberMessages $TCLSFX
+fi
+
+if [ $CP_ALL -eq 1 ] || [ $CP_FAPT -eq 1 ]; then
+    copy_fapt_files facomcore
+    copy_fapt_files FACOMCSUB
+fi

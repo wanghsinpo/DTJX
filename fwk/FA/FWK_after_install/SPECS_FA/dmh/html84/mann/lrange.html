@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="lrange_Tcl_7_4"></A>
+<TITLE>lrange Tcl Built-In Commands 7.4</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ lrange - Return one or more adjacent elements from a list <P>
+<H2>SYNOPSIS</H2>
+ <B>lrange <I>list first last</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+<I>List</I> must be a valid Tcl list.  This command will return a new list consisting of elements <I>first</I> through <I>last</I>, inclusive. <I>First</I> or <I>last</I> may be <B>end</B> (or any abbreviation of it) to refer to the last element of the list. If <I>first</I> is less than zero, it is treated as if it were zero. If <I>last</I> is greater than or equal to the number of elements in the list, then it is treated as if it were <B>end</B>. If <I>first</I> is greater than <I>last</I> then an empty string is returned. Note: ``<B>lrange <I>list first first</B></I>'' does not always produce the same result as ``<B>lindex <I>list first</B></I>'' (although it often does for simple fields that aren't enclosed in braces); it does, however, produce exactly the same results as ``<B>list [lindex <I>list first]</B></I>'' <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/list.html">list</a>, <a href="../mann/lappend.html">lappend</a>, <a href="../mann/lindex.html">lindex</a>, <a href="../mann/linsert.html">linsert</a>, <a href="../mann/llength.html">llength</a>, <a href="../mann/lsearch.html">lsearch</a>,  <a href="../mann/lset.html">lset</a>, <a href="../mann/lreplace.html">lreplace</a>, <a href="../mann/lsort.html">lsort</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ element, list, range, sublist 
+</BODY>
+</HTML>

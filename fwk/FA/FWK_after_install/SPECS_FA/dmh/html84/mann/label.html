@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="label_Tk_4_0"></A>
+<TITLE>label Tk Built-In Commands 4.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ label - Create and manipulate label widgets <P>
+<H2>SYNOPSIS</H2>
+ <B>label</B> <I>pathName </I>?<I>options</I>? <B><PRE>
+-activebackground	-font	-pady
+-activeforeground	-foreground	-relief
+-anchor	-highlightbackground	-takefocus
+-background	-highlightcolor	-text
+-bitmap	-highlightthickness	-textvariable
+-borderwidth	-image	-underline
+-cursor	-justify	-wraplength
+-disabledforeground	-padx	
+</B></PRE>
+<P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <DT>
+<PRE>Command-Line Name:    <B>-compound</B>
+Database Name:        <B>compound</B>
+Database Class:       <B>Compound</B></PRE>
+
+<DD>
+Specifies whether the label should display both an image and text, and if so, where the image should be placed relative to the text. Valid values for this option are <B>bottom</B>, <B>center</B>, <B>left</B>, <B>none</B>, <B>right</B> and <B>top</B>.  The default value is <B>none</B>, meaning that the label will display either an image or text, depending on the values of the <B>-image</B> and <B>-bitmap</B> options. <DT>
+<PRE>Command-Line Name:    <B>-height</B>
+Database Name:        <B>height</B>
+Database Class:       <B>Height</B></PRE>
+
+<DD>
+Specifies a desired height for the label. If an image or bitmap is being displayed in the label then the value is in screen units (i.e. any of the forms acceptable to <B>Tk_GetPixels</B>); for text it is in lines of text. If this option isn't specified, the label's desired height is computed from the size of the image or bitmap or text being displayed in it. <DT>
+<PRE>Command-Line Name:    <B>-state</B>
+Database Name:        <B>state</B>
+Database Class:       <B>State</B></PRE>
+
+<DD>
+Specifies one of three states for the label:  <B>normal</B>, <B>active</B>, or <B>disabled</B>.  In normal state the button is displayed using the <B>foreground</B> and <B>background</B> options.  In active state the label is displayed using the <B>activeForeground</B> and <B>activeBackground</B> options.  In the disabled state the <B>disabledForeground</B> and <B>background</B> options determine how the button is displayed. <DT>
+<PRE>Command-Line Name:    <B>-width</B>
+Database Name:        <B>width</B>
+Database Class:       <B>Width</B></PRE>
+
+<DD>
+Specifies a desired width for the label. If an image or bitmap is being displayed in the label then the value is in screen units (i.e. any of the forms acceptable to <B>Tk_GetPixels</B>); for text it is in characters. If this option isn't specified, the label's desired width is computed from the size of the image or bitmap or text being displayed in it. <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>label</B> command creates a new window (given by the <I>pathName</I> argument) and makes it into a label widget. Additional options, described above, may be specified on the command line or in the option database to configure aspects of the label such as its colors, font, text, and initial relief.  The <B>label</B> command returns its <I>pathName</I> argument.  At the time this command is invoked, there must not exist a window named <I>pathName</I>, but <I>pathName</I>'s parent must exist. <P>
+A label is a widget that displays a textual string, bitmap or image. If text is displayed, it must all be in a single font, but it can occupy multiple lines on the screen (if it contains newlines or if wrapping occurs because of the <B>wrapLength</B> option) and one of the characters may optionally be underlined using the <B>underline</B> option. The label can be manipulated in a few simple ways, such as changing its relief or text, using the commands described below. <P>
+<P>
+<H2>WIDGET COMMAND</H2>
+ <P>
+The <B>label</B> command creates a new Tcl command whose name is <I>pathName</I>.  This command may be used to invoke various operations on the widget.  It has the following general form: <PRE>
+<I>pathName option </I>?<I>arg arg ...</I>?
+</PRE>
+<I>Option</I> and the <I>arg</I>s determine the exact behavior of the command.  The following commands are possible for label widgets: 
+<DT><I>pathName <B>cget</B></I> <I>option</I>
+<DD>Returns the current value of the configuration option given by <I>option</I>. <I>Option</I> may have any of the values accepted by the <B>label</B> command. 
+<DT><I>pathName <B>configure</B></I> ?<I>option</I>? ?<I>value option value ...</I>?
+<DD>Query or modify the configuration options of the widget. If no <I>option</I> is specified, returns a list describing all of the available options for <I>pathName</I> (see <B>Tk_ConfigureInfo</B> for information on the format of this list).  If <I>option</I> is specified with no <I>value</I>, then the command returns a list describing the one named option (this list will be identical to the corresponding sublist of the value returned if no <I>option</I> is specified).  If one or more <I>option-value</I> pairs are specified, then the command modifies the given widget option(s) to have the given value(s);  in this case the command returns an empty string. <I>Option</I> may have any of the values accepted by the <B>label</B> command. <P>
+<P>
+<H2>BINDINGS</H2>
+ <P>
+When a new label is created, it has no default event bindings: labels are not intended to be interactive. <P>
+<P>
+<H2>KEYWORDS</H2>
+ label, widget 
+</BODY>
+</HTML>

@@ -1,0 +1,1274 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Ed Hume">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <meta name="Description" content="User Guide and Reference Information for the DMH VB Active-X Control">
+   <title>DMH C++ Client Class</title>
+</head>
+<body>
+
+<h1>
+DMHclient - A C++ DMH Client Class</h1>
+
+<p><br>Hume Integration has created a class library for integrating Visual
+C++ programs into a distributed system using the Distributed Message Hub
+(DMH) message system.&nbsp;&nbsp; The DMHclient class provides high-level
+methods for sending and receiving messages, with either send-and-reply
+synchronous-style interactions, or higher performance asynchronous-style
+interactions.&nbsp;&nbsp;&nbsp; Message exchanges are typically directed
+to application servers such as the Hume Integration Datahub, or the dmh_SQLsrv
+persistent database interface.&nbsp; The DMH message system is remarkably
+easy to use with these DMH Tcl processes because the messages are typically
+SQL, Tcl, or VFEI text that is directly interpreted by the receiver.&nbsp;&nbsp;
+To extend this ease of use to the C++ client, methods are provided with
+the control to parse Tcl list text strings,&nbsp; to create Tcl list text
+strings from string elements, or to parse VFEI text.&nbsp;&nbsp; The DMHclient
+class fully supports peer-to-peer interactions.
+<p><a NAME="features"></a>
+<h2>
+Feature Summary</h2>
+
+<ul>
+<li>
+High performance asynchronous message sending and receiving</li>
+
+<li>
+Convenient synchronous send-and-reply server or peer interaction provided
+as well</li>
+
+<li>
+Comprehensive support of DMH message system features such as mailbox manipulation</li>
+
+<li>
+ListSplit( ), ListElement( ), and ListJoin( ) methods provided for convenient
+manipulation of Datahub SQL replies or similar Tcl list results in C++
+applications</li>
+
+<li>
+Disconnected events and Error events provided for application recovery
+and resume logic</li>
+
+<li>
+Usable in multiple instances for high performance access to multiple DMH
+servers</li>
+
+<li>
+Fully integrated with the Visual development environment with IntelliSense
+specification of methods and parameters, and controllable debug output</li>
+
+<li>
+Fully integrated into the C++ runtime environment with asynchronous event
+dispatching, controllable trace output, and error handling</li>
+
+<li>
+No static maximum sizes for DMH messages</li>
+
+<li>
+VFEI2Map class provided to parse SEMATECH VFEI formatted messages.</li>
+</ul>
+
+<hr WIDTH="100%"><a NAME="userguide"></a>
+<h2>
+<b>User Guide</b></h2>
+
+<p><br>The DMHclient class for Visual C++ is provided as the following
+files:
+<ul>
+<li>
+DMHclient.dll&nbsp;&nbsp;&nbsp; - the runtime dynamic link library (about
+70k in size)</li>
+
+<li>
+DMHclient.h&nbsp;&nbsp;&nbsp; - class declaration for development</li>
+
+<li>
+DMHclient.lib&nbsp;&nbsp;&nbsp; - class library file for linking during
+development</li>
+
+<li>
+index.html&nbsp;&nbsp;&nbsp; - documentation home page; creates a viewing
+frame with contents</li>
+
+<li>
+DMHclient.html - the main document displayed by index.html</li>
+
+<li>
+DMHclient_cmds.html - a table of contents displayed by index.html</li>
+
+<li>
+DMHClientApp\*.*&nbsp; - a demonstration MFC C++ application (sources,
+project files, binaries)</li>
+
+<li>
+VFEI2Map.dll, .h, .lib - development and runtime files to parse VFEI text</li>
+
+<li>
+VFEI2MapTest\*.* - a test program to verify VFEI2Map functionality</li>
+</ul>
+The files are distributed in a .zip archive named <b>DMHclient.zip</b>.
+If you received the DMH software on CDROM, this archive is in the subdirectory
+<b>LAN_IMAGE</b>.
+The HTML documents in the <b>DMHclient.zip</b> archive are copies of the
+same documents found in the main online documentation.
+<p>The distribution is designed and tested for the Windows 2000 and Windows
+NT x86 architecture platform.&nbsp; The class library is designed to successfully
+interoperate with recent versions of the Tcl/Tk DMH software running on
+any platform.&nbsp; The library is designed to integrate into the Windows
+event loop, and to be used from the main thread of your application.&nbsp;
+This is the usual scenario of Visual C++ applications.&nbsp; If your application
+requires use of multiple threads for sending and receiving DMH messages,
+you should not use this library.&nbsp; Instead, you should use the <a href="posix_DMH.html">POSIX
+C Library</a> which offers similar features but is designed from the ground
+up as a portable offering for high-performance threaded platforms.
+<p>The DMHclient DLL uses only the C++ runtime library and Win32&nbsp;
+calls.&nbsp; It does not require any additional libraries or product installations
+- not Tcl, not MFC, and not any other source of maintenance or compatibility
+issues.&nbsp; Also, the library does not use any files, or the registry,
+so these are eliminated as a source of configuration management, installation,
+or runtime problems.&nbsp; In short, the DMHclient DLL is an ideal component
+for your integrated software solution, and a model for other vendors.
+<p>The VFEI2Map DLL does use the MFC class libraries as a shared DLL.&nbsp;
+If you build an application that uses the VFEI2Map class, your application
+will use the CMapStringToString MFC class, and require that MFC libraries
+be accessible at runtime.
+<p><a NAME="Installation"></a>
+<h3>
+Installation</h3>
+Installation consists of extracting the <b>DMHclient.zip</b> distribution
+archive to a directory of your choice, such as c:\hume. The DMHclient.dll
+needs to be in the working directory of the executables that you build,
+or in a directory that is found on the system Path or the user's Path.
+You may wish to copy or move the <b>DMHclient.dll</b> file to a location
+such as c:\usr\local\bin.
+<p>To develop Visual C++ programs, choose an alternative:
+<ol>
+<li>
+Modify the project settings to point to the DMHclient installation:</li>
+
+<ul>
+<li>
+Include the path to the .h file as a "C/C++", "Category: Preprocessor",
+"additional include directory" project option setting.&nbsp; Now you can
+include the .h file using the directive "#include &lt;DMHclient.h>" in
+your source code.</li>
+
+<li>
+Include the pathname of the .lib file as a "Link", "Category: General",
+"Object/Library Modules" project option setting.</li>
+</ul>
+
+<li>
+Or, include the .h and .lib files as part of the project (menu: Project/Add
+to project/Files...)</li>
+</ol>
+<a NAME="Development"></a>
+<h3>
+Development</h3>
+Your design will typically use one instance of the DMHclient class.&nbsp;
+You can declare the instance as part of your application class, and then
+pass pointers to it, or references to it, to your window and dialog classes.&nbsp;&nbsp;
+A single instance of the DMHclient can be used for sending and receiving
+with multiple mailboxes simultaneously.&nbsp; More than one instance of
+the DMHclient class is only needed if you wish to communicate directly
+with multiple DMH servers.&nbsp; You should not use multiple instances
+of the class to communicate with a single DMH server.
+<p>As a developer, per the licensing terms, you are required to have the
+Tcl/Tk DMH software installed on your development system.&nbsp;&nbsp; One
+reason for this requirement is to insure that you have the <a href="../index.html" target="_blank">online
+documentation</a> for the DMH system.&nbsp; A second major reason is so
+that you can run your own DMH server process to test and debug against
+without affecting a production system.
+<p>If you are not familiar with the DMH message system, you may want to
+read the mbx document which is usually installed at <a href="../mann/mbx.html">\usr\local\htm83\mann\mbx.html</a>.&nbsp;
+Your C++ application acts a DMH message system client, and attaches to
+a running DMH server.&nbsp; Once you are connected to the DMH system, you
+can exchange messages with other attached processes.
+<p>To get started, you only need to know the hostname where the DMH server
+is running, and the DMH Groupname that has been assigned to the server.&nbsp;&nbsp;
+If you click on the "Programs"/"Tcl 8.3 - Tk 8.3 - DMH"/"Datahub" program
+item, you will start a DMH server running on your host, with the default
+DMH groupname of "mbx".
+<p>The usual application design, and the one that provides the best performance,&nbsp;
+is to connect to the DMH server during initialization, and to use this
+connection during the life of the application.&nbsp; The <a href="#Init">Init(
+) method</a> is used to connect to the server.&nbsp; The server's hostname
+and groupname are provided as arguments to the Init( ) method.&nbsp; If
+the application disconnects from the server, the Init( )
+<br>command can be used again to restore the connection.
+<br><a NAME="Errors"></a>
+<h4>
+Error Handling</h4>
+A long running program such as a user interface or automation application
+needs to handle intermittent errors with network outages or server shutdowns.&nbsp;
+There are two styles of handling errors; you can mix both styles in your
+application as you see fit.
+<p>The first style of error handling is to avoid them by disabling buttons
+and window controls that make use of DMH features when there is not a server
+connection.&nbsp; You write the statements that enable your buttons in
+the "Connected" event handler, and you write statements that disable the
+buttons in your "Disconnected" event handler.&nbsp; During initialization,
+before you have a connection, call the Disconnected event handler yourself
+to disable the buttons.&nbsp; Also during initialization, call the Init(
+) method.&nbsp; When the Init( ) succeeds, a "Connected" event occurs and
+your buttons become enabled.&nbsp; This technique requires less coding
+than the method described next.
+<p>The second style of error handling is to add explicit error checking
+to your procedures.&nbsp;&nbsp; Many of the method calls return NULL for
+the usual successful invocation, or an error message that could be logged
+or displayed to the user.&nbsp; The most common error message is "No DMH
+server connection".&nbsp; This message occurs when using a method that
+requires a connection and Init( ) has not been called successfully, or
+the DMH connection has been lost.&nbsp; The methods do not throw exceptions,
+and you do not need to use try and catch.
+<p>Here is a summary of the kinds of errors that the DMH control will report.&nbsp;
+When you make a method call that requires a DMH server connection, and
+you do not have one, the method call will return "No DMH server connection".&nbsp;
+If you use an improper mailbox name such as one with whitespace in it,
+the method call will return a string such as, "mailbox name must contain
+only ANSI letters, digits, -, _, ., !, :, or @".&nbsp;&nbsp; These are
+the two main errors when initiating a method call.&nbsp;&nbsp; Most of
+the DMH&nbsp; method calls are then processed asynchronously.&nbsp; In
+other words, your method call returns, and the message communication you
+initiated happens as events are processed.&nbsp; An error that occurs during
+event processing results in the DMHclient Error( ) event occurring.&nbsp;
+You do not need to write an Error( ) event handler,&nbsp; but you probably
+should to communicate to the users of your program if an error occurs.&nbsp;
+When the Error( ) event occurs, the Disconnected( ) event will also occur.&nbsp;
+You can place logic in your Disconnected( ) event handler to initiate recovery
+and resume logic, exit the program, etc.
+<br><a NAME="ChildForms"></a>
+<h4>
+Child Windows</h4>
+Here is the recommended technique to use a single DMH control with all
+of the class code of your application.&nbsp; If you have a child window
+class,&nbsp; include a variable for use in referencing the application's
+DMHclient instance.&nbsp; So in the child class declarations, you include
+something like:
+<p><tt>// Child Header code</tt>
+<br><tt>// Child class declaration</tt>
+<br><tt>public:</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; DMHclient *dmh;</tt>
+<br>&nbsp;
+<p><tt>// Child class code</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; // constructor code</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; dmh = &amp;theApp.dmh</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; // button code</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; //...</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; CString reply = dmh->DoXact("DATAHUB", "eval
+localtime 16");</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; // ...</tt>
+<br>&nbsp;
+<p><tt>// Application header</tt>
+<br><tt>// class declaration</tt>
+<br><tt>...</tt>
+<br><tt>public:</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; DMHclient dmh;</tt>
+<br><tt>...</tt>
+<br><tt>// declare a visible pointer to the application instance</tt>
+<br><tt>extern MyTypeOfApp theApp;</tt>
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p><a NAME="basicDMH"></a>
+<h4>
+Sending and Receiving - Basics</h4>
+The programming model of the DMH message system is that you send a plain
+text message to a destination mailbox.&nbsp; When sending the message,
+you can optionally specify the name of a second mailbox for the recipient
+to send a reply message to.&nbsp; Usually you send a message to an application
+logic server such as a Datahub.&nbsp; The message is usually SQL,&nbsp;
+Tcl, or VFEI code that the recipient executes.&nbsp; If the sender has
+designated a reply mailbox, the result of executing the command is sent
+to the reply mailbox.
+<p>Lets discuss sending without asking for replies using the <a href="#Send">Send(
+) method</a>&nbsp; or its equivalent, the <a href="#Put">Put( ) method</a>
+.&nbsp; For example,&nbsp; suppose you are integrating a barcode reader.&nbsp;
+When data is read from the barcode reader device, your code is supposed
+to update a record in a Datahub table.&nbsp; You will send messages without
+asking for reply messages - if there is a system shutdown or communication
+failure, your application will know from the Disconnected( ) event.&nbsp;
+This is more efficient than asking for a reply message at every barcode
+read.
+<p><tt>// update latest read record in table barcode_reader at the Datahub</tt>
+<br><tt>CString message;</tt>
+<br><tt>message.Format("update barcode_reader set data_in='%s' where device_id='%s'",</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+newdata, myID);</tt>
+<br><tt>dmh->Send(Hub, message)</tt>
+<p>When you send a message without waiting for a reply, it is referred
+to as an asynchronous send.
+<p>Often, you will want to send a message to obtain reply data.&nbsp; The
+most convenient method to use is the <a href="#DoXact">DoXact( ) method</a>.&nbsp;
+This method will take care of specifying and using a unique mailbox for
+your reply message, and it will take care of managing a timer in case a
+reply message is not forthcoming.&nbsp; Suppose you want to query a database
+table, and the DB variable is assigned the mailbox name of the <a href="../man1/dmh_SQLsrv.html">dmh_SQLsrv</a>
+process.&nbsp;&nbsp; The online documentation shows that the SQL standard
+"select" command sends multiple reply messages, but the "telect" command
+sends a single reply message with all of the requested data formatted as
+a Tcl list.&nbsp; The DoXact( ) method is designed for a single reply message,
+so your code looks like:
+<p><tt>const char *reply;</tt>
+<br><tt>CString msg;</tt>
+<br><tt>CString device_id;</tt>
+<br><tt>msg.Format("telect device_id from barcode_config where display='%s'",
+dmh->Hostname());</tt>
+<br><tt>reply = dmh->DoXact(DB, msg);</tt>
+<br><tt>if (!strcmp(reply, "TIMEOUT")) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; // timeout or error</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; return reply;</tt>
+<br><tt>}</tt>
+<br><tt>// Parse the result- a Tcl List</tt>
+<br><tt>// element(6) = rows of data, then (0) = first row, then (0) =
+first item in row</tt>
+<br><tt>device_id&nbsp; = dmh->ListElement(reply, 6, 0, 0);</tt>
+<br><tt>// success</tt>
+<br><tt>return NULL;</tt>
+<br>&nbsp;
+<p><a NAME="advancedDMH"></a>
+<h4>
+Sending and Receiving - Advanced</h4>
+If your application needs to receive unsolicited messages from other processes,
+you use the <a href="#Whenever">Whenever( ) method</a> to setup asynchronous
+receiving.&nbsp; When an unsolicited message is received, your specified
+<a href="#Whenmsg">Whenmsg(
+) event handler</a> is called.&nbsp;&nbsp;&nbsp; By convention you should
+use mailbox names for receiving that end in _SQL if SQL messages are expected,
+_VFEI if VFEI messages are expected, and _RPC if Tcl messages are expected.&nbsp;&nbsp;
+There is no limit to the number of mailboxes that you use for receiving,
+but the design convention is that you use unique names based on the server
+function(s) provided.&nbsp; There should be only one receiving process
+per mailbox name in a DMH group.&nbsp; You may wish to create a unique
+mailbox name for receiving by basing the name on your hostname - see the
+DMH method <a href="#Hostname">Hostname( )</a>.
+<p>The Whenever( ) method is used for ongoing receiving - your application
+will continue to receive the messages that are sent to your specified mailbox.&nbsp;
+The <a href="#Disarm">Disarm( ) method</a> can be used to stop asynchronous
+receiving.
+<p>The <a href="#Whenmsg">Whenmsg( ) method</a> is similar to Whenever(
+) except that it functions to receive only one message.&nbsp; If <a href="#WhenmsgAgain">WhenmsgAgain(
+)</a> is executed from your receiving event handler, then the control is
+re-armed to receive the next message.&nbsp; So the combination of Whenmsg(
+) and WhenmsgAgain( ) are equivalent to the Whenever( ) method.
+<p>Lets revisit the DoXact( ) method.&nbsp; In some situations, you may
+want higher performance by sending messages and collecting the replies
+asynchronously, instead of waiting for each reply before sending the next
+message.&nbsp; You do this by setting up one or more reply mailboxes and
+arming them for receiving using the Whenmsg( ) or Whenever( ) methods.&nbsp;
+Instead of using DoXact( ) use the Send( ) command and specify the reply
+mailbox argument.&nbsp; Typically a high&nbsp; performance application
+will create a small number of unique mailbox names for replies, and re-use
+them.&nbsp; If you are creating unique mailboxes for each reply message,
+use the <a href="#CloseMailbox">CloseMailbox( ) method</a> when you are
+done with each one, to recover resource usage.
+<br><a NAME="events"></a>
+<h4>
+Event Handling Notes</h4>
+Your application should not "live" inside of your event handling code.&nbsp;
+Be sure to return in due course.&nbsp; Avoid performing long running computations.
+<p>Be careful with the Trace( ) event.&nbsp; If you turn on a lot of tracing
+and are exchanging long messages, your application will be manipulating
+huge amounts of string data.
+<p>Do not use modal dialogs that block the dispatching of events to other
+windows.
+<p><a NAME="International"></a>
+<h4>
+International Character Sets</h4>
+Multibyte UTF-8 character sequences are used by Tcl and DMH to represent
+International characters.&nbsp; The API for the DMHclient uses these character
+sequences since they are compatible with the usual single character ANSI
+strings used by most applications.&nbsp; UTF-8 strings can be manipulated
+with all the usual C language functions because they do not use the null
+character as data.&nbsp; If you are using International characters in C++
+and displaying text to the user, you are probably using Unicode strings,
+and you probably need to convert the UTF-8 strings used by the DMHclient
+DLL to and from Unicode.&nbsp; This can be done using the Win32 calls MultiByteToWideChar(
+) and WideCharToMultiByte( ).&nbsp; If you are developing International
+applications, you may find it easier to use Visual Basic and the DMHocx
+Active-X control.&nbsp; The DMHocx control converts Tcl/DMH UTF-8 sequences
+to and from Unicode transparently.
+<p>When declaring database tables to hold international text, base the
+VARCHAR( ) sizes on UTF-8 byte counts, not on the number of characters.&nbsp;
+In the most conservative case,&nbsp; you need to allow 3 bytes per displayed
+character.
+<p>To be successful with International applications you need to make sure
+that you have installed fonts and chosen fonts in your application that
+are capable of displaying the characters you require.
+<br><a NAME="Termination"></a>
+<h4>
+Termination</h4>
+When your application is shutting down, you should call the <a href="#Disconnect">Disconnect(
+) method</a> to disconnect gracefully from the DMH server.&nbsp; Practically
+speaking the DMH server routinely takes care of situations where clients
+leave ungracefully, but proper software manners are encouraged.
+<br><a NAME="Miscellaneous"></a>
+<br>&nbsp;
+<h4>
+Miscellaneous Notes</h4>
+An actual network connection is not attempted until Init() is called.
+<p>The programming model is that you will not have more than one connection
+to a particular DMH server.&nbsp; It is typical to have only one DMH connection
+per application process.&nbsp; Communication across DMH groups can be accomplished
+by sending to mailbox@groupname.&nbsp; It is also possible to use multiple
+controls, each connected to a different DMH Group.
+<p>There should be only one reader per mailbox name in a given DMH group.
+<p>The&nbsp; DMHclient class is able to use and resolve DMH groupname aliases
+as described in the online Tcl documentation.&nbsp; Groupname aliases are
+resolved at the DMH server and not at the client.
+<p>Mailbox Naming rules:
+<ul>
+<li>
+A mailbox name should be limited to 31 or fewer characters, but there is
+no firm limit.</li>
+
+<li>
+The name must start with an ANSI letter, digit, or the underscore</li>
+
+<li>
+Other characters in the name may include - or&nbsp; !.</li>
+
+<li>
+The period, colon, or @ symbol should only be used to specify optional
+groupname qualification of a mailbox name as in <i>boxname</i>[<b>@</b><i>host_or_ip_address</i><b>:</b><i>groupname</i>]</li>
+</ul>
+
+<p><br>
+<hr WIDTH="100%"><a NAME="Reference"></a>
+<h2>
+DMHclient Class Reference</h2>
+<a NAME="Properties"></a>
+<table BORDER WIDTH="100%" >
+<caption>&nbsp;<b>DMHclient "Properties"</b></caption>
+
+<tr>
+<td><b>Property Access</b></td>
+
+<td><a NAME="ClientID"></a><b>Description</b></td>
+</tr>
+
+<tr>
+<td>const char *get<b>ClientID</b>()</td>
+
+<td><a NAME="DefaultTimeout"></a>The DMH server assigns a unique string
+to each client for identification purposes. This value is a read-only runtime
+value providing the server's ID string or an empty string if a connection
+has not been established.&nbsp;</td>
+</tr>
+
+<tr>
+<td>int get<b>DefaultTimeout</b>( )<a NAME="Description"></a>
+<br>int setDefaultTimeout(int)</td>
+
+<td>The default timeout interval for send and reply transactions, or timed
+receive invocations.&nbsp;&nbsp; In seconds - the default value is 30.&nbsp;
+Settable range: 1 - 86399.</td>
+</tr>
+
+<tr>
+<td>const char *get<b>Description</b>( )<a NAME="State"></a>
+<p>void setDescription(char *)</td>
+
+<td>One of the features of the Tcl/Tk DMH Status Window is an action to
+identify connected clients.&nbsp; The default description provided for
+a Visual C++ client is similar to "<i>hostname</i>:VC DMH client".&nbsp;
+You are able to provide your own description string for your application.</td>
+</tr>
+
+<tr>
+<td>int get<b>State</b>( )
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The state property is a read-only value available at runtime.&nbsp;
+The value can be read to determine if a healthy communication connection
+exists, etc.&nbsp;&nbsp;&nbsp; Applications will ordinarily use event methods
+and not poll the state property value.&nbsp; The transient and error states
+do not last long, so testing for the values 0 or 7 is the most common scenario.&nbsp;
+<dl>
+<dl>
+<pre>&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; disconnected</pre>
+
+<pre>&nbsp; 4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hostname is being resolved</pre>
+
+<pre>&nbsp; 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connection setup in progress&nbsp;</pre>
+
+<pre>&nbsp; 7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; healthy connection exists</pre>
+
+<pre>&nbsp; 8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connection close in progress</pre>
+
+<pre>&nbsp; 9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a communication error has occurred&nbsp;&nbsp;</pre>
+
+<pre><a NAME="Tracebits"></a>519&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DMH protocol setup in progress (519 = &amp;H100 Or 7)</pre>
+</dl>
+</dl>
+</td>
+</tr>
+
+<tr>
+<td>int get<b>Tracebits</b>( )
+<br>int setTracebits( )<a NAME="mhgroup"></a></td>
+
+<td>The Tracebits property controls output of diagnostic data to the Trace
+event.&nbsp; This value is used as a bitfield with the bit values controlling
+the following categories of output:
+<p>01 data reads
+<br>02 data writes
+<br>04 message receiving
+<br>08 message sending
+<br>16 logic tracing</td>
+</tr>
+
+<tr>
+<td>const char *get<b>mhgroup</b>()</td>
+
+<td>The mhgroup property is a readonly runtime value indicating the <i>hostname<b>:</b>port&nbsp;</i>
+of the DMH server when connected, else NULL.&nbsp; <i>Hostname</i> is the
+server's idea of his hostname which may be different from the hostname
+that was specified at the client.</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+<p><a NAME="ControlEvents"></a>
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>DMHclient Callback Events</b></caption>
+
+<tr>
+<td><a NAME="Connected"></a><b>Event Callback&nbsp; and Set Method&nbsp;</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>All callback methods - NOTES
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>You write your own callback function consistent with the typedef of
+the callback.
+<p><tt>void MyConnectedCallback(DMHclient *dmh) { ... }</tt>
+<p>Then you register it with the DMHclient:
+<p><tt>dmh->setConnectedProc(MyConnectedCallback);</tt>
+<p>When the event happens, your callback function is called.&nbsp; A pointer
+to the DMHclient is provided as an argument, in case you are using the
+same callback with multiple instances of the DMHclient class.&nbsp;
+<p><a NAME="Connected"></a>When registering the callback, the previous
+value is returned.&nbsp; This lets you chain, or swap and restore callbacks.&nbsp;
+These are not recommended techniques.</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHConnectedProc</b>) (DMHclient *)
+<p>DMHConnectedProc * <b>setConnectedProc</b>(DMHConnectedProc *);<a NAME="Disconnected"></a></td>
+
+<td>The Connected event happens after successfully connecting to the DMH
+server in the wake of the Init method invocation.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHDisconnectedProc</b>) (DMHclient *)
+<p><a NAME="DoOneEvent"></a>DMHDisconnectedProc * <b>setDisconnectedProc</b>(DMHDisconnectedProc
+*)</td>
+
+<td>The Disconnected event happens when the DMH connection has been closed
+from any circumstance such as remote closure, communication failure, error,
+or invocation of the Disconnect method.&nbsp; This event is similar to
+the Tcl lostserver procedure invocation.&nbsp; The event may happen more
+than once if multiple errors are being processed.</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHDoOneEventProc</b>)(void)
+<br>&nbsp;
+<p>DMHDoOneEventProc * <b>setDoOneEventProc</b>(DMHDoOneEventProc *)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The DoOneEvent callback:
+<br>When the DMHclient does a modal receive for Init( ) or DoXact( ) it
+dispatches events on behalf of the application.&nbsp; The default event
+dispatcher is the usual GetMessage( ) , TranslateMessage( ), DispatchMessage(
+).&nbsp; If you need a custom event loop, replace the DoOneEvent( ) with
+your own code - just&nbsp;
+<br>process one message and return.
+<p><tt>static void DoOneEvent(void) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; MSG msg;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; if ( GetMessage(&amp;msg, NULL, 0, 0) ) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; TranslateMessage(&amp;msg);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; DispatchMessage(&amp;msg);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>}</tt>
+<p><b><tt>A Special Note for MFC applications</tt></b><tt>:</tt>
+<p><tt>MFC is designed to call PreTranslateMessage() in its event loop,
+so you should provide a custom DoOneEvent callback.&nbsp; This cannot be
+coded in the DMHclient class without forcing everybody to link with MFC.</tt>
+<br>&nbsp;
+<p><tt>void MFCDoOneEvent () {</tt>
+<br><tt>&nbsp;MSG msg;</tt>
+<br><tt>&nbsp;if ( GetMessage(&amp;msg, NULL, 0, 0) ) {</tt>
+<br><tt>&nbsp; if ( !AfxGetApp()->PreTranslateMessage(&amp;msg) )&nbsp;
+{</tt>
+<br><tt>&nbsp;&nbsp; TranslateMessage(&amp;msg);</tt>
+<br><tt>&nbsp;&nbsp; DispatchMessage(&amp;msg);</tt>
+<br><tt>&nbsp; }</tt>
+<br><tt>&nbsp;}</tt>
+<br><tt>}</tt><a NAME="ErrorEvent"></a>
+<br>&nbsp;</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHErrorProc</b>) (DMHclient *, int errnum, const char *text)
+<br>&nbsp;
+<br>&nbsp;
+<p>DMHErrorProc * <b>setErrorProc</b>(DMHErrorProc *)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The Error event happens when the Init method fails, or there has been
+communication failure.&nbsp; In most cases when the Error event happens,
+the control state will transition to the disconnected state, and the Disconnected(
+) event will occur shortly.
+<br>&nbsp;
+<dl>
+<dd>
+</dd>
+</dl>
+
+<p><br>Broken connection errors include:
+<dl>
+<dd>
+<tt>10051&nbsp; the network is unreachable</tt></dd>
+
+<dd>
+<tt>10060&nbsp; Connection has timed out</tt></dd>
+
+<dd>
+<tt>11053&nbsp; Connection is aborted due to timeout or other failure</tt></dd>
+
+<dd>
+<tt>10054&nbsp; Connection is reset by remote system</tt></dd>
+
+<dd>
+<tt>10058&nbsp; Connection has been shutdown</tt></dd>
+
+<dd>
+<tt>50001&nbsp; DMH Protocol error - missing data.&nbsp; You should never
+see this error.</tt></dd>
+
+<dd>
+<tt>50002&nbsp; DMH Protocol error - improper packet.&nbsp; You should
+never see this error.</tt></dd>
+</dl>
+</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>void (<b>DMHShutdownProc</b>) (DMHclient *, int *StayAlive)
+<p>DMHShutdownProc * <b>setShutdownProc</b>(DMHShutdownProc *)<a NAME="Trace"></a></td>
+
+<td><a NAME="Shutdown"></a>A remote request has been received to terminate
+the process.&nbsp; If you do not set the StayAlive flag true, the software
+will cause the application to exit.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHTraceProc</b>) (DMHclient *, const char *text)
+<p>DMHTraceProc * <b>setTraceProc</b>(DMHTraceProc *)<a NAME="WhenmsgProc"></a></td>
+
+<td>This event provides diagnostic and debug information per the Tracebit
+property setting.&nbsp; Your application needs to avoid creating new DMH
+activity in the Trace event callback, that in return causes Trace events.&nbsp;
+A cycle of positive feedback is possible which will cause a software fission
+reaction.</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHWhenmsgProc</b>) (DMHclient *, const char *DestinationMailbox,&nbsp;
+const char *ReplyMailbox, const char *Data, void *ClientData)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The Whenmsg callback is executed when a message has arrived.&nbsp;
+You can register different callback functions for each destination mailbox
+using the <a href="#Whenmsg">Whenmsg</a> or <a href="#Whenever">Whenever</a>
+methods, described in the next table.&nbsp;
+<p>The DestinationMailbox parameter is a mailbox name that your application
+has specified when initiating receiving.&nbsp; If the sender of the message
+indicated a reply mailbox, it is passed as the second argument, ReplyMailbox.&nbsp;
+If no reply mailbox has been specified, the ReplyMailbox argument is an
+empty string.&nbsp; The Data argument is the text of the sent message.&nbsp;
+The DMHclient&nbsp; logic protects you from receiving another message for
+the DestinationMailbox, and re-entering your handler logic until you have
+returned from the current callback execution.&nbsp;
+<p>When you call the Whenmsg() method or Whenever( ) method to setup receiving,&nbsp;
+you can optionally specify the ClientData argument to be saved and passed&nbsp;
+to your callback at the time a message arrives.&nbsp; A typical use would
+be to&nbsp; pass a pointer to a C++ object, so your receive callback can
+use the pointer&nbsp; to call a class method.&nbsp;</td>
+</tr>
+</table>
+
+<p><a NAME="Methods"></a>
+<table BORDER WIDTH="100%" >
+<caption><b>DMHclient Methods</b></caption>
+
+<tr>
+<td><b>METHOD</b></td>
+
+<td><b>DESCRIPTION</b></td>
+</tr>
+
+<tr>
+<td>General Comments
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td><i>Most of the information in this table cell is copied from the User
+Guide.</i>
+<p>Many of the method calls return NULL for the usual successful invocation,
+or an error message that could be logged or displayed to the user.&nbsp;
+The most common error message is "No DMH server connection".&nbsp; This
+message occurs when using a method that requires a connection and Init(
+) has not been called successfully, or the DMH connection has been lost.&nbsp;
+The methods do not throw exceptions, and you do not need to use try and
+catch.&nbsp;
+<p>If you use an improper mailbox name such as one with whitespace in it,
+the method call will return a string such as, "mailbox name must contain
+only ANSI letters, digits, -, _, ., !, :, or @".&nbsp;&nbsp; Most of the
+DMH&nbsp; method calls are then processed asynchronously.&nbsp; In other
+words, your method call returns, and the message communication you initiated
+happens as events are processed.&nbsp; An error that occurs during event
+processing results in the DMHclient Error( ) event occurring.
+<p>We us<a NAME="Abort"></a>e a lot of "const char *" declarations because
+they interoperate very well with the MFC CString string class, and they
+show that you should not tamper with the returned values - copy to save,
+copy to modify, etc.</td>
+</tr>
+
+<tr>
+<td>void <b>Abort</b>(void)<a NAME="CloseMailbox"></a></td>
+
+<td>Any in-progress send-and-reply or modal wait transactions such as the
+Init( ) method or DoXact( ) calls are aborted with return values indicating
+TIMEOUT.&nbsp; Invoking the Abort method does not affect asynchronous receiving
+that is setup using the Whenmsg( ) or Whenever( ) methods.&nbsp; Has no
+effect if not connected.</td>
+</tr>
+
+<tr>
+<td>const char *<b>CloseMailbox</b>(const char *boxname)<a NAME="Count"></a></td>
+
+<td>Stop using a mailbox - Disarm receiving if listening, Flush if not
+empty,&nbsp; and remove from existence if it exists.&nbsp; The Tcl version
+of this call, differs because it will not flush existing messages.
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>Count</b>(const char *boxname, long *ctsent, long *ctread,
+long *ctpending)
+<br><a NAME="Disarm"></a></td>
+
+<td>Returns three numbers, the total count of messages that have been sent
+to the mailbox, the total count of messages that have been consumed from
+the mailbox, and last, the current count of pending messages.&nbsp; A pending
+message is one that exists in the queue associated with the mailbox, and
+has not been consumed by reading or flushing.
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>void <b>Disarm</b>(const char *boxname = NULL)<a NAME="Disconnect"></a></td>
+
+<td>Un-register the listener from a specified&nbsp; mailbox.&nbsp; This
+call may be used to cancel an earlier whenever( ) or whenmsg( ) call.&nbsp;
+If called with no arguments, all Whenever( ) and Whenmsg( ) receiving registrations
+are canceled.&nbsp; The Abort( ) method will cancel in-progress DoXact(
+) calls.&nbsp; Has no effect if not connected.</td>
+</tr>
+
+<tr>
+<td>void <b>Disconnect</b>(void)<a NAME="DoXact"></a></td>
+
+<td>The counterpart of Init( ); disconnects from the DMH server.&nbsp;
+The Abort( ) method gets called to end any in-progress transactions.&nbsp;
+The Disarm( ) method gets called with no arguments to cancel all receiving.&nbsp;
+Has no effect if not connected.</td>
+</tr>
+
+<tr>
+<td>const char *<b>DoXact</b>(const char *DestinationMailbox, const char
+*Message, int TimeoutSeconds = 0,
+<br>&nbsp; const char *ReplyMailbox = NULL)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Performs a complete send and reply transaction with timeout management.&nbsp;
+Creates and manages a unique reply mailbox for the send and reply transaction
+if the replybox argument is defaulted.&nbsp; If the timeout is not specified,
+the <a href="#DefaultTimeout">DefaultTimeout</a> value is used.&nbsp; The
+usual reply is the text of the reply message. The String literal <b>TIMEOUT</b>
+is returned in case of failure.&nbsp; You can have multiple instances of
+DoXact( ) or TimedReceive( ) active at a time but not more than one instance
+for a specified reply mailbox.&nbsp; (You can wind up with multiple instances
+by letting a user interface initiate them before completing an earlier
+invocation.)&nbsp; Memory used for the reply result is freed and re-used
+with the next call to DoXact() or TimedReceive() so copy the reply to your
+own data structure when persistence is needed.
+<p>If you specify a ReplyMailbox, you need to insure that the name you
+specify is only used by your application.&nbsp; It is usual to create a
+unique reply mailbox name, perhaps based on the hostname, assign it to
+a variable, and use it repeatedly.
+<p><a NAME="Flush"></a>If you are not connected when using this call, the
+TIMEOUT string is returned immediately.&nbsp; Trace event information can
+be used to show the cause.</td>
+</tr>
+
+<tr>
+<td>const char *<b>Flush</b>(const char *boxname)
+<p>&nbsp;</td>
+
+<td>Empty a mailbox of any pending messages.&nbsp; A pending message is
+one that has been sent to the mailbox but has not been consumed.&nbsp;
+In other words, a pending message is waiting in a queue associated with
+the&nbsp; mailbox name.&nbsp; Messages are consumed by reading or flushing.
+<p><a NAME="GroupnamePort"></a>Returns NULL on success, or an error message.&nbsp;
+You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>int <b>GroupnamePort</b>(const char *Groupname)
+<br><a NAME="Hostname"></a></td>
+
+<td>Used to determine the TCP/IP port number that is used by the DMH server
+to listen for client connections.&nbsp; The method is equivalent to the
+mh_name_to_socket Tcl procedure.&nbsp; Most applications will not have
+a use for this method since the server socket port is managed by the DMH
+software.&nbsp;</td>
+</tr>
+
+<tr>
+<td>const char *<b>Hostname</b>(void)
+<br><a NAME="Init"></a></td>
+
+<td>Returns the TCP/IP hostname of the computer that the control is executing
+on.&nbsp; The name is guaranteed to be stripped of domain information,
+and imbedded white spaces which are not valid in hostnames, are seen as
+delimiters of the first token.</td>
+</tr>
+
+<tr>
+<td>const char *<b>Init</b>(const char *DMHGroupname = "mbx", const char
+*DMHServerHostname = "localhost")
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Performs the initial connection to the DMH message server. The connection
+will be setup or an error result will be obtained before returning.
+<p>Init errors include
+<dl>
+<dd>
+<tt>10051&nbsp; the network is unreachable</tt></dd>
+
+<dd>
+<tt>10060&nbsp; Connection has timed out. This error indicates that the
+remote host may not be online.</tt></dd>
+
+<dd>
+<tt>10061&nbsp; Connection attempt is refused.&nbsp;</tt></dd>
+
+<dd>
+<tt>10061&nbsp; Connection is forcefully rejected.</tt></dd>
+
+<dd>
+<tt>The remote host is online and reachable, but there is not a DMH server
+at the specified group or port.&nbsp; We have improperly seen this error
+when using the hostname "localhost" on Windows 2000, and have worked around
+it using the actual hostname.&nbsp; This seems to be a buggy behavior that
+is being investigated.</tt></dd>
+
+<dd>
+<tt>11001&nbsp; Hostname not found (DNS authoritative).&nbsp; This error
+may indicate an improperly spelled hostname, or a hostname that is not
+known to your name server.</tt></dd>
+
+<dd>
+<tt>11002&nbsp; Hostname not found (non-authoritative name resolution).&nbsp;
+This error may indicate that your name server is down.</tt></dd>
+
+<dd>
+<tt>50003&nbsp; DMH Server refuses our client connection</tt></dd>
+
+<dd>
+<tt>This error indicates that customer modified software running in the
+DMH server has rejected the connection.&nbsp; It is likely that you are
+in violation of your site's security policy.</tt></dd>
+
+<dd>
+<tt>50004&nbsp; DMH Protocol error - improper setup reply.</tt></dd>
+
+<dl><tt>You should never see this error.</tt></dl>
+</dl>
+If no DMHGroupname or RemoteHostname is specified, the default values,
+"mbx" and "localhost" are used.&nbsp; See the above note on "localhost"
+not always working.
+<p>If the connection succeeds, the return value is NULL, otherwise an error
+message is returned&nbsp; indicating why the initialization failed.&nbsp;
+<p>When the initialization is successfully completed, the Connected( )
+event is fired.&nbsp; If it fails, depending on how the Init call fails,
+the Error( ) event may fire.&nbsp;
+<p>If the connection to the DMH server is ever lost, the Disconnected(
+) event is fired.<a NAME="ListElement"></a>
+<p>Returns NULL on success, or an error message.&nbsp;</td>
+</tr>
+
+<tr>
+<td>const char *<b>ListElement</b>(const char *TclList, int index1, int
+index2 = -1, int index3 = -1);<a NAME="ListJoin"></a></td>
+
+<td>This method is similar to the lindex method of Tcl.&nbsp; It will parse
+text formatted as a Tcl list and return the specified element.&nbsp; Additional
+indexes may be specified to parse lists that are nested inside of&nbsp;
+lists.&nbsp; If a specified index is out of bounds, an empty string is
+returned.&nbsp; If an invalid list is parsed, NULL is returned.&nbsp;&nbsp;
+Memory is allocated from the heap for the result, and it is freed and re-used
+with the next call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>ListJoin</b>(int argc, const char *argv[]);<a NAME="ListSplit"></a></td>
+
+<td>Joins together strings as Tcl list elements forming a result string
+that is a Tcl list.&nbsp; Braces are added as needed to delimit empty elements,
+or to delimit special Tcl character sequences involving backslashes , square
+brackets, etc.&nbsp; Memory is allocated from the heap for the result,
+and it is freed and re-used with the next call to ListJoin().</td>
+</tr>
+
+<tr>
+<td>int <b>ListSplit</b>(const char *TclList, int *argc, char **argv[])<a NAME="Product"></a></td>
+
+<td>ListSplit( ) parses a string formatted as a Tcl list into an array
+of string elements.&nbsp; The method understands the Tcl usage of quotes,
+braces and backslash sequences.&nbsp; Not all strings are valid Tcl lists.&nbsp;
+The return value is 0 on success.&nbsp; Failure occurs when there are unmatched
+braces, unmatched quotes, or non-whitespace following braces or quotes.&nbsp;
+Memory is allocated from the heap for the resulting argv[] stack and the
+elements that the stack points to. These values are safe until the next
+call to ListSplit, when the memory is freed and re-used.&nbsp; The TclList
+passed in is treated as const - it is read, but not changed.</td>
+</tr>
+
+<tr>
+<td>const char *<b>Product</b>() { return "DMH"; }<a NAME="Put"></a></td>
+
+<td>The idea here is that if this interface is implemented for another
+product, a different Product() string should be returned in case the using
+software needs to know the difference.</td>
+</tr>
+
+<tr>
+<td>const char *<b>Put</b>(const char *DestinationMailbox, const char *Message)<a NAME="Putr"></a></td>
+
+<td>The Put( ) method is equivalent to <a href="#Send">Send( )</a> without
+specifying a ReplyMailbox.&nbsp;
+<br>Returns NULL on success, or an error message.&nbsp;</td>
+</tr>
+
+<tr>
+<td>const char *<b>Putr</b>(const char *DestinationMailbox, const char
+*ReplyMailbox, const char *Message)<a NAME="ReceiveList"></a></td>
+
+<td>The Putr( ) method is equivalent to <a href="#Send">Send( )</a> with
+specifying a ReplyMailbox.
+<br>Returns NULL on success, or an error message.&nbsp;</td>
+</tr>
+
+<tr>
+<td>const char *<b>ReceiveList</b>(void)<a NAME="Send"></a></td>
+
+<td>Returns a list of the mailboxes you are listening for messages on.&nbsp;
+Does not show mailbox names that have in-progress Whenmsg( ) callbacks.&nbsp;
+This command may be useful for debugging, and it is not used in a typical
+application.&nbsp; The result is an empty string when you are not connected.</td>
+</tr>
+
+<tr>
+<td>const char *<b>Send</b>(const char *DestinationMailbox, const char
+*Message, const char *ReplyMailbox = NULL);
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Send a message to a mailbox, optionally with a reply mailbox indicated.&nbsp;&nbsp;
+By convention, when a reply mailbox is indicated for a command message
+sent to a Datahub mailbox or equipment interface mailbox, the command is
+processed, and a reply message is sent to the reply mailbox.&nbsp;
+<p>Specifying the reply mailbox as a NULL pointer, an empty string, or
+as the literal text "NULL" is equivalent to not specifying a reply mailbox.
+<p>Sending to the mailbox name "TRACE" sends the message to the DMH Server
+Trace Facility.
+<p><a NAME="ServerStatus"></a>The Send method corresponds to the Tcl mbx
+put and mbx putr commands.&nbsp;
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>ServerStatus</b>()
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Returns a Tcl list containing the information presented in the Tcl
+DMH status window.&nbsp; The information can be parsed by the application
+to determine&nbsp; status information on every mailbox that is currently
+in use.&nbsp; This command may be useful for debugging, and is not used
+by ordinary applications.
+<p>The first element of the list is a list of 5 elements:
+<br>{ <i>hostname</i><b>:</b><i>port messages_received messages_sent messages_queued
+tcl_version </i>}
+<p>Subsequent elements in the list are lists of four or five elements:
+<br>{ <i>mailboxname count_in count_out count_pending </i>[<i>reader_handle</i>]
+}
+<p><a NAME="TimedReceive"></a>Additional elements may exist in the list
+if there are DMH clients that are not currently waiting to receive messages.&nbsp;
+These elements are formatted as:
+<br>{{{no whenmsg pending}} - - - <i>reader_handle</i>}
+<p>You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>TimedReceive</b>(const char *ReceiveMailbox, int TimeoutSeconds
+= 0);
+<br>g<a NAME="Version"></a></td>
+
+<td>Waits for a message to be received in the specified mailbox.&nbsp;
+If the call succeeds,&nbsp; the return value is the message data.&nbsp;
+If the call fails, the return value is the literal string "TIMEOUT".&nbsp;&nbsp;
+If you are not connected, the call fails immediately with the return value
+"TIMEOUT".&nbsp; Trace event information can be used to show the TIMEOUT
+cause.&nbsp; Memory used for the reply result is freed and re-used with
+the next call to TimedReceive( ) or DoXact( ) so copy the reply to your
+own data structure when persistence is needed.</td>
+</tr>
+
+<tr>
+<td>const char *<b>Version</b>(void) { return "1.1"; }<a NAME="Whenever"></a></td>
+
+<td>Current software returns the string "1.1" to&nbsp; indicate compatibility
+with DMH protocol version 1.1.</td>
+</tr>
+
+<tr>
+<td>const char *<b>Whenever</b>(const char *ReceiveMailbox, DMHWhenmsgProc
+*, void *ClientData = NULL)
+<br><a NAME="Whenmsg"></a></td>
+
+<td>Registers to receive all messages directed to the specified mailbox.&nbsp;
+When the MessageArrival( ) event handler returns, the control re-arms for
+receiving the next message directed to the specified mailbox.&nbsp; The
+Disarm( ) method is used to stop receiving.&nbsp;
+<p>You can optionally specify the ClientData argument to be saved and passed&nbsp;
+to your callback at the time a message arrives.&nbsp; A typical use would
+be to&nbsp; pass a pointer to a C++ object, so your receive callback can
+use the pointer&nbsp; to call a class method.&nbsp;
+<p>You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>Whenmsg</b>(const char *ReceiveMailbox, DMHWhenmsgProc
+*, void *ClientData = NULL);
+<br><a NAME="WhenmsgAgain"></a></td>
+
+<td>Register for receiving the next available message directed to the specified
+mailbox.&nbsp; Calling WhenmsgAgain( ) in the MessageArrival( ) event handling
+code re-arms the receive registration for the next message.
+<p>You can optionally specify the ClientData argument to be saved and passed&nbsp;
+to your callback at the time a message arrives.&nbsp; A typical use would
+be to&nbsp; pass a pointer to a C++ object, so your receive callback can
+use the pointer&nbsp; to call a class method.&nbsp;
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>WhenmsgAgain</b>(void)</td>
+
+<td>The Whenmsg( ) method functions as a one-shot.&nbsp; In other words,
+receiving is stopped after receiving one message.&nbsp; Calling the WhenmsgAgain
+method from the receive handler re-registers to receive the next message.
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+</table>
+
+<p><a NAME="VFEI2Map"></a>
+<h2>
+VFEI2Map Class Reference</h2>
+The VFEI2Map class is used to parse text that is formatted according to
+the SEMATECH VFEI Specification #95113016A-TR.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Method</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>static const char *<b>lastError</b>()</td>
+
+<td>Returns a diagnostic message indicating the reason for not being able
+to successfully parse a text string.&nbsp; If the previous invocation of
+<b>parse</b>()
+was without error, an empty string is returned.</td>
+</tr>
+
+<tr>
+<td>static int <b>parse</b>(const char *vfei_string, CMapStringToString&amp;
+map);</td>
+
+<td>The parse method is static which means that no instances of the class
+are needed to call the method.&nbsp;
+<p>The return value is the count of new entries that were added to the
+Map table.&nbsp; If the input text cannot be parsed, the return value is
+-1 and an error diagnostic message is available by calling <b>lastError</b>().
+<p>Backslashes can be used per the string conventions of Tcl.&nbsp; The
+parsing is equivalent to the Hume developed Tcl <b>vfei_2_array</b> command.&nbsp;
+<p>See the VFEI2MapTest utility program source code for example code that
+uses this class.</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<br>&nbsp;
+<p>
+<hr WIDTH="100%"><a NAME="LicenseTerms"></a>
+<h2>
+License Terms</h2>
+Subject to Change Without Notice
+<p>The Hume DMHclient C++ software is licensed for development and runtime
+use at no additional charge for computers that are licensed for development use of the
+Hume Integration Datahub SDK.&nbsp; We ask that
+developers install the Tcl executables and actively use the Tcl executables
+for testing and development, instead of developing against production servers.&nbsp;
+Also, we ask that developers install the Tcl online documentation and use
+it to supplement the material presented in this document.
+<p>Hume Integration is also pleased to offer separate runtime licenses
+for using the DMHclient software on systems that are not licensed as development
+systems.  Runtime usage of the DMH client 
+software is licensed separately from the Datahub SDK runtime license.
+
+<p>
+<hr WIDTH="100%">
+<h2>
+<a NAME="DocVersion"></a>Document Version</h2>
+Date of last revision: $Date: 2004/08/13 15:58:11 $
+</body>
+</html>

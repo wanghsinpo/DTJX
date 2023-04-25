@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_GetCwd_Tcl_8_1"></A>
+<TITLE>Tcl_GetCwd Tcl Library Procedures 8.1</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_GetCwd, Tcl_Chdir - manipulate the current working directory <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+char *
+<B>Tcl_GetCwd</B>(<I>interp</I>, <I>bufferPtr</I>)
+<P>
+int
+<B>Tcl_Chdir</B>(<I>path</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter in which to report an error, if any.
+<P><DT><B>Tcl_DString <I>*bufferPtr</I></B> (in/out)
+<DD>This dynamic string is used to store the current working directory.
+At the time of the call it should be uninitialized or free.  The
+caller must eventually call <B>Tcl_DStringFree</B> to free up
+anything stored here.
+<P><DT><B>char <I>*path</I></B> (in)
+<DD>File path in UTF-8 format.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+These procedures may be used to manipulate the current working
+directory for the application.  They provide C-level access to
+the same functionality as the Tcl <B>pwd</B> command.
+<P>
+<B>Tcl_GetCwd</B> returns a pointer to a string specifying the current
+directory, or NULL if the current directory could not be determined.
+If NULL is returned, an error message is left in the interp's result.
+Storage for the result string is allocated in bufferPtr; the caller
+must call <B>Tcl_DStringFree()</B> when the result is no longer needed.
+The format of the path is UTF-8.
+<P>
+<B>Tcl_Chdir</B> changes the applications current working directory to
+the value specified in <I>path</I>.  The format of the passed in string
+must be UTF-8.  The function returns -1 on error or 0 on success.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+pwd
+
+</BODY>
+</HTML>

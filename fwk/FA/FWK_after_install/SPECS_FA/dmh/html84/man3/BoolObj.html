@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_BooleanObj_Tcl_8_0"></A>
+<TITLE>Tcl_BooleanObj Tcl Library Procedures 8.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_NewBooleanObj, Tcl_SetBooleanObj, Tcl_GetBooleanFromObj - manipulate Tcl objects as boolean values <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+Tcl_Obj *
+<B>Tcl_NewBooleanObj</B>(<I>boolValue</I>)
+<P>
+<B>Tcl_SetBooleanObj</B>(<I>objPtr, boolValue</I>)
+<P>
+int
+<B>Tcl_GetBooleanFromObj</B>(<I>interp, objPtr, boolPtr</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>int <I>boolValue</I></B> (in)
+<DD>Integer value used to initialize or set a boolean object.
+If the integer is nonzero, the boolean object is set to 1;
+otherwise the boolean object is set to 0.
+<P><DT><B>Tcl_Obj <I>*objPtr</I></B> (in/out)
+<DD>For <B>Tcl_SetBooleanObj</B>, this points to the object to be converted
+to boolean type.
+For <B>Tcl_GetBooleanFromObj</B>, this refers to the object
+from which to get a boolean value; 
+if <I>objPtr</I> does not already point to a boolean object,
+an attempt will be made to convert it to one.
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in/out)
+<DD>If an error occurs during conversion,
+an error message is left in the interpreter's result object
+unless <I>interp</I> is NULL.
+<P><DT><B>int <I>*boolPtr</I></B> (out)
+<DD>Points to place where <B>Tcl_GetBooleanFromObj</B>
+stores the boolean value (0 or 1) obtained from <I>objPtr</I>.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+These procedures are used to create, modify, and read
+boolean Tcl objects from C code.
+<B>Tcl_NewBooleanObj</B> and <B>Tcl_SetBooleanObj</B>
+will create a new object of boolean type
+or modify an existing object to have boolean type. 
+Both of these procedures set the object to have the
+boolean value (0 or 1) specified by <I>boolValue</I>;
+if <I>boolValue</I> is nonzero, the object is set to 1,
+otherwise to 0.
+<B>Tcl_NewBooleanObj</B> returns a pointer to a newly created object
+with reference count zero.
+Both procedures set the object's type to be boolean
+and assign the boolean value to the object's internal representation
+<I>longValue</I> member.
+<B>Tcl_SetBooleanObj</B> invalidates any old string representation
+and, if the object is not already a boolean object,
+frees any old internal representation.
+<P>
+<B>Tcl_GetBooleanFromObj</B> attempts to return a boolean value
+from the Tcl object <I>objPtr</I>.
+If the object is not already a boolean object,
+it will attempt to convert it to one.
+If an error occurs during conversion, it returns <B>TCL_ERROR</B>
+and leaves an error message in the interpreter's result object
+unless <I>interp</I> is NULL.
+Otherwise, <B>Tcl_GetBooleanFromObj</B> returns <B>TCL_OK</B>
+and stores the boolean value in the address given by <I>boolPtr</I>.
+If the object is not already a boolean object,
+the conversion will free any old internal representation.
+Objects having a string representation equal to any of <B>0</B>,
+<B>false</B>, <B>no</B>, or <B>off</B> have a boolean value 0; if the
+string representation is any of <B>1</B>, <B>true</B>, <B>yes</B>, or
+<B>on</B> the boolean value is 1.
+Any of these string values may be abbreviated, and upper-case spellings
+are also acceptable.
+<P>
+<P>
+<H2>SEE ALSO</H2>
+
+Tcl_NewObj, Tcl_DecrRefCount, Tcl_IncrRefCount, Tcl_GetObjResult
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+boolean, boolean object, boolean type, internal representation, object, object type, string representation
+
+</BODY>
+</HTML>

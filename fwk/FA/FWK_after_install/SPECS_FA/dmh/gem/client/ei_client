@@ -1,0 +1,166 @@
+#!/bin/sh
+# $Header: /usr/cvsroot/gem/client/ei_client,v 1.6 2004/02/04 16:58:25 hume Exp $
+#
+# GUI client of an equipment interface application
+#
+# Usage: ei_client [RPC_box@group]
+#
+# restart using dmh_wish \
+exec dmh_wish -f "$0" "$@"
+package require dmh
+dmh_import
+
+global MB_EI_APP MB_GROUP argv
+set MB_GROUP [set MB_EI_APP ""]
+
+proc ei_client_target atstring {
+    set fullname [join [split $atstring " @,\t"]]
+    if { $fullname == "" } { exit }
+    global MB_EI_APP MB_GROUP MB_EI_SQL
+    vset $fullname "MB_EI_APP MB_GROUP"
+    regsub _RPC $MB_EI_APP _SQL MB_EI_SQL
+    }
+
+if { $argv == "" || ([string first @ $argv] < 0) } {
+    set txt [dmh_gets "EI Client Specification"\
+ "This utility lets you monitor Equipment Interfaces\
+ that are running in a remote application. 
+
+ Enter the DMH RPC mailbox of the remote application,\
+ fully qualified with its group name."\
+ "gemhost_RPC@[dp_hostname]:gem" {[A-Za-z0-9_.!]+@..*}]
+    set txt [string trim $txt]
+    ei_client_target $txt
+    } \
+else {
+    ei_client_target [lindex $argv 0]
+    }
+
+if { $MB_GROUP == "" } exit
+
+mbx init $MB_GROUP
+
+global env auto_path tk_version
+set V [join [split $tk_version .] ""] ;# "40" "42" "80" etc
+set display [lindex [split $env(DISPLAY) :] 0]
+set display [join [split $display "-."] "_"]
+set MB_XACT ${display}_EIX
+set MB_RPC ${display}_EI_RPC
+mbx whenmsg $MB_RPC mbx_RPC
+set TIMEOUT_EI 60000
+
+wm title . "EI Client - ${MB_EI_APP}@${MB_GROUP}"
+wm iconname . "${MB_EI_APP}@$MB_GROUP"
+
+button .b1 -text "Trace Window(s)..." -width 18\
+ -command ei_client_pick
+button .b2 -text "Inspect Client..." -width 18\
+ -command "exec inspect ${MB_EI_APP}@${MB_GROUP} &"
+button .b3 -text "Data Table Client..." -width 18\
+ -command "exec hub${V}client ${MB_EI_SQL}@${MB_GROUP} &"
+button .ex -text "Exit" -command "destroy ."
+pack .b1 .b2 .b3 .ex -side top -padx 4m -ipadx 4m
+bind .ex <Destroy> ei_client_exit
+
+
+#
+# if the DMH is shutdown, we exit
+#
+proc mh_app_lostserver {group fileID} {
+    global MB_GROUP argv0
+    set h [after 15000 exit]
+    tk_dialog .uhoh "$argv0 DMH Connection Lost" "The DMH server\
+ for $MB_GROUP has been shutdown.\
+ This client will exit shortly." error 0 "Exit Now"
+    after cancel $h
+    exit
+    }
+
+proc ei_client_exit {} {
+    global MB_EI_APP MB_RPC
+    # close remote subscriptions of the objects we are shadowing 
+    foreach pair [ei_vartrace_selection] {
+        vset $pair {name type}
+        # close remote side
+        catch {
+            mbx put $MB_EI_APP "ei_vartrace $name $MB_RPC 0 0"
+            }
+        # close local side
+        ei_vartrace $name $MB_EI_APP 0 0
+        }
+    after idle exit
+    }
+
+proc ei_client_pick {} {
+    global MB_EI_APP MB_XACT TIMEOUT_EI
+    set reply [lindex [mbx_do_xact $MB_EI_APP ei_vartrace_selection\
+ $MB_XACT $TIMEOUT_EI] 0]
+    if { $reply == "TIMEOUT" } {
+        tk_dialog .popup "EI Client Selection" "TIMEOUT -\
+ no response from mailbox $MB_EI_APP" error 0 Dimiss
+        return
+        }
+    vset $reply {rc list}
+    if { $rc != "0" } {
+        tk_dialog .popup "EI Client Selection" "The remote\
+ application is not able to offer remote clients - \"$list\""\
+ error 0 Dismiss
+        return
+        }
+    if { [llength $list ] < 1 } {
+        tk_dialog .popup "EI Client Selection" "The remote\
+ application does not have any Equipment Interfaces."\
+ error 0 Dismiss
+        return
+        }
+    dmh_listpick $list "Choose the Equipment Interface\
+ to create a Trace Window for:" ei_proxy  "EI Client Selection"
+    }
+
+    
+
+# create the local proxy of a remote hsms, secsport, or comm 
+# equipment interface
+proc ei_proxy {text} {
+    vset $text {objname class}
+    global $objname MB_XACT MB_RPC MB_EI_APP TIMEOUT_EI 
+    # setup a local proxy if it does not already exist
+    if { ![info exists $objname] && ([info commands $objname] == "") } {
+        # make a local copy of the remote obj
+        set msg "ei_vartrace $objname $MB_RPC 1 1"
+        set reply [lindex [mbx_do_xact $MB_EI_APP $msg $MB_XACT $TIMEOUT_EI] 0]
+        vset $reply {rc txt}
+        if { $rc != "0" } {
+            tk_dialog .popup "EI Client Setup" "A local representation\
+ of the chosen interface could not be created - $txt" error 0 Dismiss
+            return
+            }
+        # make sure we got all the array data
+        #update
+        # if we write to our local copy, make the changes remote
+        ei_vartrace $objname $MB_EI_APP 1 0
+        # setup a proxy command
+        proc $objname {args} "return \[lindex \[mbx_do_xact $MB_EI_APP\
+ \[concat $objname \$args\] $MB_XACT $TIMEOUT_EI\] 0\]"
+        # create the trace window UI
+        if { $class == "secsport" || $class == "hsms" } { 
+            secsport_tracewin $objname }\
+        elseif { $class == "comm" } { comm_tracewin $objname }
+        }\
+    else {  ;# the proxy already exists or there is a name conflict
+        if { [info exists $objname] && ([info procs $objname]  == $objname)\
+           && [info exists ${objname}(TRACE)] } {
+            # it already exists and we may have dismissed the window
+            if { $class == "secsport" || $class == "hsms" } { 
+                secsport_tracewin $objname }\
+            elseif { $class == "comm" } { comm_tracewin $objname }
+            }\
+        else {
+            tk_dialog .popup "EI Client Setup" "The name of the\
+ chosen interface is already in use as a command or global variable,\
+ so we cannot setup a local representation of it." error 0 Dismiss
+            return
+            }
+        }
+    }
+

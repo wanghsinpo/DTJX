@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>timestamp Dmhwidget</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ timestamp - A Dmhwidget for editing timestamp values <P>
+<H2>SYNOPSIS</H2>
+  <B>dmhwidgets::timestamp<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Widget &lt;- Iwidgets::Labeledwidget &lt;- dmhwidgets::Timestamp <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+<B>activebackground
+activeforeground
+background
+borderwidth
+cursor
+disabledforeground
+font
+foreground
+highlightcolor
+highlightthickness
+insertbackground
+insertborderwidth
+insertofftime
+insertontime
+insertwidth
+selectbackground
+selectborderwidth
+selectcolor
+selectforeground
+</B>	
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>INHERITED OPTIONS</H2>
+<B>
+labelbitmap
+labelfont
+labelimage
+labelmargin
+labelpos
+labeltext
+labelvariable
+</B>
+ <P>
+See the <a href="../mann/labeledwidget.html">Labeledwidget</a> manual entry for details on the standard options. <P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+Name:	<B>choose</B>&nbsp;
+Class:	<B>Choose</B>&nbsp;
+Command-Line Switch: <B>-choose</B>&nbsp;
+Default value:	<B>{0 0 0}</B>
+<DD>Used as a list of three boolean elements, corresponding to timestamp value
+choices in the past, the present, and the future.  If any of the values are 
+non-zero, a Choose button is provided for the user to press and select a
+timestamp value from a union of the allowed choices.
+<P>
+Name:	<B>decimals</B>&nbsp;
+Class:	<B>Decimals</B>&nbsp;
+Command-Line Switch: <B>-decimals</B>&nbsp;
+Default value:	<B>0</B>
+<DD>An integer value from 0 to 9 specifying the number of decimal digits
+to be displayed or entered.
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>timestamp</B> command creates a widget for editing timestamp values,
+and a new Tcl command whose name is <I>pathname</I>.  The command
+is then used to invoke various methods of the widget.  The command has
+the general form:<P>
+
+<P>
+<I>pathName option ?arg arg ... arg?</I>
+<P>
+<P>
+
+<H2>WIDGET-SPECIFIC METHODS</H2>
+ 
+<DT><B><I>pathName</I> get [<I>format</I>]</B>
+<DD>If a valid timestamp is represented, the value is returned in
+the caller's specified format.  If an invalid value exists, an empty
+string is returned.  The format choices are:
+<DL><DL>
+<DT>ts
+<DD>YYYY-MM-DD HH:MM:SS.uuuuuu
+<DT>ts<I>N</I>
+<DD><I>N</I> can vary 0..9.  Same as ts except there are <I>N</I> decimal
+places.
+<DT>iso
+<DD>YYYY-MM-DD<B>T</B>HH:MM:SS.uuuuuu
+<DT>secs
+<DD>the count of seconds since the epoch - <a href="localtime.html">localtime</a> format 2
+<DT>secs_micros
+<DD>the count of seconds and microseconds since the epoch - localtime format 11
+</DL></DL>
+<P>
+<DT><B><I>pathName</I> isvalid </B>
+<DD>Returns 1 if the displayed value is a valid timestamp, otherwise 0.
+<P>
+<DT><B><I>pathName</I> show <I>timestamp</I> </B>
+<DD>Sets the displayed value.  The input format is expected to be
+YYYY-MM-DD<I>X</I>hh:mm:ss[.uuuuuu], where <I>X</I> is any character.
+<P>
+
+<H2>EXAMPLE</H2>
+<PRE>
+package require dmh
+package require Iwidgets
+package require Dmhwidgets
+
+
+dmhwidgets::timestamp .timestamp -labeltext "timestamp:" -choose {1 1 1}
+pack .timestamp -side top -fill x -expand yes -padx 10 -pady 10
+button .timestamp_ok -text Ok -command [list timestamp_ok .timestamp]
+pack .timestamp_ok -side top -padx 20m -pady 2m
+
+proc timestamp_ok ts {
+    set txt [$ts get]
+    puts $txt
+    }
+
+</PRE>
+
+<H2>AUTHOR</H2>
+Hume Integration Software, www.hume.com
+
+<H2>KEYWORDS  </H2>
+calendar, date, time, UTC, widget 
+</BODY>
+</HTML>

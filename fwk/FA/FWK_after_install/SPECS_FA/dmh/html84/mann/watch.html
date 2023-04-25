@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="iwidgets__watch_iwid_"></A>
+<TITLE>iwidgets::watchSection iwid</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ iwidgets::watch - Create and manipulate time with a watch widgets <P>
+<H2>SYNOPSIS</H2>
+ <B>iwidgets::watch<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Widget &lt;- iwidgets::Watch <P>
+<P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+
+<B>background</B>	<B>cursor</B>	<B>foreground</B>	<B>relief</B>
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>ASSOCIATED OPTIONS</H2>
+ <P>
+See the <a href="../mann/canvas.html">canvas</a> manual entry for details on the above associated options. <P>
+<P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+
+Name:	<B>clockColor</B>
+Class:	<B>ColorfR
+Command-Line Switch:	-clockcolor</B>
+ 
+<DD> Fill color for the main oval encapsulating the watch, in any of the forms acceptable to <B>Tk_GetColor</B>.  The default is "White". 
+<P>
+Name:	<B>clockStipple</B>
+Class:	<B>BitmapfR
+Command-Line Switch:	-clockstipple</B>
+ 
+<DD> Bitmap for the main oval encapsulating the watch, in any of the forms acceptable to <B>Tk_GetBitmap</B>.  The default is "". <P>
+
+Name:	<B>height</B>
+Class:	<B>Height</B>
+Command-Line Switch:	<B>-height</B>
+ 
+<DD> Specifies the height of the watch widget in any of the forms  acceptable to <B>Tk_GetPixels</B>.  The default height is 175 pixels. <P>
+
+Name:	<B>hourColor</B>
+Class:	<B>ColorfR
+Command-Line Switch:	-hourcolor</B>
+ 
+<DD> Fill color for the hour hand, in any of the forms acceptable to <B>Tk_GetColor</B>. The default is "Red". <P>
+
+Name:	<B>hourRadius</B>
+Class:	<B>Radius</B>
+Command-Line Switch:	<B>-hourradius</B>
+ 
+<DD> Specifies the radius of the hour hand as a percentage of the radius from the center to the out perimeter of the clock. The value must be a fraction &lt;= 1.  The default is ".5". <P>
+
+Name:	<B>minuteColor</B>
+Class:	<B>ColorfR
+Command-Line Switch:	-minutecolor</B>
+ 
+<DD> Fill color for the minute hand, in any of the forms acceptable to <B>Tk_GetColor</B>. The default is "Yellow". <P>
+
+Name:	<B>minuteRadius</B>
+Class:	<B>Radius</B>
+Command-Line Switch:	<B>-minuteradius</B>
+ 
+<DD> Specifies the radius of the minute hand as a percentage of the radius from the center to the out perimeter of the clock. The value must be a fraction &lt;= 1.  The default is ".8". <P>
+
+Name:	<B>pivotColor</B>
+Class:	<B>ColorfR
+Command-Line Switch:	-pivotcolor</B>
+ 
+<DD> Fill color for the circle in which the watch hands rotate in any of the forms acceptable to <B>Tk_GetColor</B>. The default is "White". <P>
+
+Name:	<B>pivotRadius</B>
+Class:	<B>Radius</B>
+Command-Line Switch:	<B>-pivotradius</B>
+ 
+<DD> Specifies the radius of the circle in which the watch hands rotate as a percentage of the radius.  The value must be a fraction &lt;= 1. The default is ".1". <P>
+
+Name:	<B>secondColor</B>
+Class:	<B>ColorfR
+Command-Line Switch:	-secondcolor</B>
+ 
+<DD> Fill color for the second hand, in any of the forms acceptable to <B>Tk_GetColor</B>. The default is "Black". <P>
+
+Name:	<B>secondRadius</B>
+Class:	<B>Radius</B>
+Command-Line Switch:	<B>-secondradius</B>
+ 
+<DD> Specifies the radius of the second hand as a percentage of the radius from the center to the out perimeter of the clock. The value must be a fraction &lt;= 1.  The default is ".9". <P>
+
+Name:	<B>showAmPm</B>
+Class:	<B>ShosAmPm</B>
+Command-Line Switch:	<B>-showampm</B>
+ 
+<DD> Specifies whether the AM/PM radiobuttons should be displayed, in any of the forms acceptable to <B>Tcl_GetBoolean</B>.  The default is yes. <P>
+
+Name:	<B>state</B>
+Class:	<B>State</B>
+Command-Line Switch:	<B>-state</B>
+ 
+<DD> Specifies the editable state for the hands on the watch.  In a normal state, the user can select and move the hands via mouse button 1.  The  valid values are <B>normal</B>, and <B>disabled</B>.  The defult is normal. <P>
+
+Name:	<B>tickColor</B>
+Class:	<B>ColorfR
+Command-Line Switch:	-tickcolor</B>
+ 
+<DD> Fill color for the 60 ticks around the perimeter of the watch, in any of the forms acceptable to <B>Tk_GetColor</B>.  The default is "Black". <P>
+
+Name:	<B>width</B>
+Class:	<B>Width</B>
+Command-Line Switch:	<B>-width</B>
+ 
+<DD> Specifies the width of the watch widget in any of the forms  acceptable to <B>Tk_GetPixels</B>.  The default height is 155 pixels. <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+<P>
+The <B>iwidgets::watch</B> command creates a watch with hour, minute, and second hands modifying the time value. <P>
+<P>
+<H2>METHODS</H2>
+ <P>
+The <B>iwidgets::watch</B> command creates a new Tcl command whose name is <I>pathName</I>. This command may be used to invoke various operations on the widget. It has the following general form: <PRE>
+<I>pathName option </I>?<I>arg arg ...</I>?
+</PRE>
+<I>Option</I> and the <I>arg</I>s determine the exact behavior of the command. The following commands are possible for watch widgets: <P>
+<P>
+<H2>WIDGET-SPECIFIC METHODS</H2>
+ 
+<DT><I>pathName <B>cget</B></I> <I>option</I>
+<DD>Returns the current value of the configuration option given by <I>option</I>. <I>Option</I> may have any of the values accepted by the <B>iwidgets::watch</B> command. 
+<DT><I>pathName</I> <B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?
+<DD>Query or modify the configuration options of the widget. If no <I>option</I> is specified, returns a list describing all of the available options for <I>pathName</I> (see <B>Tk_ConfigureInfo</B> for information on the format of this list).  If <I>option</I> is specified with no <I>value</I>, then the command returns a list describing the one named option (this list will be identical to the corresponding sublist of the value returned if no <I>option</I> is specified).  If one or more <I>option-value</I> pairs are specified, then the command modifies the given widget option(s) to have the given value(s);  in this case the command returns an empty string. <I>Option</I> may have any of the values accepted by the <B>iwidgets::watch</B> command. 
+<DT><I>pathName <B>get</B></I> ?<B>format</B>?
+<DD>Returns the current time of the watch in a format of  string or as an integer clock value using the <B>-string</B> and <B>-clicks</B> format options respectively.  The default is by string.  Reference the  clock command for more information on obtaining time and its  formats. 
+<DT><I>pathName <B>show</B></I> <I>time</I>
+<DD>Changes the currently displayed time to be that of the time  argument.  The time may be specified either as a string, an integer clock value or the keyword "now".  Reference the clock  command for more information on obtaining time and its format. 
+<DT><I>pathName <B>watch</B></I> ?<B>args</B>?
+<DD>Evaluates the specifieds <B>args</B> against the canvas component. <P>
+<P>
+<H2>COMPONENTS</H2>
+ <P>
+
+Name:	<B>canvas</B>
+Class:	<B>Canvas</B>
+ 
+<DD> The canvas component is the where the clock is drawn.  See the  Canvas widget manual entry for details. <P>
+
+Name:	<B>frame</B>
+Class:	<B>Frame</B>
+ 
+<DD> The frame component is the where the "AM" and "PM" radiobuttons are displayed. See the Frame widget manual entry for details. <P>
+
+Name:	<B>am</B>
+Class:	<B>Radiobutton</B>
+ 
+<DD> The am component indicates whether on not the time is relative to "AM". See the Radiobutton widget manual entry for details. <P>
+
+Name:	<B>pm</B>
+Class:	<B>Radiobutton</B>
+ 
+<DD> The pm component indicates whether on not the time is relative to "PM". See the Radiobutton widget manual entry for details.  <P>
+<P>
+<H2>EXAMPLE</H2>
+ <PRE>
+package require Iwidgets 4.0
+iwidgets::watch .w -state disabled -showampm no -width 155 -height 155
+pack .w -padx 10 -pady 10 -fill both -expand yes
+<P>
+while {1} {
+  after 1000
+  .w show
+  update
+}
+</PRE>
+<P>
+<H2>AUTHOR</H2>
+ John Tucker </PRE>
+Mark L. Ulferts <P>
+<H2>KEYWORDS</H2>
+ watch, hand, ticks, pivot, widget <P>
+
+</BODY>
+</HTML>

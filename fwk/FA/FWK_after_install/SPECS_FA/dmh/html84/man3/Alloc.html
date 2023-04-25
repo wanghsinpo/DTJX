@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_Alloc_Tcl_7_5"></A>
+<TITLE>Tcl_Alloc Tcl Library Procedures 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_Alloc, Tcl_Free, Tcl_Realloc, Tcl_AttemptAlloc, Tcl_AttemptRealloc, ckalloc, ckfree, ckrealloc, attemptckalloc, attemptckrealloc - allocate or free heap memory <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+char *
+<B>Tcl_Alloc</B>(<I>size</I>)
+<P>
+void
+<B>Tcl_Free</B>(<I>ptr</I>)
+<P>
+char *
+<B>Tcl_Realloc</B>(<I>ptr, size</I>)
+<P>
+char *
+<B>Tcl_AttemptAlloc</B>(<I>size</I>)
+<P>
+char *
+<B>Tcl_AttemptRealloc</B>(<I>ptr, size</I>)
+<P>
+char *
+<B>ckalloc</B>(<I>size</I>)
+<P>
+void
+<B>ckfree</B>(<I>ptr</I>)
+<P>
+char *
+<B>ckrealloc</B>(<I>ptr, size</I>)
+<P>
+char *
+<B>attemptckalloc</B>(<I>size</I>)
+<P>
+char *
+<B>attemptckrealloc</B>(<I>ptr, size</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>int <I>size</I></B> (in)
+<DD>Size in bytes of the memory block to allocate.
+<P><DT><B>char <I>*ptr</I></B> (in)
+<DD>Pointer to memory block to free or realloc.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+These procedures provide a platform and compiler independent interface
+for memory allocation.  Programs that need to transfer ownership of
+memory blocks between Tcl and other modules should use these routines
+rather than the native <B>malloc()</B> and <B>free()</B> routines
+provided by the C run-time library.
+<P>
+<B>Tcl_Alloc</B> returns a pointer to a block of at least <I>size</I>
+bytes suitably aligned for any use.
+<P>
+<B>Tcl_Free</B> makes the space referred to by <I>ptr</I> available for
+further allocation.
+<P>
+<B>Tcl_Realloc</B> changes the size of the block pointed to by
+<I>ptr</I> to <I>size</I> bytes and returns a pointer to the new block.
+The contents will be unchanged up to the lesser of the new and old
+sizes.  The returned location may be different from <I>ptr</I>.
+<P>
+<B>Tcl_AttemptAlloc</B> and <B>Tcl_AttemptRealloc</B> are identical in
+function to <B>Tcl_Alloc</B> and <B>Tcl_Realloc</B>, except that
+<B>Tcl_AttemptAlloc</B> and <B>Tcl_AttemptRealloc</B> will not cause the Tcl
+interpreter to <B>panic</B> if the memory allocation fails.  If the
+allocation fails, these functions will return NULL.  Note that on some
+platforms, attempting to allocate a zero length block of memory will also cause
+these functions to return NULL.
+<P>
+The procedures <B>ckalloc</B>, <B>ckfree</B>, <B>ckrealloc</B>,
+<B>attemptckalloc</B>, and <B>attemptckrealloc</B> are implemented
+as macros.  Normally, they are synonyms for the corresponding
+procedures documented on this page.  When Tcl and all modules
+calling Tcl are compiled with <B>TCL_MEM_DEBUG</B> defined, however,
+these macros are redefined to be special debugging versions of 
+of these procedures.  To support Tcl's memory debugging within a
+module, use the macros rather than direct calls to <B>Tcl_Alloc</B>, etc.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+alloc, allocation, free, malloc, memory, realloc, TCL_MEM_DEBUG
+
+</BODY>
+</HTML>

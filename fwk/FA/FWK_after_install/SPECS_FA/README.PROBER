@@ -1,0 +1,95 @@
+
+== Keysight SPECS-FA README.PROBER ==========================
+
+CONTENTS:
+
+ 1. PROBER SETTING SUMMARY
+    TEL P-12XL
+
+    Regarding P-12XL prober setting, please contact with HSTD or TEL.
+
+
+
+
+1. Prober Setting Summary =====================================================
+   TEL P-12 Setting Summary for FA_TELP12 Framework
+   ******************************************************
+
+        GP-IB Parameters
+        (Main Menu/Diagnostics/Adjustments/Hardware Options/GPIB Parameter Settings)
+
+                Terminator                                   : CRLF
+                Coordinate Update Method (I,J command)       : Do Not Update
+                Z Position After XY Stage                    : Down Position
+                Drive Off Wafer With X,Y,I,J,b               : Yes
+                Use SRQ43(H) or C3(H) after Z when using profiler
+                                                             : 43(H)
+                Initial wafer SRQ                            : 46(H)+4A(H)
+                Output SRQ of Command/Parameter error        : Yes
+                Auto unload with alignment error signal or with the u,U command
+                                                             : u,U
+                Output SRQ48(H) at carrier end               : Yes
+                Output SRQ4E(H) at lot end                   : No
+                Issue SRQ69(H) or SRQ48(H) when lot finished : 48(H)
+
+
+        Testing Limitation
+        (Main Menu/Diagnostics/Adjustments/Testing Limitation)
+
+                Display end of lot message                   : No/Yes *1
+
+                *1: Depend on User Environment of Wafer Carrier Handling
+                        No  : for Automatic
+                        Yes : for Operator Assistance.
+
+
+        Operation Parameters
+        (Main Menu/Setup/Operation Parameter/GPIB)
+
+                GPIB                                         : Standard
+                Stop at Reference Die                        : No
+                Receive Parameters                           : No
+                Random Wafer Testing                         : No 
+                Watch Time for GPIB Timer                    : 0Sec
+                Cassette Map                                 : Yes
+                Enable RETEST                                : Yes
+
+
+        Network Control Parameters
+        (Main Menu/Diagnostics/GEM/Communication Parameters)
+
+                Connect Mode                                 : ACTIVE
+                Machine Name                                 : Not used
+                Machine IP                                   : 
+                Host Name                                    : Not used
+                Host IP                                      :
+                Port Number                                  : 5556
+                Gateway Address                              :
+                Subnet mask                                  :
+                Session ID                                   : 0000
+                Connect retry                                : ENABLE
+                Duplicate Block Detection                    : DISABLE
+                Multi-Block Data Send Inquire                : DISABLE
+                W-BIT(S5)                                    : ENABLE
+                W-BIT(S6)                                    : ENABLE
+
+
+        Alarm Message
+        (Main Menu/Diagnostics/GEM/Edit Alarms)
+
+                Msg     AlarmRpt.                            : ALL NO
+                        Detect                               : ALL NO
+                        Clear                                : ALL NO
+                        Recog.                               : ALL NO
+
+                Ast     AlarmRpt.                            : ALL NO
+                        Detect                               : ALL NO
+                        Clear                                : ALL NO
+                        Recog.                               : ALL NO
+
+                Err     AlarmRpt.                            : ALL YES
+                        Detect                               : ALL YES
+                        Clear                                : ALL YES
+                        Recog.                               : ALL YES
+
+ ==============================================================================

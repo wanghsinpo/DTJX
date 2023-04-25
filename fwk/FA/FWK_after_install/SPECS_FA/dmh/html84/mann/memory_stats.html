@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="memory_stats_Tcl_8_3"></A>
+<TITLE>memory_stats Tcl Built-In Commands 8.3</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ memory_stats - Tcl memory allocation statistics <P>
+<H2>SYNOPSIS</H2>
+ <B>memory_stats</B> <P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>memory_stats</B> command is available in Hume customized versions of Tcl 
+when the Tcl interpreter has been compiled to use its
+own memory allocation logic, and the MSTATS macro is true (compile flags -DUSE_TCL_ALLOC=1
+and -DMSTATS (see generic/tclAlloc.c)).  The command result provides information on the amount and sizes
+of memory blocks that have been allocated, are in active use, or are free.
+Tcl does not return small sized allocated memory to the system so it is often of interest
+to know to what degree allocated memory has been freed and is being retained for
+future use.  
+The command result provides a list of named values.
+<PRE>
+% memory_stats
+{freelist_counters {0 658 247 124 239 21 0 30 8 5 6 2 1}} \
+{in_use {0 1390 3849 5508 273 235 128 66 56 51 14 0 0}} \
+{total_small_free 244608} {total_small_in_use 1164416} \
+{total_smalls_and_overhead 1512312} {big_in_use_count 0}
+
+</PRE>
+The named values have the following meanings:<P>
+<DT><b>freelist_counters</b>
+<DD>The 13 numbers represent counts of memory blocks that have been allocated
+and then freed for future use.  The counts are for the sequence of rounded-up 
+allocation sizes of 8, 16, 32, ..., (2^15).  Because of the per-allocation
+overhead which also allows for memory alignment, the smallest size may not
+be in use.
+<DT><b>in_use</b>
+<DD>The 13 numbers represent counts of memory blocks that are in active use,
+ordered from smallest to largest.
+<DT><b>total_small_free</b>
+<DD>This is the total amount of free memory which is computed by 
+summing the product of the free counters and their sizes.
+<DT><b>total_small_in_use</b>
+<DD>This is the total amount of active memory represented by the
+in_use counters and using their respective sizes.
+<DT><b>total_smalls_and_overhead</b>
+<DD>This figure is the sum of the small free memory, the small active memory,
+and the amount of memory consumed by allocation overhead.
+<DT><b>big_in_use_count</b>
+<DD>Memory blocks that are larger than 32k are allocated 
+separately, and returned to the system when free.  This count
+shows how many big blocks are in use.
+<P>
+<H2>SEE ALSO</H2>
+ ckalloc, ckfree, <a href="memory.html">memory</a>, Tcl_ValidateAllMemory, Tcl_DumpActiveMemory, TCL_MEM_DEBUG <P>
+<P>
+<H2>AUTHOR</H2>
+<P>
+The <b>memory_stats</b> command has been created by Hume Integration Software
+and is not part of the ordinary Tcl/Tk distribution.
+
+<H2>KEYWORDS</H2>
+ memory, debug <P>
+<P>
+
+</BODY>
+</HTML>

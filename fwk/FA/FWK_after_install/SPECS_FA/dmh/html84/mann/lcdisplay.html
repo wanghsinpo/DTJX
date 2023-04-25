@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>lcdisplay Dmhwidget</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ lcdisplay - A Dmhwidget for displaying values using 7-segment digits<P>
+<H2>SYNOPSIS</H2>
+  <B>dmhwidgets::lcdisplay<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Widget &lt;- dmhwidgets::Lcdisplay <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+<B>background cursor foreground height</B>	
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+Name:	<B>aspect</B>&nbsp;
+Class:	<B>Aspect</B>&nbsp;
+Command-Line Switch: <B>-aspect</B>&nbsp;
+Default value:	<B>2.0</B>
+<DD>Used as a floating point value to specify the ratio of vertical pixels to
+horizontal pixels used for the rectangular area allotted for each digit and its
+usual spacing.
+<P>
+Name:	<B>format</B>&nbsp;
+Command-Line Switch: <B>-format</B>&nbsp;
+Default value:	<B>%4.2f</B>
+<DD>A value which is used as the <a href="format.html">format</a> 
+specification string.  The <b>-value</b> numeric value is formatted using this
+formatting specification and then displayed.
+<P>
+Name:	<B>formatted_value</B>&nbsp;
+Command-Line Switch: <B>-formatted_value</B>&nbsp;
+Default value:	<B>0.00</B>&nbsp;
+<DD>The formatted value to be displayed; for example, "12:34:56" or "+6.02E23".  The
+user can directly prepare and configure formatted values, or the user can configure the
+<b>-format</b> value, and then configure <b>-value</b> values, and let the widget logic
+apply the <a href="format.html">format</a> command to the new values.  The <b>
+formatted_value</b> is a string consisting of any sequence of the characters 
+in the string "0123456789 -+E.:".
+<P>
+Name:	<B>tilt</B>&nbsp;
+Class:	<B>Tilt</B>&nbsp;
+Command-Line Switch: <B>-tilt</B>&nbsp;
+Default value:	<B>0</B>
+<DD>Used as a non-negative integer to specify the percentage by which
+the digits slant to the upper-right.
+<P>
+Name:	<B>value</B>&nbsp;
+Class:	<B>Value</B>&nbsp;
+Command-Line Switch: <B>-value</B>&nbsp;
+Default value:	<B>0</B>
+<DD>A numeric value to be formatted and then displayed.
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>lcdisplay</B> command creates a widget that uses
+a set of lcdigits to display a value,
+and a new Tcl command whose name is <I>pathname</I>.  The command
+is then used to invoke various methods of the widget.  The command has
+the general form:<P>
+
+<P>
+<I>pathName option ?arg arg ... arg?</I>
+<P>
+<P>
+The lcdisplay will resize itself to fill the available height.  It will
+vary the number of digits displayed in order to comply with the format
+of the formatted value.
+<P>
+
+<H2>WIDGET-SPECIFIC METHODS</H2>
+<P>
+<DT><B><I>pathName</I> flash</B>
+<DD>This method causes all of the displayed digits to briefly appear with
+blank values, and then go back to displaying the current <B>formatted_value</B>.
+
+<H2>EXAMPLE</H2>
+<PRE>
+
+package require Dmhwidgets
+
+dmhwidgets::lcdisplay .lcd -height 150 -format "%6.2f" -value 3.1415926
+pack .lcd -side top -expand 1 -fill y
+
+after 3000 {if {[winfo exists .lcd]} {.lcd configure -value 12.345678}}
+
+</PRE>
+
+<H2>AUTHOR</H2>
+Hume Integration Software, www.hume.com
+
+<H2>KEYWORDS  </H2>
+digit, LCD, LED, 7-segment, widget 
+</BODY>
+</HTML>

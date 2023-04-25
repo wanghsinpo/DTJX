@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_CreateMathFunc_Tcl_8_4"></A>
+<TITLE>Tcl_CreateMathFunc Tcl Library Procedures 8.4</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_CreateMathFunc, Tcl_GetMathFuncInfo, Tcl_ListMathFuncs - Define, query and enumerate math functions for expressions <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+void
+<B>Tcl_CreateMathFunc</B>(<I>interp, name, numArgs, argTypes, proc, clientData</I>)
+<P>
+int
+<B>Tcl_GetMathFuncInfo</B>(<I>interp, name, numArgsPtr, argTypesPtr, procPtr, clientDataPtr</I>)
+<P>
+Tcl_Obj *
+<B>Tcl_ListMathFuncs</B>(<I>interp, pattern</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter in which new function will be defined.
+<P><DT><B>CONST char <I>*name</I></B> (in)
+<DD>Name for new function.
+<P><DT><B>int <I>numArgs</I></B> (in)
+<DD>Number of arguments to new function;  also gives size of <I>argTypes</I> array.
+<P><DT><B>Tcl_ValueType <I>*argTypes</I></B> (in)
+<DD>Points to an array giving the permissible types for each argument to
+function.
+<P><DT><B>Tcl_MathProc <I>*proc</I></B> (in)
+<DD>Procedure that implements the function.
+<P><DT><B>ClientData <I>clientData</I></B> (in)
+<DD>Arbitrary one-word value to pass to <I>proc</I> when it is invoked.
+<P><DT><B>int <I>*numArgsPtr</I></B> (out)
+<DD>Points to a variable that will be set to contain the number of
+arguments to the function.
+<P><DT><B>Tcl_ValueType <I>**argTypesPtr</I></B> (out)
+<DD>Points to a variable that will be set to contain a pointer to an array
+giving the permissible types for each argument to the function which
+will need to be freed up using <I>Tcl_Free</I>.
+<P><DT><B>Tcl_MathProc <I>**procPtr</I></B> (out)
+<DD>Points to a variable that will be set to contain a pointer to the
+implementation code for the function (or NULL if the function is
+implemented directly in bytecode.)
+<P><DT><B>ClientData <I>*clientDataPtr</I></B> (out)
+<DD>Points to a variable that will be set to contain the clientData
+argument passed to <I>Tcl_CreateMathFunc</I> when the function was
+created if the function is not implemented directly in bytecode.
+<P><DT><B>CONST char <I>*pattern</I></B> (in)
+<DD>Pattern to match against function names so as to filter them (by
+passing to <I>Tcl_StringMatch</I>), or NULL to not apply any filter.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+Tcl allows a number of mathematical functions to be used in
+expressions, such as <B>sin</B>, <B>cos</B>, and <B>hypot</B>.
+<B>Tcl_CreateMathFunc</B> allows applications to add additional functions
+to those already provided by Tcl or to replace existing functions.
+<I>Name</I> is the name of the function as it will appear in expressions.
+If <I>name</I> doesn't already exist as a function then a new function
+is created.  If it does exist, then the existing function is replaced.
+<I>NumArgs</I> and <I>argTypes</I> describe the arguments to the function.
+Each entry in the <I>argTypes</I> array must be
+one of TCL_INT, TCL_DOUBLE, TCL_WIDE_INT,
+or TCL_EITHER to indicate whether the corresponding argument must be an
+integer, a double-precision floating value, a wide (64-bit) integer,
+or any, respectively.
+<P>
+Whenever the function is invoked in an expression Tcl will invoke
+<I>proc</I>.  <I>Proc</I> should have arguments and result that match
+the type <B>Tcl_MathProc</B>:
+<PRE>
+typedef int Tcl_MathProc(
+	ClientData <I>clientData</I>,
+	Tcl_Interp *<I>interp</I>,
+	Tcl_Value *<I>args</I>,
+	Tcl_Value *<I>resultPtr</I>);
+</PRE>
+<P>
+When <I>proc</I> is invoked the <I>clientData</I> and <I>interp</I> arguments will be the same as those passed to <B>Tcl_CreateMathFunc</B>. <I>Args</I> will point to an array of <I>numArgs</I> Tcl_Value structures, which describe the actual arguments to the function: <PRE>
+typedef struct Tcl_Value {
+	Tcl_ValueType <I>type</I>;
+	long <I>intValue</I>;
+	double <I>doubleValue</I>;
+	Tcl_WideInt <I>wideValue</I>;
+} Tcl_Value;
+</PRE>
+<P>
+The <I>type</I> field indicates the type of the argument and is one of TCL_INT, TCL_DOUBLE or TCL_WIDE_INT. It will match the <I>argTypes</I> value specified for the function unless the <I>argTypes</I> value was TCL_EITHER. Tcl converts the argument supplied in the expression to the type requested in <I>argTypes</I>, if that is necessary. Depending on the value of the <I>type</I> field, the <I>intValue</I>, <I>doubleValue</I> or <I>wideValue</I> field will contain the actual value of the argument. <P>
+<I>Proc</I> should compute its result and store it either as an integer in <I>resultPtr-&gt;intValue</I> or as a floating value in <I>resultPtr-&gt;doubleValue</I>. It should set also <I>resultPtr-&gt;type</I> to one of TCL_INT, TCL_DOUBLE or TCL_WIDE_INT to indicate which value was set. Under normal circumstances <I>proc</I> should return TCL_OK. If an error occurs while executing the function, <I>proc</I> should return TCL_ERROR and leave an error message in the interpreter's result. <P>
+<B>Tcl_GetMathFuncInfo</B> retrieves the values associated with function <I>name</I> that were passed to a preceding <B>Tcl_CreateMathFunc</B> call.  Normally, the return code is <B>TCL_OK</B> but if the named function does not exist, <B>TCL_ERROR</B> is returned and an error message is placed in the interpreter's result. <P>
+If an error did not occur, the array reference placed in the variable pointed to by <I>argTypesPtr</I> is newly allocated, and should be released by passing it to <B>Tcl_Free</B>.  Some functions (the standard set implemented in the core) are implemented directly at the bytecode level; attempting to retrieve values for them causes a NULL to be stored in the variable pointed to by <I>procPtr</I> and the variable pointed to by <I>clientDataPtr</I> will not be modified. <P>
+<B>Tcl_ListMathFuncs</B> returns a Tcl object containing a list of all the math functions defined in the interpreter whose name matches <I>pattern</I>.  In the case of an error, NULL is returned and an error message is left in the interpreter result, and otherwise the returned object will have a reference count of zero. <P>
+<P>
+<H2>KEYWORDS</H2>
+ expression, mathematical function <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/expr.html">expr</a>, <a href="../mann/info.html">info</a>, Tcl_Free(3), Tcl_NewListObj(3) 
+</BODY>
+</HTML>

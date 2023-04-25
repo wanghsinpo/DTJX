@@ -1,0 +1,328 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="spinbox_Tk_8_4"></A>
+<TITLE>spinbox Tk Built-In Commands 8.4</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ spinbox - Create and manipulate spinbox widgets <P>
+<H2>SYNOPSIS</H2>
+ <B>spinbox</B> <I>pathName </I>?<I>options</I>? <B><PRE>
+-activebackground	-highlightthickness	-repeatinterval
+-background	-insertbackground	-selectbackground
+-borderwidth	-insertborderwidth	-selectborderwidth
+-cursor	-insertontime	-selectforeground
+-exportselection	-insertwidth	-takefocus
+-font	-insertofftime	-textvariable
+-foreground	-justify	-xscrollcommand
+-highlightbackground	-relief
+-highlightcolor	-repeatdelay
+</B></PRE>
+<P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <DT>
+<PRE>Command-Line Name:    <B>-buttonbackground</B>
+Database Name:        <B>buttonBackground</B>
+Database Class:       <B>Background</B></PRE>
+
+<DD>
+The background color to be used for the spin buttons. <DT>
+<PRE>Command-Line Name:    <B>-buttoncursor</B>
+Database Name:        <B>buttonCursor</B>
+Database Class:       <B>Cursor</B></PRE>
+
+<DD>
+The cursor to be used when over the spin buttons.  If this is empty (the default), a default cursor will be used. <DT>
+<PRE>Command-Line Name:    <B>-buttondownrelief</B>
+Database Name:        <B>buttonDownRelief</B>
+Database Class:       <B>Relief</B></PRE>
+
+<DD>
+The relief to be used for the upper spin button. <DT>
+<PRE>Command-Line Name:    <B>-buttonuprelief</B>
+Database Name:        <B>buttonUpRelief</B>
+Database Class:       <B>Relief</B></PRE>
+
+<DD>
+The relief to be used for the lower spin button. <DT>
+<PRE>Command-Line Name:    <B>-command</B>
+Database Name:        <B>command</B>
+Database Class:       <B>Command</B></PRE>
+
+<DD>
+Specifies a Tcl command to invoke whenever a spinbutton is invoked. The command recognizes several percent substitutions: <B>%W</B> for the widget path, <B>%s</B> for the current value of the widget, and <B>%d</B> for the direction of the button pressed (<B>up</B> or <B>down</B>). <DT>
+<PRE>Command-Line Name:    <B>-disabledbackground</B>
+Database Name:        <B>disabledBackground</B>
+Database Class:       <B>DisabledBackground</B></PRE>
+
+<DD>
+Specifies the background color to use when the spinbox is disabled.  If this option is the empty string, the normal background color is used. <DT>
+<PRE>Command-Line Name:    <B>-disabledforeground</B>
+Database Name:        <B>disabledForeground</B>
+Database Class:       <B>DisabledForeground</B></PRE>
+
+<DD>
+Specifies the foreground color to use when the spinbox is disabled.  If this option is the empty string, the normal foreground color is used. <DT>
+<PRE>Command-Line Name:    <B>-format</B>
+Database Name:        <B>format</B>
+Database Class:       <B>Format</B></PRE>
+
+<DD>
+Specifies an alternate format to use when setting the string value when using the <B>-from</B> and <B>-to</B> range. This must be a format specifier of the form <B>%&lt;pad&gt;.&lt;pad&gt;f</B>, as it will format a floating-point number. <DT>
+<PRE>Command-Line Name:    <B>-from</B>
+Database Name:        <B>from</B>
+Database Class:       <B>From</B></PRE>
+
+<DD>
+A floating-point value corresponding to the lowest value for a spinbox, to be used in conjunction with <B>-to</B> and <B>-increment</B>.  When all are specified correctly, the spinbox will use these values to control its contents.  This value must be less than the <B>-to</B> option. If <B>-values</B> is specified, it supercedes this option. <DT>
+<PRE>Command-Line Name:    <B>"\-invalidcommand</B>
+Database Name:        <B>or</B>
+Database Class:       <B>\-invcmd" invalidCommand InvalidCommand</B></PRE>
+
+<DD>
+Specifies a script to eval when <B>validateCommand</B> returns 0.  Setting it to an empty string disables this feature (the default).  The best use of this option is to set it to <I>bell</I>.  See <B>Validation</B> below for more information. <DT>
+<PRE>Command-Line Name:    <B>-increment</B>
+Database Name:        <B>increment</B>
+Database Class:       <B>Increment</B></PRE>
+
+<DD>
+A floating-point value specifying the increment.  When used with <B>-from</B> and <B>-to</B>, the value in the widget will be adjusted by <B>-increment</B> when a spin button is pressed (up adds the value, down subtracts the value). <DT>
+<PRE>Command-Line Name:    <B>-readonlybackground</B>
+Database Name:        <B>readonlyBackground</B>
+Database Class:       <B>ReadonlyBackground</B></PRE>
+
+<DD>
+Specifies the background color to use when the spinbox is readonly.  If this option is the empty string, the normal background color is used. <DT>
+<PRE>Command-Line Name:    <B>-state</B>
+Database Name:        <B>state</B>
+Database Class:       <B>State</B></PRE>
+
+<DD>
+Specifies one of three states for the spinbox:  <B>normal</B>, <B>disabled</B>, or <B>readonly</B>.  If the spinbox is readonly, then the value may not be changed using widget commands and no insertion cursor will be displayed, even if the input focus is in the widget; the contents of the widget may still be selected.  If the spinbox is disabled, the value may not be changed, no insertion cursor will be displayed, the contents will not be selectable, and the spinbox may be displayed in a different color, depending on the values of the <B>-disabledforeground</B> and <B>-disabledbackground</B> options. <DT>
+<PRE>Command-Line Name:    <B>-to</B>
+Database Name:        <B>to</B>
+Database Class:       <B>To</B></PRE>
+
+<DD>
+A floating-point value corresponding to the highest value for the spinbox, to be used in conjunction with <B>-from</B> and <B>-increment</B>.  When all are specified correctly, the spinbox will use these values to control its contents.  This value must be greater than the <B>-from</B> option. If <B>-values</B> is specified, it supercedes this option. <DT>
+<PRE>Command-Line Name:    <B>-validate</B>
+Database Name:        <B>validate</B>
+Database Class:       <B>Validate</B></PRE>
+
+<DD>
+Specifies the mode in which validation should operate: <B>none</B>, <B>focus</B>, <B>focusin</B>, <B>focusout</B>, <B>key</B>, or <B>all</B>. It defaults to <B>none</B>.  When you want validation, you must explicitly state which mode you wish to use.  See <B>Validation</B> below for more. <DT>
+<PRE>Command-Line Name:    <B>"\-validatecommand</B>
+Database Name:        <B>or</B>
+Database Class:       <B>\-vcmd" validateCommand ValidateCommand</B></PRE>
+
+<DD>
+Specifies a script to evaluate when you want to validate the input in the widget.  Setting it to an empty string disables this feature (the default). Validation occurs according to the value of <B>-validate</B>. This command must return a valid Tcl boolean value.  If it returns 0 (or the valid Tcl boolean equivalent) then the value of the widget will not change and the <B>invalidCommand</B> will be evaluated if it is set.  If it returns 1, then value will be changed. See <B>Validation</B> below for more information. <DT>
+<PRE>Command-Line Name:    <B>-values</B>
+Database Name:        <B>values</B>
+Database Class:       <B>Values</B></PRE>
+
+<DD>
+Must be a proper list value.  If specified, the spinbox will use these values as to control its contents, starting with the first value.  This option has precedence over the <B>-from</B> and <B>-to</B> range. <DT>
+<PRE>Command-Line Name:    <B>-width</B>
+Database Name:        <B>width</B>
+Database Class:       <B>Width</B></PRE>
+
+<DD>
+Specifies an integer value indicating the desired width of the spinbox window, in average-size characters of the widget's font. If the value is less than or equal to zero, the widget picks a size just large enough to hold its current text. <DT>
+<PRE>Command-Line Name:    <B>-wrap</B>
+Database Name:        <B>wrap</B>
+Database Class:       <B>wrap</B></PRE>
+
+<DD>
+Must be a proper boolean value.  If on, the spinbox will wrap around the values of data in the widget. <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>spinbox</B> command creates a new window (given by the <I>pathName</I> argument) and makes it into a spinbox widget. Additional options, described above, may be specified on the command line or in the option database to configure aspects of the spinbox such as its colors, font, and relief.  The <B>spinbox</B> command returns its <I>pathName</I> argument.  At the time this command is invoked, there must not exist a window named <I>pathName</I>, but <I>pathName</I>'s parent must exist. <P>
+A <B>spinbox</B> is an extended <B>entry</B> widget that allows he user to move, or spin, through a fixed set of ascending or descending values such as times or dates in addition to editing the value as in an <B>entry</B>.  When first created, a spinbox's string is empty. A portion of the spinbox may be selected as described below. If a spinbox is exporting its selection (see the <B>exportSelection</B> option), then it will observe the standard protocols for handling the selection;  spinbox selections are available as type <B>STRING</B>. Spinboxes also observe the standard Tk rules for dealing with the input focus.  When a spinbox has the input focus it displays an <I>insertion cursor</I> to indicate where new characters will be inserted. <P>
+Spinboxes are capable of displaying strings that are too long to fit entirely within the widget's window.  In this case, only a portion of the string will be displayed; commands described below may be used to change the view in the window.  Spinboxes use the standard <B>xScrollCommand</B> mechanism for interacting with scrollbars (see the description of the <B>xScrollCommand</B> option for details).  They also support scanning, as described below. <P>
+<P>
+<H2>VALIDATION</H2>
+ <P>
+Validation works by setting the <B>validateCommand</B> option to a script which will be evaluated according to the <B>validate</B> option as follows: <P>
+
+<DT><B>none</B>
+<DD>Default.  This means no validation will occur. 
+<DT><B>focus</B>
+<DD><B>validateCommand</B> will be called when the spinbox receives or loses focus. 
+<DT><B>focusin</B>
+<DD><B>validateCommand</B> will be called when the spinbox receives focus. 
+<DT><B>focusout</B>
+<DD><B>validateCommand</B> will be called when the spinbox loses focus. 
+<DT><B>key</B>
+<DD><B>validateCommand</B> will be called when the spinbox is edited. 
+<DT><B>all</B>
+<DD><B>validateCommand</B> will be called for all above conditions. <P>
+It is posible to perform percent substitutions on the <B>validateCommand</B> and <B>invalidCommand</B>, just as you would in a <B>bind</B> script.  The following substitutions are recognized: <P>
+
+<DT><B>%d</B>
+<DD>Type of action: 1 for <B>insert</B>, 0 for <B>delete</B>, or -1 for focus, forced or textvariable validation. 
+<DT><B>%i</B>
+<DD>Index of char string to be inserted/deleted, if any, otherwise -1. 
+<DT><B>%P</B>
+<DD>The value of the spinbox should edition occur.  If you are configuring the spinbox widget to have a new textvariable, this will be the value of that textvariable. 
+<DT><B>%s</B>
+<DD>The current value of spinbox before edition. 
+<DT><B>%S</B>
+<DD>The text string being inserted/deleted, if any. Otherwise it is an empty string. 
+<DT><B>%v</B>
+<DD>The type of validation currently set. 
+<DT><B>%V</B>
+<DD>The type of validation that triggered the callback (key, focusin, focusout, forced). 
+<DT><B>%W</B>
+<DD>The name of the spinbox widget. <P>
+In general, the <B>textVariable</B> and <B>validateCommand</B> can be dangerous to mix.  Any problems have been overcome so that using the <B>validateCommand</B> will not interfere with the traditional behavior of the spinbox widget.  Using the <B>textVariable</B> for read-only purposes will never cause problems.  The danger comes when you try set the <B>textVariable</B> to something that the <B>validateCommand</B> would not accept, which causes <B>validate</B> to become <I>none</I> (the <B>invalidCommand</B> will not be triggered).  The same happens when an error occurs evaluating the <B>validateCommand</B>. <P>
+Primarily, an error will occur when the <B>validateCommand</B> or <B>invalidCommand</B> encounters an error in its script while evaluating or <B>validateCommand</B> does not return a valid Tcl boolean value.  The <B>validate</B> option will also set itself to <B>none</B> when you edit the spinbox widget from within either the <B>validateCommand</B> or the <B>invalidCommand</B>.  Such editions will override the one that was being validated.  If you wish to edit the value of the widget during validation and still have the <B>validate</B> option set, you should include the command <PRE>
+     <I>%W config -validate %v</I>
+</PRE>
+in the <B>validateCommand</B> or <B>invalidCommand</B> (whichever one you were editing the spinbox widget from).  It is also recommended to not set an associated <B>textVariable</B> during validation, as that can cause the spinbox widget to become out of sync with the <B>textVariable</B>. <P>
+<P>
+<H2>WIDGET COMMAND</H2>
+ <P>
+The <B>spinbox</B> command creates a new Tcl command whose name is <I>pathName</I>.  This command may be used to invoke various operations on the widget.  It has the following general form: <PRE>
+<I>pathName option </I>?<I>arg arg ...</I>?
+</PRE>
+<I>Option</I> and the <I>arg</I>s determine the exact behavior of the command. <P>
+Many of the widget commands for spinboxes take one or more indices as arguments.  An index specifies a particular character in the spinbox's string, in any of the following ways: 
+<DT><I>number</I>
+<DD>Specifies the character as a numerical index, where 0 corresponds to the first character in the string. 
+<DT><B>anchor</B>
+<DD>Indicates the anchor point for the selection, which is set with the <B>select from</B> and <B>select adjust</B> widget commands. 
+<DT><B>end</B>
+<DD>Indicates the character just after the last one in the spinbox's string. This is equivalent to specifying a numerical index equal to the length of the spinbox's string. 
+<DT><B>insert</B>
+<DD>Indicates the character adjacent to and immediately following the insertion cursor. 
+<DT><B>sel.first</B>
+<DD>Indicates the first character in the selection.  It is an error to use this form if the selection isn't in the spinbox window. 
+<DT><B>sel.last</B>
+<DD>Indicates the character just after the last one in the selection. It is an error to use this form if the selection isn't in the spinbox window. 
+<DT><B>@<I>number</B></I>
+<DD>In this form, <I>number</I> is treated as an x-coordinate in the spinbox's window;  the character spanning that x-coordinate is used. For example, ``<B>@0</B>'' indicates the left-most character in the window. <P>
+Abbreviations may be used for any of the forms above, e.g. ``<B>e</B>'' or ``<B>sel.f</B>''.  In general, out-of-range indices are automatically rounded to the nearest legal value. <P>
+The following commands are possible for spinbox widgets: 
+<DT><I>pathName <B>bbox index</B></I>
+<DD>Returns a list of four numbers describing the bounding box of the character given by <I>index</I>. The first two elements of the list give the x and y coordinates of the upper-left corner of the screen area covered by the character (in pixels relative to the widget) and the last two elements give the width and height of the character, in pixels. The bounding box may refer to a region outside the visible area of the window. 
+<DT><I>pathName <B>cget</B></I> <I>option</I>
+<DD>Returns the current value of the configuration option given by <I>option</I>. <I>Option</I> may have any of the values accepted by the <B>spinbox</B> command. 
+<DT><I>pathName <B>configure</B></I> ?<I>option</I>? ?<I>value option value ...</I>?
+<DD>Query or modify the configuration options of the widget. If no <I>option</I> is specified, returns a list describing all of the available options for <I>pathName</I> (see <B>Tk_ConfigureInfo</B> for information on the format of this list).  If <I>option</I> is specified with no <I>value</I>, then the command returns a list describing the one named option (this list will be identical to the corresponding sublist of the value returned if no <I>option</I> is specified).  If one or more <I>option-value</I> pairs are specified, then the command modifies the given widget option(s) to have the given value(s);  in this case the command returns an empty string. <I>Option</I> may have any of the values accepted by the <B>spinbox</B> command. 
+<DT><I>pathName <B>delete first </B></I>?<I>last</I>?
+<DD>Delete one or more elements of the spinbox. <I>First</I> is the index of the first character to delete, and <I>last</I> is the index of the character just after the last one to delete. If <I>last</I> isn't specified it defaults to <I>first</I>+1, i.e. a single character is deleted. This command returns an empty string. 
+<DT><I>pathName <B>get</B></I>
+<DD>Returns the spinbox's string. 
+<DT><I>pathName <B>icursor index</B></I>
+<DD>Arrange for the insertion cursor to be displayed just before the character given by <I>index</I>.  Returns an empty string. 
+<DT><I>pathName <B>identify x y</B></I>
+<DD>Returns the name of the window element corresponding to coordinates <I>x</I> and <I>y</I> in the spinbox.  Return value is one of: <B>none</B>, <B>buttondown</B>, <B>buttonup</B>, <B>entry</B>. 
+<DT><I>pathName <B>index index</B></I>
+<DD>Returns the numerical index corresponding to <I>index</I>. 
+<DT><I>pathName <B>insert index string</B></I>
+<DD>Insert the characters of <I>string</I> just before the character indicated by <I>index</I>.  Returns an empty string. 
+<DT><I>pathName <B>invoke element</B></I>
+<DD>Causes the specified element, either <B>buttondown</B> or <B>buttonup</B>, to be invoked, triggering the action associated with it. 
+<DT><I>pathName <B>scan</B></I> <I>option args</I>
+<DD>This command is used to implement scanning on spinboxes.  It has two forms, depending on <I>option</I>: <DL>
+
+<DT><I>pathName <B>scan mark x</B></I>
+<DD>Records <I>x</I> and the current view in the spinbox window;  used in conjunction with later <B>scan dragto</B> commands.  Typically this command is associated with a mouse button press in the widget.  It returns an empty string. 
+<DT><I>pathName <B>scan dragto x</B></I>
+<DD>This command computes the difference between its <I>x</I> argument and the <I>x</I> argument to the last <B>scan mark</B> command for the widget.  It then adjusts the view left or right by 10 times the difference in x-coordinates.  This command is typically associated with mouse motion events in the widget, to produce the effect of dragging the spinbox at high speed through the window.  The return value is an empty string. </DL>
+
+<DT><I>pathName <B>selection option arg</B></I>
+<DD>This command is used to adjust the selection within a spinbox.  It has several forms, depending on <I>option</I>: <DL>
+
+<DT><I>pathName <B>selection adjust index</B></I>
+<DD>Locate the end of the selection nearest to the character given by <I>index</I>, and adjust that end of the selection to be at <I>index</I> (i.e including but not going beyond <I>index</I>).  The other end of the selection is made the anchor point for future <B>select to</B> commands.  If the selection isn't currently in the spinbox, then a new selection is created to include the characters between <I>index</I> and the most recent selection anchor point, inclusive. Returns an empty string. 
+<DT><I>pathName <B>selection clear</B></I>
+<DD>Clear the selection if it is currently in this widget.  If the selection isn't in this widget then the command has no effect. Returns an empty string. 
+<DT><I>pathName <B>selection element</B></I> ?<I>element</I>?
+<DD>Sets or gets the currently selected element.  If a spinbutton element is specified, it will be displayed depressed. 
+<DT><I>pathName <B>selection from index</B></I>
+<DD>Set the selection anchor point to just before the character given by <I>index</I>.  Doesn't change the selection. Returns an empty string. 
+<DT><I>pathName <B>selection present</B></I>
+<DD>Returns 1 if there is are characters selected in the spinbox, 0 if nothing is selected. 
+<DT><I>pathName <B>selection range start</B></I> <I>end</I>
+<DD>Sets the selection to include the characters starting with the one indexed by <I>start</I> and ending with the one just before <I>end</I>. If <I>end</I> refers to the same character as <I>start</I> or an earlier one, then the spinbox's selection is cleared. 
+<DT><I>pathName <B>selection to index</B></I>
+<DD>If <I>index</I> is before the anchor point, set the selection to the characters from <I>index</I> up to but not including the anchor point. If <I>index</I> is the same as the anchor point, do nothing. If <I>index</I> is after the anchor point, set the selection to the characters from the anchor point up to but not including <I>index</I>. The anchor point is determined by the most recent <B>select from</B> or <B>select adjust</B> command in this widget. If the selection isn't in this widget then a new selection is created using the most recent anchor point specified for the widget. Returns an empty string. </DL>
+
+<DT><I>pathName <B>set</B></I> ?<I>string</I>?
+<DD>If <I>string</I> is specified, the spinbox will try and set it to this value, otherwise it just returns the spinbox's string. If validation is on, it will occur when setting the string. 
+<DT><I>pathName <B>validate</B></I>
+<DD>This command is used to force an evaluation of the <B>validateCommand</B> independent of the conditions specified by the <B>validate</B> option. This is done by temporarily setting the <B>validate</B> option to <B>all</B>. It returns 0 or 1. 
+<DT><I>pathName <B>xview args</B></I>
+<DD>This command is used to query and change the horizontal position of the text in the widget's window.  It can take any of the following forms: <DL>
+
+<DT><I>pathName <B>xview</B></I>
+<DD>Returns a list containing two elements. Each element is a real fraction between 0 and 1;  together they describe the horizontal span that is visible in the window. For example, if the first element is .2 and the second element is .6, 20% of the spinbox's text is off-screen to the left, the middle 40% is visible in the window, and 40% of the text is off-screen to the right. These are the same values passed to scrollbars via the <B>-xscrollcommand</B> option. 
+<DT><I>pathName <B>xview</B></I> <I>index</I>
+<DD>Adjusts the view in the window so that the character given by <I>index</I> is displayed at the left edge of the window. 
+<DT><I>pathName <B>xview moveto fraction</B></I>
+<DD>Adjusts the view in the window so that the character <I>fraction</I> of the way through the text appears at the left edge of the window. <I>Fraction</I> must be a fraction between 0 and 1. 
+<DT><I>pathName <B>xview scroll number what</B></I>
+<DD>This command shifts the view in the window left or right according to <I>number</I> and <I>what</I>. <I>Number</I> must be an integer. <I>What</I> must be either <B>units</B> or <B>pages</B> or an abbreviation of one of these. If <I>what</I> is <B>units</B>, the view adjusts left or right by <I>number</I> average-width characters on the display;  if it is <B>pages</B> then the view adjusts by <I>number</I> screenfuls. If <I>number</I> is negative then characters farther to the left become visible;  if it is positive then characters farther to the right become visible. </DL>
+<P>
+<P>
+<H2>DEFAULT BINDINGS</H2>
+ <P>
+Tk automatically creates class bindings for spinboxes that give them the following default behavior. In the descriptions below, ``word'' refers to a contiguous group of letters, digits, or ``_'' characters, or any single character other than these. 
+<DT>[1]
+<DD>Clicking mouse button 1 positions the insertion cursor just before the character underneath the mouse cursor, sets the input focus to this widget, and clears any selection in the widget. Dragging with mouse button 1 strokes out a selection between the insertion cursor and the character under the mouse. 
+<DT>[2]
+<DD>Double-clicking with mouse button 1 selects the word under the mouse and positions the insertion cursor at the beginning of the word. Dragging after a double click will stroke out a selection consisting of whole words. 
+<DT>[3]
+<DD>Triple-clicking with mouse button 1 selects all of the text in the spinbox and positions the insertion cursor before the first character. 
+<DT>[4]
+<DD>The ends of the selection can be adjusted by dragging with mouse button 1 while the Shift key is down;  this will adjust the end of the selection that was nearest to the mouse cursor when button 1 was pressed. If the button is double-clicked before dragging then the selection will be adjusted in units of whole words. 
+<DT>[5]
+<DD>Clicking mouse button 1 with the Control key down will position the insertion cursor in the spinbox without affecting the selection. 
+<DT>[6]
+<DD>If any normal printing characters are typed in a spinbox, they are inserted at the point of the insertion cursor. 
+<DT>[7]
+<DD>The view in the spinbox can be adjusted by dragging with mouse button 2. If mouse button 2 is clicked without moving the mouse, the selection is copied into the spinbox at the position of the mouse cursor. 
+<DT>[8]
+<DD>If the mouse is dragged out of the spinbox on the left or right sides while button 1 is pressed, the spinbox will automatically scroll to make more text visible (if there is more text off-screen on the side where the mouse left the window). 
+<DT>[9]
+<DD>The Left and Right keys move the insertion cursor one character to the left or right;  they also clear any selection in the spinbox and set the selection anchor. If Left or Right is typed with the Shift key down, then the insertion cursor moves and the selection is extended to include the new character. Control-Left and Control-Right move the insertion cursor by words, and Control-Shift-Left and Control-Shift-Right move the insertion cursor by words and also extend the selection. Control-b and Control-f behave the same as Left and Right, respectively. Meta-b and Meta-f behave the same as Control-Left and Control-Right, respectively. 
+<DT>[10]
+<DD>The Home key, or Control-a, will move the insertion cursor to the beginning of the spinbox and clear any selection in the spinbox. Shift-Home moves the insertion cursor to the beginning of the spinbox and also extends the selection to that point. 
+<DT>[11]
+<DD>The End key, or Control-e, will move the insertion cursor to the end of the spinbox and clear any selection in the spinbox. Shift-End moves the cursor to the end and extends the selection to that point. 
+<DT>[12]
+<DD>The Select key and Control-Space set the selection anchor to the position of the insertion cursor.  They don't affect the current selection. Shift-Select and Control-Shift-Space adjust the selection to the current position of the insertion cursor, selecting from the anchor to the insertion cursor if there was not any selection previously. 
+<DT>[13]
+<DD>Control-/ selects all the text in the spinbox. 
+<DT>[14]
+<DD>Control-\ clears any selection in the spinbox. 
+<DT>[15]
+<DD>The F16 key (labelled Copy on many Sun workstations) or Meta-w copies the selection in the widget to the clipboard, if there is a selection. 
+<DT>[16]
+<DD>The F20 key (labelled Cut on many Sun workstations) or Control-w copies the selection in the widget to the clipboard and deletes the selection. If there is no selection in the widget then these keys have no effect. 
+<DT>[17]
+<DD>The F18 key (labelled Paste on many Sun workstations) or Control-y inserts the contents of the clipboard at the position of the insertion cursor. 
+<DT>[18]
+<DD>The Delete key deletes the selection, if there is one in the spinbox. If there is no selection, it deletes the character to the right of the insertion cursor. 
+<DT>[19]
+<DD>The BackSpace key and Control-h delete the selection, if there is one in the spinbox. If there is no selection, it deletes the character to the left of the insertion cursor. 
+<DT>[20]
+<DD>Control-d deletes the character to the right of the insertion cursor. 
+<DT>[21]
+<DD>Meta-d deletes the word to the right of the insertion cursor. 
+<DT>[22]
+<DD>Control-k deletes all the characters to the right of the insertion cursor. 
+<DT>[23]
+<DD>Control-t reverses the order of the two characters to the right of the insertion cursor. <P>
+If the spinbox is disabled using the <B>-state</B> option, then the spinbox's view can still be adjusted and text in the spinbox can still be selected, but no insertion cursor will be displayed and no text modifications will take place. <P>
+The behavior of spinboxes can be changed by defining new bindings for individual widgets or by redefining the class bindings. <P>
+<P>
+<H2>KEYWORDS</H2>
+ spinbox, entry, widget 
+</BODY>
+</HTML>

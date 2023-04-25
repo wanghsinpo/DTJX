@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_InternAtom_Tk_"></A>
+<TITLE>Tk_InternAtom Tk Library Procedures</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_InternAtom, Tk_GetAtomName - manage cache of X atoms <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+Atom
+<B>Tk_InternAtom(<I>tkwin, name</B></I>)
+<P>
+CONST char *
+<B>Tk_GetAtomName(<I>tkwin, atom</B></I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tk_Window <I>tkwin</I></B> (in)
+<DD>Token for window.  Used to map atom or name relative to a particular display.
+<P><DT><B>CONST char <I>*name</I></B> (in)
+<DD>String name for which atom is desired.
+<P><DT><B>Atom <I>atom</I></B> (in)
+<DD>Atom for which corresponding string name is desired.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+These procedures are similar to the Xlib procedures
+<B>XInternAtom</B> and <B>XGetAtomName</B>.  <B>Tk_InternAtom</B>
+returns the atom identifier associated with string given by
+<I>name</I>;  the atom identifier is only valid for the display
+associated with <I>tkwin</I>.
+<B>Tk_GetAtomName</B> returns the string associated
+with <I>atom</I> on <I>tkwin</I>'s display.  The string returned
+by <B>Tk_GetAtomName</B> is in Tk's storage:  the caller need
+not free this space when finished with the string, and the caller
+should not modify the contents of the returned string.
+If there is no atom <I>atom</I> on <I>tkwin</I>'s display,
+then <B>Tk_GetAtomName</B> returns the string ``?bad atom?''.
+<P>
+Tk caches
+the information returned by <B>Tk_InternAtom</B> and <B>Tk_GetAtomName</B>
+so that future calls
+for the same information can be serviced from the cache without
+contacting the server.  Thus <B>Tk_InternAtom</B> and <B>Tk_GetAtomName</B>
+are generally much faster than their Xlib counterparts, and they
+should be used in place of the Xlib procedures.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+atom, cache, display
+
+</BODY>
+</HTML>

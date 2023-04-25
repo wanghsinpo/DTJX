@@ -1,0 +1,128 @@
+#!/bin/sh
+# $Header: /usr/cvsroot/dmh84bin/hub84client,v 1.2 2002/10/28 19:38:57 hume Exp $
+# GUI client of a hub
+# Usage: hub8Xclient [box@group]
+#
+# restart \
+exec dmh84 -f "$0" "$@"
+
+package require dmh
+dmh_import
+
+global MB_HUB MB_GROUP argv
+set MB_GROUP [set MB_HUB ""]
+
+proc hub_client_target atstring {
+    set fullname [join [split $atstring " @,\t"]]
+    if { $fullname == "" } { exit }
+    global MB_HUB MB_GROUP
+    vset $fullname {MB_HUB MB_GROUP}
+    }
+
+if { $argv == "" || ([string first @ $argv] < 0) } {
+    set txt [dmh_gets "Hub Client Specification" "Enter the mailbox name of the target hub,
+ fully qualified with its group name." "DATAHUB@mbx" {[A-Za-z0-9_][-A-Za-z0-9_.!]+@..*}]
+    set txt [string trim $txt]
+    hub_client_target $txt
+    } \
+else {
+    hub_client_target [lindex $argv 0]
+    }
+
+if { $MB_GROUP == "" } exit
+
+mbx init $MB_GROUP
+
+global env
+if { [info exists env(DISPLAY)] } {
+set display [lindex [split $env(DISPLAY) :] 0]
+ } else {
+set display [dp_hostname]
+ }
+set display [join [split $display "-."] "_"]
+set MB_XACT ${display}_HC
+set TIMEOUT_HUB 60000
+
+namespace eval ::dmh {
+proc execute cmd {
+    global MB_XACT MB_HUB TIMEOUT_HUB
+    set reply [lindex [mbx_do_xact $MB_HUB \
+ [list eval execute $cmd] $MB_XACT $TIMEOUT_HUB] 0]
+    if { $reply == "TIMEOUT" } { return -code error $reply }
+    return $reply
+    }
+
+proc SQL cmd {
+    global MB_XACT MB_HUB TIMEOUT_HUB
+    set reply [lindex [mbx_do_xact $MB_HUB \
+ [list eval SQL $cmd] $MB_XACT $TIMEOUT_HUB] 0]
+    if { $reply == "TIMEOUT" } { return -code error $reply }
+    return $reply
+    }
+ } ;# end namespace
+# we are replacing the execute and SQL commands in both the ::dmh
+# and the global namespaces
+namespace import -force ::dmh::execute ::dmh::SQL
+
+set hub_script hub84
+if { [info exists env(DMH_BIN)] } { 
+    set hub_script [file join $env(DMH_BIN) $hub_script] } \
+else {
+    set hub_script /usr/local/bin/$hub_script
+    }
+source $hub_script
+
+# make the file system actions work remotely
+# when the hub is on a different host
+set hub_host [execute "eval dp_hostname"]
+if { $hub_host != [dp_hostname] } {
+ foreach cmd {pwd glob} {
+   proc $cmd {args} "\
+    global MB_XACT MB_HUB TIMEOUT_HUB ;\
+    set reply \[lindex \[mbx_do_xact \$MB_HUB \
+ \[concat eval $cmd \$args\] \$MB_XACT \$TIMEOUT_HUB\] 0\] ;\
+    if { \$reply == \"TIMEOUT\" } { return -code error \$reply } ;\
+    return \$reply"
+    }
+
+  if { [info commands file_local] != "file_local" } { rename file file_local }
+  proc file args {
+      # speed up remote file dialog by using file_local when possible
+      # file join is portable unix<->NT but not mac
+      set arg1 [lindex $args 0]
+      if { $arg1 == "join" || $arg1 == "dirname" || $arg1 == "tail" \
+ || $arg1 == "extension" } {
+          return [eval [concat file_local $args]]
+          }
+      global  MB_XACT MB_HUB TIMEOUT_HUB
+      set reply [lindex [mbx_do_xact $MB_HUB [concat eval file $args] $MB_XACT $TIMEOUT_HUB] 0]
+      if { $reply == "TIMEOUT" } { return -code error $reply } 
+      return $reply
+      }
+   }
+
+wm title . "Realtime Data Hub Client - ${MB_HUB}@${MB_GROUP}"
+wm iconname . "${MB_HUB}@$MB_GROUP"
+
+proc hub_atexit { } { mbx end }
+
+proc hub_tabwin_close {w} {
+    rename mh_app_lostserver {}
+    exit
+    }
+
+proc hub_subs_close_all {} { ; }
+
+#
+# if the DMH is shutdown, we exit
+#
+proc mh_app_lostserver {group fileID} {
+    global MB_HUB MB_GROUP argv0
+    set h [after 15000 exit]
+    tk_dialog .uhoh "$argv0 DMH Connection Lost" "The DMH server\
+ for ${MB_HUB}@$MB_GROUP has been shutdown.\
+ This client will exit shortly." error 0 "Exit Now"
+    after cancel $h
+    exit
+    }
+

@@ -1,0 +1,61 @@
+#
+# (C) Copyright Agilent Technologies, Inc. 2001.
+# All Rights are reserved.
+#
+# Copying Or Other Reproduction Of This Program Except For Archival Purposes
+# Is Prohibited Without The Prior Written Consent Of Agilent Technologies.
+#
+# TclPro::Compiler::Include
+
+if {[catch {package require tbcload 1.4} err] == 1} {
+    return -code error "[info script]: The TclPro ByteCode Loader is not available or does not support the correct version -- $err"
+}
+tbcload::bceval {
+TclPro ByteCode 2 0 1.4 8.4
+1 0 11 5 0 0 12 0 4 1 1 -1 -1
+11
+(<E<!(H&s!+-!!
+1
+z
+1
++!
+5
+x
+4
+,CHr@
+x
+22
+uoi'F26=iC%*/lBv.DTA,I6x?<Jw
+x
+20
+*%^;@.Vi|DuBMTA,-R;@93jFE
+p
+1 0 11 1 0 0 8 0 4 1 1 -1 -1
+11
+,|&v!8ryX!+-!!
+1
+z
+1
++!
+1
+x
+18
+uoi'F26=iC%*/lBsjtSAc+%
+0
+0
+3 3
+6
+*%^;@ISw
+0 0 257
+6
+**B(FMv%
+1 0 257
+6
+1,M*FMv%
+2 0 257
+x
+15
+rpwhC;Z2b3<?<+EfqT+
+0
+0
+}

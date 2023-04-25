@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>dc_ui_focus Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ dc_ui_focus - grab the focus to prevent re-entry or competing dialog actions <P>
+<H2>SYNOPSIS</H2>
+ <B>package require Humelib</B><BR>
+ <B>humelib::dc_ui_focus <I>verb</I> {<I>message</I> {}} {<I>win</I> .dc_ui_focus} {<I>title</I> Status}</B>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command is used to manage the window system focus so that
+the user does not re-initiate an incomplete action, or initate
+a competing action before the current action is complete.
+<P>
+The <I>verb</I> argument is either <B>grab</B>, <B>lock</B>, <B>release</B>,
+or <B>update</B>.
+You may optionally specify a status message and window title, 
+which the user sees in a modal popup window.  The window pathname
+argument, <I>win</I> is usually a child of the current application
+window so the focus lock behavior locks the desired window.
+<P>
+Any of the <I>verb</I> argument values <B>grab</B>, <B>lock</B>, 
+or <B>update</B> will create the modal popup window with the 
+optional message displayed.  The <B>lock</B> call is intended for
+use as a mutex.  It returns 1 without changing the displayed message
+if the window already exists.  The return value to the <B>lock</B>
+call is 0 if the focus is newly locked.  The <B>grab</B> and <B>update</B> 
+values will update a displayed message.  
+The caller needs to supply the same value of the <I>win</I>
+argument to the <B>release</B> call as was used to create the 
+modal popup window.  You 
+need to structure your application so you never fail to invoke
+the <B>release</B> action after creating the focus grab window.
+You may need to use <a href="catch.html">catch</a> to insure that
+an error does not prevent making the <b>release</b> call.
+<P>
+The command is part of the <B>Humelib</B> package and can be 
+imported from the namespace <B>humelib</B>.
+<H2>EXAMPLE</H2>
+<PRE>
+package require Humelib
+package require msgcat
+namespace import -force humelib::*
+set cmd [list eval dc_user_group_read $group_id]
+if { [dc_ui_focus lock [msgcat::mc READING_ITEM]] }  return
+set reply [dc_ui_hub_xact $cmd $dc_ui(dmh)]
+dc_ui_focus release
+</PRE>
+<H2>AUTHOR</H2>
+ Hume Integration Software, www.hume.com  <P>
+<H2>SEE ALSO</H2>
+ <a href="wm.html">wm</a>
+<H2>KEYWORDS</H2>
+ focus, modal, transient
+</BODY>
+</HTML>

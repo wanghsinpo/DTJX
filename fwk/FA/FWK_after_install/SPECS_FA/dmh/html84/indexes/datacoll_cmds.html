@@ -1,0 +1,97 @@
+<html>
+<head>
+<title>The Hume Data Collection Component</title>
+</head>
+<P>
+<A NAME="dcc_refs"></A>
+<H2>Contents</H2>
+<P>
+<base target="man">
+<h3><A HREF="datacoll.html">Data Coll. & SPC</A></h3>
+
+<h4><A HREF="datacoll.html">Introduction</A></h4>
+<h4><A HREF="datacoll.html#Features">Feature&nbsp;Summary</A></h4>
+
+<h4><A HREF="datacoll.html#Installation">Installation</A></h4>
+
+<h4><A HREF="datacoll.html#SecurityIntegration">Security</A></h4>
+
+<h4><A HREF="datacoll.html#ServerAPI">Server&nbsp;API</A></h4>
+
+<A HREF="datacoll.html#dc_alarm_ack">dc_alarm_ack</A><br>
+<A HREF="datacoll.html#dc_cfg_export">dc_cfg_export</A><br>
+<A HREF="datacoll.html#dc_config">dc_config</A><br>
+<A HREF="datacoll.html#dc_config_write">dc_config_write</A><br>
+<A HREF="datacoll.html#dc_data_insert">dc_data_insert</A><br>
+<A HREF="datacoll.html#dc_data_sub_add">dc_data_sub_add</A><br>
+<A HREF="datacoll.html#dc_data_sub_filtered">dc_data_sub_filtered</A><br>
+<A HREF="datacoll.html#dc_data_sub_mod">dc_data_sub_mod</A><br>
+<A HREF="datacoll.html#dc_data_sub_open">dc_data_sub_open</A><br>
+<A HREF="datacoll.html#dc_drop_tables">dc_drop_tables</A><br>
+<A HREF="datacoll.html#dc_encode">dc_encode</A><br>
+<A HREF="datacoll.html#dc_group_insert">dc_group_insert</A><br>
+<A HREF="datacoll.html#dc_group_save">dc_group_save</A><br>
+<A HREF="datacoll.html#dc_hub_init">dc_hub_init</A><br>
+<A HREF="datacoll.html#dc_input_config">dc_input_config</A><br>
+<A HREF="datacoll.html#dc_item_delete">dc_item_delete</A><br>
+<A HREF="datacoll.html#dc_item_read">dc_item_read</A><br>
+<A HREF="datacoll.html#dc_item_save">dc_item_save</A><br>
+<A HREF="datacoll.html#dc_item_saveAs">dc_item_saveAs</A><br>
+<A HREF="datacoll.html#dc_items_view">dc_items_view</A><br>
+<A HREF="datacoll.html#dc_save_data">dc_save_data</A><br>
+<A HREF="datacoll.html#dc_schema">dc_schema</A><br>
+<A HREF="datacoll.html#dc_schema_add_cols">dc_schema_add_cols</A><br>
+<A HREF="datacoll.html#dc_schema_custom">dc_schema_custom</A><br>
+<A HREF="datacoll.html#dc_schema_write">dc_schema_write</A><br>
+<A HREF="datacoll.html#dc_secs_discovery">dc_secs_discovery</A><br>
+<A HREF="datacoll.html#dc_secs_ei_hosts">dc_secs_ei_hosts</A><br>
+<A HREF="datacoll.html#dc_secs_event_report_save">dc_secs_event_report_save</A><br>
+<A HREF="datacoll.html#dc_secs_event_report_setup">dc_secs_event_report_setup</A><br>
+<A HREF="datacoll.html#dc_secs_insert">dc_secs_insert</A><br>
+<A HREF="datacoll.html#dc_secs_trace_action">dc_secs_trace_action</A><br>
+<A HREF="datacoll.html#dc_secs_trace_report_save">dc_secs_trace_report_save</A><br>
+<A HREF="datacoll.html#dc_set_auto_path">dc_set_auto_path</A><br>
+<A HREF="datacoll.html#dc_statistics">dc_statistics</A><br>
+<A HREF="datacoll.html#dc_user_access_check">dc_user_access_check</A><br>
+<A HREF="datacoll.html#dc_user_all_groups">dc_user_all_groups</A><br>
+<A HREF="datacoll.html#dc_user_all_privileges">dc_user_all_privileges</A><br>
+<A HREF="datacoll.html#dc_user_all_user_ids">dc_user_all_user_ids</A><br>
+<A HREF="datacoll.html#dc_user_assoc_groups">dc_user_assoc_groups</A><br>
+<A HREF="datacoll.html#dc_user_assoc_privileges">dc_user_assoc_privileges</A><br>
+<A HREF="datacoll.html#dc_user_delete">dc_user_delete,*</A><br>
+<A HREF="datacoll.html#dc_user_group_delete">dc_user_group_*</A><br>
+<A HREF="datacoll.html#dc_user_login">dc_user_log*</A><br>
+<A HREF="datacoll.html#dc_user_password_update">dc_user_password_update</A><br>
+<A HREF="datacoll.html#dc_user_privilege_delete">dc_user_privilege_*</A><br>
+<A HREF="datacoll.html#dc_user_session_proc">dc_user_session</A><br>
+<h4><A HREF="datacoll.html#ConfigUI">DCC&nbsp;GUI</A></h4>
+
+<h4><A HREF="datacoll.html#TableSchema">Table&nbsp;Schema</A></h4>
+
+<A HREF="datacoll.html#dc_custom">dc_custom</A><br>
+<A HREF="datacoll.html#dc_data">dc_data</A><br>
+<A HREF="datacoll.html#dc_dmh_lostclient">dc_dmh_lostclient</A><br>
+<A HREF="datacoll.html#dc_group_config">dc_group_config</A><br>
+<A HREF="datacoll.html#dc_item">dc_item</A><br>
+<A HREF="datacoll.html#dc_item_type">dc_item_type</A><br>
+<A HREF="datacoll.html#dc_item_use">dc_item_use</A><br>
+<A HREF="datacoll.html#dc_list_text">dc_list_text</A><br>
+<A HREF="datacoll.html#dc_runrules">dc_runrules</A><br>
+<A HREF="datacoll.html#dc_recipient">dc_recipient</A><br>
+<A HREF="datacoll.html#dc_secs_event">dc_secs_event</A><br>
+<A HREF="datacoll.html#dc_secs_host">dc_secs_host</A><br>
+<A HREF="datacoll.html#dc_secs_trace">dc_secs_trace</A><br>
+<A HREF="datacoll.html#dc_secs_var_map">dc_secs_var_map</A><br>
+<A HREF="datacoll.html#dc_user">dc_user</A><br>
+<A HREF="datacoll.html#dc_user_group">dc_user_group</A><br>
+<A HREF="datacoll.html#dc_user_grp_assoc">dc_user_grp_assoc</A><br>
+<A HREF="datacoll.html#dc_user_priv_assoc">dc_user_priv_assoc</A><br>
+<A HREF="datacoll.html#dc_user_privilege">dc_user_privilege</A><br>
+<A HREF="datacoll.html#dc_user_session">dc_user_session</A><br>
+<A HREF="datacoll.html#dmh_trace">dmh_trace</A><br>
+
+<h4><A HREF="datacoll.html#LicenseTerms">License Terms</A></h4>
+<h4><A HREF="datacoll.html#DocVersion">Document Version</A></h4>
+</BODY>
+</HTML>
+

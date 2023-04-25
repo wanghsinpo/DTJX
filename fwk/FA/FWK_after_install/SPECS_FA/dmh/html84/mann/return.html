@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="return_Tcl_7_0"></A>
+<TITLE>return Tcl Built-In Commands 7.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ return - Return from a procedure <P>
+<H2>SYNOPSIS</H2>
+ <B>return </B>?<B>-code <I>code</B></I>? ?<B>-errorinfo <I>info</B></I>? ?<B>-errorcode<I> code</B></I>? ?<I>string</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+Return immediately from the current procedure (or top-level command or <B>source</B> command), with <I>string</I> as the return value.  If <I>string</I> is not specified then an empty string will be returned as result. <P>
+<P>
+<H2>EXCEPTIONAL RETURNS</H2>
+ <P>
+In the usual case where the <B>-code</B> option isn't specified the procedure will return normally (its completion code will be TCL_OK). However, the <B>-code</B> option may be used to generate an exceptional return from the procedure. <I>Code</I> may have any of the following values: 
+<DT><B>ok</B>
+<DD>Normal return:  same as if the option is omitted. 
+<DT><B>error</B>
+<DD>Error return: same as if the <B>error</B> command were used to terminate the procedure, except for handling of <B>errorInfo</B> and <B>errorCode</B> variables (see below). 
+<DT><B>return</B>
+<DD>The current procedure will return with a completion code of TCL_RETURN, so that the procedure that invoked it will return also. 
+<DT><B>break</B>
+<DD>The current procedure will return with a completion code of TCL_BREAK, which will terminate the innermost nested loop in the code that invoked the current procedure. 
+<DT><B>continue</B>
+<DD>The current procedure will return with a completion code of TCL_CONTINUE, which will terminate the current iteration of the innermost nested loop in the code that invoked the current procedure. 
+<DT><I>value</I>
+<DD><I>Value</I> must be an integer;  it will be returned as the completion code for the current procedure. <P>
+The <B>-code</B> option is rarely used. It is provided so that procedures that implement new control structures can reflect exceptional conditions back to their callers. <P>
+Two additional options, <B>-errorinfo</B> and <B>-errorcode</B>, may be used to provide additional information during error returns. These options are ignored unless <I>code</I> is <B>error</B>. <P>
+The <B>-errorinfo</B> option specifies an initial stack trace for the <B>errorInfo</B> variable;  if it is not specified then the stack trace left in <B>errorInfo</B> will include the call to the procedure and higher levels on the stack but it will not include any information about the context of the error within the procedure. Typically the <I>info</I> value is supplied from the value left in <B>errorInfo</B> after a <B>catch</B> command trapped an error within the procedure. <P>
+If the <B>-errorcode</B> option is specified then <I>code</I> provides a value for the <B>errorCode</B> variable. If the option is not specified then <B>errorCode</B> will default to <B>NONE</B>. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/break.html">break</a>, <a href="../mann/continue.html">continue</a>, <a href="../mann/error.html">error</a>, <a href="../mann/proc.html">proc</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ break, continue, error, procedure, return 
+</BODY>
+</HTML>

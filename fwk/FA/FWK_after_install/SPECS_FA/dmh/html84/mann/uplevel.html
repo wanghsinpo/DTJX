@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="uplevel_Tcl_"></A>
+<TITLE>uplevel Tcl Built-In Commands</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ uplevel - Execute a script in a different stack frame <P>
+<H2>SYNOPSIS</H2>
+ <B>uplevel </B>?<I>level</I>?<I> arg </I>?<I>arg ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+All of the <I>arg</I> arguments are concatenated as if they had been passed to <B>concat</B>; the result is then evaluated in the variable context indicated by <I>level</I>.  <B>Uplevel</B> returns the result of that evaluation. <P>
+If <I>level</I> is an integer then it gives a distance (up the procedure calling stack) to move before executing the command.  If <I>level</I> consists of <B>#</B> followed by a number then the number gives an absolute level number.  If <I>level</I> is omitted then it defaults to <B>1</B>.  <I>Level</I> cannot be defaulted if the first <I>command</I> argument starts with a digit or <B>#</B>. <P>
+For example, suppose that procedure <B>a</B> was invoked from top-level, and that it called <B>b</B>, and that <B>b</B> called <B>c</B>. Suppose that <B>c</B> invokes the <B>uplevel</B> command.  If <I>level</I> is <B>1</B> or <B>#2</B>  or omitted, then the command will be executed in the variable context of <B>b</B>.  If <I>level</I> is <B>2</B> or <B>#1</B> then the command will be executed in the variable context of <B>a</B>. If <I>level</I> is <B>3</B> or <B>#0</B> then the command will be executed at top-level (only global variables will be visible). <P>
+The <B>uplevel</B> command causes the invoking procedure to disappear from the procedure calling stack while the command is being executed. In the above example, suppose <B>c</B> invokes the command <PRE>
+<B>uplevel 1 {set x 43; d}</B>
+</PRE>
+where <B>d</B> is another Tcl procedure.  The <B>set</B> command will modify the variable <B>x</B> in <B>b</B>'s context, and <B>d</B> will execute at level 3, as if called from <B>b</B>.  If it in turn executes the command <PRE>
+<B>uplevel {set x 42}</B>
+</PRE>
+then the <B>set</B> command will modify the same variable <B>x</B> in <B>b</B>'s context:  the procedure <B>c</B> does not appear to be on the call stack when <B>d</B> is executing.  The command ``<B>info level</B>'' may be used to obtain the level of the current procedure. <P>
+<B>Uplevel</B> makes it possible to implement new control constructs as Tcl procedures (for example, <B>uplevel</B> could be used to implement the <B>while</B> construct as a Tcl procedure). <P>
+<B>namespace eval</B> is another way (besides procedure calls) that the Tcl naming context can change. It adds a call frame to the stack to represent the namespace context. This means each <B>namespace eval</B> command counts as another call level for <B>uplevel</B> and <B>upvar</B> commands. For example, <B>info level 1</B> will return a list describing a command that is either the outermost procedure call or the outermost <B>namespace eval</B> command. Also, <B>uplevel #0</B> evaluates a script at top-level in the outermost namespace (the global namespace). <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/namespace.html">namespace</a>, <a href="../mann/upvar.html">upvar</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ context, level, namespace, stack frame, variables 
+</BODY>
+</HTML>

@@ -1,0 +1,361 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <title>DMH Message System for Tcl/Tk</title>
+</head>
+<body>
+<a NAME="mbx_tk_"></a>
+<hr>
+<h2>
+NAME</h2>
+mbx - DMH Mailbox message system commands for Tcl/Tk scripts
+<h2>
+SYNOPSIS</h2>
+<b><a href="#clientID">dmh::mbx clientID</a></b>
+<br><b><a href="#close">dmh::mbx close <i>boxname</i></a></b>
+<br><b><a href="#count">dmh::mbx count <i>boxname</i></a></b>
+<br><b><a href="#disarm">dmh::mbx disarm <i>boxname</i></a></b>
+<br><b><a href="#end">dmh::mbx end</a></b>
+<br><b><a href="#flush">dmh::mbx flush <i>boxname</i></a></b>
+<br><b><a href="#get">dmh::mbx get <i>boxname</i></a></b>
+<br><b><a href="#help">dmh::mbx help</a></b>
+<br><b><a href="#init">dmh::mbx init <i>groupname ?retryCount?</i></a></b>
+<br><b><a href="#open">dmh::mbx open <i>boxname</i></a></b>
+<br><b><a href="#product">dmh::mbx product</a></b>
+<br><b><a href="#put">dmh::mbx put <i>mailbox message</i></a></b>
+<br><b><a href="#put">dmh::mbx putr <i>destBox replyBox message</i></a></b>
+<br><b><a href="#server">dmh::mbx server <i>groupname ?retryCount?</i></a></b>
+<br><b><a href="#whenmsg">dmh::mbx whenmsg <i>boxname code</i></a></b>
+<br><b><a href="#whenmsg">dmh::mbx whenmsg again</a></b>
+<br><b><a href="#dump">dmh::mbx whenmsg dump</a></b>
+<p>
+<hr>
+<h2>
+DESCRIPTION</h2>
+This collection of commands is used to send and receive messages in a Tcl/Tk
+application using the Distributed Message Hub (DMH) from Hume Integration
+Software.&nbsp; These commands are available in the extended Tcl/Tk shell,
+<a href="../man1/dmh_wish.html">dmh_wish</a> or after executing <b>package 
+require dmh</b>.&nbsp; As of Tcl version 8.4, the <b>dmh</b> package commands
+are in their own namespace <b>::dmh</b>.&nbsp; For convenient use, and for
+compatibility with pre-Tcl 8.4 applications, the command 
+<a href="dmh_import.html">dmh_import</a> can be executed to import these
+commands into the global namespace so that they can be called without using the
+<b>::dmh::</b> namespace prefix.
+<p>
+Interprocess communication using messages is a desirable alternative
+to Remote Procedure Calls (RPC) in typical CIM applications. A message
+interface is easier to develop, debug, and test. Also, the message system
+provides queuing. Queuing allows a slower process such as storage into
+a persistent database, to be used with fast processes such as test floor
+data collection, without being a bottleneck.
+<p>The concept is simple. Messages are sent to named queues called mailboxes.
+Each cooperating application reads messages from a set of mailboxes and
+sends messages to other mailboxes. Usually a message is a command, such
+as an SQL statement to insert a new row of data into a database table.
+A message may also carry with it the name of a mailbox where reply messages
+are to be sent.
+<p><a NAME="init"></a>Cooperating applications belong to named messaging
+groups. Typically, the first message system command used is <b>mbx init</b>.
+The <i>groupname</i> argument specifies the name of the message group.
+The <b>mbx init</b> command must be called before attempting message exchange.
+The <b>mbx init</b> command is the usual way for a client application to
+connect to an existing DMH message group server.&nbsp;<a NAME="server"></a>A
+DMH message group server is created by executing a server application such
+as the <a href="../man1/datahub.html">Hume Datahub</a>, or by using
+the <b>mbx server <i>groupname</i></b>, command instead of the <b>mbx init
+<i>groupname</i></b> command.
+<p>As of Tcl version 8.2, both the <b>mbx init</b> and <b>mbx server</b>
+commands accept an optional <i>retryCount</i> argument to specify an integer
+number of times that establishing the underlying TCP/IP socket connection
+should be attempted if failure is encountered. The default value is 1.
+The value of 6 can be used to specify the behavior that existed with the
+Tcl 8.0 version.
+<p>There is no fixed limit to the size of a message that can be sent or
+received using the DMH message system. If a DMH application regularly sends
+messages larger than 64k, the send and receive buffers can be reconfigured
+for both the server and client components by using the <a href="fconfigure.html">fconfigure</a>
+command.
+<h2>
+SENDING MESSAGES</h2>
+The commands <b>mbx&nbsp;<a NAME="put"></a>put</b> and <b>mbx putr</b>
+are used to send messages. The <b>mbx put</b> command sends a message with
+the attribute that no reply is expected. The <b>mbx putr</b> command is
+used when a mailbox is specified as the destination for reply messages.
+There is no requirement that your application has opened or reads from
+the specified reply mailbox. You may direct replies to a mailbox used by
+another process. Mailboxes are specified using their text names.
+<pre>&nbsp;&nbsp;&nbsp; mbx put DBM "insert into process_run (run_id, ts_start) \&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; values ('$run_id', '[localtime 9]')"
+
+&nbsp;&nbsp;&nbsp; mbx putr DBM MYREPLY "select * from process_run where\
+&nbsp;ts_start>='1998-12-01 00:00:00'"</pre>
+
+<h2>
+RECEIVING MESSAGES</h2>
+<p>The command <b>mbx&nbsp;<a NAME="whenmsg"></a>whenmsg</b> <i>boxname
+code</i> is used to register Tcl code that gets executed when a message
+is received in the <i>boxname</i> mailbox. By default the code is executed
+only one time when the next message is received in the specified mailbox.
+The command <b>mbx whenmsg again</b> is executed when handling a message,
+to indicate that the same handling code should be invoked when the next
+message is received in the same mailbox. The code may constitute any valid
+Tcl code string - procedure calls, etc.
+<p>When a message is received into a mailbox where there is registered
+code, the whenmsg code begins execution at the global level of the interpreter,
+in the namespace <b>::dmh</b>.
+This means that variables that are used in the code outside of a procedure
+call are accessible as global or namespace variables without being declared
+global, or being declared as namespace variables.
+Because of the
+danger of inadvertently using the same data instance in more than one active
+dispatch, it is highly recommended that you call a procedure in your whenmsg
+code to perform most of your logic. The following example is a recommended
+model:
+<pre>mbx whenmsg MACHMGR {&nbsp;
+&nbsp;&nbsp;&nbsp; process_MACHMGR_msg $mbxmsg $mbxdest&nbsp;
+&nbsp;&nbsp;&nbsp; mbx whenmsg again
+&nbsp;&nbsp;&nbsp; }</pre>
+Writing assignment statements directly from the whenmsg clause, as in:
+<pre>mbx whenmsg MACHMGR {
+&nbsp;&nbsp;&nbsp; set i 0
+&nbsp;&nbsp;&nbsp; set token1&nbsp; [lindex $mbxmsg 0]
+&nbsp;&nbsp;&nbsp; ...</pre>
+may be problematic since variables like i and token1 can have their
+values changed when message exchanges are nested.
+<p>Before the code is evaluated, the following <b>::dmh</b> namespace data items are set from
+the received message:
+<dt>
+<b>mbxmsg</b></dt>
+
+<dd>
+The data content (text) of the message.</dd>
+
+<dt>
+<b>mbxdest</b></dt>
+
+<dd>
+The mailbox name that the message was sent to.</dd>
+
+<dt>
+<b>mbxreply</b></dt>
+
+<dd>
+The mailbox name where reply messages should be sent. An empty string signifies
+that reply messages should not be sent.</dd>
+
+<p><br>Note that the above variables are updated whenever a new message is
+received using <b>mbx whenmsg</b>.&nbsp; If an application
+needs to preserve these data items across the reception of an additional
+message, they should be copied. It is recommended to the use these variables
+as arguments to a procedure, in which case local copies are made by the
+Tcl interpreter. 
+A common method to pass data from one message to the next receiving context,
+is to make the data part of the code that is dynamically registered by
+the <b>mbx whenmsg</b> command.
+<p>The following command prints a message to the console whenever a message
+is received in the mailbox MBTEST.
+<pre><b>mbx whenmsg MBTEST {puts "msg=$mbxmsg (reply to $mbxreply)";
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mbx whenmsg again}</b></pre>
+The next example, demonstrates passing data from a previous message. In
+the mbx whenmsg code, brackets are used with the list command so that the
+current value of <b>mbxmsg</b> is evaluated and substituted as part of the command
+string. The example passes the entire message, but it is more common to
+pass selected data items such as index keys.
+<pre><b>proc domsg {priormsg} {
+&nbsp;&nbsp;&nbsp; puts "prior message=$priormsg"
+&nbsp;&nbsp;&nbsp; puts "latest message=$::dmh::mbxmsg"
+&nbsp;&nbsp;&nbsp; # the next line is substituted now and saved
+&nbsp;&nbsp;&nbsp; mbx whenmsg MBTEST [list domsg $::dmh::mbxmsg]
+&nbsp;&nbsp;&nbsp; }</b>
+<b># initialize to receive the first message: 
+mbx whenmsg MBTEST {domsg "there is no prior message"}</b></pre>
+<p>Only one code string can be registered for a specific mailbox. Newer
+registrations replace any existing registration for the specific mailbox.
+A process may wait on as many mailboxes as it wants.
+<p>
+When you write code for the <b>whenmsg</b> command, it can be tricky to
+combine variable values that are substituted at the time the <b>whenmsg</b>
+command is used, with variable values such as <b>$mbxmsg</b> that are to
+be substituted at the time the message is received.&nbsp; The Tcl <b>list</b>
+command is the safest way to properly format values that are immediately
+substituted.&nbsp;  However, it will surround a value such as <b>\$mbxmsg</b>
+with braces, which will prevent it from being substituted.&nbsp; Here is an
+example where both <b>list</b> and quoted string substitution are used to
+combine immediate and deferred substitution:
+<P>
+<pre><b>
+    proc handle_reply {cdata timer_h reply destbox} { ... }
+
+    mbx whenmsg $replybox \
+ "[list handle_reply $clientdata $timer_handle] \$mbxmsg \$mbxdest"
+
+</b></pre>
+<p>
+The command <b>mbx whenmsg&nbsp;<a NAME="dump"></a>dump</b> is used
+to display all of the currently registered handlers.
+<p>During the execution of a handler, it is not included in the set returned
+by the <b>mbx whenmsg dump</b> command. This is because the whenmsg code
+for the active handler is deactivated so that another message does not
+cause re-entrant usage of the whenmsg logic. Usually this behavior is highly
+desirable because it simplifies matters for the application developer.
+However, there are rare circumstances where re-entrant usage is needed.
+An example: a programmable database A initializes in response to a message.
+As part of the initialization, the database A sends a message to a server
+B, and waits for the reply from B to formulate the reply to the original
+initialization message. However, server B needs to query database A in
+order to process the request from database A. Database A needs to re-entrantly
+process commands from server B or he will be deadlocked. To activate re-entrant
+execution, it is not sufficient to call <b>mbx whenmsg again</b>. The full
+<b>mbx whenmsg</b> <i>boxname code</i> must be executed to rearm the handler.
+<p>A server that has been developed with the SEMATECH generic server framework
+or a compatible server, such as a Hume Datahub, may be rearmed for
+re-entrant commands using
+<pre><b>mbx whenmsg</b> <i>server_command_mailbox</i> <b>{
+&nbsp;&nbsp;&nbsp; mbx whenmsg again; gs_execute $mbxdest $mbxmsg $mbxreply}</b>
+
+</pre>
+As we said above, it is only in rare circumstances where you want to re-arm
+a whenmsg handler for re-entrant execution.
+<p>
+The command <b>mbx&nbsp;<a NAME="disarm"></a>disarm</b> is used to remove
+handler code that was registered using the <b>mbx whenmsg</b> command.
+<p>
+The command <b>mbx&nbsp;<a NAME="get"></a>get</b> can be used to read the
+oldest pending message from a mailbox. If no messages are pending, an empty
+message with a null reply is received. If the command succeeds, the message
+and the reply mailbox are returned formatted as a two element list. Do
+<b>not</b> poll for messages using the get sub-command. Use the <b>mbx
+whenmsg</b> command instead.
+<h2>
+MAILBOX MANIPULATION AND MISCELLANEOUS</h2>
+<a NAME="open"></a>In general you do not need to open a mailbox to use
+it; just start sending messages to it, or setting up reception of messages
+from it. The command <b>mbx open</b> can be used to create a mailbox if
+it does not already exist. The command does not affect an existing mailbox.
+<p>The command <b>mbx&nbsp;<a NAME="flush"></a>flush</b> is used to empty
+a mailbox of all pending messages. A pending message is one that has been
+sent to the mailbox but has not been consumed. In other words, a pending
+message is waiting in a queue associated with the mailbox. Messages are
+consumed by reading (<b>mbx get</b> or <b>mbx whenmsg</b>) or flushing.
+The <b>mbx flush</b> command opens a mailbox if the mailbox does not exist.
+If you want to insure that a mailbox exists and is empty, you can use <b>mbx
+flush</b>.
+<p>Calling <b>mbx&nbsp;<a NAME="close"></a>close</b> disarms the mailbox
+for the caller and removes it from existence only if it is empty. If you
+intend to delete the mailbox when you close it, use <b>mbx flush</b> first.
+Any subsequent use of the mailbox will automatically reopen it.
+<p>The command <b>mbx&nbsp;<a NAME="count"></a>count <i>mailbox</i></b>
+returns a three element list giving the total count of messages that have
+been sent to the <i>mailbox</i>, the total count of messages that have
+been consumed from the <i>mailbox</i>, and last, the current count of pending
+messages.
+<p>The command <b>mbx&nbsp;<a NAME="product"></a>product</b> returns the
+string <b>DMH</b>. The reply indicates that the <b>mbx</b> Tcl command
+interface is supported by the Distributed Message Hub software product.
+<p>The command <b>mbx&nbsp;<a NAME="end"></a>end</b> is used to free resources
+and discontinue using mbx commands. It is not proper to subsequently use
+most of the mbx commands without first calling mbx init.
+<p><a NAME="clientID"></a>The DMH server uses a unique identifier for each
+client connection. The client connection may be obtained using the <b>mbx
+clientID</b> command. The identifier is useful in conjunction with the
+<a href="mh_app_lost.html">mh_app_lostclient</a> procedure. The Hume Data
+Collection Component uses this identifier in its API in order to name subscriptions
+which should be closed when a client disconnects from the DMH group.
+<p>The command <b>mbx&nbsp;<a NAME="help"></a>help</b> returns a text synopsis
+of the mbx commands.
+<h2>
+AUTOLINKING</h2>
+The message system supports using multiple independent named groups of
+communicating processes. This feature is important in larger deployments
+to distribute the processing load and to manage risk by reducing the dependence
+of the system on any single workstation or software process. Ordinarily,
+messages are sent to named mailboxes within a group. Communication across
+groups is easily and transparently accomplished by specifying an optional
+group designation in the mailbox name.
+<p>Mailbox names of the form &lt;boxname>@&lt;groupname> such as DBM@spc2
+can be used to designate both the boxname and the message group. Message
+passing across separate message groups is automatically established when
+a compound name for a box in an external message group is encountered.
+Also, the trailing @&lt;group> is properly ignored when it specifies the
+group that the application is a member of. The messaging support code takes
+care of setting up the return path for reply mailboxes as well as the forward
+direction for sending message. You never have to explicitly add the groupname
+of your own group to a local mailbox such as a reply mailbox.
+<p>The DMH software launches a single gateway process on demand per message
+group to connect to other message groups. This process is launched as a
+child of the message server on the workstation where the message server
+runs. When the server process is terminated, the gateway process is also
+terminated because of the Unix parent process - child process relationship.
+A gateway process is able to re-establish communication with external message
+groups if they are terminated and restarted. If only one named message
+group is used, there are no DMH demon processes, even if there are multiple
+connected workstations in the group. The Distributed Message Hub relies
+on the robust services of the operating system's TCP/IP support for name
+resolution, connection management, and message distribution.
+<h2>
+ALIAS SUPPORT</h2>
+The use of aliases is provided to support the creation and mapping of virtual
+message groups to physical message groups. This feature is used in more
+sophisticated applications where separate message groups such as SFC, FRONT_END,
+BACK_END, etc., are defined as a logical means of partioning the messaging
+and processing load. At installation time, the application can be readily
+configured to run in a single physical message group for a small deployment,
+or into several physical message groups (possibly on several workstations)
+for a large deployment.
+<p>When aliases are used, the ::dmh namespace array <b>mh_alias</b> holds the mapping
+of alias names to physical names. The alias array can also be used to specify
+TCP/IP hostnames of the workstation where a physical message group is "homed".
+Hostnames (or IP addresses) are needed when the indicated physical message
+group is not present on the current workstation. The supported syntax is
+that array element mh_alias(<i>logical_groupname</i>;) is given the alias
+value [<i>hostname:</i>]<i>physical_groupname</i>.
+<p>Alias names are only effective if defined prior to sending messages
+to the <i>boxname@group</i> the first time. Also, they need to be known
+by the message server process, not the client process.
+<p>The DMH uses TCP/IP to connect multiple clients to message server hubs,
+any of which may execute on different hosts. At any time, a process can
+be started on any host and connect with any of the existing message hubs.
+Hostnames are specified as part of the message group name or in the mh_alias
+array whenever an application process is on a different workstation host
+than the message server process.
+<h2>
+MAILBOX NAMES</h2>
+Mailbox names should begin with alphanumeric characters and or the underscore.
+Subsequent characters may include ., @, or !. The @ character should only
+be used when specifying a two part <i>name@group</i> designation. The :
+character should only be used if a hostname or IP address is specified
+as part of the <i>group</i> as in <b>RTDH@baloo:mbx</b> or <b>DATABASE@192.168.2.8:sfc</b>.
+Older servers that use the SEMATECH generic server framework have a length
+limit of 32 characters in a mailbox name. This limit does not apply to
+the Hume Datahub. The mailbox name <b>NULL</b> may be used to indicate
+a "throwaway" destination. Command messages or reply messages sent to mailbox
+<b>NULL</b> are not actually sent, they are discarded. The most common
+use for this feature is as the REPLYTO parameter for a Hume Datahub
+subscription.
+<h2>
+SEE ALSO</h2>
+Higher level Tcl commands are available to perform transactions such as
+obtaining a reply or timing out <a href="mbx_cmds.html">mbx_timed_get</a>),
+obtaining a series of replies ending with a certain pattern or timing out
+(<a href="mbx_cmds.html">mbx_xact_pat</a>), or obtaining a known number
+of replies or timing out (<a href="mbx_cmds.html">mbx_do_xact</a>).
+<p>The <a href="mbx_RPC.html">mbx_RPC</a> command is used to execute received
+DMH messages as Tcl commands. Using this command allows a DMH client to
+be inspected remotely using the <a href="../man1/dmh_inspect.html">inspect</a> application.
+<p>You are also able to install procedures that are executed if the DMH
+message system connection is lost. See <a href="mh_app_lost.html">mh_app_lostclient</a>
+and <a href="mh_app_lost.html">mh_app_lostserver</a>.
+<h2>
+AUTHOR</h2>
+Ed Hume, Hume Integration Software, Austin TX, hume&#064;hume&#046;com This is licensed
+and supported software.
+<br>&nbsp;
+<br>&nbsp;
+<h2>
+KEYWORDS</h2>
+DMH, mailbox, mbx, IPC, message
+</body>
+</html>

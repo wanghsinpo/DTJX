@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="pkg__create_Tcl_8_3"></A>
+<TITLE>pkg::create Tcl Built-In Commands 8.3</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ pkg::create - Construct an appropriate <B>package ifneeded</B> command for a given package specification <P>
+<H2>SYNOPSIS</H2>
+ <B>::pkg::create <I>-name packageName</B></I> <I>-version packageVersion</I> ?<I>-load filespec</I>? ... ?<I>-source filespec</I>? ... <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+<B>::pkg::create</B> is a utility procedure that is part of the standard Tcl library.  It is used to create an appropriate <B>package ifneeded</B> command for a given package specification.  It can be used to construct a <B>pkgIndex.tcl</B> file for use with the <B>package</B> mechanism. <P>
+<P>
+<H2>OPTIONS</H2>
+ The parameters supported are: 
+<DT><B>-name</B> <I>packageName</I>
+<DD>This parameter specifies the name of the package.  It is required. 
+<DT><B>-version</B> <I>packageVersion</I>
+<DD>This parameter specifies the version of the package.  It is required. 
+<DT><B>-load</B> <I>filespec</I>
+<DD>This parameter specifies a binary library that must be loaded with the <B>load</B> command.  <I>filespec</I> is a list with two elements.  The first element is the name of the file to load.  The second, optional element is a list of commands supplied by loading that file.  If the list of procedures is empty or omitted, <B>::pkg::create</B> will set up the library for direct loading (see <B>pkg_mkIndex</B>).  Any number of <B>-load</B> parameters may be specified. 
+<DT><B>-source</B> <I>filespec</I>
+<DD>This parameter is similar to the <B>-load</B> parameter, except that it specifies a Tcl library that must be loaded with the <B>source</B> command.  Any number of <B>-source</B> parameters may be specified. <P>
+At least one <B>-load</B> or <B>-source</B> parameter must be given. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/package.html">package</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ auto-load, index, package, version 
+</BODY>
+</HTML>

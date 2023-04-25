@@ -1,0 +1,10 @@
+ERROR 70-10014
+
+/SPECS/sys/config/sysconf の読みとりでエラーが発生しました。 
+以下の原因が考えられます。                                   
+
+1. /SPECS/sys/config/sysconf のパーミッションが間違っている。
+
+2. /SPECS/sys/config/sysconf 中に SMODE, OP_LANG, ADTFORMAT, 
+   CLEARONRETEST, CLEARONREJECT, PORTID, PROJID, HOSTNAME,   
+   ADTLOGGING についての有効な記述がない。                              

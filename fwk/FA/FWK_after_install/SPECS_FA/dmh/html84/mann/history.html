@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="history_Tcl_"></A>
+<TITLE>history Tcl Built-In Commands</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ history - Manipulate the history list <P>
+<H2>SYNOPSIS</H2>
+ <B>history </B>?<I>option</I>? ?<I>arg arg ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>history</B> command performs one of several operations related to recently-executed commands recorded in a history list.  Each of these recorded commands is referred to as an ``event''.  When specifying an event to the <B>history</B> command, the following forms may be used: 
+<DT>[1]
+<DD>A number:  if positive, it refers to the event with that number (all events are numbered starting at 1).  If the number is negative, it selects an event relative to the current event (<B>-1</B> refers to the previous event, <B>-2</B> to the one before that, and so on).  Event <B>0</B> refers to the current event. 
+<DT>[2]
+<DD>A string:  selects the most recent event that matches the string. An event is considered to match the string either if the string is the same as the first characters of the event, or if the string matches the event in the sense of the <B>string match</B> command. <P>
+The <B>history</B> command can take any of the following forms: 
+<DT><B>history</B>
+<DD>Same as <B>history info</B>, described below. 
+<DT><B>history add<I> command </B></I>?<B>exec</B>?
+<DD>Adds the <I>command</I> argument to the history list as a new event.  If <B>exec</B> is specified (or abbreviated) then the command is also executed and its result is returned.  If <B>exec</B> isn't specified then an empty string is returned as result. 
+<DT><B>history change<I> newValue</B></I> ?<I>event</I>?
+<DD>Replaces the value recorded for an event with <I>newValue</I>.  <I>Event</I> specifies the event to replace, and defaults to the <I>current</I> event (not event <B>-1</B>).  This command is intended for use in commands that implement new forms of history substitution and wish to replace the current event (which invokes the substitution) with the command created through substitution.  The return value is an empty string. 
+<DT><B>history clear</B>
+<DD>Erase the history list.  The current keep limit is retained. The history event numbers are reset. 
+<DT><B>history event</B> ?<I>event</I>?
+<DD>Returns the value of the event given by <I>event</I>.  <I>Event</I> defaults to <B>-1</B>. 
+<DT><B>history info </B>?<I>count</I>?
+<DD>Returns a formatted string (intended for humans to read) giving the event number and contents for each of the events in the history list except the current event.  If <I>count</I> is specified then only the most recent <I>count</I> events are returned. 
+<DT><B>history keep </B>?<I>count</I>?
+<DD>This command may be used to change the size of the history list to <I>count</I> events.  Initially, 20 events are retained in the history list.  If <I>count</I> is not specified, the current keep limit is returned. 
+<DT><B>history nextid</B>
+<DD>Returns the number of the next event to be recorded in the history list.  It is useful for things like printing the event number in command-line prompts. 
+<DT><B>history redo </B>?<I>event</I>?
+<DD>Re-executes the command indicated by <I>event</I> and return its result. <I>Event</I> defaults to <B>-1</B>.  This command results in history revision:  see below for details. <P>
+<H2>HISTORY REVISION</H2>
+ <P>
+Pre-8.0 Tcl had a complex history revision mechanism. The current mechanism is more limited, and the old history operations <B>substitute</B> and <B>words</B> have been removed. (As a consolation, the <B>clear</B> operation was added.) <P>
+The history option <B>redo</B> results in much simpler ``history revision''. When this option is invoked then the most recent event is modified to eliminate the history command and replace it with the result of the history command. If you want to redo an event without modifying history, then use the <B>event</B> operation to retrieve some event, and the <B>add</B> operation to add it to history and execute it. <P>
+<P>
+<H2>KEYWORDS</H2>
+ event, history, record 
+</BODY>
+</HTML>

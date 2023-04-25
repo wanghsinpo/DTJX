@@ -1,0 +1,84 @@
+
+discover DVVALs in S6F3 post event Discrete Variable Data Send
+Maybe you can query sets of DVVALs using S6F7 if made possible
+  by vendor defining <DATAID> canned reports.
+need vendor documentation
+
+What events are reported by the machine?
+What kind of type code is being used?
+use S2F37 to enable them all
+discover them in S6F11 S6F13
+use vendor documentation
+use vendor documentation to determine meaning of events, and
+  map them to vfei event names.
+there is no communicable description or string name
+  
+
+what do the state binary codes mean?
+use vendor documentation
+
+
+What type code is being used for reports?
+  RPTID
+use vendor documentation
+
+What type code is being used for DATAID's?
+  DATAID
+use vendor documentation
+
+
+What reports are set up on the machine?
+Are they the right ones?
+There is no way to ask directly except to initiate the report
+S6F19 can tell you about reports, but you need to verify
+event <<-->> RPTID so you get it all with S6F17
+foreach event {
+   do S6F17 get data of S6F13 
+   verify RPTIDs and VIDs
+   }
+What most people do is reprogram the reports
+ in fact this is standard VFEI
+ S2F33 {L:2 {U4 0} L}  ;# erase all reports and links
+ S2F33 {L:2 {U4 0} {L:n ...  define reports
+ S2F35 define links
+ S2F37 enable events
+
+
+# host interface job
+# characterize equipment 
+# make equipment look like gem
+# define/setup reports (enable events)
+# assert desired set of equipment constants
+# collect report data into tables
+# provide example integration dmh/vfei
+# example UI for
+#   status 
+#   characterization
+#   verification
+# UI features
+# Control
+#   local/remote
+# EventReports     
+#     define
+#     setup
+#     enable/disable
+#     verify
+#     get/test
+# Alarms
+#    status
+#    history
+#    enable/disable
+# Status
+#   comm_state, control_state, process_state
+# Characterization
+#    discover 
+# Exercise VFEI commands H->E
+#   ABORT, PAUSE, RESUME, START
+#   ALARM_SETUP, DISPLAY MESSAGE, EVENT SETUP
+#   INITIALIZE, MACHINE COMMAND?
+#   MOVE, 
+#   RESOURCE ACTIVATE/DEACTIVATE/DELETE
+#   RESOURCE QUERY, RESOURCE TRANSFER
+#   STATUS QUERY
+#   TRACE SETUP
+

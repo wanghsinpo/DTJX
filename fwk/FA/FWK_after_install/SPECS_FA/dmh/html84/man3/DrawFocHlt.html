@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_DrawFocusHighlight_Tk_4_0"></A>
+<TITLE>Tk_DrawFocusHighlight Tk Library Procedures 4.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_DrawFocusHighlight - draw the traversal highlight ring for a widget <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+<B>Tk_DrawFocusHighlight(<I>tkwin, gc, width, drawable)</B></I>
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tk_Window <I>tkwin</I></B> (in)
+<DD>Window for which the highlight is being drawn.  Used to retrieve
+the window's dimensions, among other things.
+<P><DT><B>GC <I>gc</I></B> (in)
+<DD>Graphics context to use for drawing the highlight.
+<P><DT><B>int <I>width</I></B> (in)
+<DD>Width of the highlight ring, in pixels.
+<P><DT><B>Drawable <I>drawable</I></B> (in)
+<DD>Drawable in which to draw the highlight;  usually an offscreen
+pixmap for double buffering.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tk_DrawFocusHighlight</B> is a utility procedure that draws the
+traversal highlight ring for a widget.
+It is typically invoked by widgets during redisplay.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+focus, traversal highlight
+
+</BODY>
+</HTML>

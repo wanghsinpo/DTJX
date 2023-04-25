@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_Backslash_Tcl_8_1"></A>
+<TITLE>Tcl_Backslash Tcl Library Procedures 8.1</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_Backslash - parse a backslash sequence <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+char
+<B>Tcl_Backslash</B>(<I>src, countPtr</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>char <I>*src</I></B> (in)
+<DD>Pointer to a string starting with a backslash.
+<P><DT><B>int <I>*countPtr</I></B> (out)
+<DD>If <I>countPtr</I> isn't NULL, <I>*countPtr</I> gets filled
+in with number of characters in the backslash sequence, including
+the backslash character.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+The use of <B>Tcl_Backslash</B> is deprecated in favor of
+<B>Tcl_UtfBackslash</B>.
+<P>
+This is a utility procedure provided for backwards compatibility with
+non-internationalized Tcl extensions.  It parses a backslash sequence and
+returns the low byte of the Unicode character corresponding to the sequence. 
+<B>Tcl_Backslash</B> modifies <I>*countPtr</I> to contain the number of
+characters in the backslash sequence.
+<P>
+See the Tcl manual entry for information on the valid backslash sequences.
+All of the sequences described in the Tcl manual entry are supported by
+<B>Tcl_Backslash</B>.
+<P>
+<H2>SEE ALSO</H2>
+
+<a href="../mann/Tcl.html">Tcl</a>, Tcl_UtfBackslash(3)
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+backslash, parse
+
+</BODY>
+</HTML>

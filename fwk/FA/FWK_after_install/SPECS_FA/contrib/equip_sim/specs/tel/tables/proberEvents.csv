@@ -1,0 +1,105 @@
+events,,,,,,
+spname,CEID,idTSN,isReported,class,name,description
+gemprober,100,U4,1,Control,Equipment OFF-LINE,The equipment is placed in off-line state.
+gemprober,101,U4,1,Control,Control State LOCAL,The equipment is placed in local state.
+gemprober,102,U4,1,Control,Control State REMOTE,The equipment is placed in remote state.
+gemprober,103,U4,1,Control,Operator Command Issued,The operator executed a command under remote state.
+gemprober,104,U4,1,Control,Operator Changed,Operator change message was input.
+gemprober,105,U4,1,Control,Host Command Failed,Execution of a remote command from the host failed.
+gemprober,200,U4,1,Equipment Constant,Operator Equipment Constant Change,The operator changed the equipment constant.
+gemprober,300,U4,1,Process Program,Process Program Change,The operator changed the process program.
+gemprober,400,U4,1,Spooling,Spooling Activated,Spooling was activated. This message is spooled.
+gemprober,401,U4,1,Spooling,Spooling Deactivated,No spool data remains.
+gemprober,402,U4,1,Spooling,Spool Transmit Failure,Spool data transmit failed.
+gemprober,500,U4,1,Terminal Services,Message Recognition,The operator recognized a terminal request message from the host.
+gemprober,600,U4,1,Job Chargeable State,Entry Chargeable State,
+gemprober,601,U4,1,Job Chargeable State,Into Charge Enabled,
+gemprober,602,U4,1,Job Chargeable State,Into Charge Disabled
+gemprober,603,U4,1,Job Chargeable State,Changed Charge Enabled
+gemprober,700,U4,1,Job State,JobCreated
+gemprober,701,U4,1,Job State,JobCancel
+gemprober,702,U4,1,Job State,JobStarted
+gemprober,707,U4,1,Job State,EnterProcessing
+gemprober,708,U4,1,Job State,JobComplete
+gemprober,711,U4,1,Job State,End Stopping
+gemprober,800,U4,1,Wafer State,WafersLoaded
+gemprober,801,U4,1,Wafer State,LoadWafer
+gemprober,802,U4,1,Wafer State,ReadyReceiveMapData
+gemprober,803,U4,1,Wafer State,GotMapData
+gemprober,804,U4,1,Wafer State,WaferStart
+gemprober,805,U4,1,Wafer State,WaferEnd
+gemprober,806,U4,1,Wafer State,EndProcessing
+gemprober,807,U4,1,Wafer State,IncompleteEndProcessing
+gemprober,808,U4,1,Wafer State,Unloaded,
+gemprober,1001,U4,1,Equipment State,Idle,
+gemprober,1004,U4,1,Equipment State,SetupStarted,
+gemprober,1005,U4,1,Equipment State,StartEXECUTING,
+gemprober,3000,U4,1,Port1 State,Port1Disabled,
+gemprober,3001,U4,1,Port1 State,Port1Empty,
+gemprober,3002,U4,1,Port1 State,Port1NoAccess,
+gemprober,3003,U4,1,Port1 State,Port1InAccess,
+gemprober,3004,U4,1,Port1 State,Port1AccessEnd,
+gemprober,3100,U4,1,Port2 State,Port2Disabled,
+gemprober,3101,U4,1,Port2 State,Port2Empty,
+gemprober,3102,U4,1,Port2 State,Port2NoAccess,
+gemprober,3103,U4,1,Port2 State,Port2InAccess,
+gemprober,3104,U4,1,Port2 State,Port2AccessEnd,
+gemprober,4002,U4,1,Load Port Transfer State,In Service,OUT OF SERVICE -> IN SERVICE
+gemprober,4003,U4,1,Load Port Transfer State,Out Of Service,IN SERVICE -> OUT OF SERVICE
+gemprober,4006,U4,1,Load Port Transfer State,Load Start,READY TO LOAD -> TRANSFER BLOCKED
+gemprober,4007,U4,1,Load Port Transfer State,Unload Start,READY TO UNLOAD -> TRANSFER BLOCKED
+gemprober,4008,U4,1,Load Port Transfer State,Ready To Load,TRANSFER BLOCKED -> READY TO LOAD
+gemprober,4009,U4,1,Load Port Transfer State,Ready To Unload,TRANSFER BLOCKED -> READY TO UNLOAD 
+gemprober,4201,U4,1,Load Port/Access Mode State	Auto,initial -> AUTO
+gemprober,4202,U4,1,Load Port/Access Mode State	Auto,MANUAL -> AUTO
+gemprober,4203,U4,1,Load Port/Access Mode State	Manual,AUTO -> MANUAL 
+gemprober,4401,U4,1,Load Port/Carrier Association State,Association Reset,
+gemprober,4402,U4,1,Load Port/Carrier Association State,Associated,NOT ASSOCIATED -> ASSOCIATED
+gemprober,4403,U4,1,Load Port/Carrier Association State,Not Associated,ASSOCIATED -> NOT ASSOCIATED
+gemprober,4404,U4,1,Load Port/Carrier Association State,Associated Loop,ASSOCIATED -> ASSOCIATED
+gemprober,4501,U4,1,Carrier State,Carrier Instantiated,
+gemprober,4502,U4,1,Carrier State,CID Not Read,(none) -> ID NOT READ
+gemprober,4503,U4,1,Carrier State,CID Waiting For Host,(none) -> WAITING FOR HOST
+gemprober,4504,U4,1,Carrier State,CID Verify OK,(none) -> ID VERIFICATION OK
+gemprober,4505,U4,1,Carrier State,CID Verify Fail,(none) -> ID VERIFICATION FAIL
+gemprober,4506,U4,1,Carrier State,CID EQ. Verify OK,ID NOT READ -> ID VERIFICATION OK
+gemprober,4507,U4,1,Carrier State,CID HOST Verify Wait,ID NOT READ -> WAITING FOR HOST
+gemprober,4508,U4,1,Carrier State,CID HOST Verify OK,WAITING FOR HOST -> ID VERIFICATION OK
+gemprober,4509,U4,1,Carrier State,CID HOST Verify FAIL,WAITING FOR HOST -> ID VERIFICATION FAIL
+gemprober,4510,U4,1,Carrier State,No CID HOST Verify Wait,ID NOT READ -> WAITING FOR HOST
+gemprober,4511,U4,1,Carrier State,No CID EQ. Verify OK,ID NOT READ -> ID VERIFICATION OK
+gemprober,4512,U4,1,Carrier State,SMap Not Read,(none) -> SLOT MAP NOT READ  
+gemprober,4513,U4,1,Carrier State,SMap EQ. Verify OK,SLOT MAP NOT READ -> SLOT MAP VERIFICATION OK
+gemprober,4514,U4,1,Carrier State,SMap Waiting For Host,SLOT MAP NOT READ -> WAITING FOR HOST
+gemprober,4515,U4,1,Carrier State,SMap HOST Verify OK,WAITING FOR HOST -> SLOT MAP VERIFICATION OK
+gemprober,4516,U4,1,Carrier State,SMap HOST Verify FAIL,WAITING FOR HOST -> SLOT MAP VERIFICATION FAIL
+gemprober,4517,U4,1,Carrier State,Carrier Object Instantiated,
+gemprober,4518,U4,1,Carrier State,CAcc In Access,NOT ACCESSED -> IN ACCESS
+gemprober,4519,U4,1,Carrier State,CAcc Complete,IN ACCESS -> CARRIER COMPLETE
+gemprober,4520,U4,1,Carrier State,CAcc Stopped,IN ACCESS -> CARRIER STOPPED
+gemprober,4521,U4,1,Carrier State,Carrier Object Terminate,CARRIER -> Terminate
+gemprober,4530,U4,1,Carrier State,CID Read Failure,
+gemprober,4531,U4,1,Carrier State,CID Read Failure,
+gemprober,4601,U4,1,FOUP State,FOUP clamped,
+gemprober,4602,U4,1,FOUP State,FOUP un-clamped,
+gemprober,4611,U4,1,FOUP State,FOUP docked
+gemprober,4612,U4,1,FOUP State,FOUP un-docked
+gemprober,4621,U4,1,FOUP State,FOUP door open
+gemprober,4622,U4,1,FOUP State,FOUP door open
+gemprober,5001,U4,1,E90,Into AT SOURCE 01,No state to AT SOURCE
+gemprober,5002,U4,1,E90,Into AT WORK 02,AT SOURCE to AT WORK
+gemprober,5003,U4,1,E90,Into AT SOURCE 03,AT WORK to AT SOURCE
+gemprober,5004,U4,1,E90,Into AT WORK 04,AT WORK to AT WORK
+gemprober,5005,U4,1,E90,Into AT DESTINATION 05,AT WORK to AT DESTINATION
+gemprober,5006,U4,1,E90,Into AT WORK 06,AT DESTINATION to AT WORK
+gemprober,5007,U4,1,E90,Goto Extinction 07,AT DESTINATION to Extinction
+gemprober,5008,U4,1,E90,Into AT SOURCE 08,AT DESTINATION to AT SOURCE
+gemprober,5009,U4,1,E90,Goto Extinction 09,SUBSTRATE to Extinction
+gemprober,5020,U4,1,E90,Into NEEDS PROCESSING 10,No state to NEEDS PROCESSING
+gemprober,5021,U4,1,E90,Into PROCESS 11,NEEDS PROCESSING to IN PROCESS
+gemprober,5022,U4,1,E90,Into PROCESSING COMPLETE 12,IN PROCESS to PROCESSING COMPLETE
+gemprober,5023,U4,1,E90,Into NEEDS PROCESSING 13,IN PROCESS to NEEDS PROCESSING
+gemprober,5024,U4,1,E90,Into PROCESS 14,IN PROCESS to IN PROCESS
+gemprober,5025,U4,1,E90,Into PROCESSING COMPLETE 15,NEEDS PROCESSING to PROCESSING COMPLETE
+gemprober,5051,U4,1,E90,Into OCCUPIED,Into OCCUPIED state
+gemprober,5052,U4,1,E90,Into UNOCCUPIED,Into UNOCCUPIED state

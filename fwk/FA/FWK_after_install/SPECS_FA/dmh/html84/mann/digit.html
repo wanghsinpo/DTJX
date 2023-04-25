@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>digit Dmhwidget</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ digit - A Dmhwidget for scoreboard style 4x7 lamp digits<P>
+<H2>SYNOPSIS</H2>
+  <B>dmhwidgets::digit<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Widget &lt;- dmhwidgets::Digit <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+<B>activebackground activeforeground background cursor
+disabledforeground font foreground
+highlightcolor highlightthickness</B>	
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+None
+
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>digit</B> command creates a widget that represents a large digit
+drawn from an array of 4 x 7 lights,
+and a new Tcl command whose name is <I>pathname</I>.  The command
+is then used to invoke various methods of the widget.  The command has
+the general form:<P>
+
+<P>
+<I>pathName option ?arg arg ... arg?</I>
+<P>
+<P>
+The <B>digit</B> is implemented as a button.  The default button
+action is to invoke the <B>roll</B> method.<P>  The button action can be
+changed by configuring the -command option of the <B>bdigit</B> component.
+(For example, <I>pathName</I> component bdigit configure -command <I>newCommand</I>.)
+The digit depiction is based on displayed characters for the button text.
+A larger or smaller digit can be obtained by configuring a larger or smaller
+fixed pitch font for the widget.
+
+<P>
+
+<H2>WIDGET-SPECIFIC METHODS</H2>
+ 
+<DT><B><I>pathName</I> roll</B>
+<DD>Show a random digit from 0 to 9.  The return value is the chosen face value.
+
+<DT><B><I>pathName</I> show <I>N</I></B>
+<DD>Display the digit for the value <I>N</I> where 0 &lt;= N &lt;= 10.  
+The value 10 displays a blank face.
+
+<DT><B><I>pathName</I> value </B>
+<DD>Return the numeric value corresponding to the displayed face.
+
+<H2>EXAMPLE</H2>
+ <PRE>
+package require Dmhwidgets
+
+frame .digits -background grey22
+pack .digits -expand 1 -fill both
+dmhwidgets::digit .digits.d1
+dmhwidgets::digit .digits.d2
+pack .digits.d1 .digits.d2 -side left -expand 0  -padx 1m -pady 6m
+
+proc digits_show d {
+   set d1 [expr int($d/10)]
+   set d2 [expr int($d % 10)]
+   .digits.d1 show $d1
+   .digits.d2 show $d2
+   }
+
+digits_show 37
+
+</PRE>
+
+<H2>AUTHOR</H2>
+Hume Integration Software, www.hume.com
+
+<H2>KEYWORDS  </H2>
+widget 
+</BODY>
+</HTML>

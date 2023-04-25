@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="itkvars_itk_3_0"></A>
+<TITLE>itkvars [incr\ Tk] 3.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ itkvars - variables used by [incr&nbsp;Tk] <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The following global variables are created and managed automatically by the <B>[incr&nbsp;Tk]</B> library.  Except where noted below, these variables should normally be treated as read-only by application-specific code and by users. 
+<DT><B>itk::library</B>
+<DD>When an interpreter is created, <B>[incr&nbsp;Tk]</B> initializes this variable to hold the name of a directory containing the system library of <B>[incr&nbsp;Tk]</B> scripts.  The initial value of <B>itk::library</B> is set from the ITK_LIBRARY environment variable if it exists, or from a compiled-in value otherwise. <P>
+When <B>[incr&nbsp;Tk]</B> is added to an interpreter, it executes the script "init.itk" in this directory.  This script, in turn, looks for other script files with the name "init.<I>xxx</I>". Mega-widget libraries will be automatically initialized if they install a script named "init.<I>xxx</I>" in this directory, where "<I>xxx</I>" is the name of the mega-widget library. For example, the <B>[incr&nbsp;Widgets]</B> library installs the script "init.iwidgets" in this directory. This script establishes the "iwidgets" namespace, and sets up autoloading for all <B>[incr&nbsp;Widgets]</B> commands. <P>
+<P>
+<H2>KEYWORDS</H2>
+ itcl, itk, variables 
+</BODY>
+</HTML>

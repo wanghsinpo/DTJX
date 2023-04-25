@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="glob_Tcl_8_3"></A>
+<TITLE>glob Tcl Built-In Commands 8.3</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ glob - Return names of files that match patterns <P>
+<H2>SYNOPSIS</H2>
+ <B>glob </B>?<I>switches</I>? <I>pattern </I>?<I>pattern ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command performs file name ``globbing'' in a fashion similar to the csh shell.  It returns a list of the files whose names match any of the <I>pattern</I> arguments. <P>
+If the initial arguments to <B>glob</B> start with <B>-</B> then they are treated as switches.  The following switches are currently supported: 
+<DT><B>-directory</B> <I>directory</I>
+<DD>Search for files which match the given patterns starting in the given <I>directory</I>.  This allows searching of directories whose name contains glob-sensitive characters without the need to quote such characters explicitly.  This option may not be used in conjunction with <B>-path</B>, which is used to allow searching for complete file paths whose names may contain glob-sensitive characters. 
+<DT><B>-join</B>
+<DD>The remaining pattern arguments are treated as a single pattern obtained by joining the arguments with directory separators. 
+<DT><B>-nocomplain</B>
+<DD>Allows an empty list to be returned without error;  without this switch an error is returned if the result list would be empty. 
+<DT><B>-path</B> <I>pathPrefix</I>
+<DD>Search for files with the given <I>pathPrefix</I> where the rest of the name matches the given patterns.  This allows searching for files with names similar to a given file (as opposed to a directory) even when the names  contain glob-sensitive  characters.  This option may not be used in conjunction with <B>-directory</B>.  For example, to find all files with the same root name as $path, but differing extensions, you should use <B>glob  -path [file rootname $path] .*</B> which will work even if $path contains numerous glob-sensitive characters. 
+<DT><B>-tails</B>
+<DD>Only return the part of each file found which follows the last directory named in any <B>-directory</B> or <B>-path</B> path specification.   Thus <B>glob -tails -directory $dir *</B> is equivalent to  <B>set pwd [pwd] ; cd $dir ; glob *; cd $pwd</B>.  For  <B>-path</B> specifications, the returned names will include the last path segment, so <B>glob -tails -path [file rootname ~/foo.tex] .*</B>  will return paths like <B>foo.aux foo.bib foo.tex</B> etc. 
+<DT><B>-types</B> <I>typeList</I>
+<DD>Only list files or directories which match <I>typeList</I>, where the items in the list have two forms.  The first form is like the -type option of the Unix find command: <I>b</I> (block special file), <I>c</I> (character special file), <I>d</I> (directory), <I>f</I> (plain file), <I>l</I> (symbolic link), <I>p</I> (named pipe), or <I>s</I> (socket), where multiple types may be specified in the list. <B>Glob</B> will return all files which match at least one of the types given. <DL>
+<P>
+The second form specifies types where all the types given must match. These are <I>r</I>, <I>w</I>, <I>x</I> as file permissions, and <I>readonly</I>, <I>hidden</I> as special permission cases.  On the Macintosh, MacOS types and creators are also supported, where any item which is four characters long is assumed to be a MacOS type (e.g. <B>TEXT</B>).  Items which are of the form <I>{macintosh type XXXX}</I> or <I>{macintosh creator XXXX}</I> will match types or creators respectively.  Unrecognized types, or specifications of multiple MacOS types/creators will signal an error. <P>
+The two forms may be mixed, so <B>-types {d f r w}</B> will find all regular files OR directories that have both read AND write permissions. The following are equivalent: <DL>
+<PRE>
+<B>glob -type d *</B>
+<B>glob */</B>
+</PRE>
+</DL>
+except that the first case doesn't return the trailing ``/'' and is more platform independent. </DL>
+
+<DT><B>--</B>
+<DD>Marks the end of switches.  The argument following this one will be treated as a <I>pattern</I> even if it starts with a <B>-</B>. <P>
+The <I>pattern</I> arguments may contain any of the following special characters: 
+<DT><B>?</B>
+<DD>Matches any single character. 
+<DT><B>*</B>
+<DD>Matches any sequence of zero or more characters. 
+<DT><B>[<I>chars]</B></I>
+<DD>Matches any single character in <I>chars</I>.  If <I>chars</I> contains a sequence of the form <I>a<B>-b</B></I> then any character between <I>a</I> and <I>b</I> (inclusive) will match. 
+<DT><B>\<I>x</B></I>
+<DD>Matches the character <I>x</I>. 
+<DT><B>{<I>a,b,...</B></I>}
+<DD>Matches any of the strings <I>a</I>, <I>b</I>, etc. <P>
+On Unix, as with csh, a ``.'' at the beginning of a file's name or just after a ``/'' must be matched explicitly or with a {} construct, unless the ``-types hidden'' flag is given (since ``.'' at the beginning  of a file's name indicates that it is hidden).  On other platforms, files beginning with a ``.'' are handled no differently to any others, except the special directories ``.'' and ``..'' which must be matched explicitly (this is to avoid a recursive pattern like ``glob -join * * * *'' from recursing up the directory hierarchy as well as down). In addition, all ``/'' characters must be matched explicitly. <P>
+If the first character in a <I>pattern</I> is ``~'' then it refers to the home directory for the user whose name follows the ``~''. If the ``~'' is followed immediately by ``/'' then the value of the HOME environment variable is used. <P>
+The <B>glob</B> command differs from csh globbing in two ways. First, it does not sort its result list (use the <B>lsort</B> command if you want the list sorted). Second, <B>glob</B> only returns the names of files that actually exist;  in csh no check for existence is made unless a pattern contains a ?, *, or [] construct. <P>
+<P>
+<H2>PORTABILITY ISSUES</H2>
+ <P>
+Unlike other Tcl commands that will accept both network and native style names (see the <B>filename</B> manual entry for details on how native and network names are specified), the <B>glob</B> command only accepts native names.   
+<DT><B>Windows</B>
+<DD>. For Windows UNC names, the servername and sharename components of the path may not contain ?, *, or [] constructs.  On Windows NT, if <I>pattern</I> is of the form ``<B>~<I>username@domain</B></I>'' it refers to the home directory of the user whose account information resides on the specified NT domain server.  Otherwise, user account information is obtained from the local computer.  On Windows 95 and 98, <B>glob</B> accepts patterns like ``.../'' and ``..../'' for successively higher up parent directories. <P>
+. Since the backslash character has a special meaning to the glob  command, glob patterns containing Windows style path separators need  special care. The pattern <I>C:\\foo\\*</I> is interpreted as  <I>C:\foo\*</I> where <I>\f</I> will match the single character <I>f</I>  and <I>\*</I> will match the single character <I>*</I> and will not be  interpreted as a wildcard character. One solution to this problem is  to use the Unix style forward slash as a path separator. Windows style  paths can be converted to Unix style paths with the command <B>file join $path</B> (or <B>file normalize $path</B> in Tcl 8.4).  
+<DT><B>Macintosh</B> 
+<DD>.  When using the options, <B>-directory</B>, <B>-join</B> or <B>-path</B>, glob assumes the directory separator for the entire pattern is the standard ``:''.  When not using these options, glob examines each pattern argument and uses ``/'' unless the pattern contains a ``:''. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/file.html">file</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ exist, file, glob, pattern 
+</BODY>
+</HTML>

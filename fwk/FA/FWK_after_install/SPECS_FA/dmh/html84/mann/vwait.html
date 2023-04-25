@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="vwait_Tcl_8_0"></A>
+<TITLE>vwait Tcl Built-In Commands 8.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ vwait - Process events until a variable is written <P>
+<H2>SYNOPSIS</H2>
+ <B>vwait</B> <I>varName</I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command enters the Tcl event loop to process events, blocking the application if no events are ready.  It continues processing events until some event handler sets the value of variable <I>varName</I>.  Once <I>varName</I> has been set, the <B>vwait</B> command will return as soon as the event handler that modified <I>varName</I> completes.  <I>varName</I> must globally scoped (either with a call to <B>global</B> for the <I>varName</I>, or with the full namespace path specification). <P>
+In some cases the <B>vwait</B> command may not return immediately after <I>varName</I> is set.  This can happen if the event handler that sets <I>varName</I> does not complete immediately.  For example, if an event handler sets <I>varName</I> and then itself calls <B>vwait</B> to wait for a different variable, then it may not return for a long time.  During this time the top-level <B>vwait</B> is blocked waiting for the event handler to complete, so it cannot return either. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/global.html">global</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ event, variable, wait 
+</BODY>
+</HTML>

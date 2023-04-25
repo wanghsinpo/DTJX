@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="mh_app_lost"></A>
+<TITLE>mh_app_lostserver, mh_app_lostclient Tcl Commands</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ mh_app_lostclient, mh_app_lostserver - Commands invoked on lost DMH connections<P>
+<H2>SYNOPSIS</H2>
+<B>mh_app_lostclient <I>connection_handle &nbsp; superseded</I></B> <P>
+<B>mh_app_lostserver <I>dmh_group &nbsp; connection_handle</I></B> <P>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>mh_app_lostclient</B> and <B>mh_app_lostserver</B> commands are procedures
+that you may choose to define in your application in order to handle notification
+from the DMH message system that the connection to a client or server has 
+become lost.
+<P>
+The <B>mh_app_lostserver</B> command is called in an application that has been
+a client of a DMH server such as the <A href="../man1/datahub.html">Hume Datahub
+</A>, when the connection to the server is lost.  The <I>dmh_group</I> argument
+is the <I>hostname</I>:<I>port</I> identification of the DMH server.  This value
+is the same as the return value from <B>mbx init</B> when the server
+connection was first established.  The <I>connection_handle</I>
+argument is the underlying connection handle used by the DMH message system.
+Most applications have one connection to one DMH server and do not need to
+use these arguments.  The <B>mh_app_lostserver</B> command is only executed
+if it already exists in the interpreter; it is not loaded on demand.
+In this procedure, your application can perform actions such as inform the
+user, try to re-connect to the server at timed intervals, save important
+data to the file system, exit gracefully, etc.
+To connect to a different server,
+or to reconnect, use <A href="mbx.html">mbx init</A>
+just like the first time.  
+As an example, if you include the following procedure 
+in your application, your application will notify the user and 
+exit if the DMH server exits.
+<P>
+<PRE>
+proc mh_app_lostserver {group h} {
+    # exit after 30 seconds
+    after 30000 exit
+    tk_dialog .popup "System Shutdown" "The system is being shutdown. \
+ This application is exiting.  Contact the System Administrator to find out \
+ when you may restart." error 0 "Exit Now"
+    exit
+    }
+</PRE>
+<P>
+The <B>mh_app_lostclient</B> procedure is executed in a DMH server when the
+server becomes aware of a lost client.  You can use this notification
+mechanism to perform clean-up logic such as closing any data subscriptions
+the client might have opened.  The procedure <B>mh_app_lostclient</B> is
+called with two arguments, the connection handle that was used to communicate
+with the client and a boolean value called the superseded flag.  When the
+superseded flag is 1, it indicates that detection of the lost client happened
+when a new client connection began to use one of the same mailboxes that the
+lost client was using.  In this case you should be extra careful in your cleanup
+logic so that you do not disrupt conditions that the new client needs.
+The connection handle is usable as a subscript for the <b>::dmh</b> namespace array
+mh_waitboxes, to determine which mailboxes the client was reading from.
+For most applications, this is sufficient identification for the cleanup
+code.  Use the <b>inspect</b> application on a running DMH server to develop
+a better understanding of the mh_waitboxes array.
+<P>
+<P>
+<H2>SEE ALSO</H2>
+ <A href="mbx.html">DMH message system</A>
+<H2>AUTHOR</H2>
+ Ed Hume, Hume Integration Software <P>
+<H2>KEYWORDS</H2>
+ DMH, error, handler
+</BODY>
+</HTML>

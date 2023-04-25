@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Toplevel_itk_3_0"></A>
+<TITLE>Toplevel [incr\ Tk] 3.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Toplevel - base class for mega-widgets in a top-level window <P>
+<H2>INHERITANCE</H2>
+ itk::Archetype &lt;- itk::Toplevel <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+
+<B>background</B>	<B>cursor</B>
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+
+Name:   <B>title</B>
+Class:  <B>Title</B>
+Command-Line Switch:    <B>-title</B>
+ 
+<DD> Sets the title that the window manager displays in the title bar above the window.  The default title is the null string. <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>Toplevel</B> class inherits everything from the <B>Archetype</B> class, and adds a Tk toplevel called the "hull" component to represent the body of the mega-widget.  The window class name for the hull is set to the most-specific class name for the mega-widget. The protected variable <B>itk_interior</B> contains the window path name for the "hull" component.  Derived classes specialize this widget by packing other widget components into the hull. <P>
+Since the hull for the <B>Toplevel</B> class is implemented with a Tk toplevel, mega-widgets in the <B>Toplevel</B> class have their own toplevel window.  This class is used to create dialog boxes and other pop-up windows. <P>
+<P>
+<H2>COMPONENTS</H2>
+ <P>
+
+Name:	<B>hull</B>
+Class:	<B>Toplevel</B>
+ 
+<DD> The "hull" component acts as the body for the entire mega-widget. Other components are packed into the hull to further specialize the widget. <P>
+<P>
+<H2>EXAMPLE</H2>
+ <P>
+The following example implements a <B>MessageInfo</B> mega-widget.  It creates a pop-up message that the user can dismiss by pushing the "Dismiss" button. <PRE>
+option add *MessageInfo.title "Notice" widgetDefault
+<P>
+class MessageInfo {
+    inherit itk::Toplevel
+<P>
+    constructor {args} {
+        itk_component add dismiss {
+            button $itk_interior.dismiss -text "Dismiss" \
+                -command "destroy $itk_component(hull)"
+        }
+        pack $itk_component(dismiss) -side bottom -pady 4
+<P>
+        itk_component add separator {
+            frame $itk_interior.sep -height 2 -borderwidth 1 -relief sunken
+        }
+        pack $itk_component(separator) -side bottom -fill x -padx 4
+<P>
+        itk_component add icon {
+            label $itk_interior.icon -bitmap info
+        }
+        pack $itk_component(icon) -side left -padx 8 -pady 8
+<P>
+        itk_component add infoFrame {
+            frame $itk_interior.info
+        }
+        pack $itk_component(infoFrame) -side left -expand yes \
+            -fill both -padx 4 -pady 4
+<P>
+        itk_component add message {
+            label $itk_interior.mesg -width 20
+        } {
+            usual
+            rename -text -message message Text
+        }
+        pack $itk_component(message) -expand yes -fill both
+<P>
+        eval itk_initialize $args
+<P>
+        after idle [code $this centerOnScreen]
+    }
+<P>
+    protected method centerOnScreen {} {
+        update idletasks
+        set wd [winfo reqwidth $itk_component(hull)]
+        set ht [winfo reqheight $itk_component(hull)]
+        set x [expr ([winfo screenwidth $itk_component(hull)]-$wd)/2]
+        set y [expr ([winfo screenheight $itk_component(hull)]-$ht)/2]
+        wm geometry $itk_component(hull) +$x+$y
+    }
+}
+<P>
+usual MessageInfo {
+    keep -background -cursor -foreground -font
+    keep -activebackground -activeforeground -disabledforeground
+    keep -highlightcolor -highlightthickness
+}
+<P>
+#
+# EXAMPLE:  Create a notice window:
+#
+MessageInfo .m -message "File not found:\n/usr/local/bin/foo"
+</PRE>
+<P>
+<P>
+<H2>KEYWORDS</H2>
+ itk, Archetype, Widget, mega-widget 
+</BODY>
+</HTML>

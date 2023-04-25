@@ -1,0 +1,223 @@
+#!/usr/bin/ksh
+trap "" 23
+
+ECHO=print
+INSDIR=/opt/SPECS/install/bin
+CFGDIR=/opt/SPECS/sys/config
+FWKDIR=/opt/SPECS/usr/fwk
+CNFUSR=`$INSDIR/get_user $CFGDIR/sysconf`
+CNFGRP=`$INSDIR/get_group $CFGDIR/sysconf`
+ROTUSR=root
+ROTGRP=`$INSDIR/get_usrgrp $ROTUSR`
+ADMUSR=`sed -n '/^ADMIN_USR=\(.*\)$/s/^ADMIN_USR=\(.*\)$/\1/p' $CFGDIR/sysconf`
+ADMGRP=`sed -n '/^ADMIN_GRP=\(.*\)$/s/^ADMIN_GRP=\(.*\)$/\1/p' $CFGDIR/sysconf`
+TELFWK=/opt/SPECS_FA/SPECS/fwk/FA_TELP12.fwk
+TSKFWK=/opt/SPECS_FA/SPECS/fwk/FA_TSKUF300.fwk
+
+setup_autostart_user()
+{
+    if [ "$ADMUSR" = "" ]; then
+        $ECHO "Enter user name for automatic start mode. (except for $ROTUSR)"
+    else
+        $ECHO "Enter user name for automatic start mode. (except for $ROTUSR and $ADMUSR)"
+    fi
+    $ECHO "[skip='s'] : \c"
+    read AUTOSTART_USR
+    $ECHO
+
+    if [ "$AUTOSTART_USR" = "s" ]; then
+        return
+    elif [ "$AUTOSTART_USR" = "" ] || [ "$AUTOSTART_USR" = "$ROTUSR" ] || [ "$AUTOSTART_USR" = "$ADMUSR" ]; then
+        $ECHO "ERROR: Cannot specify $ROTUSR and $ADMUSR as user name."
+        exit
+    fi
+
+    $ECHO "Checking existence of user name account: $AUTOSTART_USR"
+    RTNVAL=`$INSDIR/check_user $AUTOSTART_USR`
+    if [ $RTNVAL = 0 ]; then
+        $ECHO "ERROR: User '$AUTOSTART_USR' is not found."
+        exit
+    fi
+
+    AUTOSTART_GRP=`$INSDIR/get_usrgrp $AUTOSTART_USR`
+    $ECHO "Checking existence of user group account: $AUTOSTART_GRP"
+    if [ "$AUTOSTART_GRP" = "" ] || [ "$AUTOSTART_GRP" = "$ROTGRP" ] || [ "$AUTOSTART_GRP" = "$ADMGRP" ]; then
+        $ECHO "ERROR: Cannot specify $ROTGRP and $ADMGRP as user group."
+        exit
+    fi
+
+    sed s/^AUTOSTART_USR=.*/AUTOSTART_USR=$AUTOSTART_USR/ $CFGDIR/sysconf > $CFGDIR/sysconf.tmp
+    mv -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf
+
+    sed s/^AUTOSTART_GRP=.*/AUTOSTART_GRP=$AUTOSTART_GRP/ $CFGDIR/sysconf > $CFGDIR/sysconf.tmp
+    mv -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf
+
+    chown $CNFUSR:$CNFGRP $CFGDIR/sysconf
+    chmod 644 $CFGDIR/sysconf
+}
+
+setup_autostart()
+{
+    $ECHO "Enter the automatic start mode upon boot. (ON/OFF)"
+    $ECHO "Default = 'ON'. [skip='s'] : \c"
+    read AUTOSTART
+    $ECHO
+
+    if [ "$AUTOSTART" = "s" ]; then
+        return
+    elif [ "$AUTOSTART" = "" ]; then
+        AUTOSTART="ON"
+    fi
+    if [ "$AUTOSTART" != "ON" ] && [ "$AUTOSTART" != "OFF" ]; then
+        $ECHO "ERROR: Invalid automatic start mode.  Customization canceled."
+        exit
+    elif [ "$AUTOSTART" = "ON" ]; then
+        setup_autostart_user
+        $ECHO
+    fi
+
+    sed s/^AUTOSTART=.*/AUTOSTART=$AUTOSTART/ $CFGDIR/sysconf > $CFGDIR/sysconf.tmp
+    mv -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf
+    chown $CNFUSR:$CNFGRP $CFGDIR/sysconf
+    chmod 644 $CFGDIR/sysconf
+}
+
+show_framework()
+{
+    $ECHO
+    $ECHO "#### Framework Default Setting!! ####"
+    $ECHO "Framework list"
+    $ECHO
+    $ECHO "  Framework       Description"
+    $ECHO "  --------------- ------------------------------------------------------"
+    if [ -f $TELFWK ]; then
+        $ECHO "  FA_TELP12       Factory Automation for TEL P12XL Prober"
+    fi
+    if [ -f $TSKFWK ]; then
+        $ECHO "  FA_TSKUF300     Factory Automation for ACCRETECH UF300 Prober"
+    fi
+    $ECHO "  (others)        User created framework"
+    $ECHO
+}
+
+setup_framework()
+{
+    $ECHO "Enter the framework for development and execution."
+    if [ -f $TELFWK ]; then
+        $ECHO "Default = 'FA_TELP12'. [skip='s'] : \c"
+    elif [ -f $TSKFWK ]; then
+        $ECHO "Default = 'FA_TSKUF300'. [skip='s'] : \c"
+    fi
+    read FRAMEWORK
+    $ECHO
+
+    if [ "$FRAMEWORK" = "s" ]; then
+        return
+    elif [ "$FRAMEWORK" = "" ]; then
+        if [ -f $TELFWK ]; then
+            FRAMEWORK="FA_TELP12"
+        elif [ -f $TSKFWK ]; then
+            FRAMEWORK="FA_TSKUF300"
+        fi
+    fi
+    BUF="FALSE"
+    for i in $FWKDIR/*.fwk; do
+        if [ "$FWKDIR/$FRAMEWORK".fwk = "$i" ]; then
+            BUF="TRUE"
+        fi
+    done
+    if [ "$BUF" != "TRUE" ]; then
+        $ECHO "ERROR: No such framework.  Customization canceled"
+        exit
+    else
+        sed s/^FRAMEWORK=.*/FRAMEWORK=$FRAMEWORK/ $CFGDIR/sysconf > $CFGDIR/sysconf.tmp
+        mv -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf
+        sed s/^EXECFRAMEWORK=.*/EXECFRAMEWORK=$FRAMEWORK/ $CFGDIR/sysconf > $CFGDIR/sysconf.tmp
+        mv -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf
+        if [ "$FRAMEWORK" = "FA_TELP12" ] || [ "$FRAMEWORK" = "FA_TSKUF300" ]; then
+            sed s/^OP_SW=.*$/OP_SW=900/ $CFGDIR/sysconf > $CFGDIR/sysconf.tmp
+            mv -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf
+            sed s/^OP_SH=.*$/OP_SH=700/ $CFGDIR/sysconf > $CFGDIR/sysconf.tmp
+            mv -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf
+            sed s/^OP_AUTOUPDATE=.*$/OP_AUTOUPDATE=FALSE/ $CFGDIR/sysconf > $CFGDIR/sysconf.tmp
+            mv -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf
+        fi
+        chown $CNFUSR:$CNFGRP $CFGDIR/sysconf
+        chmod 644 $CFGDIR/sysconf
+    fi
+    $ECHO
+}
+
+setup_compatimode()
+{
+    $ECHO "#### Compatibility Setting!! ####"
+    $ECHO "Which framework handling do you want to use?"
+    $ECHO
+
+    $ECHO "Do you want to use E40 (Process Job Management) and E94 (Control Job Management)?"
+    $ECHO "Type y (yes) or n (no), then press Return."
+    $ECHO
+    $ECHO "Default = 'y'. [skip='s'] : \c"
+    read COMPATI
+    $ECHO
+    if [ "$COMPATI" = "s" ]; then
+        return
+    elif [ "$COMPATI" = "y" ]; then
+        CompatiVal="0"
+        $ECHO
+    elif [ "$COMPATI" = "n" ]; then
+        CompatiVal="1"
+        $ECHO
+    elif [ "$COMPATI" = "" ]; then
+        CompatiVal="0"
+    else
+        exit
+    fi
+    TEMPMAK=/opt/SPECS_FA/dmh/vgem/defaults.ini
+    if [ -f $TEMPMAK ]; then
+        if /usr/bin/grep CompatibilityMode $TEMPMAK >/dev/null; then
+            sed -e "s/^VGEM CompatibilityMode .*/VGEM CompatibilityMode $CompatiVal/" $TEMPMAK > $TEMPMAK.tmp
+            mv $TEMPMAK.tmp $TEMPMAK
+            chmod 444 $TEMPMAK
+            chown root:sys $TEMPMAK
+            $ECHO "Customizing $TEMPMAK..."
+        fi
+    fi
+
+    RunTimeLoad="1"
+    $ECHO "Checking framework configuration files..."
+    if [ `ls $FWKDIR/*.cf | wc -l` != 0 ]; then
+        for i in $FWKDIR/*.cf; do
+            if grep -q "FA_MEASLOAD_MODE" $i; then
+                sed -e "s/^FA_MEASLOAD_MODE:.*$/FA_MEASLOAD_MODE:$RunTimeLoad/" $i > $i.tmp
+                cp -f $i.tmp $i
+                rm -f $i.tmp
+                chmod 666 $i
+                chown root:sys $i
+                $ECHO "Customizing $i..."
+            fi
+        done
+    fi
+    sed s/^MULTIPLE_MEASLIB=.*/MULTIPLE_MEASLIB=TRUE/ $CFGDIR/sysconf > $CFGDIR/sysconf.tmp
+    mv -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf
+    chown $CNFUSR:$CNFGRP $CFGDIR/sysconf
+    chmod 644 $CFGDIR/sysconf
+    $ECHO
+}
+
+if [ `id -un` != "$ROTUSR" ]; then
+    $ECHO "ERROR: You must log in as root."
+    exit
+else
+    if [ ! -r $CFGDIR/sysconf.org ]; then
+        cp -f $CFGDIR/sysconf $CFGDIR/sysconf.org
+        chown $CNFUSR:$CNFGRP $CFGDIR/sysconf.org
+        chmod 644 $CFGDIR/sysconf.org
+    fi
+    $INSDIR/update_sysconf
+
+    setup_autostart
+    show_framework
+    setup_framework
+    setup_compatimode
+fi

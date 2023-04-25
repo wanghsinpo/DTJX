@@ -1,0 +1,122 @@
+#!/bin/sh
+# $Header: /usr/cvsroot/gem/equip/gemsim,v 1.14 2004/09/24 18:04:03 hume Exp $
+#
+# Restart using Tcl/Tk with the hub UI script.
+# Additional command line arguments can be Tcl statements
+#
+# Use -notk to run detached from X-windows.
+#
+# $Log: gemsim,v $
+# Revision 1.14  2004/09/24 18:04:03  hume
+# Changed default TRACE to include state and connection attempts.
+#
+# Revision 1.13  2002/11/01 15:57:14  hume
+# Changed lset usage to vset usage, using dmh_import, and dmh_var for Tcl 8.4
+# compatibility.
+#
+# Revision 1.12  2000/12/05 01:21:32  hume
+# New Trace Data Collection capability.
+#
+#
+# \
+exec dmh_wish -tclargs -f "$0" "$@"
+
+# load the database ui
+global tk_version env
+if { [info exists tk_version] } {
+    # if we are not running in background, provide the Data Table window
+    if { [info exists env(DMH_BIN)] } {
+        source [file join $env(DMH_BIN) hub[join [split $tk_version .] ""]]
+        } \
+    else {
+        source [file join /usr/local/bin hub[join [split $tk_version .] ""]]
+        }
+    }
+
+
+# GEM equipment simulator
+#   ref SEMI E30-95
+
+proc main { } {
+    # add this directory and ../lib to the path that is searched for
+    # unknown procedures (see mann/library.html)
+    # the file commands are used for portability
+    global auto_path tk_version
+    set pwd [pwd]
+    if { [lsearch -exact $auto_path $pwd] < 0 } {
+        lappend auto_path $pwd [file join [file dirname $pwd] lib]
+        }
+    dmh_import   ;# compatibility with Tcl 8.4+
+
+    # our connection object name 
+    set spname gemsim
+    global $spname
+    set ${spname}(EQUIP) 1  ;# set this early - affects table schema
+
+    # create variables - equipment constants, status variables,
+    #                    and dynamic values
+    ei_var_create $spname  ;# table create
+    eq_var_init $spname    ;# initial data load
+
+    # create a table for alarm management
+    ei_alarmtab_create $spname
+    # and one for event management
+    ei_eventtab_create $spname
+    # create some alarms
+    eq_alarm_add $spname 1000 "Software test alarm 1000"
+    eq_alarm_add $spname 1002 "Software test alarm 1002"
+    # turn on handling of alarms by subscription
+    eq_alarmtab_init $spname
+    # install gem events
+    eq_eventtab_init $spname
+    # initialize/restore spooling state
+    eq_spool_init $spname
+    # subscribe to ECV changes for event "Operator Equipment Constant Change"
+    eq_var_ECVsub_init $spname
+    # allow TRACE Reports S6F1 (comment out next line to disallow) 
+    eq_trace_startup $spname
+
+    # initialize the connection, HSMS equipment is usually passive
+    set passive 1
+    set port 5555
+    global PORT PASSIVE HOST DEVID
+    set devid 0
+    if { [info exists DEVID] } { set devid $DEVID }
+    if { [info exists PORT] } { set port $PORT }
+    if { [info exists PASSIVE] } {
+        if { $PASSIVE != "0" } { set passive 1 }\
+        else { set passive 0 }
+        }
+    if { !$passive && [info exists HOST] } {
+        eq_init $spname $port $spname "1.0" $passive $HOST $devid
+        }\
+    else {
+        # hostname defaults to our own system  
+        eq_init $spname $port $spname "1.0" $passive {} $devid
+        }
+        
+    set ${spname}(MULT) 1   ;# host can handle multiple transactions
+
+    # fire up the gem UI
+    if { [info exists tk_version] } { 
+        # hiding the windows with -notk is a command line option
+        set notk_var [dmh_var dmh notk]  ;# ::dmh(notk) or ::dmh::notk
+        if { [info exists $notk_var] && [set $notk_var] } { }\
+        else {
+            # refresh the database UI (if running hub script)
+            # the hub script is run after this one
+            after 1 "catch { 
+                wm title . \"$spname Data Tables\"
+                wm iconname . \"$spname\ntables\"
+                wm iconify .
+                }"
+            eq_ui $spname 
+            # fire up the low level trace window
+            set ${spname}(TRACE) 0x440E
+            $spname tracewin
+            }
+        }
+    return "$spname started at [localtime 0]"
+    }
+
+main

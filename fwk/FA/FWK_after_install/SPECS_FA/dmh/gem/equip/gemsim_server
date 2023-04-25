@@ -1,0 +1,14 @@
+#!/bin/sh
+# $Header: /usr/cvsroot/gem/equip/gemsim_server,v 1.1 2000/08/24 12:30:02 hume Exp $ 
+#
+# Unix startup of gemsim as background server
+#
+# See gemsim_server.bat for a description
+#
+# $Log: gemsim_server,v $
+# Revision 1.1  2000/08/24 12:30:02  hume
+# Example use of separate background process for equipment SECS interface.
+# 
+#
+# \
+exec dmh_wish -notk -tclargs "$@" "after 1 {eq_server_init gemsim EQUIP}" -f gemsim

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_SourceRCFile_Tcl_8_3"></A>
+<TITLE>Tcl_SourceRCFile Tcl Library Procedures 8.3</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_SourceRCFile - source the Tcl rc file <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+void
+<B>Tcl_SourceRCFile</B>(<I>interp</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Tcl interpreter to source rc file into.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tcl_SourceRCFile</B> is used to source the Tcl rc file at startup.
+It is typically invoked by Tcl_Main or Tk_Main.  The name of the file
+sourced is obtained from the global variable <B>tcl_rcFileName</B> in
+the interpreter given by <I>interp</I>.  If this variable is not
+defined, or if the file it indicates cannot be found, no action is
+taken.
+<P>
+On the Macintosh, after sourcing the rc file, this function will
+additionally source the TEXT resource indicated by the global variable
+<B>tcl_rcRsrcName</B> in <I>interp</I>.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+application-specific initialization, main program, rc file
+
+</BODY>
+</HTML>

@@ -1,0 +1,187 @@
+#this script defines the Manual Access Normal Run
+#Remote Pipeline scenario for the TEL P12XL
+#
+#Conditions : carrier id read fail (set to blank)
+#
+
+#some useful commands to pause a script
+#gui_pause_script
+#tk_messageBox -title "test" -icon error -message "ok"
+
+prober_set_values {
+    PortID                      1
+    CarrierID                   ""
+    SlotMap                     {
+        {B 3} {B 3} {B 3} {B 3} {B 3} {B 3} {B 3} {B 3} {B 3}
+        {B 3} {B 3} {B 3} {B 3} {B 3} {B 3} {B 3} {B 3} {B 3}
+        {B 3} {B 3} {B 3} {B 3} {B 3} {B 3} {B 3}
+    }
+    ChargeableState             0
+}
+
+
+#########################################################################
+# Tester Initialization
+#########################################################################
+
+
+
+for {set i 1} {$i <= 5} {incr i} {
+
+gui_append_script_log "\n********************\n"
+gui_append_script_log "PASS = $i\n"
+gui_append_script_log "********************\n"
+
+#########################################################################
+# Prober Initialization
+#########################################################################
+
+# Job Chargeable State
+prober_send_event 600
+
+#this prober variable (SVID 16)
+#defines the current job acceptance state
+#0 = undefined
+#1 = CHARGE DISABLED
+#2 = CHARGE ENABLED
+prober_set_values {
+    ChargeableState             2
+}
+prober_send_event 601
+
+#########################################################################
+# ...
+#########################################################################
+
+#LP Load Start
+prober_send_event 4006 
+
+#into port no access (Port 1, 3102 is port 2)
+prober_send_event 3102
+
+# To be defined
+prober_send_event 4601
+
+# To be defined
+prober_send_event 4611
+ 
+
+
+#carrier ID waiting for host
+prober_send_event 4530
+
+wait_msg CARRIER ProceedWithCarrier
+
+#We assume here that our host simulator 
+#has sent a carrier id set to "CarrierA"
+#The current simulator does not extract
+#the S3F17 parameters and reassign the
+#variables like port or carrier. We 
+#do it here manually
+
+prober_set_values {
+    PortID                      1
+    CarrierID                   "CarrierA"
+}
+
+
+#carrier id verification OK
+prober_send_event 4504
+
+#To be defined
+prober_send_event 4512
+
+#To be defined
+prober_send_event 4517
+
+#Associated
+prober_send_event 4402
+
+#To be defined
+prober_send_event 4621
+
+#slot map status / waiting for host
+prober_send_event 4514
+
+wait_msg CARRIER ProceedWithCarrier
+
+#slot map verification OK
+prober_send_event 4515   
+
+wait_port_state STARTING 1
+
+prober_send_event 860
+
+# Prober has created the job
+prober_set_values {
+    ChargeableState             1
+}
+prober_send_event 700
+
+
+
+# Job has been started.
+prober_send_event 702
+
+wait_port_state RELEASING 1
+
+#end processing
+prober_send_event 708
+
+#carrier object terminate
+#prober_send_event 4521
+
+#LP ready to unload
+#prober_send_event 4009
+
+#LP ready to load
+#prober_send_event 4008
+
+# Job has finished normally.
+prober_set_values {
+    ChargeableState             2
+}
+
+
+
+#NoPortAccessEnd
+prober_send_event 3004
+
+#carrier release
+wait_msg CARRIER CarrierRelease
+
+#carrier accessing status complete
+prober_send_event 4519
+
+
+#VERY IMPORTANT MESSAGE!!!!!!!!!!!!!
+#IF NOT RECEIVED, THE CARRIER ACCESSING
+#STATUS STAYS TO CARRIER COMPLETE
+#AND IS NOT RESET TO "NOT ACCESSED"
+#carrier object terminate
+prober_send_event 4521
+
+#port empty
+prober_send_event 3001
+
+#load port ready to unload
+prober_send_event 4009
+
+#load port ready to load
+prober_send_event 4008 
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

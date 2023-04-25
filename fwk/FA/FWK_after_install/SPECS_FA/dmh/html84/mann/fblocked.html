@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="fblocked_Tcl_7_5"></A>
+<TITLE>fblocked Tcl Built-In Commands 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ fblocked - Test whether the last input operation exhausted all available input <P>
+<H2>SYNOPSIS</H2>
+ <B>fblocked <I>channelId</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>fblocked</B> command returns 1 if the most recent input operation on <I>channelId</I> returned less information than requested because all available input was exhausted. For example, if <B>gets</B> is invoked when there are only three characters available for input and no end-of-line sequence, <B>gets</B> returns an empty string and a subsequent call to <B>fblocked</B> will return 1. <P>
+<I>ChannelId</I> must be an identifier for an open channel such as a Tcl standard channel (<B>stdin</B>, <B>stdout</B>, or <B>stderr</B>), the return value from an invocation of <B>open</B> or <B>socket</B>, or the result of a channel creation command provided by a Tcl extension. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/gets.html">gets</a>, <a href="../mann/open.html">open</a>, <a href="../mann/read.html">read</a>, Tcl_StandardChannels(3) <P>
+<P>
+<H2>KEYWORDS</H2>
+ blocking, nonblocking 
+</BODY>
+</HTML>

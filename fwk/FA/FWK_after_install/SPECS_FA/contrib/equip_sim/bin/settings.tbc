@@ -1,0 +1,213 @@
+#
+# (C) Copyright Agilent Technologies, Inc. 2001.
+# All Rights are reserved.
+#
+# Copying Or Other Reproduction Of This Program Except For Archival Purposes
+# Is Prohibited Without The Prior Written Consent Of Agilent Technologies.
+#
+# filename: settings.tcl
+# TclPro::Compiler::Include
+
+if {[catch {package require tbcload 1.4} err] == 1} {
+    return -code error "[info script]: The TclPro ByteCode Loader is not available or does not support the correct version -- $err"
+}
+tbcload::bceval {
+TclPro ByteCode 2 0 1.4 8.4
+2 0 22 8 0 0 24 0 4 2 2 -1 -1
+22
++EE<!(H&s!/HW<!.E`<!3)Ppv%!!
+2
+,B!
+2
+6?!
+8
+x
+4
+,CHr@
+x
+19
+|(j:@,+^Z?pgpgCh!Q<@h:g+
+x
+27
++c9KDuC#D+/09KDuC#D+|(j:@,+^Z?e(Q,
+p
+11 0 92 11 0 0 48 0 6 11 11 -1 -1
+92
+,|&v!-BW<!/5C3w/;L3w,ivUvklbT49n^Tv3#B=!1oJs!=Sbt!2ZW<!.j!m#43Bs!:8:3w:U
+v5w/;L3w,ivUvHpOB(y5'v!0oA=!/oe9vh@:r+0`&v!
+11
+;7&*'0N!!!B;Tv
+11
+FyMh%EJGUv^ABv
+11
+x
+6
+q'-W@Dhw
+x
+4
+wm<eD
+x
+6
+1lo(F^(%
+x
+1
+I!
+x
+1
+J!
+x
+3
+g6-)
+x
+47
+!qbSA:m(sFvxQ<@3y#D+,HX/D6,aaEegpgC:`Y<+.p/bE)cN<@&=..D@p0%
+x
+1
+H!
+i
+6
+i
+0
+x
+0
+
+0
+0
+3 5
+7
++c9KDUvg+
+0 0 257
+7
+/09KDUvg+
+1 0 257
+11
+|(j:@,+^Z?e(Q,
+2 0 257
+5
++sEiCEv
+3 0 9
+3
+%@`-
+4 0 9
+x
+16
+|(j:@,+^Z?8)DEF)B|(F
+x
+0
+
+p
+20 0 212 35 0 0 80 0 4 20 20 -1 -1
+212
+w0E<!-BW<!*f+pv*K&s!(NA9v1#o9v)?W<!*Qr<!5fAs!'9E<!4;tl#/HW<!'3E<!=G(qv,K
+&s!0Apiw9;o9v)?W<!2,f=!;fAs!'9E<!B:3-&/HW<!'3E<!Kqgqv,K&s!7+/*'@Po9v)?W<
+!9VP>!@fAs!'9E<!MsJE'/HW<!'3E<!W@Irv,K&s!=a'w)Fbo9v)?W<!@%2?!JfAs!(B`W!^
+8xW*/HW<!'3E<!gp<sv,K&s!ETVT+Lto9v)?W<!FOq?!2KE!!
+20
+:n6OwM=xOwM=xOwM=xOwM=xOw
+20
+E1xOwM=xOwM=xOwM=xOwL4@4w
+35
+x
+6
+q'-W@Dhw
+x
+6
+UKL;6cn#
+x
+4
+QQqg9
+x
+13
+|(j:@,+^Z?0Kk_F1v
+x
+4
+>Ncr6
+i
+9600
+x
+5
+J8JQ8e!
+i
+0
+x
+2
+Q`v
+i
+500
+x
+2
+Rcv
+i
+10000
+x
+2
+Sfv
+i
+45
+x
+2
+Tiv
+x
+3
+!9N*
+i
+3
+x
+2
+Ulv
+i
+10
+x
+2
+Vov
+i
+5
+x
+2
+Wrv
+x
+2
+Xuv
+x
+15
+|1^b;xAjJDVlsl9Zyf+
+x
+6
+C&8Q8gG#
+x
+13
+`wj3A&BK(Fqc4cE@v
+x
+18
+;1oh/BO5i/H!I_2SER)27ov
+x
+7
+5X?V7ytf+
+x
+21
+E,aaEMyB,EGtC`F-6elBC%qeD3v
+x
+11
+5X?V7Zc9e;jIg+
+i
+1024000
+x
+11
+t0gY6!:_LCNdD-
+i
+1
+x
+12
+ng|:7BvvwHi.;EF
+x
+8
+D^YSAD!k:6
+0
+0
+0 0
+x
+15
+rpwhC;Z2b3<?<+EfqT+
+0
+0
+}

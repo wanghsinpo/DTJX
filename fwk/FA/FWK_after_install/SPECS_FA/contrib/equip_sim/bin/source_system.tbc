@@ -1,0 +1,250 @@
+##############################################################################
+# Proc name:  default_value
+#
+# Desc:       Ensures that an array value is set if it it does not exist.
+#
+# Parameters:
+#   arrname       name of the global array
+#   varname       name of the index of the array
+#   default_val   value that varname should receive if it is
+#                   not defined.
+#
+# Return:     none
+##############################################################################
+# TclPro::Compiler::Include
+
+if {[catch {package require tbcload 1.4} err] == 1} {
+    return -code error "[info script]: The TclPro ByteCode Loader is not available or does not support the correct version -- $err"
+}
+tbcload::bceval {
+TclPro ByteCode 2 0 1.4 8.4
+3 0 33 11 0 0 36 0 4 3 3 -1 -1
+33
+.NE<!(H&s!/HW<!1E`<!3)Ppv35:3w2/YQ#5/o9vz
+3
+7/0v
+3
+A)'v
+11
+x
+4
+,CHr@
+x
+13
+|(j:@,+^Z?0Kk_F1v
+x
+27
++c9KDuC#D+/09KDuC#D+|(j:@,+^Z?e(Q,
+p
+4 0 44 6 0 0 16 0 6 4 4 -1 -1
+44
+,|&v!-BW<!/5C3w/;L3w,ivUvklbT4b;'v!0oA=!/oe9vf::r++BN!!
+4
+;7&*'
+4
+icj1%
+6
+x
+6
+q'-W@Dhw
+x
+4
+wm<eD
+x
+6
+1lo(F^(%
+x
+1
+I!
+x
+1
+J!
+x
+0
+
+0
+0
+3 3
+7
++c9KDUvg+
+0 0 257
+7
+/09KDUvg+
+1 0 257
+11
+|(j:@,+^Z?e(Q,
+2 0 257
+x
+13
+A;lcEgKi'F=!WTA9v
+x
+20
+h9MTA,1DE+#O`aEf0RdD%d/bE
+p
+8 0 87 8 2 2 40 2 5 8 8 -1 -1
+87
+?GGY!g@#!!ee6(!G#+3-h-<<!6D13w@:iH&,B`W!*TA9v6cyTvCv_qvg@#!!fh6(!H)43-;-
+<<!;b^3wD:iH&4fvpv<r8X!-LbT!xv;0y)6!!
+8
+?t-0%I=.0%
+8
+lR=C1Jetpv
+8
+x
+4
+m'cSA
+x
+4
+(w=JD
+x
+4
+q'-W@
+x
+11
+:6Hr@06FiCZLc,
+x
+10
+9&TbE#KffDb:%
+x
+5
+Q=sr@8v
+x
+6
+A;lcE?Sw
+x
+0
+
+2
+L 1 17 64 84 10 -1
+L 2 57 19 79 50 -1
+2
+F
+1 2 3
+1
+4
+F
+1 6 7
+1
+8
+2 10
+7
+h9MTAad2-
+0 0 257
+12
+#O`aEf0RdD%d/bE
+1 0 257
+0
+
+2 0 521
+0
+
+3 0 521
+3
+ad2-
+4 0 9
+7
+%H9KDUvg+
+5 0 9
+0
+
+6 0 521
+0
+
+7 0 521
+4
+m'cSA
+8 0 9
+8
+m'cSAnjkSA
+9 0 9
+x
+13
+i%97A#NfCF*FV5B?v
+x
+8
+m'cSAnjkSA
+p
+15 0 115 16 2 0 76 1 7 15 15 -1 -1
+115
+f!!!!,)13w)`vpv9u&s!IdR!v|bbW!C*-w,e(%w;wB#8-9/p<v*HW<!3TN<!3`8s!1B`W!N;
+)I/xGl!,-WAs!4;tl#<5>:v;SYUv5&Ks!0KW<!9NE<!8NW<!g.DV,9YAs!<>B=!Omm<v&-!!
+
+15
+&?N!!AoOQ#:A13wKkfv
+15
+f>VR#+gW<!@#j<!A|W!
+16
+x
+4
+*dmID
+x
+1
+>v
+i
+0
+i
+3
+x
+0
+
+x
+4
+:NfCF
+x
+21
+`A(3:uC#D+m<7hCM1-.D)cN<@8v
+x
+1
+D!
+x
+7
+.=cSAi4Q,
+x
+13
+|(j:@,+^Z?0Kk_F1v
+x
+1
+Gv
+x
+1
+Iv
+x
+4
++u(*F
+x
+4
+u3uSA
+i
+1
+x
+5
+)lP)F1v
+2
+C 1 5 10 -1 -1 20
+L 1 29 57 101 87 -1
+0
+1 6
+8
+m'cSAnjkSA
+0 0 257
+6
+m'cSAwPw
+1 0 9
+4
+u3uSA
+2 0 8
+7
+`A(3:Uvg+
+3 0 8
+9
+m<7hCM1-.D1v
+4 0 8
+3
+e(Q,
+5 0 8
+x
+15
+rpwhC;Z2b3<?<+EfqT+
+0
+0
+}

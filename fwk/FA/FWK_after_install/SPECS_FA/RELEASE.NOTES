@@ -1,0 +1,734 @@
+
+== Keysight SPECS-FA for TEL Prober RELEASE.NOTES ===========================
+
+ > FILE LIST Including this RELEASE
+ > ENHANCEMENTS ON RELEASE G.03.10 Release 30
+ > ENHANCEMENTS ON RELEASE F.03.10 Release 19
+ > FIXED BUGS ON RELEASE F.03.10 Release 19
+ > FIXED BUGS ON RELEASE F.03.10 Release 18
+ > ENHANCEMENTS ON RELEASE F.03.10 Release 17
+ > FIXED BUGS ON RELEASE E.03.10 Release 16
+ > ENHANCEMENTS ON RELEASE E.03.10 Release 15
+ > FIXED BUGS ON RELEASE E.03.10 Release 15
+ > ENHANCEMENTS ON RELEASE E.03.10 Release 14
+ > ENHANCEMENTS ON RELEASE E.03.10 Release 13
+ > FIXED BUGS ON RELEASE E.03.10 Release 13
+ > ENHANCEMENTS ON RELEASE E.03.10 Release 12
+ > ENHANCEMENTS ON RELEASE E.03.10 Release 11
+ > FIXED BUGS ON RELEASE E.03.10 Release 10
+ > ENHANCEMENTS ON RELEASE E.03.10 Release 9
+ > FIXED BUGS ON RELEASE E.03.10 Release 9
+ > FIXED BUGS ON RELEASE E.03.10 Release 8
+ > FIXED BUGS ON RELEASE E.03.10 Release 7
+ > ENHANCEMENTS ON RELEASE E.03.10 Release 6
+ > FIXED BUGS ON RELEASE E.03.10 Release 6
+ > FIXED BUGS ON RELEASE E.03.10 Release 5
+ > FIXED BUGS ON RELEASE E.03.10 Release 4
+ > NEW FEATURES OF RELEASE E.03.10 Release 3
+ > ENHANCEMENTS ON RELEASE E.03.10 Release 3
+ > FIXED BUGS ON RELEASE E.03.10 Release 3
+ > ENHANCEMENTS ON FIRSTAID 3.10_20081121
+ > FIXED BUGS ON FIRSTAID 3.10_20081121
+ > ENHANCEMENTS ON RELEASE 3.10_20061115
+ > ENHANCEMENTS ON PATCH 3.00_20060803
+ > FIXED BUGS ON PATCH 3.00_20060803
+ > ENHANCEMENTS ON FIRSTAID 3.00_20051108
+ > FIXED BUGS ON FIRSTAID 3.00_20051108
+ > FIXED BUGS ON PATCH 3.00_20050630
+ > NEW FEATURES OF PATCH 3.00_20041112
+ > FIXED BUGS ON PATCH 3.00_20041112
+ > FIXED BUGS ON PATCH 3.00_20040325
+ > FIXED BUGS ON PATCH 3.00_20040312
+ > FIXED BUGS ON PATCH 3.00_20040305
+ > FIXED BUGS ON PATCH 3.00_20040126
+ > FIXED BUGS ON PATCH 3.00_20031118
+ > FIXED BUGS ON PATCH 3.00_20030813
+ > FIXED BUGS ON PATCH 3.00_20030708
+ > Limitations
+
+== FILE LIST Including this RELEASE ========================================
+
+   Full set of files of SPECS_FA G.03.10 Release 30
+
+== ENHANCEMENTS ON RELEASE SPECS_FA G.03.10 Release 30 =====================
+
+ > Support controller
+     Support new controller Keysight N9171C.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA F.03.10 Release 19 =====================
+
+ > VGEM: Log File
+     VGEM LogTimeFormat in defaults.ini is added to support timestamp on
+     usec time scale.
+
+ > VGEM: Log File (gemtester_xxx.log)
+     VGEM can generate the log file for coummunication between VGEM and SPECS.
+
+== FIXED BUGS ON RELEASE SPECS_FA F.03.10 Release 19 =======================
+
+ > VGEM: ALID and ALTX
+     VGEM assigns ALID and ALTX to the correct VID (AlarmID and AlarmDetails)
+     after the prober alarm.
+
+ > VGEM: Serial Dongle Access
+     Lock error is resolved for serial dongle access.
+
+== FIXED BUGS ON RELEASE SPECS_FA F.03.10 Release 18 =======================
+
+ > VGEM: Process Job ID and Control Job ID in PP-SELECT
+     VGEM sends process job ID and control job ID with the PP-SELECT command
+     to FA Framework 
+
+ > VGEM: S3F25 Port Action Request
+     TSN string data error is resolved for IN SERVICE and OUT OF SERVICE in
+     the port action.
+
+ > FA Framework: Test Abort in Execution
+     PJABORT and CJABORT is processed properly in
+     HP_PROBER_PRB_QUERY_READY_TELP12 action spec.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA F.03.10 Release 17 =====================
+
+ > Support controller
+     Support new controller Keysight N9171B.
+
+ > VGEM: log file (gemport_xxx.log, gemprober_xxx.log)
+     Timestamp is added on sent message.
+
+ > UTIL_FA(BASIC) library: FA_RCP_EXEC_CMD is modified for RHEL7.1 (on N9171B).
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 16 =======================
+
+ > VGEM: Job State Transition
+     Job state error is resolved at the time of starting test on LMP.
+
+ > FA Framework: Test Abort in Execution
+     Test abort is corrected to reject lot in execution.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA E.03.10 Release 15 =====================
+
+ > VGEM: S1F1 Are You There (R)
+ > VGEM: S1F13 Establish Communication Request (CR)
+     MDLN and SOFTREV can be formated with VGEM and FA framework.
+
+ > LMP: GEMPORT and GEMPROBER Trace Window
+     The geometry of GEMPORT and GEMPROBER trace window can be specified.
+
+ > Install: Software Update
+     The customization files are kept (not overwritten) at software update.
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 15 =======================
+
+ > VGEM: S2F29 Equipment Constant Namelist Request (ECNR)
+ > VGEM: S1F11 Status Variable Namelist Request (SVNR)
+     The prefix is appended to ECNAME and SVNAME for the prober to
+     distinguish from VGEM.
+
+ > VGEM: S10F5 Terminal Display, Multi-Block (VTN)
+     The text message is shown on LMP terminal services not only by S10F3
+     but also by S10F5.
+
+ > Install: Software Install
+     Software dependency error is resolved even if the tester software is
+     not installed.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA E.03.10 Release 14 =====================
+
+ > VGEM: Added SEMI Standard Support
+   * SEMI E148
+     - The clocks in tester workstation can be synchronized via network time
+       protocol.
+     - The TS-Clock object is defined to access equipment time value and
+       synchronization status.
+     - The setup_ntp is prepared to configure the network time
+       synchronization on tester workstation.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA E.03.10 Release 13 =====================
+
+ > VGEM: Multi-Block Inquire
+     The configuration parameter in defaults.ini, MultiBlockInquired is
+     added to skip the SECS-II message of multi-block inquired.
+
+ > VGEM: Delete process job and control job
+     The configuration parameter in defaults.ini, JobDeleteEvent is added
+     to choose a time to delete process job and control job.
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 13 =======================
+
+ > VGEM: S14F1 GetAttr Request (GAR)
+     VGEM does not return S14F0 but S14F2 even when HOST continuously sends
+     S14F1 before receiving each S14F2.
+
+ > FA Framework: RUN-DIAGNOSITICS
+     An acknowledge is added for "RUN-DIAGNOSTICS" remote command.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA E.03.10 Release 12 =====================
+
+ > VGEM: Updated SEMI Standard Support
+   * SEMI E005
+     - The maximum length of PPID in S7F33 is changed from 80 bytes to 120
+       bytes.
+     - TimeFormat in ECV is extended to define the extended format complying
+       with SEMI E148.
+   * SEMI E030
+     - PPError is added to DV in VGEM and copied from PPBadCompileCode.
+     - PPFormat is added to SV in VGEM and shows the type of supported
+       process programs.
+   * SEMI E094
+     - PRJobStatusList is added to the attribute of the ControlJob object.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA E.03.10 Release 11 =====================
+
+ > LMP: Confirm Dialog
+   The PopupConfirmDialog in defaults.ini is added to choose whether to
+   output a confirm dialog after ABORT/STOP action.
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 10 =======================
+
+ > LMP: Warning Dialog
+   The PopupPausedDialog in defaults.ini is added to choose whether to
+   output a warning dialog for RESUME action.
+
+ > Install: Setup License
+   The setup_license can be executed with the absolute path.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA E.03.10 Release 9 ======================
+
+ > VGEM: Tester Remote Commands on PJ/CJ Mode
+   Optional tester remote commands can be added to VGEM on PJ/CJ mode.
+   The remote commands must be defined with the CMD_TESTER trigger type.
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 9 ========================
+
+ > FA Framework: Test Conditions on the Adaptive Test
+   In some cases like specifying the test plan directly in PP-RECIPETUNE,
+   test conditions could not be changed on the adaptive test.
+   FA Framework is modified to do correctly.
+
+ > FA Framework: Pause Condition on the Adaptive Test
+   The fail ratio on the adaptive test was calculated as integers, and the
+   pause condition could not be decided properly.
+   FA Framework is modified to do correctly.
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 8 ========================
+
+ > LMP: Warning Dialog
+   When operator is required to push RESUME button, such as after an alarm
+   cleared, a red warning dialog will output to pay attention to the RESUME
+   button.
+
+ > Facomcore: Function Declaration
+   The facomcore is modified to provide the necessary declaration in its
+   header file.
+
+ > FA Recipe File: User Labels Added
+   User12 - User17 are added to FA_recipe2.rec to extract data correctly
+   with FA_QUERY_RCP2 algorithm.
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 7 ========================
+
+ > LMP: Port Command
+   The port command on LMP become disabled after S1F13 is issued by HOST
+   while the following conditions are satisfied.
+     - SPECS-FA compatibility flag is on.
+     - The VGEM control state is Host OFF-LINE.
+     - The VGEM port state is READY.
+
+ > FA Framework: Test Plan Constant File
+   FA Framework is modified to support SPECS test plan constant files in
+   addition to SPECS_FA E.03.10 Release 6.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA E.03.10 Release 6 ======================
+
+ > VGEM: S16F17 PRJobDequeue
+   VGEM returns FALSE for dequeuing all when no process job is queued.
+   It is customizable by NoPRJobDequeued in defaults.ini, which can be set
+   to TRUE or FALSE.
+
+ > VGEM: S5F1 Alarm Report Send (ARS)
+   VGEM sets 0 to W-bit for S5F1.
+   It is customizable by ARSWbit in defaults.ini, which can be set to 0 or
+   1.
+
+ > FA Framework: Test Plan Constant File
+   At the creatation of process job, SPECS test plan constant files can be
+   specified only via SPECS recipe file.
+   FA Framework is modified and they can be specified directly.
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 6 ========================
+
+ > VGEM: S14F1 GetAttr Request (GAR)
+   VGEM returned the unknown attribute name error for any attribute request,
+   "unknown attribute name or non public attribute name was specified.".
+   VGEM is modified to return the proper attribute.
+
+ > VGEM: Recipe File
+   SPECS recipe file could not be changed by RecipeFile in defaults.ini.
+   Reclist is modified to use RecipeFile in defaults.ini.
+
+ > FA Framework: Directory for Recipe Management
+   The top directory for the recipe management could not be customized in
+   FA Framework.
+   The setup_recipe is modified to customize them.
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 5 ========================
+
+ > VGEM: Carrier Release Control
+   CancelCarrierAtPort and CarrierRelease are sent to the prober after
+   PPBadCompile when VGEM is configured as below.
+   - defaults.ini
+     VGEM CarrierReleaseMode        : 1
+     VGEM CancelCarrierOnBadCompile : 1
+   - ECV
+     CarrierReleaseControl (153376) : 1
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 4 ========================
+
+ > LMP: Port Command
+   Port Command on LMP is changed to insensitive state on compatibility mode
+   if port state is SETTINGUP.
+
+== NEW FEATURES OF RELEASE SPECS_FA E.03.10 Release 3 ======================
+
+ > New Supported Workstation
+   Hewlett Packard Z600 is new supported.
+
+ > New Supported Operating System
+   Red hat Enterprise Linux 5.3 is new supported.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA E.03.10 Release 3 ======================
+
+ > Log Files
+   VGEM logs messages with timestamp in /var/opt/SPECS/log/prober.log and
+   /var/tmp/tcl_message.log.
+
+== FIXED BUGS ON RELEASE SPECS_FA E.03.10 Release 3 ========================
+
+ > VGEM: PJPause
+   PJPause is changed to disabled state if it is not available.
+
+ > LMP: Port Command
+   Port Command on LMP is changed to insensitive state if it is not available.
+
+ > Reclist and Tec
+   Wrong definition in makefile is corrected to compile source code.
+
+== ENHANCEMENTS ON FIRSTAID 2008.11.21 =====================================
+
+ > NEW Reserve Diag Function
+   This version allows the host to reserver diag start in Equipment state
+   beside IDLEREADY. And when VGEM will return to IDLEREADY state, VGEM
+   will send DIAG command to SPECS.
+   
+ > Enhancments for error checking at PJ creation
+   NEW Recipe ID Checking. When defaults.ini:ChkRecIDS16 is enabled,
+   VGEM will check existance of RecipeID when PJCreate receives.
+
+ > Enhancments for error checking at CJ creation
+   VGEM will check additionally like CarrierID cosistency among PJs
+   which are designated as members of the CJ.
+
+ > Execute User CMD on Alarm
+   When an alarm occures, VGEM will execute a user CMD string defined in
+   defaults.ini:execcmdOnAlarm flag.
+
+ > LMP Resume Button Color. When operator is required to push RESUME button,
+   such as after Alarm Cleared, the RESUME button color will turn to RED color 
+   to get more attention. After clicking the RESUME button, the button color 
+   will be changed back to the default color of LMP.
+
+ > When the host computer issues CancelCarrierAtPort command, VGEM will
+   issue CarrierRelease command to the prober following the CancelCarrierAtPort
+   command if defaults.ini;CarrierReleaseMode is set to '1'.
+
+== FIXED BUGS ON FIRSTAID 2008.11.21 =======================================
+
+ > FA Framework : 
+   Main Manu Button Actions has some problem. SPECS-FA Framework:
+    Main Panel >> System Setting >> Save Settings. Even user click the
+   Save Settings button, all of changes are not saved. This FirstAid version 
+   fixed this bug.
+
+ > FA_UPD_VGEMVAR : This algorithm  does not work well SPECS_FA C.03.10
+   This FIRSTAID version fixed this bug. No data would be updated or previous
+   data would be sent.
+          
+ > FA_UPD_VGEMLVAR (BASIC) : This algorithm does not work well SPECS_FA C.03.10
+   This FIRSTAID version fiexed this bug. No data would be updated.
+
+ > LinkTest Procedure Change : Link test would not start with some hosts. This
+   depends on the Host Computer.
+
+ > S14F11 Reply Header :
+   VGEM returned OBJID for OBJSPEC. This version fixed this bug.
+
+ > Multiple PJ execution under one CJ: This bug occures on only OFFLINE
+   mode. After the second PJ, SPECS will test wrong wafers different from 
+   wafers which are designated by the PJ.
+
+ > defaults.ini:CarrierReleaseMode : In Offline or Online-Local mode, VGEM
+   does not issue CarrierRelease to the prober automatically even though the
+   CarrierReleaseMode flag is set to 1. This FirstAid version fixed this bug.
+
+== ENHANCEMENTS ON RELEASE SPECS_FA 3.10 2006.11.15 ========================
+
+ > SPECS 3.1 New Functions Support
+   - Measurement Dynamic Loading Support
+   - Multiple Measurement Libraries Loading Support
+     - You can designate multiple measurement libraries from PJCreate
+       command or recipe file.
+
+ > FWK: Test Plan Verification before executing
+   - Added multiple Measurement Libraries file checking
+   - Added TPL verification using "tplverify" before executing
+
+ > FWK: LotCancel Flag
+   - Added new FA_LOTCANCEL_BYSPECS flag to cancel the lot at WAFER_END.
+     After completing of a wafer measurement, you can judge the wafer
+     on your Framework, and if the judgement will fail and it need to
+     cancel the lot, then you can lotcancel automatically if you set
+     1 to the FA_LOTCANCEL_BYSPECS flag after the judgement.
+
+ > FWK: LotCancel from Prober Panel
+   - If Wafer alignment error will occur or Prober receipe error will
+     occur at STARTING, once operator push the LOTCANCEL from the prober
+     panel, FA framework and VGEM will process the LOTCANCEL completely.
+
+ > VGEM: Delayed CJStop
+   - VGEM has new flag defaults.ini:VGEM delayedCJStop. If you set 1
+     to this flag, and the host send CJStop command to VGEM, VGEM will
+     delay to execute CJSTOP until the current going wafer will be
+     completed the measurement.
+
+ > VGEM: CJAbort for each port
+   - New LMP will allow operator to execute CJAbort for each port
+     on LMP when VGEM is Online-Local or Offline mode.
+
+ > VGEM: PJAbort from LMP
+   - New LMP will allow operator to execute PJAbort on LMP when
+     VGEM is Online-Local or Offline mode.
+
+ > VGEM: S7F19
+   - S7F19 for Tester Recipe Query is availble.
+
+ > VGEM: S10F3
+   - Host can send some message to the Prober Panel using S10F3.
+     TERMID=0 : S10F3 message will be displayed on LMP message
+                display area.
+     TERMID=1 : S10F3 message will be forwarded to the Prober
+                and Prober will display the message on its panel.
+
+ > VGEM: Alarm Calling:
+   - User can designate a program to execute when Alarm will be
+     occur. defaults.ini:execcmdOnAlarm
+
+ > LMP: Simplified PJ/CJ Creation Panel
+   - On Online-Local or Offline Mode; default.ini:MultiPJCreate
+      MultiPJCreate=1 : User can create multiple PJs on LMP
+      MultiPJCreate=0 : Simplified PJ/CJ Creation Panel. User
+                        can create only one PJ for a CJ. And
+                        User will not be required to enter CJ
+                        name.
+
+ > Util_FA: Utility Algorithm New Function
+   - FA_UPD_VGEMLVAR(): User can update a series of list values to
+                        List Type Status Variable of VGEM
+
+== ENHANCEMENTS ON PATCH 2006.08.03 =========================================
+
+ > New HP-UX WorkStation c8000 support.
+
+== FIXED BUGS ON PATCH 2006.08.03 ===========================================
+
+ > FA Framework : When Limit Spec is used to build TestPlan in previous lot,
+   and next lot will NOT use Limit Spec to build TestPlan, it will make
+   PP-Badcompile because of Limit Spec name is not initialized.
+
+== ENHANCEMENTS ON FIRSTAID 2005.11.08 ======================================
+
+ > LinkTest Interval Time Value : We have new flag LinkTestInterval to
+   designate interval time of LinkTest.
+
+== FIXED BUGS ON FIRSTAID 2005.11.08 ========================================
+
+ > Host Communication : When the communication between the host and VGEM
+   will lose, LMP will keep COMMUNICATING state. This patch version detect
+   the communication loss if UseLinkTest flag of defaults.ini is set to '1'.
+   And LMP will change the communication state displayment.
+   If host will come back, VGEM will re-establish the communication.
+
+ > Add PR Job Create Error Checking Facility : The next four parameter checking
+   are added;NoCID, NoMaterialList, Slot Number out of range, and No Wafer
+   Slot specifying.
+
+ > Add CJCreate Error Checking Facility : Mismatching CarrierID between PJ
+   and CJ.
+
+== FIXED BUGS ON PATCH 2005.06.30 ===========================================
+
+ > Prober Dual Port Model Operation: In the case of measurement is going on
+   a port, and another port has FOUP too and PJ & CJ are created for the
+   port. The secondary CJ will go into Selected state. When operator push ABORT
+   or STOP button on LMP, the both of CJ are terminated and deleted. But the
+   FOUP of the secondary port will not be released even if the CarrierRelease
+   mode is set to ON;Auto.
+
+ > Prober Dual Port Mode Operation: Online-Local/Offline Mode Operation.
+   In the case of measurement is going on a port, and another port has FOUP
+   too and PJ & CJ are created. The secondary CJ will go into Selected state.
+   When the secondary CJ start, the PJAbort button for the secondary port will not
+   be enabled.
+
+ > Prober Dual Port Model Operation: When FOUP is put on Port2 of the prober,
+   the prober alarm occurs and VGEM fails into alarmpause state, after
+   that, the alarm is cleared and resumed. LMP can not update PJStatus
+   for the port2. And when the PJ completed, the PJComplete event will not
+   be issued to the host.
+
+ > Prober Dual Port Model Operation: When measurement is going on a port.
+   operator put a FOUP on another port and PJ and CJ is created. The CJ is
+   in Selected state. At that time if the host issues the CJSTOP/CJABORT to
+   the both of port1 and port2, VGEM will not send carrier release to the
+   secondary port(CJ Selected State Port.) So the FOUP on the secondary port will
+   not be released even if the CarrierRelease mode is set to ON;Auto.
+
+ > When user try to test all of 25 wafers in a PJ, the WaferID of slot #1 will
+   be always set to "1". facomcore.c:parse_waferlist() and parse_dietstlist()
+   routines are replaced with new routines.
+
+ > FA Framework: Added processing for Prober Lot-Cancel when alignment error 
+   occurs on the prober.
+
+ > FA Framework: Error message correction.
+   
+ > Prober Driver TELP12 BASIC : TELP12_CMAPODR Fixed script out of range error.
+
+== NEW FEATURES OF PATCH 3.00_20041112 =======================================
+
+ > Unified Security Mechanism
+   SPECS-FA adopts the same Security Mechanism with SPECS 3.0(using Hardware
+   Key.) And SPECS-FA shares the hardware key with SPECS. Not required any
+   other additional hardware key.
+   And this version is still supporting the previous software key mechanism
+   too. The previous version users will not be required to get new password 
+   for the hardware key. The current using software password is still effective
+   after installing this patch. (But it will be required to reinstall the
+   password again in the installation procedure.)
+
+ > New LMP(:Local Management Panel)
+   - New LMP allows user to create multiple Process Jobs from GUI.
+   - New LMP allows SPECS FA Framework to display some data on LMP
+     user data displayment area. SPECS FA Framework can display
+     a set of Data Label and its Value(String). And it can change
+     foreground color and background color of the Value displayment.
+
+ > New Utility Algorithms
+   - To display user data onto LMP easily, some new utility algorithms are 
+     added.
+         FA_LMP_DISPLINE(),FA_LMP_DISPVAR(),FA_LMP_CLEARLN()
+   - To update SV or DV of VGEM easily, FA_UPD_VGEMVAR() is added.
+
+ > Prober Event forward facility
+   New VGEM can forward Prober Event to SPECS FA Framework. This allows
+   user to start a processing in FA Framework when prober issues an event.
+
+ > Event Generation from SPECS FA Framework
+   New SPECS FA Framework can generate an event and send it to the Host 
+   via VGEM. 
+
+ > VGEM send an event to SPECS FA Framework when the host update an SV of VGEM.
+   SPECS FA Framework can receive an event when a specific SV of VGEM is
+   updated by the Host(Operator).
+
+ > SPECS FA Framework can update user definable DV of VGEM.
+
+ > Add some new setup scripts for easy installation.
+   setup_recipe,setup_userdisp,setup_eventmsgtype
+
+ > Fixed bugs found on SPECS-FA 3.0
+   -  Minor Enhancements are also included.
+
+== FIXED BUGD ON PATCH 3.00_20041112 =========================================
+
+* FA Framework: Operation Panel is not update correctly after Alarm.
+
+* FA Framework: In AlarmPaused state, it can not abort/stop from LMP abort/
+  stop button. 
+
+* FA Framework: When Initial Hardware fails, framework can not terminate.
+  it allows to abort the session.
+
+* Utility library UTIL_FA(C & BASIC): FA_WAFERDUMP algorithm : If SPECS
+  framework is executed on beside session 1, data will not be dumped correctly.
+
+* VGEM : While port state of Port1 is in STARTING, when next cassette arrives
+  at Port2 and new ControlJob will start, VGEM VID #1300 and #1400 will be
+  overwritten with Port2 values. The VIDs should keep Port1 values.
+
+== FIXED BUGS ON PATCH 3.00_20040325 =========================================
+
+* VGEM: Changed eq_alarms.tbc to only pass an 'enable all alarms' to the
+        prober if VGEM AlarmEnable is set to 1.  This is in the case of
+        the host sending an S5F3 with an empty list of ALID.
+
+== FIXED BUGS ON PATCH 3.00_20040312 =========================================
+
+* FA_CHECK_MEAS: Modified FA_CHECK_MEAS action spec.
+  When SPECS-FA framework find a write permission error on measurement 
+  library file.  SPECS-FA framework should ignore the error.
+
+== FIXED BUGS ON PATCH 3.00_20040305 =========================================
+
+* UTIL_FA:Modified FA_RUNP_CREATE function specification
+  When it will be required to change the session on testplan executing,
+  this utility function will make a file which will contain tpledit's 
+  arguments to invoke. We stopped to output testplan name into the special
+  file.
+
+* SYSTEM.system: SYSTEM.system spec calls the above FA_RUNP_CREATE algorithm.
+  According to the modification to FA_RUNP_CREATE, we changed the SYSTEM.system
+  spec also.
+  
+== FIXED BUGS ON PATCH 3.00_20040126 =========================================
+
+* VGEM: Fixed issue of alarm occurring after Process Job has completed and
+  has been destroyed.  In this case, we switch to a ControlJob pause
+  resume scenario.  Customer must be aware that an alarm can trigger
+  either a 5908/5909 OR a 5808.  If the ControlJobPause was triggered
+  in this event, the ControlJob resume must be sent.
+
+* VGEM: Added capability to define log file directories using defaults.ini
+  file entry.  
+
+* facomcore.c: Discard to print out debug message to algorithm terminal window.
+
+* FA_TELP12.fwk: SYSTEM.sys specs. Add to a line to transfer previous session ID
+  TAG variable from previous session to new session when new measurement library
+  is designated from the host computer. After starting new session, the new 
+  session will terminate the previous session using the transferred session ID.
+
+* UTIL_FA(C) library: APPLY_FWKCONF.c Fix bug which could not copy string array
+  data to TAGs of FWK correctly, if each array items did not have value=only some 
+  array items are having values.
+
+== FIXED BUGS ON PATCH 3.00_20031118 ==========================================
+
+* Fixed facomcore library;After repeating Adaptive Testing, the library would
+    not handle die-test spec name correctly. 'Dust-String' might be added at 
+    tail of the die-test spec name string.
+
+* Fixed Wrong Displayment on Operation Panel:
+  - Wafer ID, Cassette Result, Die Result information are not displayed 
+    correctly on Test Execution Panel.
+  - Wafer ID information is not displayed on Test Result Panel.
+
+* Fixed Nowafer testing after PJPause recipe tuning;In adaptive scenario using
+     IWCONDITION, at PJPause, tune slotlist and resume. Then remaining wafers
+     would not be tested.
+
+* Fixed Wrong number of wafers would be tested after PJPause recipe tuning;
+     In adaptive scenario using BWCONDITION, at PJPause, change slotlist and
+     resume. Then 'changed slotlist -1' wafers would be tested.
+
+* Fixed No stop after PJPause recipe tuning; BWCONDITION=NWAF, BWNWaf=1.
+     At PJPause, execute 'RETEST' retaining the BWCONDITION. After retesting 
+     the wafer, SPECS-FA would not stop.
+
+* Fixed No retesting after PJPause recipe tuning; IWCONDITION=NDIE, at PJPause,
+     execute 'RETEST' retaining the IWCONDITION. After resume, SPECS-FA would not
+     retest the wafer.
+
+* Fixed No stop after PJPause recipe tuning; BWCONDITION=LSTW, at PJPause,
+     execute 'RETEST' retaining the BWCONDITION. After retesting the last
+     wafer, SPECS-FA would not stop the last wafer.
+ 
+* Fixed Wrong EVENT generation: At PJPause by IWCONDITION, if SPECS-FA receives 
+     PJAbort command, SPECS-FA would issue bad PENDINGCOMPLETE event to the 
+     host.
+
+* Fixed Wrong Prober GPIB control;At PJPause by BWCONDITION, if SPECS-FA
+     receives the PJAbort command, SPECS-FA would issue duplicated unload
+     command to the prober.
+
+* Fixed : There is no Tester Alarm Setting for SPECS-FA 3.0. Added additional 
+     alarms to match SPECS-FA 3.0 FA framework changes.
+
+* Fixed : FWK create *.ad4 file for *.ad5 file when sysconfig:ADTFORMT 
+     is set to 5.
+
+* Enhanced: User can use CJAbort when user meet Alarm in Settingup state
+     of PortStateModel of VGEM. When Alarm is occurred in Settingup state,
+     the EQ state will move to AlamPaused state, and if the alarm is cleared,
+     the EQ state will move to Paused state. User can use CJAbort in the
+     both of states.
+
+* Enhanced: Increased ObjID length to allow 128 character process job ID's
+
+== FIXED BUGS ON PATCH 3.00_20030813 ==========================================
+
+* Fixed SPECS-FA framework;tplbuild fails when PJ-Recipetune is done when user 
+  designate die,test spec informations in the PP-Recipetune message directly.
+
+* Fixed SPECS-FA Framework to return correct NDIE value when PJ-Pause occurred.
+
+* Fixed VGEM: S1F3 response to handle empty lists correctly. 
+
+* Fixed VGEM: Removed code to update Available Space from destroyControlJob.
+
+* Fixed VGEM: bad reply format.  Variable 'reply' was being used it two places.
+
+* Fixed VGEM: Modified code to allow multiple entries in CarrierInput Spec.  
+  Only first entry in this list will be used but it will not n ack a job
+  creation with multiple entries.  
+
+* Modified VGEM:
+  CJHOQ function works correctly now, as well as DESELECT.
+  Only one job is now sent into SELECTED state and if the correct
+  material is not present for this job than HOQ/DESELECT functions
+  will need to be used to manipulate job objects.
+
+  If a job is DESELECTED, than there must be a job at HOQ to replace
+  it as SELECTED.  A check is made when the new job is selected to
+  see if material is present for this job, if so the checkPRJob proc is 
+  run and the job is started.
+
+== FIXED BUGS ON PATCH 3.00_20030708 ==========================================
+
+* Add E94 ECV SetUpName EC (3150)
+
+* Fixed code to allow CJ_QueueAvailableSpace to work correctly according
+  to the standard.
+
+* Added a reset of available space variables.
+
+* Modified code to always obtain the prober recipe file name from the
+  equipment.
+
+* Modified FA Framework to return prober recipe file name even if the
+  recipe file name is designated in PP-Select directly.
+
+* Modified FA Framework to check as if string of each die,tst/dietest 
+  specs information is NULL string or not. If the NULL is designated, 
+  Framework will use the current reserved die,test/dietest specs for 
+  TPLBUILD operation.
+
+* Modified FA Framework to handle the die,test/dietest specs information
+  correctly.
+
+* Added ~/calg/utility/UTIL_FA~/GEM_SENDEVENT.c source file
+  
+* Fixed S16F13 and S16F15 which didn't store the pause event list properly in 
+  the database. Therefore, a PJPauseRequest from the tester wouldn't not work.
+
+* Fixed code so S14F1 and S14F3 functions would work on an object of type 
+  "ProcessJob" as well as "PROCESSJOB".
+
+* Added a trigger for S16F17 Process Job Dequeue event. 
+
+* UPDATED contrib tools.
+
+---------------------------------------------------------------------------
+
+== Limitations ============================================================
+
+ * Refer to User's Guide Section-2 Limitations.

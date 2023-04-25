@@ -1,0 +1,3582 @@
+#Library	UTILITY_DTJX_220927	1	09/27/2022	22:35:47	wat	
+#Algorithm	ALGPANEL_LAUNCH	1	09/01/2000	09:00:00	specs	Execute Algorithm Panel.
+#Algorithm	ALGPANEL_START	1	09/01/2000	09:00:00	specs	Popdup Algorithm Panel.
+#Algorithm	ALGPANEL_STOP	1	09/01/2000	09:00:00	specs	Popdown Algorithm Panel.
+#Algorithm	APPLY_FWKCONF	1	09/01/2000	09:00:00	specs	Read configuration parameter and apply them.\n  SPECS2.5: Added special parameters.
+#Algorithm	ARRAY_LOOKUP1	1	09/01/2000	09:00:00	specs	Returns the array index for a specified data element of a STRING array.
+#Algorithm	ARRAY_LOOKUP2	1	09/01/2000	09:00:00	specs	Returns the array indices for the specified data elements of a STRING array.
+#Algorithm	ARRAY_LOOKUP3	1	09/01/2000	09:00:00	specs	Returns the data elements for the specified indices of a STRING array
+#Algorithm	ATTRIB_FILE	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	BEEP	1	09/01/2000	09:00:00	specs	Specifies frquency and duration for the beep, and sounds the beep
+#Algorithm	CALL_ERRHANDLER	1	11/14/2005	15:06:01	specs	Error Handler.
+#Algorithm	CHECK_DATAFILE	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	CHECK_FILE	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	CHECK_FSIZE	1	03/15/2018	05:52:37	agilent	Description for this Algorithm spec.  Paul 2018-03-13  for prober.log auto backup
+#Algorithm	CHECK_PASSWD	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	CHECK_PROBER	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	CHECK_PROFILE	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	CHECK_SYSCONF	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	CHECK_TIME	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	CLOCK	1	09/01/2000	09:00:00	specs	Returns the present date and time
+#Algorithm	CLOSE_DDTERM	1	11/05/2003	17:27:26	levis	Description for this Algorithm spec.
+#Algorithm	COPY_FILE	1	03/05/2002	21:30:23	joy	Copy file or Move file\n
+#Algorithm	CREATE_WINDOW	1	09/01/2000	09:00:00	specs	Opens a new HP BASIC/UX window
+#Algorithm	CTM_CLR_XTERM	1	05/31/2012	03:46:34	wat	201205,sami:close xterm
+#Algorithm	CTM_DATE_LOG	1	08/14/2003	10:45:11	levis	Description for this Algorithm spec.
+#Algorithm	CTM_FILE_LOOKUP	1	05/31/2012	03:35:55	wat	201205,sami:Returns specified field of specified line in an ASCII data file
+#Algorithm	CTM_INFO_DIS	1	09/18/2003	11:17:18	wat	Description for this Algorithm spec.
+#Algorithm	CTM_LIMBLD	1	03/05/2002	21:53:03	joy	This algorithm generates Limit File dynamically.
+#Algorithm	CTM_LIMFMT	1	03/05/2002	21:53:03	joy	This algorithm alters Limit File according to conditions specified by external file.
+#Algorithm	CTM_MON_CONV	1	05/26/2011	17:57:11	wat	Description for this Algorithm spec.
+#Algorithm	CTM_PCID_LOG	1	01/31/2013	15:41:01	wat	201301,sami: read/write host,pcid
+#Algorithm	CTM_PCIL_ACCESS	1	05/16/2011	07:06:03	wat	20080424,sami: RFID & Meas R for PC ID extract from PCIL\nAccess PCIL to extract ProbeCard type/id\t2002/8/16 Joy Huang\nremove check for 48pin Pcard        2007/12/05 angel\nRFID read R               2008/01/03 angel
+#Algorithm	CTM_PCIL_ACCESo	1	01/19/2011	13:10:04	wat	Access PCIL to extract ProbeCard type/id\t2002/8/16 Joy Huang
+#Algorithm	CTM_PCIL_ACC_bk	1	05/16/2011	07:06:03	wat	20080424,sami: RFID & Meas R for PC ID extract from PCIL\nAccess PCIL to extract ProbeCard type/id\t2002/8/16 Joy Huang\nremove check for 48pin Pcard        2007/12/05 angel\nRFID read R               2008/01/03 angel
+#Algorithm	CTM_PC_COUNT	1	08/21/2002	22:05:18	ae	2002/8/21: Joy HUANG \nSend "kc" to P8 to request probe-card contact times in ON_LINE mode
+#Algorithm	CTM_PC_ID_R	1	01/18/2011	10:25:54	agilent	Fab1 search probe card Id by resistor
+#Algorithm	CTM_PC_ID_RL	1	01/18/2011	10:25:54	agilent	Fab1:Search probecard ID by resistance
+#Algorithm	CTM_PC_ID_TYPE	1	01/18/2011	10:25:54	agilent	Fab1:Search probecard ID by type
+#Algorithm	CTM_PC_LEAK	1	01/19/2011	13:09:41	wat	CTM: check probe-card leak
+#Algorithm	CTM_PC_LEAK_D2	1	05/02/2013	12:07:02	wat	CTM: check probe-card leak
+#Algorithm	CTM_PC_LEAK_DHV	1	05/02/2013	12:07:02	wat	CTM: check probe-card leak
+#Algorithm	CTM_PC_LEAK_DIS	1	05/02/2013	12:07:02	wat	CTM: check probe-card leak
+#Algorithm	CTM_PC_LEAK_HV	1	01/19/2011	13:09:41	wat	CTM: check probe-card leak
+#Algorithm	CTM_PC_LEAKold	1	01/19/2011	13:09:41	wat	CTM: check probe-card leak
+#Algorithm	CTM_PC_MGR	1	03/27/2003	13:46:34	wat	To update probe-card contact numbe and review the card
+#Algorithm	CTM_PIL_ACCESS	1	01/24/2006	13:13:29	specs	Query recipe items in the recipe file from key recipe id.\n  SPECS3.1: Initial revision.
+#Algorithm	CTM_PIL_ACCESo	1	06/16/2003	11:51:08	levis	Access PIL information
+#Algorithm	CTM_POS	1	03/30/2012	07:59:45	wat	20080522,sami:Check string position for MergeLot
+#Algorithm	CTM_PURGE_DISP	1	06/17/2003	14:24:44	levis	Description for this Algorithm spec.
+#Algorithm	CTM_RFID	1	05/16/2011	07:18:21	wat	20080520,sami: read/write PC info by RFID\n1.Flag,2:Contact_PM,3:Contact_total,4:PM_Limit,5:Life_Limit,6:Res,7:Prb,8:Type,9:ID\n
+#Algorithm	CTM_STRING_EXTR	1	12/22/2003	17:04:27	wat	Description for this Algorithm spec.
+#Algorithm	CTM_TELP8_INFO	1	06/20/2003	15:57:05	levis	Gets prober recipe overdrive
+#Algorithm	CTM_TEST_LOG	1	05/27/2011	07:19:39	wat	Description for this Algorithm spec.\n1. change product ID to "TST_RCP_PROCESS"   ----Paul, 20110425\n2. change probe card ID from 9 bits to 10 bits  ----Paul, 20110425\n3. add prober recipe to Testlog file   ----Paul, 20110425\n
+#Algorithm	CTM_TIMEDATE	1	03/23/2012	05:43:45	wat	Description for this Algorithm spec.
+#Algorithm	CTM_TIME_CAL	1	03/23/2012	05:27:49	wat	Description for this Algorithm spec.
+#Algorithm	CTM_TPLBLD	1	06/16/2003	11:58:46	levis	This algorithm generates Test Plan dynamically.
+#Algorithm	CTM_TPLFMT	1	03/05/2002	21:30:23	joy	This algorithm alters Test Plan according to conditions specified by external file.
+#Algorithm	CTM_TPLFMTold	1	03/05/2002	21:30:23	joy	This algorithm alters Test Plan according to conditions specified by external file.
+#Algorithm	CTM_WAF_JDG_HEA	1	06/17/2003	18:08:28	levis	CTM: check probe-card leak
+#Algorithm	CTM_WAF_JDG_LOG	1	04/12/2005	13:32:03	wat	CTM: check probe-card leak
+#Algorithm	CTM_WAF_YLD_JDG	1	04/03/2020	11:55:22	wat	CTM: check probe-card leak
+#Algorithm	DATALOG_DIEEND	1	09/01/2000	09:00:00	specs	Logs datas on the specified file. This uses user bin.\n
+#Algorithm	DESTROY_WINDOW	1	09/01/2000	09:00:00	specs	Closes an existing HP BASIC/UX window
+#Algorithm	DISCHARGE_ALL	1	08/03/2013	16:48:41	root	Description for this Algorithm spec.
+#Algorithm	FILE_EXIST	1	03/05/2002	21:30:23	joy	Check file exists or not\n
+#Algorithm	FILE_HWCONFIG	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	FILE_LOOKUP	1	09/01/2000	09:00:00	specs	Searches for and returns all the file names (in all directories under a specified directory) that have a specified suffix
+#Algorithm	FORMAT_PATH	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	GET_BRK_MOD	1	09/01/2000	09:00:00	specs	Return breakpoint flag value of specified module.\n  SPECS2.5: Initial revision.
+#Algorithm	GET_JDG_DIE	1	09/01/2000	09:00:00	specs	Return judgement flag value of specified die.\n  SPECS2.5: Initial revision.
+#Algorithm	GET_LOC_MOD	1	09/01/2000	09:00:00	specs	Return module position of specified module relative to die.\n  SPECS2.5: Initial revision.
+#Algorithm	GET_NEXT_MOD	1	09/01/2000	09:00:00	specs	Search failed module.\n  SPECS2.5: Initial revision.
+#Algorithm	GET_PREV_MOD	1	09/01/2000	09:00:00	specs	Search failed module.\n  SPECS2.5: Initial revision.
+#Algorithm	GET_SLOT_NO	1	05/31/2004	03:00:00	specs	Get slot number from lot ID and wafer ID.
+#Algorithm	DTJX_HV_INIT	1	03/20/2020	14:14:40	wat	For initial B1505+K707 SWM\nJeremy @Raytrex 20200320
+#Algorithm	G_CV	1	09/01/2000	09:00:00	specs	Measures the Capacitance-Voltage characteristics (C-V characteristics), and displays the measurement results on a graph
+#Algorithm	G_HFE	1	09/01/2000	09:00:00	specs	Measures the bipolar transistor Collector Current-hFE characteristics (Ic-hFE characteristics), and displays the measurement results on a graph
+#Algorithm	G_ICVB	1	09/01/2000	09:00:00	specs	Measures the bipolar transistor Collector Current-Base Voltage characteristics (Ic-Vb characteristics), and displays the measurement results on a graph
+#Algorithm	G_ICVC	1	09/01/2000	09:00:00	specs	Measures the bipolar transistor Collector Current-Collector Voltage characteristics (Ic-Vc characteristics), and displays the measurement results on a graph
+#Algorithm	G_IDVD	1	09/01/2000	09:00:00	specs	Measures the MOSFET Drain Current-Drain Voltage characteristics (Id-Vd characteristics), and displays the measurement results on a graph
+#Algorithm	G_IDVG	1	09/01/2000	09:00:00	specs	Measures the MOSFET Drain Current-Gate Voltage characteristics (Id-Vg characteristics), and displays the measurement results on a graph
+#Algorithm	INIT_RELAY	1	07/03/2012	14:48:31	agilent	initialize relay    paul 2012-07
+#Algorithm	IS_CALG	1	09/01/2000	09:00:00	specs	Check the lang of algorithm
+#Algorithm	IS_FIRST	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	JDG_DIE	1	09/01/2000	09:00:00	specs	Judge current die by parameter yield.
+#Algorithm	JDG_DIE_AT_POS	1	03/20/2003	16:23:03	wat	Judge specified die by parameter yield.
+#Algorithm	JDG_DIE_AT_POS2	1	09/01/2000	09:00:00	specs	Judge specified die by parameter yield.
+#Algorithm	JDG_DIE_AT_POSo	1	09/01/2000	09:00:00	specs	Judge specified die by parameter yield.
+#Algorithm	JDG_MOD	1	09/01/2000	09:00:00	specs	Return if current module has failed outputs.\n  SPECS2.5: Initial revision.
+#Algorithm	JDG_MOD_AT_POS	1	09/01/2000	09:00:00	specs	Return if specified module has failed outputs.\n  SPECS2.5: Initial revision.
+#Algorithm	JDG_WAF_BY_DIE	1	03/20/2003	16:23:03	wat	Judge current wafer by die yield.\nJoy add Critical & Ignore
+#Algorithm	JDG_WAF_BY_DIEo	1	09/01/2000	09:00:00	specs	Judge current wafer by die yield.
+#Algorithm	JDG_WAF_BY_ITEM	1	07/04/2013	16:03:36	wat	Judge current wafer by whole key parameters for whole test die.
+#Algorithm	JDG_WAF_BY_PARA	1	09/01/2000	09:00:00	specs	Judge current wafer by parameter yield.
+#Algorithm	LOG_LOT_BEGIN	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	LOG_LOT_END	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	LOG_PROBER	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	LOG_SYSTEM	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	LOG_WAFER_BEGIN	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	LOG_WAFER_END	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	MASTER_LOOKUP	1	09/01/2000	09:00:00	specs	Returns specified field of specified line in an ASCII data file
+#Algorithm	MERGE_DATAFILE	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	NAME_TMPDATA	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	PLOTTER_IS	1	09/01/2000	09:00:00	specs	Changes the PLOTTER IS device
+#Algorithm	POS	1	05/22/2003	10:29:44	f2eng	Check string position
+#Algorithm	POSI	1	05/22/2003	10:29:44	f2eng	Check string position
+#Algorithm	POS_LotIdRcp	1	04/05/2017	10:37:42	f2eng	Check string position
+#Algorithm	PRBCOUNT	1	09/01/2000	09:00:00	specs	Return the number of Pins
+#Algorithm	PRBINFO	1	09/01/2000	09:00:00	specs	Return pin number and pad number.
+#Algorithm	PRINT	1	09/01/2000	09:00:00	specs	Prints the specified STRING variable to the present PRINTER IS device
+#Algorithm	PRINTER_IS	1	09/01/2000	09:00:00	specs	Changes the PRINTER IS device
+#Algorithm	PRINT_CHAR	1	09/01/2000	09:00:00	specs	Writes a CHARACTER value to a STRING variable, then prints it to the present PRINTER IS device
+#Algorithm	PRINT_INTEGER	1	09/01/2000	09:00:00	specs	Writes an INTEGER value to a STRING variable, then prints it to the present PRINTER IS device
+#Algorithm	PRINT_REAL	1	09/01/2000	09:00:00	specs	Writes a REAL value to a STRING variable, then prints it to the present PRINTER IS device
+#Algorithm	PRINT_STRING	1	09/01/2000	09:00:00	specs	Writes a STRING value to a STRING variable, then prints it to the present PRINTER IS device
+#Algorithm	QUERY_DIR	1	09/01/2000	09:00:00	specs	Let Quick Query open specified directory.\n  SPECS2.5: Initial revision.
+#Algorithm	QUERY_FILE	1	09/01/2000	09:00:00	specs	Let Quick Query open specified file.\n  SPECS2.5: Initial revision.
+#Algorithm	QUERY_GRAPH	1	09/01/2000	09:00:00	specs	Let Quick Query open Graph. Must be executed after QUERY_FILE.\n  SPECS2.5: Initial revision.
+#Algorithm	QUERY_LAUNCH	1	09/01/2000	09:00:00	specs	Start Quick Query.
+#Algorithm	QUERY_START	1	09/01/2000	09:00:00	specs	Popup Quick Query.
+#Algorithm	QUERY_STOP	1	09/01/2000	09:00:00	specs	Popdown Quick Query.
+#Algorithm	QUERY_VIEW	1	09/01/2000	09:00:00	specs	Let Quick Query open Quick View. Must be executed after QUERY_FILE.\n  SPECS2.5: Initial revision.
+#Algorithm	RCP_CHECK_KEY	1	09/01/2002	09:00:00	specs	Check if recipe file has duplicate key fields.\n  SPECS3.0: Initial revision.
+#Algorithm	RCP_DIETST	1	09/01/2002	09:00:00	specs	The Algorithm makes a Die Spec-Test Spec list for tplbuild command.\n  SPECS3.0: Initial revision.
+#Algorithm	RCP_EXEC_CMD	1	09/01/2002	09:00:00	specs	Execute command file and get result file.\n  SPECS3.0: Initial revision.
+#Algorithm	RCP_LIMBLD	1	09/01/2002	09:00:00	specs	This algorithm generates Limit File dynamically.\n  SPECS3.0: Initial revision.
+#Algorithm	RCP_MK_FILENAME	1	09/01/2002	09:00:00	specs	Make file name from directory name and file name.\n  SPECS3.0: Initial revision.
+#Algorithm	RCP_QUERY_RECIP	1	01/24/2006	13:13:29	specs	Query recipe items in the recipe file from key recipe id.\n  SPECS3.1: Initial revision.
+#Algorithm	RCP_REPLACE_WD	1	09/01/2002	09:00:00	specs	Replace keyword in Format String.\n  SPECS3.0: Initial revision.
+#Algorithm	RCP_SYSCONF	1	09/01/2002	09:00:00	specs	Read a parameter written in sysconf file.\n  SPECS3.0: Initial revision.
+#Algorithm	RCP_TPLBLD	1	01/23/2006	22:38:59	specs	This algorithm generates Test Plan dynamically.\n  SPECS3.1: Initial revision.
+#Algorithm	READ_CHAR	1	09/01/2000	09:00:00	specs	Reads a character from a STRING variable, and returns it to a CHARACTER variable
+#Algorithm	READ_EQUIPID2	1	03/19/2003	16:15:22	wat	Read Equipment ID from File$ to Equip_id$
+#Algorithm	READ_INTEGER	1	09/01/2000	09:00:00	specs	Reads a value from a STRING variable, and returns it to an INTEGER variable
+#Algorithm	READ_PROCCOND	1	05/31/2004	03:00:00	specs	Read process condition file.
+#Algorithm	READ_REAL	1	09/01/2000	09:00:00	specs	Reads a value from a STRING variable, and returns it to a REAL variable
+#Algorithm	READ_STRING	1	09/01/2000	09:00:00	specs	Reads string data from a STRING variable, and returns it to another STRING variable
+#Algorithm	REAL_TO_STR	1	03/19/2003	16:15:22	wat	Convert real number to string
+#Algorithm	RE_DIE_DIR	1	04/16/2020	17:13:25	wat	Jeremy @Raytrex add 20200416\n\nFor automatic build out die name directory
+#Algorithm	SAVE_TMPDATA	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	SETUSRBIN_LPBGN	1	09/01/2000	09:00:00	specs	Initializes "user bin" condition.\n
+#Algorithm	SET_BRK_MOD	1	09/01/2000	09:00:00	specs	Set judgement flag of specified module.\n  SPECS2.5: Initial revision.
+#Algorithm	SET_GUARD_OPEN	1	08/03/2013	16:45:05	root	Description for this Algorithm spec.
+#Algorithm	SET_JDG_DIE	1	09/01/2000	09:00:00	specs	Set judgement flag of specified die.\n  SPECS2.5: Initial revision.
+#Algorithm	SET_JDG_DIE_ALL	1	09/01/2000	09:00:00	specs	Set judgement flag of all dice.\n  SPECS2.5: Initial revision.
+#Algorithm	SET_JDG_DIE_TYP	1	09/01/2000	09:00:00	specs	Set judgement flag of specified die type.\n  SPECS2.5: Initial revision.
+#Algorithm	SET_SAMELEN	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	SET_SAMELEN20	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	SET_TAG_CHAR	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	SET_TAG_INTEGER	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	SET_TAG_REAL	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	SET_TAG_STRING	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	SIZEOFDISPLAY	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	STATLOG_DIEEND	1	09/01/2000	09:00:00	specs	logs statistics on the specified file. This users user bin.\n\n
+#Algorithm	STRING_LOOKUP	1	09/01/2000	09:00:00	specs	Returns the position of specified character(s) in a STRING variable
+#Algorithm	STRING_SPLIT	1	09/01/2000	09:00:00	specs	Returns data (without separators) from a STRING variable, which contains data separated by data separators
+#Algorithm	STRING_TIME	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	TIMEDATE	1	09/01/2000	09:00:00	specs	Returns the present date and time
+#Algorithm	UPDATE_FWKCONF	1	09/01/2000	09:00:00	specs	Store current configuration parameters.\n  SPECS2.5: Added type parameter.
+#Algorithm	VERIFY_FILE	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	WAIT	1	09/01/2000	09:00:00	specs	Waits for the speicifed duration
+#Algorithm	WRITE_CHAR	1	09/01/2000	09:00:00	specs	Writes a CHARACTER value to a STRING variable
+#Algorithm	WRITE_INTEGER	1	09/01/2000	09:00:00	specs	Writes an INTEGER value to a STRING variable
+#Algorithm	WRITE_REAL	1	09/01/2000	09:00:00	specs	Writes a REAL value to a STRING variable
+#Algorithm	WRITE_STRING	1	09/01/2000	09:00:00	specs	Writes a STRING value to a STRING variable
+#Algorithm	WRITE_WAFER_SUM	1	09/01/2000	09:00:00	specs	Description for this Algorithm spec.
+#Algorithm	XWUD	1	09/01/2000	09:00:00	specs	Executes the xwud(1) command to display a window image, which is stored in the specified dump file
+#Algorithm	YIELDLOG_WAFEND	1	09/01/2000	09:00:00	specs	Logs yield on the specified file. This uses user bin.\n
+#Algorithm	DTJX_MKDIR	1	06/15/2020	15:52:22	wat	Jeremy @Raytrex add 20200615\nFor check and make directory if not exist
+#Algorithm	DTJX_YLD_LST	1	07/08/2020	14:14:02	wat	Jeremy @Raytrex 20200707.\nAdd for low-yield control. Check gta_yld_table and get YLD rate if recipe key match.
+#Algorithm	DTJX_LOT2	1	08/27/2021	07:01:50	wat	For check Product_ID and dataReport output lot2 if passed.\n\nJeremy @Raytrex 20210826
+
+$Type: Algorithm
+$Name: ALGPANEL_LAUNCH
+$Vers: 1
+$Desc: Execute Algorithm Panel.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- ------- --------------- - ----------
+ INPUT                                                        
+          Session=STRING  "1"     "1","2","3","4"   Session ID
+          Port=STRING     "14062"                   Port ID   
+          Project=STRING  "v"                       Project ID
+          Hostname=STRING ""                        Hostname  
+ OUTPUT                                                       
+                                                              
+ DEVICE                                                       
+                                                              
+ TERMINAL                                                     
+$-------- --------------- ------- --------------- - ----------
+
+$Type: Algorithm
+$Name: ALGPANEL_START
+$Vers: 1
+$Desc: Popdup Algorithm Panel.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------ - --- - ----------------------------
+ INPUT                                                     
+          Mode=INTEGER 0 0,1   0:Normal, 1:Disable problibs
+                                                           
+ OUTPUT                                                    
+                                                           
+ DEVICE                                                    
+                                                           
+ TERMINAL                                                  
+$-------- ------------ - --- - ----------------------------
+
+$Type: Algorithm
+$Name: ALGPANEL_STOP
+$Vers: 1
+$Desc: Popdown Algorithm Panel.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- - - - - -
+ INPUT             
+                   
+ OUTPUT            
+                   
+ DEVICE            
+                   
+ TERMINAL          
+$-------- - - - - -
+
+$Type: Algorithm
+$Name: APPLY_FWKCONF
+$Vers: 1
+$Desc: Read configuration parameter and apply them.\n  SPECS2.5: Added special parameters.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- - ----- - ---------------------------------------------------
+ INPUT                                                                               
+          File=STRING                                                                
+          Type=INTEGER  0 0,1,2   0:All vars, 1:Normal vars only, 2:Special vars only
+                                                                                     
+ OUTPUT                                                                              
+          Errno=INTEGER 0                                                            
+          Errmsg=STRING                                                              
+                                                                                     
+ DEVICE                                                                              
+                                                                                     
+ TERMINAL                                                                            
+$-------- ------------- - ----- - ---------------------------------------------------
+
+$Type: Algorithm
+$Name: ARRAY_LOOKUP1
+$Vers: 1
+$Desc: Returns the array index for a specified data element of a STRING array.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - - - -----------------------------------
+ INPUT                                                             
+          Src=STRING[256]       Source strings                     
+          Pat=STRING            Pattern string                     
+ OUTPUT                                                            
+          {Pos}=INTEGER         Position (>0 position, 0 not found)
+ DEVICE                                                            
+ TERMINAL                                                          
+$-------- --------------- - - - -----------------------------------
+
+$Type: Algorithm
+$Name: ARRAY_LOOKUP2
+$Vers: 1
+$Desc: Returns the array indices for the specified data elements of a STRING array.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------ - - - --------------------------------------------------
+ INPUT                                                                               
+          Src=STRING[256]          Source strings                                    
+          Pat=STRING[256]          Pattern strings                                   
+ OUTPUT                                                                              
+          {Pos}=INTEGER[256]       Positions of each pattern string (>0, 0 not found)
+ DEVICE                                                                              
+ TERMINAL                                                                            
+$-------- ------------------ - - - --------------------------------------------------
+
+$Type: Algorithm
+$Name: ARRAY_LOOKUP3
+$Vers: 1
+$Desc: Returns the data elements for the specified indices of a STRING array
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- - - - --------------------------------------------
+ INPUT                                                                        
+          Src=STRING[256]         Source strings                              
+          Pos=INTEGER[256]        Positions of strings to extract (>0 position
+ OUTPUT                                                                       
+          {Sub}=STRING[256]       Extracted strings                           
+ DEVICE                                                                       
+ TERMINAL                                                                     
+$-------- ----------------- - - - --------------------------------------------
+
+$Type: Algorithm
+$Name: ATTRIB_FILE
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- -- - - -
+ INPUT                              
+          Filename=STRING   ""      
+                                    
+ OUTPUT                             
+          Permission=STRING         
+          Owner=STRING              
+          Group=STRING              
+ DEVICE                             
+                                    
+ TERMINAL                           
+$-------- ----------------- -- - - -
+
+$Type: Algorithm
+$Name: BEEP
+$Vers: 1
+$Desc: Specifies frquency and duration for the beep, and sounds the beep
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- ------ - - ---------
+ INPUT                                       
+          Freq=REAL,"Hz" 2000.0     Frequency
+          Dur=REAL,"Sec" 0.1        Duration 
+ OUTPUT                                      
+ DEVICE                                      
+ TERMINAL                                    
+$-------- -------------- ------ - - ---------
+
+$Type: Algorithm
+$Name: CALL_ERRHANDLER
+$Vers: 1
+$Desc: Error Handler.
+$Date: 11/14/2005
+$Time: 15:06:01
+$User: specs
+$-------- --------------- - - - --------------------------------
+ INPUT                                                          
+          ErrorNo=STRING        ErrorCode  .ex  "12-34567"      
+          Message=STRING        Error Message                   
+          MoreInfo=STRING       More Info                       
+ OUTPUT                                                         
+          Status=INTEGER        0: OK, -1: Exec Err, -2: No File
+          Errmsg=STRING                                         
+ DEVICE                                                         
+ TERMINAL                                                       
+$-------- --------------- - - - --------------------------------
+
+$Type: Algorithm
+$Name: CHECK_DATAFILE
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- -- - - -
+ INPUT                            
+          Filename=STRING ""      
+                                  
+ OUTPUT                           
+          Valid=INTEGER   1       
+ DEVICE                           
+                                  
+ TERMINAL                         
+$-------- --------------- -- - - -
+
+$Type: Algorithm
+$Name: CHECK_FILE
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - - - --------------------------------------------
+ INPUT                                                                      
+          Testplan=STRING                                                   
+          Limit=STRING                                                      
+                                                                            
+ OUTPUT                                                                     
+          Result=INTEGER        0: OK 1: File Mismatch: 2: Revision Mismatch
+ DEVICE                                                                     
+                                                                            
+ TERMINAL                                                                   
+$-------- --------------- - - - --------------------------------------------
+
+$Type: Algorithm
+$Name: CHECK_FSIZE
+$Vers: 1
+$Desc: Description for this Algorithm spec.  Paul 2018-03-13  for prober.log auto backup
+$Date: 03/15/2018
+$Time: 05:52:37
+$User: agilent
+$-------- ----------- --------------------- - - -------------
+ INPUT                                                       
+          Path=STRING "/var/opt/SPECS/log/"     file location
+          File=STRING "prober.log"                           
+          Limit=REAL  10000                                  
+ OUTPUT                                                      
+          Size=REAL                                          
+          Sta=INTEGER                                        
+          Err=STRING                                         
+ DEVICE                                                      
+ TERMINAL                                                    
+$-------- ----------- --------------------- - - -------------
+
+$Type: Algorithm
+$Name: CHECK_PASSWD
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- - - - -------------
+ INPUT                                      
+          Name=STRING                       
+          Command=STRING                    
+                                            
+ OUTPUT                                     
+          Result=INTEGER       0: Fail 1: OK
+ DEVICE                                     
+                                            
+ TERMINAL                                   
+$-------- -------------- - - - -------------
+
+$Type: Algorithm
+$Name: CHECK_PROBER
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- - - - -
+ INPUT                         
+          Symbol=STRING        
+                               
+ OUTPUT                        
+          Vendor=STRING        
+          Model=STRING         
+ DEVICE                        
+                               
+ TERMINAL                      
+$-------- ------------- - - - -
+
+$Type: Algorithm
+$Name: CHECK_PROFILE
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- - - - ---------------------------------------------------------------------
+ INPUT                                                                                              
+                                                                                                    
+ OUTPUT                                                                                             
+          Result=INTEGER       0:OK 1:TPL: 2:FWK: 3:MLIB: 4:TLIB: 5:PLIB: 6:ULIB: 7:LIM 8:TCO 9:DLIB
+ DEVICE                                                                                             
+                                                                                                    
+ TERMINAL                                                                                           
+$-------- -------------- - - - ---------------------------------------------------------------------
+
+$Type: Algorithm
+$Name: CHECK_SYSCONF
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------------- - - - -
+ INPUT                                
+                                      
+ OUTPUT                               
+          ERRNO=INTEGER               
+          ERRMSG=STRING               
+          SMODE=STRING                
+          OP_LANG=STRING              
+          ADTFORMAT=STRING            
+          CLEARONRETEST=STRING        
+          CLEARONREJECT=STRING        
+          PORTID=STRING               
+          PROJID=STRING               
+          HOSTNAME=STRING             
+          ADTLOGGING=STRING           
+ DEVICE                               
+                                      
+ TERMINAL                             
+$-------- -------------------- - - - -
+
+$Type: Algorithm
+$Name: CHECK_TIME
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------- - - - -
+ INPUT                     
+                           
+ OUTPUT                    
+          Time=REAL        
+                           
+ DEVICE                    
+                           
+ TERMINAL                  
+$-------- --------- - - - -
+
+$Type: Algorithm
+$Name: CLOCK
+$Vers: 1
+$Desc: Returns the present date and time
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- - --- - ----------------------------
+ INPUT                                                         
+          {Digit}=INTEGER  2 2,4   # digits to represent a year
+ OUTPUT                                                        
+          {Year}=INTEGER           Year:   YY or YYYY          
+          {Month}=INTEGER          Month:  MM                  
+          {Day}=INTEGER            Day:    DD                  
+          {Hour}=INTEGER           Hour:   HH                  
+          {Minute}=INTEGER         Minute: MM                  
+          {Second}=INTEGER         Second: SS                  
+                                                               
+          {Value}=REAL                                         
+ DEVICE                                                        
+ TERMINAL                                                      
+$-------- ---------------- - --- - ----------------------------
+
+$Type: Algorithm
+$Name: CLOSE_DDTERM
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 11/05/2003
+$Time: 17:27:26
+$User: levis
+$-------- ------------------ ----------- - - -
+ INPUT                                        
+          Title=STRING       "WAT_TEST"       
+          Proc_kill=STRING   "proc_kill"      
+          Back_ground=STRING "yellow"         
+ OUTPUT                                       
+ DEVICE                                       
+ TERMINAL                                     
+$-------- ------------------ ----------- - - -
+
+$Type: Algorithm
+$Name: COPY_FILE
+$Vers: 1
+$Desc: Copy file or Move file\n
+$Date: 03/05/2002
+$Time: 21:30:23
+$User: joy
+$-------- ------------------ - - - ----------------
+ INPUT                                             
+          Source_file=STRING       Source file     
+          Desti_file=STRING        Destination file
+          Mode=INTEGER             1: copy, 2: move
+ OUTPUT                                            
+          Status=STRING            "OK", "ERROR"   
+          Error=STRING                             
+ DEVICE                                            
+                                                   
+ TERMINAL                                          
+$-------- ------------------ - - - ----------------
+
+$Type: Algorithm
+$Name: CREATE_WINDOW
+$Vers: 1
+$Desc: Opens a new HP BASIC/UX window
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- ---------- - - -
+ INPUT                                   
+          Window=INTEGER 601             
+          X=INTEGER      0               
+          Y=INTEGER      0               
+          W=INTEGER      640             
+          H=INTEGER      400             
+          Label=STRING   "HP BASIC"      
+ OUTPUT                                  
+ DEVICE                                  
+ TERMINAL                                
+$-------- -------------- ---------- - - -
+
+$Type: Algorithm
+$Name: CTM_CLR_XTERM
+$Vers: 1
+$Desc: 201205,sami:close xterm
+$Date: 05/31/2012
+$Time: 03:46:34
+$User: wat
+$-------- ---------------- ----------- - - -
+ INPUT                                      
+          Title=STRING     "WAT_TEST"       
+          Proc_kill=STRING "proc_kill"      
+ OUTPUT                                     
+ DEVICE                                     
+ TERMINAL                                   
+$-------- ---------------- ----------- - - -
+
+$Type: Algorithm
+$Name: CTM_DATE_LOG
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 08/14/2003
+$Time: 10:45:11
+$User: levis
+$-------- ------------ - - - -
+ INPUT                        
+ OUTPUT                       
+          Year=STRING         
+          Month=STRING        
+ DEVICE                       
+ TERMINAL                     
+$-------- ------------ - - - -
+
+$Type: Algorithm
+$Name: CTM_FILE_LOOKUP
+$Vers: 1
+$Desc: 201205,sami:Returns specified field of specified line in an ASCII data file
+$Date: 05/31/2012
+$Time: 03:35:55
+$User: wat
+$-------- ---------------- - - - ----------------------------------------
+ INPUT                                                                   
+          File=STRING            Master filename                         
+          Key=STRING             Key string,will add ` in head and tail  
+ OUTPUT                                                                  
+          Field=STRING           Extracted field                         
+          Position=INTEGER       position of key in extracted field      
+          Stat=INTEGER           0(ok),-1(no key),-2(invalid),-3(no file)
+ DEVICE                                                                  
+ TERMINAL                                                                
+$-------- ---------------- - - - ----------------------------------------
+
+$Type: Algorithm
+$Name: CTM_INFO_DIS
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/18/2003
+$Time: 11:17:18
+$User: wat
+$-------- ------------ ---------- - - -
+ INPUT                                 
+          Title=STRING "WAT_TEST"      
+          File=STRING  "pc_leak"       
+ OUTPUT                                
+ DEVICE                                
+ TERMINAL                              
+$-------- ------------ ---------- - - -
+
+$Type: Algorithm
+$Name: CTM_LIMBLD
+$Vers: 1
+$Desc: This algorithm generates Limit File dynamically.
+$Date: 03/05/2002
+$Time: 21:53:03
+$User: joy
+$-------- ----------------- - - - ----------------------------------
+ INPUT                                                              
+          Tpl=STRING              Test Plan to read                 
+          Lim=STRING              Temporary limit file to write     
+ OUTPUT                                                             
+          Status=INTEGER          Command status                    
+          Error=STRING            Error message                     
+          Ndetail=INTEGER         # of lines of detail error message
+          Detail=STRING[10]       detailed error message            
+ DEVICE                                                             
+                                                                    
+ TERMINAL                                                           
+$-------- ----------------- - - - ----------------------------------
+
+$Type: Algorithm
+$Name: CTM_LIMFMT
+$Vers: 1
+$Desc: This algorithm alters Limit File according to conditions specified by external file.
+$Date: 03/05/2002
+$Time: 21:53:03
+$User: joy
+$-------- --------------- --- ----- - --------------------------------------------
+ INPUT                                                                            
+          Tmplim=STRING               Temporary Limit File to Read                
+          Maslim=STRING               Master Limit File to Read                   
+          Genlim=STRING               Generated Limit File to Write (specs format)
+          Yld=INTEGER,"%" 100 0~100   Target Yield                                
+ OUTPUT                                                                           
+          Status=INTEGER              Command status                              
+          Error=STRING                Error message                               
+                                                                                  
+ DEVICE                                                                           
+                                                                                  
+ TERMINAL                                                                         
+$-------- --------------- --- ----- - --------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_MON_CONV
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 05/26/2011
+$Time: 17:57:11
+$User: wat
+$-------- ------------- - ---- - ----------------
+ INPUT                                           
+          Month=INTEGER 3 1~12   Month in integer
+ OUTPUT                                          
+          Mon=STRING             Month in MMM    
+ DEVICE                                          
+ TERMINAL                                        
+$-------- ------------- - ---- - ----------------
+
+$Type: Algorithm
+$Name: CTM_PCID_LOG
+$Vers: 1
+$Desc: 201301,sami: read/write host,pcid
+$Date: 01/31/2013
+$Time: 15:41:01
+$User: wat
+$-------- --------------- -------------------------- - - -------------------------------------------------------------------
+ INPUT                                                                                                                      
+          File=STRING     "/WATSERV/LOG/EQ_PCID.log"     file name to log host,pcid                                         
+          Eqid=STRING     "WAT01"                        Tester host ID                                                     
+          Pcid=STRING     "1A"                           Probecard ID                                                       
+ OUTPUT                                                                                                                     
+          Rep_eqid=STRING                                replaced EQID in previous log file                                 
+          Rep_pcid=STRING                                replaced PCID in previous log file                                 
+          Stat=INTEGER                                   0:no change; 1:replace OK; -1:EQID not found; -2:log file not found
+ DEVICE                                                                                                                     
+ TERMINAL                                                                                                                   
+$-------- --------------- -------------------------- - - -------------------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PCIL_ACCESS
+$Vers: 1
+$Desc: 20080424,sami: RFID & Meas R for PC ID extract from PCIL\nAccess PCIL to extract ProbeCard type/id\t2002/8/16 Joy Huang\nremove check for 48pin Pcard        2007/12/05 angel\nRFID read R               2008/01/03 angel
+$Date: 05/16/2011
+$Time: 07:06:03
+$User: wat
+$-------- ----------------- ------------------- --------- - -------------------------------------------------------------------------------------------------
+ INPUT                                                                                                                                                       
+          Check=INTEGER     1                   0,1,2       to decide if user want to extract prbc-card id, 1:yes, 0:no,2:no RFID                            
+          Pcil_file=STRING  "/WATSERV/ETC/PCIL"             Filename of PCIL file                                                                            
+          Hi=INTEGER        1                   1~49        Hi, Lo mean the 2 pin (related to pin-board, not pad) which the Resistance soldered on probe-card
+          Lo=INTEGER        2                   1~49                                                                                                         
+          Vf=REAL           0.1                 -100~+100   force voltage to measure the resistance by R=Vf/Im                                               
+          Dev=REAL,"%"                                      Tolerance btw Rmean and Rpcil to verify ProbCard id                                              
+          Ip_file=STRING    "/WAT/ETC/IP_RFID"              IP=10.216.54.14,Port=5000                                                                        
+ OUTPUT                                                                                                                                                      
+          Pcard_type=STRING                                 Probecard type                                                                                   
+          Pcard_id=STRING                                   Probecard ID                                                                                     
+          Pcard_spec=STRING                                                                                                                                  
+          St=STRING                                         "OK" or "ERROR" or "END"                                                                         
+          Err=STRING                                        Error message                                                                                    
+          Pcard_st=INTEGER                                  0: error   1:Wu   2:Cu                                                                           
+                                                                                                                                                             
+ DEVICE                                                                                                                                                      
+                                                                                                                                                             
+ TERMINAL                                                                                                                                                    
+$-------- ----------------- ------------------- --------- - -------------------------------------------------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PCIL_ACCESo
+$Vers: 1
+$Desc: Access PCIL to extract ProbeCard type/id\t2002/8/16 Joy Huang
+$Date: 01/19/2011
+$Time: 13:10:04
+$User: wat
+$-------- ----------------- ------------------- --------- - -------------------------------------------------------------------------------------------------
+ INPUT                                                                                                                                                       
+          Check=INTEGER     1                   0,1         to decide if user want to extract prbc-card id, 1:yes, 0:no                                      
+          Pcil_file=STRING  "/WATSERV/ETC/PCIL"             Filename of PCIL file                                                                            
+          Hi=INTEGER        1                   1~48        Hi, Lo mean the 2 pin (related to pin-board, not pad) which the Resistance soldered on probe-card
+          Lo=INTEGER        2                   1~48                                                                                                         
+          Vf=REAL           0.1                 -100~+100   force voltage to measure the resistance by R=Vf/Im                                               
+          Dev=REAL,"%"                                      Tolerance btw Rmean and Rpcil to verify ProbCard id                                              
+ OUTPUT                                                                                                                                                      
+          Pcard_type=STRING                                 Probecard type                                                                                   
+          Pcard_id=STRING                                   Probecard ID                                                                                     
+          St=STRING                                         "OK" or "ERROR" or "END"                                                                         
+          Err=STRING                                        Error message                                                                                    
+                                                                                                                                                             
+ DEVICE                                                                                                                                                      
+                                                                                                                                                             
+ TERMINAL                                                                                                                                                    
+$-------- ----------------- ------------------- --------- - -------------------------------------------------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PCIL_ACC_bk
+$Vers: 1
+$Desc: 20080424,sami: RFID & Meas R for PC ID extract from PCIL\nAccess PCIL to extract ProbeCard type/id\t2002/8/16 Joy Huang\nremove check for 48pin Pcard        2007/12/05 angel\nRFID read R               2008/01/03 angel
+$Date: 05/16/2011
+$Time: 07:06:03
+$User: wat
+$-------- ----------------- ------------------- --------- - -------------------------------------------------------------------------------------------------
+ INPUT                                                                                                                                                       
+          Check=INTEGER     1                   0,1,2       to decide if user want to extract prbc-card id, 1:yes, 0:no,2:no RFID                            
+          Pcil_file=STRING  "/WATSERV/ETC/PCIL"             Filename of PCIL file                                                                            
+          Hi=INTEGER        1                   1~49        Hi, Lo mean the 2 pin (related to pin-board, not pad) which the Resistance soldered on probe-card
+          Lo=INTEGER        2                   1~49                                                                                                         
+          Vf=REAL           0.1                 -100~+100   force voltage to measure the resistance by R=Vf/Im                                               
+          Dev=REAL,"%"                                      Tolerance btw Rmean and Rpcil to verify ProbCard id                                              
+          Ip_file=STRING    "/WAT/ETC/IP_RFID"              IP=10.216.54.14,Port=5000                                                                        
+ OUTPUT                                                                                                                                                      
+          Pcard_type=STRING                                 Probecard type                                                                                   
+          Pcard_id=STRING                                   Probecard ID                                                                                     
+          Pcard_spec=STRING                                                                                                                                  
+          St=STRING                                         "OK" or "ERROR" or "END"                                                                         
+          Err=STRING                                        Error message                                                                                    
+          Pcard_st=INTEGER                                  0: error   1:Wu   2:Cu                                                                           
+                                                                                                                                                             
+ DEVICE                                                                                                                                                      
+                                                                                                                                                             
+ TERMINAL                                                                                                                                                    
+$-------- ----------------- ------------------- --------- - -------------------------------------------------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PC_COUNT
+$Vers: 1
+$Desc: 2002/8/21: Joy HUANG \nSend "kc" to P8 to request probe-card contact times in ON_LINE mode
+$Date: 08/21/2002
+$Time: 22:05:18
+$User: ae
+$-------- --------------- ---- - - -----------------------------------
+ INPUT                                                                
+          Prb_adr=INTEGER 2505                                        
+ OUTPUT                                                               
+          Count=REAL               the Z up/down times of prober chuck
+ DEVICE                                                               
+ TERMINAL                                                             
+$-------- --------------- ---- - - -----------------------------------
+
+$Type: Algorithm
+$Name: CTM_PC_ID_R
+$Vers: 1
+$Desc: Fab1 search probe card Id by resistor
+$Date: 01/18/2011
+$Time: 10:25:54
+$User: agilent
+$-------- ---------------- ---- --- - --------------------------
+ INPUT                                                          
+          File=STRING      ""         Filename of PCIL          
+          Rmeas=REAL,"Ohm" 1000       R measured                
+          Deviation=REAL   .05  0~1   Deviation for extacting ID
+ OUTPUT                                                         
+          Nfound=INTEGER   0          # of found record         
+          Id=STRING        ""         Probecard ID              
+                                                                
+ DEVICE                                                         
+                                                                
+ TERMINAL                                                       
+$-------- ---------------- ---- --- - --------------------------
+
+$Type: Algorithm
+$Name: CTM_PC_ID_RL
+$Vers: 1
+$Desc: Fab1:Search probecard ID by resistance
+$Date: 01/18/2011
+$Time: 10:25:54
+$User: agilent
+$-------- -------------- -- - - -----------------
+ INPUT                                           
+          File=STRING    ""     Filename of PCIL 
+          Id=STRING      ""     Probecard ID     
+ OUTPUT                                          
+          Nfound=INTEGER 0      # of found record
+          Type=STRING    ""     Probecard type   
+          Plimit=REAL    0      Probing limit    
+                                                 
+ DEVICE                                          
+                                                 
+ TERMINAL                                        
+$-------- -------------- -- - - -----------------
+
+$Type: Algorithm
+$Name: CTM_PC_ID_TYPE
+$Vers: 1
+$Desc: Fab1:Search probecard ID by type
+$Date: 01/18/2011
+$Time: 10:25:54
+$User: agilent
+$-------- ---------------- -- ----- - ----------------
+ INPUT                                                
+          File=STRING      ""         Filename of PCIL
+          Type=STRING      ""         Probecard type  
+ OUTPUT                                               
+          Num=INTEGER      0  0~100                   
+          Id=STRING[100]              Probecard ID    
+          Plimit=REAL[100]            Probing limit   
+                                                      
+ DEVICE                                               
+                                                      
+ TERMINAL                                             
+$-------- ---------------- -- ----- - ----------------
+
+$Type: Algorithm
+$Name: CTM_PC_LEAK
+$Vers: 1
+$Desc: CTM: check probe-card leak
+$Date: 01/19/2011
+$Time: 13:09:41
+$User: wat
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+ INPUT                                                                                                             
+          Vbias=REAL,"Volt"     3.3                                                                                
+          Ifail=REAL,"pA"       1                                                                                  
+          Pcard_type=STRING     "12"                                                                               
+          Pcard_spec_dir=STRING "/WATSERV/RCP/PRB"                                                                 
+          Wd=REAL               3                            Waiting time for discharging probe card before forcing
+          Wt=REAL               .3                           Waiting time from force to measure                    
+          ADC=INTEGER           1                  0,1       ADC TYPE (0:HI-SPEED, 1:HI-RESOLUTION)                
+          INTEG=INTEGER         3                  0,1,2,3   INTEGRATION TIME (0:MAN. 1:S, 2:M, 3:L)               
+ OUTPUT                                                                                                            
+          Status=STRING                                                                                            
+          Msg=STRING                                                                                               
+ DEVICE                                                                                                            
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+ TERMINAL                                                                                                          
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PC_LEAK_D2
+$Vers: 1
+$Desc: CTM: check probe-card leak
+$Date: 05/02/2013
+$Time: 12:07:02
+$User: wat
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+ INPUT                                                                                                             
+          Vbias=REAL,"Volt"     3.3                                                                                
+          Ifail=REAL,"pA"       1                                                                                  
+          Pcard_type=STRING     "IS12W"                                                                            
+          Pcard_spec_dir=STRING "/WATSERV/RCP/PRB"                                                                 
+          Wd=REAL               3                            Waiting time for discharging probe card before forcing
+          Wt=REAL               .3                           Waiting time from force to measure                    
+          ADC=INTEGER           1                  0,1       ADC TYPE (0:HI-SPEED, 1:HI-RESOLUTION)                
+          INTEG=INTEGER         3                  0,1,2,3   INTEGRATION TIME (0:MAN. 1:S, 2:M, 3:L)               
+          Pcard_id=STRING                                                                                          
+ OUTPUT                                                                                                            
+          Status=STRING                                                                                            
+          Msg=STRING                                                                                               
+ DEVICE                                                                                                            
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+ TERMINAL                                                                                                          
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PC_LEAK_DHV
+$Vers: 1
+$Desc: CTM: check probe-card leak
+$Date: 05/02/2013
+$Time: 12:07:02
+$User: wat
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+ INPUT                                                                                                             
+          Vbias=REAL,"Volt"     3.3                                                                                
+          Ifail=REAL,"pA"       1                                                                                  
+          Pcard_type=STRING     "IS12W"                                                                            
+          Pcard_spec_dir=STRING "/WATSERV/RCP/PRB"                                                                 
+          Wd=REAL               3                            Waiting time for discharging probe card before forcing
+          Wt=REAL               .3                           Waiting time from force to measure                    
+          ADC=INTEGER           1                  0,1       ADC TYPE (0:HI-SPEED, 1:HI-RESOLUTION)                
+          INTEG=INTEGER         3                  0,1,2,3   INTEGRATION TIME (0:MAN. 1:S, 2:M, 3:L)               
+          Pcard_id=STRING                                                                                          
+ OUTPUT                                                                                                            
+          Status=STRING                                                                                            
+          Msg=STRING                                                                                               
+ DEVICE                                                                                                            
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+ TERMINAL                                                                                                          
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PC_LEAK_DIS
+$Vers: 1
+$Desc: CTM: check probe-card leak
+$Date: 05/02/2013
+$Time: 12:07:02
+$User: wat
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+ INPUT                                                                                                             
+          Vbias=REAL,"Volt"     3.3                                                                                
+          Ifail=REAL,"pA"       1                                                                                  
+          Pcard_type=STRING     "IS12W"                                                                            
+          Pcard_spec_dir=STRING "/WATSERV/RCP/PRB"                                                                 
+          Wd=REAL               3                            Waiting time for discharging probe card before forcing
+          Wt=REAL               .3                           Waiting time from force to measure                    
+          ADC=INTEGER           1                  0,1       ADC TYPE (0:HI-SPEED, 1:HI-RESOLUTION)                
+          INTEG=INTEGER         3                  0,1,2,3   INTEGRATION TIME (0:MAN. 1:S, 2:M, 3:L)               
+          Pcard_id=STRING                                                                                          
+ OUTPUT                                                                                                            
+          Status=STRING                                                                                            
+          Msg=STRING                                                                                               
+ DEVICE                                                                                                            
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+ TERMINAL                                                                                                          
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PC_LEAK_HV
+$Vers: 1
+$Desc: CTM: check probe-card leak
+$Date: 01/19/2011
+$Time: 13:09:41
+$User: wat
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+ INPUT                                                                                                             
+          Vbias=REAL,"Volt"     3.3                                                                                
+          Ifail=REAL,"pA"       1                                                                                  
+          Pcard_type=STRING     "12"                                                                               
+          Pcard_spec_dir=STRING "/WATSERV/RCP/PRB"                                                                 
+          Wd=REAL               3                            Waiting time for discharging probe card before forcing
+          Wt=REAL               .3                           Waiting time from force to measure                    
+          ADC=INTEGER           1                  0,1       ADC TYPE (0:HI-SPEED, 1:HI-RESOLUTION)                
+          INTEG=INTEGER         3                  0,1,2,3   INTEGRATION TIME (0:MAN. 1:S, 2:M, 3:L)               
+ OUTPUT                                                                                                            
+          Status=STRING                                                                                            
+          Msg=STRING                                                                                               
+ DEVICE                                                                                                            
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+ TERMINAL                                                                                                          
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PC_LEAKold
+$Vers: 1
+$Desc: CTM: check probe-card leak
+$Date: 01/19/2011
+$Time: 13:09:41
+$User: wat
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+ INPUT                                                                                                             
+          Vbias=REAL,"Volt"     3.3                                                                                
+          Ifail=REAL,"pA"       1                                                                                  
+          Pcard_type=STRING     "12"                                                                               
+          Pcard_spec_dir=STRING "/WATSERV/RCP/PRB"                                                                 
+          Wd=REAL               3                            Waiting time for discharging probe card before forcing
+          Wt=REAL               .3                           Waiting time from force to measure                    
+          ADC=INTEGER           1                  0,1       ADC TYPE (0:HI-SPEED, 1:HI-RESOLUTION)                
+          INTEG=INTEGER         3                  0,1,2,3   INTEGRATION TIME (0:MAN. 1:S, 2:M, 3:L)               
+ OUTPUT                                                                                                            
+          Status=STRING                                                                                            
+          Msg=STRING                                                                                               
+ DEVICE                                                                                                            
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+ TERMINAL                                                                                                          
+$-------- --------------------- ------------------ ------- - ------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PC_MGR
+$Vers: 1
+$Desc: To update probe-card contact numbe and review the card
+$Date: 03/27/2003
+$Time: 13:46:34
+$User: wat
+$-------- ----------------- ------------------------ - - ------------------------------------------------------------
+ INPUT                                                                                                               
+          Pcil_mgr=STRING   "/WATSERV/LOG/PRBC_LIFE"     PRBC_LIFE file for managing Probe-card                      
+          Pcard_type=STRING "22"                         Probecard type                                              
+          Pcard_id=STRING   "A"                          Probecard ID                                                
+          Count=REAL        100                          the contact no. record in prober                            
+          Leak_pin=STRING   ""                           If content is not empity, it will record the leak pin number
+ OUTPUT                                                                                                              
+          St=STRING                                                                                                  
+          Err=STRING                                                                                                 
+ DEVICE                                                                                                              
+ TERMINAL                                                                                                            
+$-------- ----------------- ------------------------ - - ------------------------------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PIL_ACCESS
+$Vers: 1
+$Desc: Query recipe items in the recipe file from key recipe id.\n  SPECS3.1: Initial revision.
+$Date: 01/24/2006
+$Time: 13:13:29
+$User: specs
+$-------- ----------------- ------------------------------- - - -----------------------------------------
+ INPUT                                                                                                   
+          Key=STRING        ""                                                                           
+          Filename=STRING   "/opt/SPECS/usr/tpl/recipe.rec"                                              
+ OUTPUT                                                                                                  
+          {Waf}=STRING                                                                                   
+          {Die}=STRING[256]                                                                              
+          {Mod}=STRING[256]                                                                              
+          {Tst}=STRING[256]                                                                              
+          {Prb}=STRING                                                                                   
+          {Lms}=STRING[256]                                                                              
+          {Tco}=STRING[16]                                                                               
+          {Mlib}=STRING[6]                                                                               
+          {Item}=STRING[32]                                                                              
+          Status=INTEGER    0                                   0: OK, -1: Exec Err, -2: No File, 1: Warn
+          Errmsg=STRING                                                                                  
+ DEVICE                                                                                                  
+ TERMINAL                                                                                                
+$-------- ----------------- ------------------------------- - - -----------------------------------------
+
+$Type: Algorithm
+$Name: CTM_PIL_ACCESo
+$Vers: 1
+$Desc: Access PIL information
+$Date: 06/16/2003
+$Time: 11:51:08
+$User: levis
+$-------- --------------- -------- - - ------------------------
+ INPUT                                                         
+          Pil_file=STRING ""           Filename of PIL file    
+          Product=STRING  "E_R011"     Prouct ID               
+ OUTPUT                                                        
+          Recipe=STRING                Recipe Name             
+          Limit=STRING                 Limit Name              
+          T1=STRING                    Test Specification1     
+          T2=STRING                    Test Specification2     
+          Waf=STRING                   Wafer Specification     
+          D1=STRING                    Die Specification1      
+          D2=STRING                    Die Specification2      
+          Pc_type=STRING               Probecard type          
+          Ctr=STRING                   Criteria                
+          Pcm=STRING                   PCM spec                
+          Ctm=STRING                   Customer information    
+          Owner=STRING                 Device Category         
+          Tech=STRING                  Technology              
+          Date=STRING                  Setup Date              
+          St=STRING                    "OK" or "ERROR" or "END"
+          Err=STRING                   Error message           
+                                                               
+ DEVICE                                                        
+                                                               
+ TERMINAL                                                      
+$-------- --------------- -------- - - ------------------------
+
+$Type: Algorithm
+$Name: CTM_POS
+$Vers: 1
+$Desc: 20080522,sami:Check string position for MergeLot
+$Date: 03/30/2012
+$Time: 07:59:45
+$User: wat
+$-------- ---------------- - - - ------------------------
+ INPUT                                                   
+          Original=STRING        Input string:E001_WAT1M1
+          Search=STRING          string position:E001    
+ OUTPUT                                                  
+          Length=INTEGER                                 
+          Position=INTEGER                               
+          Prefix=STRING                                  
+          Postfix=STRING                                 
+ DEVICE                                                  
+ TERMINAL                                                
+$-------- ---------------- - - - ------------------------
+
+$Type: Algorithm
+$Name: CTM_PURGE_DISP
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 06/17/2003
+$Time: 14:24:44
+$User: levis
+$-------- ------------------ -------------- - - -
+ INPUT                                           
+          Purge_file=STRING  "/tmp/display"      
+          Create_file=STRING "/tmp/display"      
+ OUTPUT                                          
+ DEVICE                                          
+ TERMINAL                                        
+$-------- ------------------ -------------- - - -
+
+$Type: Algorithm
+$Name: CTM_RFID
+$Vers: 1
+$Desc: 20080520,sami: read/write PC info by RFID\n1.Flag,2:Contact_PM,3:Contact_total,4:PM_Limit,5:Life_Limit,6:Res,7:Prb,8:Type,9:ID\n
+$Date: 05/16/2011
+$Time: 07:18:21
+$User: wat
+$-------- ----------------- ------------------ ---- - ----------------------------
+ INPUT                                                                            
+          IP_FILE=STRING    "/WAT/ETC/IP_RFID"        IP=10.216.54.14,Port=5000   
+          PAGE=INTEGER      1                  1~10   1.PC_type;2.PC_ID           
+          RW=INTEGER        0                  0,1    0:read,1:write              
+          WRITE_INFO=STRING ""                        Information to write in RFID
+ OUTPUT                                                                           
+          ITEM=STRING[10]                                                         
+          STATUS=INTEGER                                                          
+ DEVICE                                                                           
+ TERMINAL                                                                         
+$-------- ----------------- ------------------ ---- - ----------------------------
+
+$Type: Algorithm
+$Name: CTM_STRING_EXTR
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 12/22/2003
+$Time: 17:04:27
+$User: wat
+$-------- ------------------- - - - -
+ INPUT                               
+          Input_str=STRING           
+          Extract_num=INTEGER        
+ OUTPUT                              
+          Output_str=STRING          
+ DEVICE                              
+ TERMINAL                            
+$-------- ------------------- - - - -
+
+$Type: Algorithm
+$Name: CTM_TELP8_INFO
+$Vers: 1
+$Desc: Gets prober recipe overdrive
+$Date: 06/20/2003
+$Time: 15:57:05
+$User: levis
+$-------- ---------------- - - - ----------------------------
+ INPUT                                                       
+ OUTPUT                                                      
+          Overdrive=STRING       Flat angle defined in prober
+          Status=STRING          "OK" or "ERROR"             
+          Error=STRING           Error message               
+ DEVICE                                                      
+ TERMINAL                                                    
+$-------- ---------------- - - - ----------------------------
+
+$Type: Algorithm
+$Name: CTM_TEST_LOG
+$Vers: 1
+$Desc: Description for this Algorithm spec.\n1. change product ID to "TST_RCP_PROCESS"   ----Paul, 20110425\n2. change probe card ID from 9 bits to 10 bits  ----Paul, 20110425\n3. add prober recipe to Testlog file   ----Paul, 20110425\n
+$Date: 05/27/2011
+$Time: 07:19:39
+$User: wat
+$-------- -------------- -------------------------- - - -
+ INPUT                                                   
+          Testlog=STRING "/WATSERV/LOG/Testlog.txt"      
+ OUTPUT                                                  
+          Status=INTEGER                                 
+          Error=STRING                                   
+ DEVICE                                                  
+ TERMINAL                                                
+$-------- -------------- -------------------------- - - -
+
+$Type: Algorithm
+$Name: CTM_TIMEDATE
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 03/23/2012
+$Time: 05:43:45
+$User: wat
+$-------- ------------ - - - -------------------
+ INPUT                                          
+ OUTPUT                                         
+          Time=STRING        20111231142325     
+          Time2=STRING       2011/12/31_14:23:25
+ DEVICE                                         
+ TERMINAL                                       
+$-------- ------------ - - - -------------------
+
+$Type: Algorithm
+$Name: CTM_TIME_CAL
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 03/23/2012
+$Time: 05:27:49
+$User: wat
+$-------- -------------------- --------------------- - - -
+ INPUT                                                    
+          Start_time=STRING    "2012/03/14_13:21:45"      
+          End_time=STRING      "2012/03/14_13:22:45"      
+ OUTPUT                                                   
+          Timespend=REAL,"min"                            
+ DEVICE                                                   
+ TERMINAL                                                 
+$-------- -------------------- --------------------- - - -
+
+$Type: Algorithm
+$Name: CTM_TPLBLD
+$Vers: 1
+$Desc: This algorithm generates Test Plan dynamically.
+$Date: 06/16/2003
+$Time: 11:58:46
+$User: levis
+$-------- ----------------- -- - - ----------------------------------
+ INPUT                                                               
+          Waf=STRING               Wafer spec name to read           
+          Prb=STRING               Probe spec name to read           
+          Die=STRING               Die spec name to read             
+          Die2=STRING              Die spec2 name to read            
+          Tst=STRING               Test spec name to read            
+          Tst2=STRING       ""     Test spec2 name to read           
+          Tpl=STRING               Test Plan name to write           
+ OUTPUT                                                              
+          Status=INTEGER           Command status                    
+          Error=STRING             Error message                     
+          Ndetail=INTEGER          # of lines of detail error message
+          Detail=STRING[10]        detailed error message            
+ DEVICE                                                              
+                                                                     
+ TERMINAL                                                            
+$-------- ----------------- -- - - ----------------------------------
+
+$Type: Algorithm
+$Name: CTM_TPLFMT
+$Vers: 1
+$Desc: This algorithm alters Test Plan according to conditions specified by external file.
+$Date: 03/05/2002
+$Time: 21:30:23
+$User: joy
+$-------- -------------- - - - ----------------------------
+ INPUT                                                     
+          Tmptpl=STRING        Temporary Test Plan to read 
+          Maslim=STRING        Master Limit File to read   
+          Gentpl=STRING        Generated Test Plan to write
+                                                           
+ OUTPUT                                                    
+          Status=INTEGER       Command status              
+          Error=STRING         Error message               
+                                                           
+ DEVICE                                                    
+                                                           
+ TERMINAL                                                  
+$-------- -------------- - - - ----------------------------
+
+$Type: Algorithm
+$Name: CTM_TPLFMTold
+$Vers: 1
+$Desc: This algorithm alters Test Plan according to conditions specified by external file.
+$Date: 03/05/2002
+$Time: 21:30:23
+$User: joy
+$-------- -------------- - - - ----------------------------
+ INPUT                                                     
+          Tmptpl=STRING        Temporary Test Plan to read 
+          Maslim=STRING        Master Limit File to read   
+          Gentpl=STRING        Generated Test Plan to write
+                                                           
+ OUTPUT                                                    
+          Status=INTEGER       Command status              
+          Error=STRING         Error message               
+                                                           
+ DEVICE                                                    
+                                                           
+ TERMINAL                                                  
+$-------- -------------- - - - ----------------------------
+
+$Type: Algorithm
+$Name: CTM_WAF_JDG_HEA
+$Vers: 1
+$Desc: CTM: check probe-card leak
+$Date: 06/17/2003
+$Time: 18:08:28
+$User: levis
+$-------- ----------------- - - - -
+ INPUT                             
+          Wafer_no=INTEGER         
+          Wafer_jdg=INTEGER        
+          Key_item_yld=REAL        
+ OUTPUT                            
+          Status=STRING            
+          Msg=STRING               
+ DEVICE                            
+                                   
+                                   
+                                   
+                                   
+ TERMINAL                          
+$-------- ----------------- - - - -
+
+$Type: Algorithm
+$Name: CTM_WAF_JDG_LOG
+$Vers: 1
+$Desc: CTM: check probe-card leak
+$Date: 04/12/2005
+$Time: 13:32:03
+$User: wat
+$-------- ----------------- - - - -
+ INPUT                             
+          Wafer_no=INTEGER         
+          Wafer_jdg=INTEGER        
+          Key_item_yld=REAL        
+          Lot_id=STRING            
+ OUTPUT                            
+          Status=STRING            
+          Msg=STRING               
+ DEVICE                            
+                                   
+                                   
+                                   
+                                   
+ TERMINAL                          
+$-------- ----------------- - - - -
+
+$Type: Algorithm
+$Name: CTM_WAF_YLD_JDG
+$Vers: 1
+$Desc: CTM: check probe-card leak
+$Date: 04/03/2020
+$Time: 11:55:22
+$User: wat
+$-------- -------------------- - - - -
+ INPUT                                
+          TEST_CATEGORY=REAL          
+          Key_item_yld=REAL           
+          Wafer_jdg=INTEGER           
+          Wafer_count=INTEGER         
+          Product_name=STRING         
+          Lot_id=STRING               
+          Prod_category=STRING        
+ OUTPUT                               
+          Status=STRING               
+          Msg=STRING                  
+ DEVICE                               
+                                      
+                                      
+                                      
+                                      
+                                      
+ TERMINAL                             
+$-------- -------------------- - - - -
+
+$Type: Algorithm
+$Name: DATALOG_DIEEND
+$Vers: 1
+$Desc: Logs datas on the specified file. This uses user bin.\n
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- -------------------------------- --- - ----------------------
+ INPUT                                                                                 
+          Filename=STRING "/var/opt/SPECS/log/datalog.log"       Filename.             
+          Mode=INTEGER    0                                0~1   All(0), Failed only(1)
+                                                                                       
+ OUTPUT                                                                                
+                                                                                       
+ DEVICE                                                                                
+                                                                                       
+ TERMINAL                                                                              
+$-------- --------------- -------------------------------- --- - ----------------------
+
+$Type: Algorithm
+$Name: DESTROY_WINDOW
+$Vers: 1
+$Desc: Closes an existing HP BASIC/UX window
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- --- - - -
+ INPUT                            
+          Window=INTEGER 601      
+ OUTPUT                           
+ DEVICE                           
+ TERMINAL                         
+$-------- -------------- --- - - -
+
+$Type: Algorithm
+$Name: DISCHARGE_ALL
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 08/03/2013
+$Time: 16:48:41
+$User: root
+$-------- ------------ --- - - -----------------------
+ INPUT                                                
+          Port=INTEGER 3       SMU1-SMU8, GNDU        
+          Hold=REAL    0.1     hold time for discharge
+ OUTPUT                                               
+          Stat=INTEGER         0: OK -1:Error         
+ DEVICE                                               
+ TERMINAL                                             
+$-------- ------------ --- - - -----------------------
+
+$Type: Algorithm
+$Name: FILE_EXIST
+$Vers: 1
+$Desc: Check file exists or not\n
+$Date: 03/05/2002
+$Time: 21:30:23
+$User: joy
+$-------- --------------- - - - ------------------
+ INPUT                                            
+          Filename=STRING       Filename for check
+                                                  
+ OUTPUT                                           
+          Status=STRING         "OK" or "ERROR"   
+          Error=STRING          Error message     
+                                                  
+ DEVICE                                           
+                                                  
+ TERMINAL                                         
+$-------- --------------- - - - ------------------
+
+$Type: Algorithm
+$Name: FILE_HWCONFIG
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- - - - -
+ INPUT                             
+          File=STRING              
+          Config=STRING[50]        
+ OUTPUT                            
+                                   
+ DEVICE                            
+                                   
+ TERMINAL                          
+$-------- ----------------- - - - -
+
+$Type: Algorithm
+$Name: FILE_LOOKUP
+$Vers: 1
+$Desc: Searches for and returns all the file names (in all directories under a specified directory) that have a specified suffix
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------------- ----- - - -----------------------
+ INPUT                                                          
+          Dir=STRING                     Search directory name  
+          Suffix=STRING        "tpl"     Suffix                 
+ OUTPUT                                                         
+          {Files}=STRING[1024]           Found files            
+          {Count}=INTEGER                Number of found files  
+          {Depth}=INTEGER                Max directory depth + 1
+ DEVICE                                                         
+ TERMINAL                                                       
+$-------- -------------------- ----- - - -----------------------
+
+$Type: Algorithm
+$Name: FORMAT_PATH
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - - - -
+ INPUT                           
+          Original=STRING        
+                                 
+ OUTPUT                          
+          Path=STRING            
+ DEVICE                          
+                                 
+ TERMINAL                        
+$-------- --------------- - - - -
+
+$Type: Algorithm
+$Name: GET_BRK_MOD
+$Vers: 1
+$Desc: Return breakpoint flag value of specified module.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- - ------- - ----------------------------------
+ INPUT                                                                    
+          Typeindex=INTEGER 1 0~256     Die type index (DIE.TYPENUMBER)   
+          Dieindex=INTEGER  1 0~32768   Die index in die type (DIE.NUMBER)
+          Modindex=INTEGER  1 0~4096    Module index (MODULE.NUMBER)      
+ OUTPUT                                                                   
+          Break=INTEGER     0           1: Break, 0: Unbreak, -1: Error   
+ DEVICE                                                                   
+                                                                          
+ TERMINAL                                                                 
+$-------- ----------------- - ------- - ----------------------------------
+
+$Type: Algorithm
+$Name: GET_JDG_DIE
+$Vers: 1
+$Desc: Return judgement flag value of specified die.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- - ------- - ----------------------------------
+ INPUT                                                                    
+          Typeindex=INTEGER 1 0~256     Die type index (DIE.TYPENUMBER)   
+          Dieindex=INTEGER  1 0~32768   Die index in die type (DIE.NUMBER)
+                                                                          
+ OUTPUT                                                                   
+          Judge=INTEGER     1           Judgement value.                  
+          Offsetx=INTEGER   0           Die X position offset.            
+          Offsety=INTEGER   0           Die Y position offset.            
+                                                                          
+ DEVICE                                                                   
+                                                                          
+ TERMINAL                                                                 
+$-------- ----------------- - ------- - ----------------------------------
+
+$Type: Algorithm
+$Name: GET_LOC_MOD
+$Vers: 1
+$Desc: Return module position of specified module relative to die.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- -- ----- - ------------------------------------------------------
+ INPUT                                                                                       
+          Typeindex=INTEGER 1  0~255   Die type index (DIE.TYPENUMBER). "0" is an error case.
+          Modname=STRING    ""         Module name.                                          
+                                                                                             
+ OUTPUT                                                                                      
+          X=REAL,"um"       0          X Position                                            
+          Y=REAL,"um"       0          Y Position                                            
+          Stat=INTEGER      0          0:No error, -1:Error                                  
+ DEVICE                                                                                      
+                                                                                             
+ TERMINAL                                                                                    
+$-------- ----------------- -- ----- - ------------------------------------------------------
+
+$Type: Algorithm
+$Name: GET_NEXT_MOD
+$Vers: 1
+$Desc: Search failed module.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------- -- ----- - -------------------------------
+ INPUT                                                                  
+          Typeindex_c=INTEGER 0          Current type index.            
+          Diex_c=INTEGER      0          Current die x.                 
+          Diey_c=INTEGER                 Current die y.                 
+          Modname_c=STRING    ""         Current module name.           
+ OUTPUT                                                                 
+          Typeindex=INTEGER   0  0~256   Next die type w/ failed module.
+          Diex=INTEGER        0          Next die x w/ failed module.   
+          Diey=INTEGER                   Next die y w/ failed module.   
+          Modname=STRING      ""         Next failed module name.       
+          Stat=INTEGER        0          0:ok/-1:error                  
+ DEVICE                                                                 
+                                                                        
+ TERMINAL                                                               
+$-------- ------------------- -- ----- - -------------------------------
+
+$Type: Algorithm
+$Name: GET_PREV_MOD
+$Vers: 1
+$Desc: Search failed module.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------- -- - - -------------------------------
+ INPUT                                                              
+          Typeindex_c=INTEGER 0      Current type index.            
+          Diex_c=INTEGER      0      Current die x.                 
+          Diey_c=INTEGER             Current die y.                 
+          Modname_c=STRING    ""     Current module name.           
+                                                                    
+ OUTPUT                                                             
+          Typeindex=INTEGER   0      Prev die type w/ failed module.
+          Diex=INTEGER        0      Prev die x w/ failed module.   
+          Diey=INTEGER               Prev die y w/ failed module.   
+          Modname=STRING      ""     Prev failed module name.       
+          Stat=INTEGER        0      0:ok/-1:error                  
+                                                                    
+ DEVICE                                                             
+                                                                    
+ TERMINAL                                                           
+$-------- ------------------- -- - - -------------------------------
+
+$Type: Algorithm
+$Name: GET_SLOT_NO
+$Vers: 1
+$Desc: Get slot number from lot ID and wafer ID.
+$Date: 05/31/2004
+$Time: 03:00:00
+$User: specs
+$-------- -------------- -- - - -
+ INPUT                           
+          Lotid=STRING   ""      
+          Waferid=STRING ""      
+ OUTPUT                          
+          Slotno=INTEGER 0       
+ DEVICE                          
+ TERMINAL                        
+$-------- -------------- -- - - -
+
+$Type: Algorithm
+$Name: DTJX_HV_INIT
+$Vers: 1
+$Desc: For initial B1505+K707 SWM\nJeremy @Raytrex 20200320
+$Date: 03/20/2020
+$Time: 14:14:40
+$User: wat
+$-------- - - - - -
+ INPUT             
+ OUTPUT            
+ DEVICE            
+ TERMINAL          
+$-------- - - - - -
+
+$Type: Algorithm
+$Name: G_CV
+$Vers: 1
+$Desc: Measures the Capacitance-Voltage characteristics (C-V characteristics), and displays the measurement results on a graph
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- ---- ------ - --------------------
+ INPUT                                                       
+          Vstart=REAL,"V"  -5   -40~40   Inversion voltage   
+          Vstop=REAL,"V"   5    -40~40   Accumulation voltage
+          Vstep=REAL,"V"   0.1  -80~80   Step voltage        
+          Delay=REAL,"sec" 0.1  0~650    Step delay time     
+          Hold=REAL,"sec"  30.0 0~650    Hold time           
+ OUTPUT                                                      
+ DEVICE                                                      
+ TERMINAL                                                    
+          H                                                  
+          L                                                  
+$-------- ---------------- ---- ------ - --------------------
+
+$Type: Algorithm
+$Name: G_HFE
+$Vers: 1
+$Desc: Measures the bipolar transistor Collector Current-hFE characteristics (Ic-hFE characteristics), and displays the measurement results on a graph
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- ---- ---------- - --------------------
+ INPUT                                                            
+          Ibestart=REAL,"A" 1p   -100m~100m   Base start current  
+          Ibestop=REAL,"A"  500u -100m~100m   Base stop current   
+          Ibestep=INTEGER   25   2~1001       Base number of steps
+          Vce=REAL,"V"      5.0  -100~100     Collector voltage   
+ OUTPUT                                                           
+ DEVICE                                                           
+ TERMINAL                                                         
+          E                                                       
+          B                                                       
+          C                                                       
+$-------- ----------------- ---- ---------- - --------------------
+
+$Type: Algorithm
+$Name: G_ICVB
+$Vers: 1
+$Desc: Measures the bipolar transistor Collector Current-Base Voltage characteristics (Ic-Vb characteristics), and displays the measurement results on a graph
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- ---- -------- - ------------------
+ INPUT                                                        
+          Vbestart=REAL,"V" 0.0  -100~100   Base start voltage
+          Vbestop=REAL,"V"  1.0  -100~100   Base stop voltage 
+          Vbestep=REAL,"V"  0.01 -200~200   Base step voltage 
+ OUTPUT                                                       
+ DEVICE                                                       
+ TERMINAL                                                     
+          E                                                   
+          B                                                   
+          C                                                   
+$-------- ----------------- ---- -------- - ------------------
+
+$Type: Algorithm
+$Name: G_ICVC
+$Vers: 1
+$Desc: Measures the bipolar transistor Collector Current-Collector Voltage characteristics (Ic-Vc characteristics), and displays the measurement results on a graph
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- --- ---------- - -----------------------
+ INPUT                                                              
+          Vcestart=REAL,"V" 0.0 -100~100     Collector start voltage
+          Vcestop=REAL,"V"  5.0 -100~100     Collector stop voltage 
+          Vcestep=REAL,"V"  0.1 -200~200     Collector step voltage 
+          Ibstart=REAL,"A"  10u -100m~100m   Base start current     
+          Ibstop=REAL,"A"   50u -100m~100m   Base stop current      
+          Ibstep=REAL,"A"   10u -200m~200m   Base step current      
+ OUTPUT                                                             
+ DEVICE                                                             
+ TERMINAL                                                           
+          E                                                         
+          B                                                         
+          C                                                         
+$-------- ----------------- --- ---------- - -----------------------
+
+$Type: Algorithm
+$Name: G_IDVD
+$Vers: 1
+$Desc: Measures the MOSFET Drain Current-Drain Voltage characteristics (Id-Vd characteristics), and displays the measurement results on a graph
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- ---- -------- - -------------------
+ INPUT                                                        
+          Vdstart=REAL,"V" 0.0  -100~100   Drain start voltage
+          Vdstop=REAL,"V"  20.0 -100~100   Drain stop voltage 
+          Vdstep=REAL,"V"  0.25 -200~200   Drain step voltage 
+          Vgstart=REAL,"V" 3.0  -100~100   Gate start voltage 
+          Vgstop=REAL,"V"  6.0  -100~100   Gate stop voltage  
+          Vgstep=REAL,"V"  1.0  -200~200   Gate step voltage  
+ OUTPUT                                                       
+ DEVICE                                                       
+ TERMINAL                                                     
+          S                                                   
+          G                                Gate terminal      
+          D                                Drain terminal     
+          Sub                              Substrate terminal 
+$-------- ---------------- ---- -------- - -------------------
+
+$Type: Algorithm
+$Name: G_IDVG
+$Vers: 1
+$Desc: Measures the MOSFET Drain Current-Gate Voltage characteristics (Id-Vg characteristics), and displays the measurement results on a graph
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------ ---- -------- - -----------------------
+ INPUT                                                              
+          Vgstart=REAL,"V"   0.0  -100~100   Gate start voltage     
+          Vgstop=REAL,"V"    5.0  -100~100   Gate stop voltage      
+          Vgstep=REAL,"V"    0.05 -200~200   Gate step voltage      
+          Vsubstart=REAL,"V" 0.0  -100~100   Substrate start voltage
+          Vsubstop=REAL,"V"  -1.2 -100~100   Substrate stop voltage 
+          Vsubstep=REAL,"V"  -0.4 -200~200   Substrate step voltage 
+          Vd=REAL,"V"        5.0  -100~100   Drain voltage          
+ OUTPUT                                                             
+ DEVICE                                                             
+ TERMINAL                                                           
+          S                                                         
+          G                                  Gate terminal          
+          D                                  Drain terminal         
+          Sub                                Substrate terminal     
+$-------- ------------------ ---- -------- - -----------------------
+
+$Type: Algorithm
+$Name: INIT_RELAY
+$Vers: 1
+$Desc: initialize relay    paul 2012-07
+$Date: 07/03/2012
+$Time: 14:48:31
+$User: agilent
+$-------- - - - - -
+ INPUT             
+ OUTPUT            
+ DEVICE            
+ TERMINAL          
+$-------- - - - - -
+
+$Type: Algorithm
+$Name: IS_CALG
+$Vers: 1
+$Desc: Check the lang of algorithm
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------ - - - ------------
+ INPUT                                   
+                                         
+ OUTPUT                                  
+          Lang=INTEGER 0     BASIC:0, C:1
+                                         
+ DEVICE                                  
+                                         
+ TERMINAL                                
+$-------- ------------ - - - ------------
+
+$Type: Algorithm
+$Name: IS_FIRST
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- - - - -
+ INPUT                         
+                               
+ OUTPUT                        
+          First=INTEGER 1      
+                               
+ DEVICE                        
+                               
+ TERMINAL                      
+$-------- ------------- - - - -
+
+$Type: Algorithm
+$Name: JDG_DIE
+$Vers: 1
+$Desc: Judge current die by parameter yield.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- --- --------- - ---------------------------------------------
+ INPUT                                                                                   
+          Tgt_yld=INTEGER   100 0~100       target parameter yield to be passed          
+          Last=INTEGER      0   0,1         all test are finished or not                 
+          Critical=INTEGER  0   0,1,2,3,4   user flag index as "critical" parameter flag.
+          Ignore=INTEGER    0   0,1,2,3,4   user flag index as "ignored" parameter flag. 
+ OUTPUT                                                                                  
+          Jdg=INTEGER                       0:fail/1:pass/2:unknown                      
+          Yld=REAL                          parameter yield                              
+          Pass_cnt=INTEGER                  pass count of parameter                      
+          Fail_cnt=INTEGER                  fail count of parameter                      
+          Total_cnt=INTEGER                                                              
+                                                                                         
+ DEVICE                                                                                  
+                                                                                         
+ TERMINAL                                                                                
+$-------- ----------------- --- --------- - ---------------------------------------------
+
+$Type: Algorithm
+$Name: JDG_DIE_AT_POS
+$Vers: 1
+$Desc: Judge specified die by parameter yield.
+$Date: 03/20/2003
+$Time: 16:23:03
+$User: wat
+$-------- ----------------- --- --------- - ---------------------------------------------
+ INPUT                                                                                   
+          Die_pos=INTEGER                   index of die                                 
+          Tgt_yld=INTEGER   100 0~100       target parameter yield to be passed          
+          Last=INTEGER      0   0,1         all test are finished or not                 
+          Critical=INTEGER  0   0,1,2,3,4   user flag index as "critical" parameter flag.
+          Ignore=INTEGER    0   0,1,2,3,4   user flag index as "ignored" parameter flag. 
+ OUTPUT                                                                                  
+          Jdg=INTEGER                       0:fail/1:pass/2:unknown                      
+          Yld=REAL                          parameter yield                              
+          Pass_cnt=INTEGER                  pass count of parameter                      
+          Fail_cnt=INTEGER                  fail count of parameter                      
+          Total_cnt=INTEGER                                                              
+                                                                                         
+ DEVICE                                                                                  
+                                                                                         
+ TERMINAL                                                                                
+$-------- ----------------- --- --------- - ---------------------------------------------
+
+$Type: Algorithm
+$Name: JDG_DIE_AT_POS2
+$Vers: 1
+$Desc: Judge specified die by parameter yield.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- --- --------- - ---------------------------------------------
+ INPUT                                                                                   
+          Die_pos=INTEGER                   index of die                                 
+          Tgt_yld=INTEGER   100 0~100       target parameter yield to be passed          
+          Last=INTEGER      0   0,1         all test are finished or not                 
+          Critical=INTEGER  0   0,1,2,3,4   user flag index as "critical" parameter flag.
+          Ignore=INTEGER    0   0,1,2,3,4   user flag index as "ignored" parameter flag. 
+ OUTPUT                                                                                  
+          Jdg=INTEGER                       0:fail/1:pass/2:unknown                      
+          Yld=REAL                          parameter yield                              
+          Pass_cnt=INTEGER                  pass count of parameter                      
+          Fail_cnt=INTEGER                  fail count of parameter                      
+          Total_cnt=INTEGER                                                              
+                                                                                         
+ DEVICE                                                                                  
+                                                                                         
+ TERMINAL                                                                                
+$-------- ----------------- --- --------- - ---------------------------------------------
+
+$Type: Algorithm
+$Name: JDG_DIE_AT_POSo
+$Vers: 1
+$Desc: Judge specified die by parameter yield.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- --- ----- - -----------------------------------
+ INPUT                                                                     
+          Die_pos=INTEGER               index of die                       
+          Tgt_yld=INTEGER   100 0~100   target parameter yield to be passed
+          Last=INTEGER      0   0,1     all test are finished or not       
+ OUTPUT                                                                    
+          Jdg=INTEGER                   0:fail/1:pass/2:unknown            
+          Yld=REAL                      parameter yield                    
+          Pass_cnt=INTEGER              pass count of parameter            
+          Fail_cnt=INTEGER              fail count of parameter            
+          Total_cnt=INTEGER                                                
+                                                                           
+ DEVICE                                                                    
+                                                                           
+ TERMINAL                                                                  
+$-------- ----------------- --- ----- - -----------------------------------
+
+$Type: Algorithm
+$Name: JDG_MOD
+$Vers: 1
+$Desc: Return if current module has failed outputs.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- - --------- - --------------------------------------------
+ INPUT                                                                                
+          Ignore=INTEGER    0 0,1,2,3,4   user flag index as "ignored" parameter flag.
+                                                                                      
+ OUTPUT                                                                               
+          Jdg=INTEGER                     0:fail/1:pass/2:unknown                     
+          Pass_cnt=INTEGER                pass count of item                          
+          Fail_cnt=INTEGER                fail count of item                          
+          Total_cnt=INTEGER                                                           
+                                                                                      
+ DEVICE                                                                               
+                                                                                      
+ TERMINAL                                                                             
+$-------- ----------------- - --------- - --------------------------------------------
+
+$Type: Algorithm
+$Name: JDG_MOD_AT_POS
+$Vers: 1
+$Desc: Return if specified module has failed outputs.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- - --------- - --------------------------------------------
+ INPUT                                                                                
+          Die_pos=INTEGER                 index of die                                
+          Mod_pos=INTEGER                 Index of module                             
+          Ignore=INTEGER    0 0,1,2,3,4   user flag index as "ignored" parameter flag.
+                                                                                      
+ OUTPUT                                                                               
+          Jdg=INTEGER                     0:fail/1:pass/2:unknown                     
+          Pass_cnt=INTEGER                pass count of item                          
+          Fail_cnt=INTEGER                fail count of item                          
+          Total_cnt=INTEGER                                                           
+ DEVICE                                                                               
+                                                                                      
+ TERMINAL                                                                             
+$-------- ----------------- - --------- - --------------------------------------------
+
+$Type: Algorithm
+$Name: JDG_WAF_BY_DIE
+$Vers: 1
+$Desc: Judge current wafer by die yield.\nJoy add Critical & Ignore
+$Date: 03/20/2003
+$Time: 16:23:03
+$User: wat
+$-------- ------------------ --- --------- - ---------------------------------------------
+ INPUT                                                                                    
+          Tgt_wafyld=INTEGER 100 0~100       target parameter yield to be passed          
+          Tgt_dieyld=INTEGER 100 0~100                                                    
+          Last=INTEGER       0   0,1         all test are finished or not                 
+          Critical=INTEGER   0   0,1,2,3,4   user flag index as "critical" parameter flag.
+          Ignore=INTEGER     0   0,1,2,3,4   user flag index as "ignored" parameter flag. 
+ OUTPUT                                                                                   
+          Jdg=INTEGER                        0:fail/1:pass/2:unknown                      
+          Yld=REAL                           die yield                                    
+          Pass_cnt=INTEGER                   pass count of die                            
+          Fail_cnt=INTEGER                   fail count of die                            
+          Total_cnt=INTEGER                                                               
+                                                                                          
+ DEVICE                                                                                   
+                                                                                          
+ TERMINAL                                                                                 
+$-------- ------------------ --- --------- - ---------------------------------------------
+
+$Type: Algorithm
+$Name: JDG_WAF_BY_DIEo
+$Vers: 1
+$Desc: Judge current wafer by die yield.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------ --- ----- - -----------------------------------
+ INPUT                                                                      
+          Tgt_wafyld=INTEGER 100 0~100   target parameter yield to be passed
+          Tgt_dieyld=INTEGER 100 0~100                                      
+          Last=INTEGER       0   0,1     all test are finished or not       
+ OUTPUT                                                                     
+          Jdg=INTEGER                    0:fail/1:pass/2:unknown            
+          Yld=REAL                       die yield                          
+          Pass_cnt=INTEGER               pass count of die                  
+          Fail_cnt=INTEGER               fail count of die                  
+          Total_cnt=INTEGER                                                 
+                                                                            
+ DEVICE                                                                     
+                                                                            
+ TERMINAL                                                                   
+$-------- ------------------ --- ----- - -----------------------------------
+
+$Type: Algorithm
+$Name: JDG_WAF_BY_ITEM
+$Vers: 1
+$Desc: Judge current wafer by whole key parameters for whole test die.
+$Date: 07/04/2013
+$Time: 16:03:36
+$User: wat
+$-------- ------------------------ - - - -
+ INPUT                                    
+          Jdg_die_array=REAL[1000]        
+          Die_count=INTEGER               
+ OUTPUT                                   
+          Yld=REAL                        
+ DEVICE                                   
+ TERMINAL                                 
+$-------- ------------------------ - - - -
+
+$Type: Algorithm
+$Name: JDG_WAF_BY_PARA
+$Vers: 1
+$Desc: Judge current wafer by parameter yield.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- --- --------- - ---------------------------------------------
+ INPUT                                                                                   
+          Tgt_yld=INTEGER   100 0~100       target parameter yield to be passed          
+          Last=INTEGER      0   0,1         all test are finished or not                 
+          Critical=INTEGER  0   0,1,2,3,4   user flag index as "critical" parameter flag.
+          Ignore=INTEGER    0   0,1,2,3,4   user flag index as "ignored" parameter flag. 
+ OUTPUT                                                                                  
+          Jdg=INTEGER                       0:fail/1:pass/2:unknown                      
+          Yld=REAL                          parameter yield                              
+          Pass_cnt=INTEGER                  pass count of parameter                      
+          Fail_cnt=INTEGER                  fail count of parameter                      
+          Total_cnt=INTEGER                                                              
+ DEVICE                                                                                  
+                                                                                         
+ TERMINAL                                                                                
+$-------- ----------------- --- --------- - ---------------------------------------------
+
+$Type: Algorithm
+$Name: LOG_LOT_BEGIN
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- - - - -
+ INPUT                            
+          Session=STRING          
+          Lotid=STRING            
+          Testplan=STRING         
+          Algorithm=STRING        
+          Limitfile=STRING        
+          Operator=STRING         
+          Date=STRING             
+          Time=STRING             
+ OUTPUT                           
+                                  
+ DEVICE                           
+                                  
+ TERMINAL                         
+$-------- ---------------- - - - -
+
+$Type: Algorithm
+$Name: LOG_LOT_END
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - - - -
+ INPUT                           
+          Session=STRING         
+          State=STRING           
+          Result=INTEGER         
+          Datadir=STRING         
+          Dataname=STRING        
+          Time=STRING            
+ OUTPUT                          
+                                 
+ DEVICE                          
+                                 
+ TERMINAL                        
+$-------- --------------- - - - -
+
+$Type: Algorithm
+$Name: LOG_PROBER
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- - - - -
+ INPUT                          
+          Session=STRING        
+          Message=STRING        
+ OUTPUT                         
+                                
+ DEVICE                         
+                                
+ TERMINAL                       
+$-------- -------------- - - - -
+
+$Type: Algorithm
+$Name: LOG_SYSTEM
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- - - - -
+ INPUT                          
+          Session=STRING        
+          Message=STRING        
+ OUTPUT                         
+                                
+ DEVICE                         
+                                
+ TERMINAL                       
+$-------- -------------- - - - -
+
+$Type: Algorithm
+$Name: LOG_WAFER_BEGIN
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- - - - -
+ INPUT                          
+          Session=STRING        
+          Waferid=STRING        
+          Time=STRING           
+ OUTPUT                         
+                                
+ DEVICE                         
+                                
+ TERMINAL                       
+$-------- -------------- - - - -
+
+$Type: Algorithm
+$Name: LOG_WAFER_END
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- - - - -
+ INPUT                          
+          Session=STRING        
+          State=STRING          
+          Result=INTEGER        
+          Time=STRING           
+ OUTPUT                         
+                                
+ DEVICE                         
+                                
+ TERMINAL                       
+$-------- -------------- - - - -
+
+$Type: Algorithm
+$Name: MASTER_LOOKUP
+$Vers: 1
+$Desc: Returns specified field of specified line in an ASCII data file
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- - ----- - ----------------------------------------
+ INPUT                                                                     
+          File=STRING              Master filename                         
+          Key=STRING               Key string                              
+          Fnum=INTEGER   1 1~199   Field number, 1 ~ 199                   
+ OUTPUT                                                                    
+          {Field}=STRING           Extracted field                         
+          {Stat}=INTEGER           0(ok),-1(no key),-2(invalid),-3(no file)
+ DEVICE                                                                    
+ TERMINAL                                                                  
+$-------- -------------- - ----- - ----------------------------------------
+
+$Type: Algorithm
+$Name: MERGE_DATAFILE
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------ - - - -
+ INPUT                              
+          Original=STRING           
+          New=STRING                
+          Format=STRING             
+          Numwaf=INTEGER            
+          Waferid=STRING[50]        
+ OUTPUT                             
+          Stat=INTEGER              
+          Error=STRING              
+ DEVICE                             
+                                    
+ TERMINAL                           
+$-------- ------------------ - - - -
+
+$Type: Algorithm
+$Name: NAME_TMPDATA
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - - - -
+ INPUT                           
+          Basename=STRING        
+          Session=STRING         
+                                 
+ OUTPUT                          
+          Tmpname=STRING         
+                                 
+ DEVICE                          
+                                 
+ TERMINAL                        
+$-------- --------------- - - - -
+
+$Type: Algorithm
+$Name: PLOTTER_IS
+$Vers: 1
+$Desc: Changes the PLOTTER IS device
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------- - - - -
+ INPUT                       
+          Sel=INTEGER 1      
+ OUTPUT                      
+ DEVICE                      
+ TERMINAL                    
+$-------- ----------- - - - -
+
+$Type: Algorithm
+$Name: POS
+$Vers: 1
+$Desc: Check string position
+$Date: 05/22/2003
+$Time: 10:29:44
+$User: f2eng
+$-------- ---------------- - - - ---------------
+ INPUT                                          
+          Original=STRING        Input string   
+          Search=STRING          string position
+ OUTPUT                                         
+          Length=INTEGER                        
+          Position=INTEGER                      
+          Prefix=STRING                         
+          Postfix=STRING                        
+ DEVICE                                         
+ TERMINAL                                       
+$-------- ---------------- - - - ---------------
+
+$Type: Algorithm
+$Name: POSI
+$Vers: 1
+$Desc: Check string position
+$Date: 05/22/2003
+$Time: 10:29:44
+$User: f2eng
+$-------- ---------------- - - - ---------------
+ INPUT                                          
+          Original=STRING        Input string   
+          Search=STRING          string position
+ OUTPUT                                         
+          Length=INTEGER                        
+          Position=INTEGER                      
+          Prefix=STRING                         
+          Postfix=STRING                        
+ DEVICE                                         
+ TERMINAL                                       
+$-------- ---------------- - - - ---------------
+
+$Type: Algorithm
+$Name: POS_LotIdRcp
+$Vers: 1
+$Desc: Check string position
+$Date: 04/05/2017
+$Time: 10:37:42
+$User: f2eng
+$-------- ------------------ - - - ------------
+ INPUT                                         
+          Lot_id=STRING            Input string
+          Test_recipe=STRING       Input string
+                                               
+ OUTPUT                                        
+          Status=INTEGER                       
+          Length=INTEGER                       
+ DEVICE                                        
+ TERMINAL                                      
+$-------- ------------------ - - - ------------
+
+$Type: Algorithm
+$Name: PRBCOUNT
+$Vers: 1
+$Desc: Return the number of Pins
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- - - - -
+ INPUT                         
+                               
+ OUTPUT                        
+          Count=INTEGER 0      
+                               
+ DEVICE                        
+                               
+ TERMINAL                      
+$-------- ------------- - - - -
+
+$Type: Algorithm
+$Name: PRBINFO
+$Vers: 1
+$Desc: Return pin number and pad number.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- -- - - -
+ INPUT                          
+          Index=INTEGER         
+ OUTPUT                         
+          Pad=INTEGER   -1      
+          Pin=INTEGER   -1      
+ DEVICE                         
+                                
+ TERMINAL                       
+$-------- ------------- -- - - -
+
+$Type: Algorithm
+$Name: PRINT
+$Vers: 1
+$Desc: Prints the specified STRING variable to the present PRINTER IS device
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------- - - - -
+ INPUT                    
+          S=STRING        
+ OUTPUT                   
+ DEVICE                   
+ TERMINAL                 
+$-------- -------- - - - -
+
+$Type: Algorithm
+$Name: PRINTER_IS
+$Vers: 1
+$Desc: Changes the PRINTER IS device
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------- - - - -
+ INPUT                       
+          Sel=INTEGER 1      
+ OUTPUT                      
+ DEVICE                      
+ TERMINAL                    
+$-------- ----------- - - - -
+
+$Type: Algorithm
+$Name: PRINT_CHAR
+$Vers: 1
+$Desc: Writes a CHARACTER value to a STRING variable, then prints it to the present PRINTER IS device
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- ---- - - ----------------
+ INPUT                                             
+          Format=STRING   "%c"     Format string   
+          Value=CHARACTER          Value to convert
+ OUTPUT                                            
+ DEVICE                                            
+ TERMINAL                                          
+$-------- --------------- ---- - - ----------------
+
+$Type: Algorithm
+$Name: PRINT_INTEGER
+$Vers: 1
+$Desc: Writes an INTEGER value to a STRING variable, then prints it to the present PRINTER IS device
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- ---- - - ----------------
+ INPUT                                           
+          Format=STRING "%d"     Format string   
+          Value=INTEGER          Value to convert
+ OUTPUT                                          
+ DEVICE                                          
+ TERMINAL                                        
+$-------- ------------- ---- - - ----------------
+
+$Type: Algorithm
+$Name: PRINT_REAL
+$Vers: 1
+$Desc: Writes a REAL value to a STRING variable, then prints it to the present PRINTER IS device
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- ---- - - ----------------
+ INPUT                                           
+          Format=STRING "%e"     Format string   
+          Value=REAL             Value to convert
+ OUTPUT                                          
+ DEVICE                                          
+ TERMINAL                                        
+$-------- ------------- ---- - - ----------------
+
+$Type: Algorithm
+$Name: PRINT_STRING
+$Vers: 1
+$Desc: Writes a STRING value to a STRING variable, then prints it to the present PRINTER IS device
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- ---- - - ----------------
+ INPUT                                           
+          Format=STRING "%s"     Format string   
+          Value=STRING           Value to convert
+ OUTPUT                                          
+ DEVICE                                          
+ TERMINAL                                        
+$-------- ------------- ---- - - ----------------
+
+$Type: Algorithm
+$Name: QUERY_DIR
+$Vers: 1
+$Desc: Let Quick Query open specified directory.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------ --------------------- - - ------------------
+ INPUT                                                             
+          Dir=STRING   "/var/opt/SPECS/data"     Opened directory. 
+                                                                   
+ OUTPUT                                                            
+          Stat=INTEGER                           0:ok, -1:not found
+                                                                   
+ DEVICE                                                            
+                                                                   
+ TERMINAL                                                          
+$-------- ------------ --------------------- - - ------------------
+
+$Type: Algorithm
+$Name: QUERY_FILE
+$Vers: 1
+$Desc: Let Quick Query open specified file.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------ -- - - ------------------
+ INPUT                                          
+          File=STRING  ""     Opened file.      
+                                                
+ OUTPUT                                         
+          Stat=INTEGER        0:ok, -1:not found
+                                                
+ DEVICE                                         
+                                                
+ TERMINAL                                       
+$-------- ------------ -- - - ------------------
+
+$Type: Algorithm
+$Name: QUERY_GRAPH
+$Vers: 1
+$Desc: Let Quick Query open Graph. Must be executed after QUERY_FILE.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- -- --------- - ------------------------
+ INPUT                                                           
+          Filter=INTEGER  0  0,1,2,3,4   Filter item.            
+          Type=INTEGER    0  0,1,2       0:XY, 1:Hist, 2:WaferMap
+          Unit=INTEGER    0  0,1,2       0:Lot, 1:Wafer, 2:Die   
+          Variable=STRING ""             Output variable name.   
+          Update=INTEGER  0  0,1         0:New, 1:Update         
+ OUTPUT                                                          
+                                                                 
+ DEVICE                                                          
+                                                                 
+ TERMINAL                                                        
+$-------- --------------- -- --------- - ------------------------
+
+$Type: Algorithm
+$Name: QUERY_LAUNCH
+$Vers: 1
+$Desc: Start Quick Query.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- ------- --------------- - ----------
+ INPUT                                                        
+          Session=STRING  "1"     "1","2","3","4"   Session ID
+          Port=STRING     "14062"                   Port ID   
+          Project=STRING  "v"                       Project ID
+          Hostname=STRING ""                        Hostname  
+ OUTPUT                                                       
+                                                              
+ DEVICE                                                       
+                                                              
+ TERMINAL                                                     
+$-------- --------------- ------- --------------- - ----------
+
+$Type: Algorithm
+$Name: QUERY_START
+$Vers: 1
+$Desc: Popup Quick Query.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- - - - - -
+ INPUT             
+                   
+ OUTPUT            
+                   
+ DEVICE            
+                   
+ TERMINAL          
+$-------- - - - - -
+
+$Type: Algorithm
+$Name: QUERY_STOP
+$Vers: 1
+$Desc: Popdown Quick Query.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- - - - - -
+ INPUT             
+                   
+ OUTPUT            
+                   
+ DEVICE            
+                   
+ TERMINAL          
+$-------- - - - - -
+
+$Type: Algorithm
+$Name: QUERY_VIEW
+$Vers: 1
+$Desc: Let Quick Query open Quick View. Must be executed after QUERY_FILE.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- -- --- - ---------------------
+ INPUT                                                  
+          Variable=STRING ""       Output variable name.
+          Update=INTEGER  0  0,1   0:New, 1:Update      
+ OUTPUT                                                 
+                                                        
+ DEVICE                                                 
+                                                        
+ TERMINAL                                               
+$-------- --------------- -- --- - ---------------------
+
+$Type: Algorithm
+$Name: RCP_CHECK_KEY
+$Vers: 1
+$Desc: Check if recipe file has duplicate key fields.\n  SPECS3.0: Initial revision.
+$Date: 09/01/2002
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- ------------------------------- - - ---------------------------
+ INPUT                                                                                    
+          Filename=STRING  "/opt/SPECS/usr/tpl/recipe.rec"                                
+ OUTPUT                                                                                   
+          {Status}=INTEGER 0                                   0: OK, -1: Err, -2: No File
+          {Errmsg}=STRING                                                                 
+          {Dupkey}=STRING                                      Duplicated key             
+ DEVICE                                                                                   
+ TERMINAL                                                                                 
+$-------- ---------------- ------------------------------- - - ---------------------------
+
+$Type: Algorithm
+$Name: RCP_DIETST
+$Vers: 1
+$Desc: The Algorithm makes a Die Spec-Test Spec list for tplbuild command.\n  SPECS3.0: Initial revision.
+$Date: 09/01/2002
+$Time: 09:00:00
+$User: specs
+$-------- --------------------- -- - - -----
+ INPUT                                      
+          Die=STRING[256]                   
+          Tst=STRING[256]                   
+          Rule=STRING           ""          
+ OUTPUT                                     
+          {Die_tst}=STRING[256]             
+          {Status}=INTEGER             0: Ok
+          {Errmsg}=STRING                   
+ DEVICE                                     
+ TERMINAL                                   
+$-------- --------------------- -- - - -----
+
+$Type: Algorithm
+$Name: RCP_EXEC_CMD
+$Vers: 1
+$Desc: Execute command file and get result file.\n  SPECS3.0: Initial revision.
+$Date: 09/01/2002
+$Time: 09:00:00
+$User: specs
+$-------- ------------------- -------------------- - - ----------------------------------
+ INPUT                                                                                   
+          Cmd=STRING                                                                     
+          Result=STRING       "/var/tmp/algresult"                                       
+                                                                                         
+ OUTPUT                                                                                  
+          {Status}=INTEGER                             0: OK, -1: Exec Err, -2: No File  
+          {Errmsg}=STRING                                                                
+          {Ndetail}=INTEGER                            # of lines of detail error message
+          {Detail}=STRING[10]                          Detailed error message            
+          {Cmd_ret}=INTEGER                            Return value from Command         
+ DEVICE                                                                                  
+ TERMINAL                                                                                
+$-------- ------------------- -------------------- - - ----------------------------------
+
+$Type: Algorithm
+$Name: RCP_LIMBLD
+$Vers: 1
+$Desc: This algorithm generates Limit File dynamically.\n  SPECS3.0: Initial revision.
+$Date: 09/01/2002
+$Time: 09:00:00
+$User: specs
+$-------- ------------------- ----------------------- - - ----------------------------------
+ INPUT                                                                                      
+          Tpl_dir=STRING      "/var/opt/SPECS/recipe"                                       
+          Lms_dir=STRING      "/opt/SPECS/demo"                                             
+          Lim_dir=STRING      "/var/opt/SPECS/recipe"                                       
+          Tpl=STRING          "testplan.tpl"                                                
+          Lms=STRING[256]                                                                   
+          Lim=STRING          "limit.lim"                                                   
+ OUTPUT                                                                                     
+          Status=INTEGER                                  0: OK, -1: Exec Err, -2: No File  
+          Errmsg=STRING                                                                     
+          {Ndetail}=INTEGER                               # of lines of detail error message
+          {Detail}=STRING[10]                             Detailed error message            
+ DEVICE                                                                                     
+ TERMINAL                                                                                   
+$-------- ------------------- ----------------------- - - ----------------------------------
+
+$Type: Algorithm
+$Name: RCP_MK_FILENAME
+$Vers: 1
+$Desc: Make file name from directory name and file name.\n  SPECS3.0: Initial revision.
+$Date: 09/01/2002
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- -- - - -
+ INPUT                              
+          Dirname=STRING    ""      
+          Filename=STRING   ""      
+          Suffix=STRING     ""      
+ OUTPUT                             
+          {Fullfile}=STRING ""      
+ DEVICE                             
+ TERMINAL                           
+$-------- ----------------- -- - - -
+
+$Type: Algorithm
+$Name: RCP_QUERY_RECIP
+$Vers: 1
+$Desc: Query recipe items in the recipe file from key recipe id.\n  SPECS3.1: Initial revision.
+$Date: 01/24/2006
+$Time: 13:13:29
+$User: specs
+$-------- ----------------- ------------------------------- - - -----------------------------------------
+ INPUT                                                                                                   
+          Key=STRING        ""                                                                           
+          Filename=STRING   "/opt/SPECS/usr/tpl/recipe.rec"                                              
+ OUTPUT                                                                                                  
+          {Waf}=STRING                                                                                   
+          {Die}=STRING[256]                                                                              
+          {Mod}=STRING[256]                                                                              
+          {Tst}=STRING[256]                                                                              
+          {Prb}=STRING                                                                                   
+          {Lms}=STRING[256]                                                                              
+          {Tco}=STRING[16]                                                                               
+          {Mlib}=STRING[6]                                                                               
+          {Item}=STRING[32]                                                                              
+          Status=INTEGER    0                                   0: OK, -1: Exec Err, -2: No File, 1: Warn
+          Errmsg=STRING                                                                                  
+ DEVICE                                                                                                  
+ TERMINAL                                                                                                
+$-------- ----------------- ------------------------------- - - -----------------------------------------
+
+$Type: Algorithm
+$Name: RCP_REPLACE_WD
+$Vers: 1
+$Desc: Replace keyword in Format String.\n  SPECS3.0: Initial revision.
+$Date: 09/01/2002
+$Time: 09:00:00
+$User: specs
+$-------- -------------------- -------------- - - -
+ INPUT                                             
+          Format=STRING        "$(RCP)_$(SI)"      
+          Find_wd=STRING[5]                        
+          Replace_wd=STRING[5]                     
+ OUTPUT                                            
+          {String}=STRING      ""                  
+ DEVICE                                            
+ TERMINAL                                          
+$-------- -------------------- -------------- - - -
+
+$Type: Algorithm
+$Name: RCP_SYSCONF
+$Vers: 1
+$Desc: Read a parameter written in sysconf file.\n  SPECS3.0: Initial revision.
+$Date: 09/01/2002
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- --------- ------------------------------------------------------------------------------------------------------------------------ - -----------------------------------------------------
+ INPUT                                                                                                                                                                                                               
+          Name=STRING      "RCP_TPL" "RCPLIB_WAF","RCPLIB_PRB","RCPLIB_DIE","RCPLIB_MOD","RCPLIB_TST","RCPLIB_LMS","RCPLIB_TCO","RCP_DST","RCP_TPL","RCP_LIM"   Parameter name for Recipe Management in sysconf file.
+ OUTPUT                                                                                                                                                                                                              
+          {Value}=STRING   ""                                                                                                                                   Parameter value read from sysconf file.              
+          {Status}=INTEGER 0                                                                                                                                    0: Ok, -1: Not found, -2: Exec fail                  
+ DEVICE                                                                                                                                                                                                              
+ TERMINAL                                                                                                                                                                                                            
+$-------- ---------------- --------- ------------------------------------------------------------------------------------------------------------------------ - -----------------------------------------------------
+
+$Type: Algorithm
+$Name: RCP_TPLBLD
+$Vers: 1
+$Desc: This algorithm generates Test Plan dynamically.\n  SPECS3.1: Initial revision.
+$Date: 01/23/2006
+$Time: 22:38:59
+$User: specs
+$-------- ------------------- ----------------------- - - ----------------------------------
+ INPUT                                                                                      
+          Waf_dir=STRING      "/opt/SPECS/demo"                                             
+          Prb_dir=STRING      "/opt/SPECS/demo"                                             
+          Die_dir=STRING      "/opt/SPECS/demo"                                             
+          Mod_dir=STRING      "/opt/SPECS/demo"                                             
+          Tst_dir=STRING      "/opt/SPECS/demo"                                             
+          Tpl_dir=STRING      "/var/opt/SPECS/recipe"                                       
+          Waf=STRING          ""                                                            
+          Prb=STRING          ""                                                            
+          Die=STRING[256]                                                                   
+          Mod=STRING[256]                                                                   
+          Tst=STRING[256]                                                                   
+          Mlib=STRING[6]                                                                    
+          Tpl=STRING          "testplan.tpl"                                                
+ OUTPUT                                                                                     
+          Status=INTEGER      0                           0: OK, -1: Exec Err, -2: No File  
+          Errmsg=STRING                                                                     
+          {Ndetail}=INTEGER                               # of lines of detail error message
+          {Detail}=STRING[10]                             Detailed error message            
+ DEVICE                                                                                     
+ TERMINAL                                                                                   
+$-------- ------------------- ----------------------- - - ----------------------------------
+
+$Type: Algorithm
+$Name: READ_CHAR
+$Vers: 1
+$Desc: Reads a character from a STRING variable, and returns it to a CHARACTER variable
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- ---- - - --------------------------
+ INPUT                                                         
+          Format=STRING     "%c"     Format string             
+          String=STRING              String to read from       
+ OUTPUT                                                        
+          {Value}=CHARACTER          Read value                
+          {Stat}=INTEGER             1(ok), 0(no data), -1(EOF)
+ DEVICE                                                        
+ TERMINAL                                                      
+$-------- ----------------- ---- - - --------------------------
+
+$Type: Algorithm
+$Name: READ_EQUIPID2
+$Vers: 1
+$Desc: Read Equipment ID from File$ to Equip_id$
+$Date: 03/19/2003
+$Time: 16:15:22
+$User: wat
+$-------- --------------- - - - -
+ INPUT                           
+          File=STRING            
+                                 
+ OUTPUT                          
+          Equip_id=STRING        
+ DEVICE                          
+                                 
+ TERMINAL                        
+$-------- --------------- - - - -
+
+$Type: Algorithm
+$Name: READ_INTEGER
+$Vers: 1
+$Desc: Reads a value from a STRING variable, and returns it to an INTEGER variable
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- ---- - - --------------------------
+ INPUT                                                       
+          Format=STRING   "%d"     Format string             
+          String=STRING            String to read from       
+ OUTPUT                                                      
+          {Value}=INTEGER          Read value                
+          {Stat}=INTEGER           1(ok), 0(no data), -1(EOF)
+ DEVICE                                                      
+ TERMINAL                                                    
+$-------- --------------- ---- - - --------------------------
+
+$Type: Algorithm
+$Name: READ_PROCCOND
+$Vers: 1
+$Desc: Read process condition file.
+$Date: 05/31/2004
+$Time: 03:00:00
+$User: specs
+$-------- ----------------- - - - ----------------------------
+ INPUT                                                        
+          {Filename}=STRING       file name                   
+ OUTPUT                                                       
+          {Ret}=INTEGER     0     return code                 
+          {Readnum}=INTEGER 0     the number of read condition
+ DEVICE                                                       
+ TERMINAL                                                     
+$-------- ----------------- - - - ----------------------------
+
+$Type: Algorithm
+$Name: READ_REAL
+$Vers: 1
+$Desc: Reads a value from a STRING variable, and returns it to a REAL variable
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- ---- - - --------------------------
+ INPUT                                                      
+          Format=STRING  "%e"     Format string             
+          String=STRING           String to read from       
+ OUTPUT                                                     
+          {Value}=REAL            Read value                
+          {Stat}=INTEGER          1(ok), 0(no data), -1(EOF)
+ DEVICE                                                     
+ TERMINAL                                                   
+$-------- -------------- ---- - - --------------------------
+
+$Type: Algorithm
+$Name: READ_STRING
+$Vers: 1
+$Desc: Reads string data from a STRING variable, and returns it to another STRING variable
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- ---- - - --------------------------
+ INPUT                                                      
+          Format=STRING  "%s"     Format string             
+          String=STRING           String to read from       
+ OUTPUT                                                     
+          {Value}=STRING          Read value                
+          {Stat}=INTEGER          1(ok), 0(no data), -1(EOF)
+ DEVICE                                                     
+ TERMINAL                                                   
+$-------- -------------- ---- - - --------------------------
+
+$Type: Algorithm
+$Name: REAL_TO_STR
+$Vers: 1
+$Desc: Convert real number to string
+$Date: 03/19/2003
+$Time: 16:15:22
+$User: wat
+$-------- ------------- - - - -------------------------
+ INPUT                                                 
+          Rvalue=REAL         Real Number              
+                                                       
+ OUTPUT                                                
+          String=STRING       String requied to convert
+          Status=STRING       "OK" or "ERROR"          
+          Error=STRING        Error message            
+                                                       
+ DEVICE                                                
+                                                       
+ TERMINAL                                              
+$-------- ------------- - - - -------------------------
+
+$Type: Algorithm
+$Name: RE_DIE_DIR
+$Vers: 1
+$Desc: Jeremy @Raytrex add 20200416\n\nFor automatic build out die name directory
+$Date: 04/16/2020
+$Time: 17:13:25
+$User: wat
+$-------- ----------------- - - - -
+ INPUT                             
+          LotID=STRING             
+          WaferID=STRING           
+          DieNumber=INTEGER        
+ OUTPUT                            
+ DEVICE                            
+ TERMINAL                          
+$-------- ----------------- - - - -
+
+$Type: Algorithm
+$Name: SAVE_TMPDATA
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- ----- ----------------------- - -----------------------------------------------------------------------
+ INPUT                                                                                                                          
+          Path=STRING                                                                                                           
+          Name=STRING                                                                                                           
+          Format=STRING  "adt" "adt","ad2","ad3","ad5"                                                                          
+          Session=STRING                                                                                                        
+                                                                                                                                
+ OUTPUT                                                                                                                         
+          Stat=INTEGER                                   0: No temporary file exists 1: Save as official file -1: Failed to save
+          Error=STRING                                                                                                          
+          Pubname=STRING                                 Official name                                                          
+                                                                                                                                
+ DEVICE                                                                                                                         
+                                                                                                                                
+ TERMINAL                                                                                                                       
+$-------- -------------- ----- ----------------------- - -----------------------------------------------------------------------
+
+$Type: Algorithm
+$Name: SETUSRBIN_LPBGN
+$Vers: 1
+$Desc: Initializes "user bin" condition.\n
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------ - ----- - -------------------------
+ INPUT                                                          
+          Waftgt=INTEGER,"%" 0 0~100   Wafer-level yield target.
+          Lottgt=INTEGER,"%" 0 0~100   Lot-level yield target.  
+ OUTPUT                                                         
+                                                                
+ DEVICE                                                         
+                                                                
+ TERMINAL                                                       
+$-------- ------------------ - ----- - -------------------------
+
+$Type: Algorithm
+$Name: SET_BRK_MOD
+$Vers: 1
+$Desc: Set judgement flag of specified module.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- - ------- - ----------------------------------
+ INPUT                                                                    
+          Typeindex=INTEGER 1 0~256     Die type index (DIE.TYPENUMBER)   
+          Dieindex=INTEGER  1 0~32768   Die index in die type (DIE.NUMBER)
+          Modindex=INTEGER  1 0~4096    Module index (MODULE.NUMBER)      
+          Break=INTEGER     1           Breakpoint flag.                  
+                                                                          
+ OUTPUT                                                                   
+                                                                          
+ DEVICE                                                                   
+                                                                          
+ TERMINAL                                                                 
+$-------- ----------------- - ------- - ----------------------------------
+
+$Type: Algorithm
+$Name: SET_GUARD_OPEN
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 08/03/2013
+$Time: 16:45:05
+$User: root
+$-------- ------------ - - - ------------------------
+ INPUT                                               
+          Yes=INTEGER  0     1:open(floating) 0:close
+ OUTPUT                                              
+          Stat=INTEGER       0: OK  -1:Error         
+ DEVICE                                              
+ TERMINAL                                            
+$-------- ------------ - - - ------------------------
+
+$Type: Algorithm
+$Name: SET_JDG_DIE
+$Vers: 1
+$Desc: Set judgement flag of specified die.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- - -------- - ----------------------------------
+ INPUT                                                                     
+          Typeindex=INTEGER 1 0~256      Die type index (DIE.TYPENUMBER)   
+          Dieindex=INTEGER  1 0~32768    Die index in die type (DIE.NUMBER)
+          Judge=INTEGER     1 0~255      Judgement value.                  
+          Offsetx=INTEGER   0 -127~127   Die X position offset.            
+          Offsety=INTEGER   0 -127~127   Die Y position offset.            
+                                                                           
+ OUTPUT                                                                    
+                                                                           
+ DEVICE                                                                    
+                                                                           
+ TERMINAL                                                                  
+$-------- ----------------- - -------- - ----------------------------------
+
+$Type: Algorithm
+$Name: SET_JDG_DIE_ALL
+$Vers: 1
+$Desc: Set judgement flag of all dice.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - -------- - ----------------------
+ INPUT                                                       
+          Judge=INTEGER   1 0~255       Judgement value      
+          Offsetx=INTEGER 0 -127~127   Die X position offset.
+          Offsety=INTEGER 0 -127~127   Die Y position offset.
+                                                             
+ OUTPUT                                                      
+                                                             
+ DEVICE                                                      
+                                                             
+ TERMINAL                                                    
+$-------- --------------- - -------- - ----------------------
+
+$Type: Algorithm
+$Name: SET_JDG_DIE_TYP
+$Vers: 1
+$Desc: Set judgement flag of specified die type.\n  SPECS2.5: Initial revision.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------------- - -------- - -------------------------------
+ INPUT                                                                  
+          Typeindex=INTEGER 1 0~256      Die type index (DIE.TYPENUMBER)
+          Judge=INTEGER     1 0~255      Judgement value.               
+          Offsetx=INTEGER   0 -127~127   Die X position offset.         
+          Offsety=INTEGER   0 -127~127   Die Y position offset.         
+                                                                        
+ OUTPUT                                                                 
+                                                                        
+ DEVICE                                                                 
+                                                                        
+ TERMINAL                                                               
+$-------- ----------------- - -------- - -------------------------------
+
+$Type: Algorithm
+$Name: SET_SAMELEN
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- - - - -
+ INPUT                            
+          Original=STRING         
+          Reference=STRING        
+ OUTPUT                           
+          Modified=STRING         
+ DEVICE                           
+                                  
+ TERMINAL                         
+$-------- ---------------- - - - -
+
+$Type: Algorithm
+$Name: SET_SAMELEN20
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------- - - - -
+ INPUT                               
+          Original=STRING[20]        
+                                     
+ OUTPUT                              
+          Modified=STRING[20]        
+ DEVICE                              
+                                     
+ TERMINAL                            
+$-------- ------------------- - - - -
+
+$Type: Algorithm
+$Name: SET_TAG_CHAR
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - - - -
+ INPUT                           
+          Name=STRING            
+          Value=CHARACTER        
+                                 
+ OUTPUT                          
+                                 
+ DEVICE                          
+                                 
+ TERMINAL                        
+$-------- --------------- - - - -
+
+$Type: Algorithm
+$Name: SET_TAG_INTEGER
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- - - - -
+ INPUT                         
+          Name=STRING          
+          Value=INTEGER        
+ OUTPUT                        
+                               
+ DEVICE                        
+                               
+ TERMINAL                      
+$-------- ------------- - - - -
+
+$Type: Algorithm
+$Name: SET_TAG_REAL
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ----------- - - - -
+ INPUT                       
+          Name=STRING        
+          Value=REAL         
+                             
+ OUTPUT                      
+                             
+ DEVICE                      
+                             
+ TERMINAL                    
+$-------- ----------- - - - -
+
+$Type: Algorithm
+$Name: SET_TAG_STRING
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------ - - - -
+ INPUT                        
+          Name=STRING         
+          Value=STRING        
+                              
+ OUTPUT                       
+                              
+ DEVICE                       
+                              
+ TERMINAL                     
+$-------- ------------ - - - -
+
+$Type: Algorithm
+$Name: SIZEOFDISPLAY
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- - - - -
+ INPUT                          
+                                
+ OUTPUT                         
+          Width=INTEGER         
+          Height=INTEGER        
+ DEVICE                         
+                                
+ TERMINAL                       
+$-------- -------------- - - - -
+
+$Type: Algorithm
+$Name: STATLOG_DIEEND
+$Vers: 1
+$Desc: logs statistics on the specified file. This users user bin.\n\n
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- -------------------------------- --- - ----------------------
+ INPUT                                                                                 
+          Filename=STRING "/var/opt/SPECS/log/statlog.log"       Filename.             
+          Mode=INTEGER    0                                0~1   All(0), Failed only(1)
+ OUTPUT                                                                                
+                                                                                       
+ DEVICE                                                                                
+                                                                                       
+ TERMINAL                                                                              
+$-------- --------------- -------------------------------- --- - ----------------------
+
+$Type: Algorithm
+$Name: STRING_LOOKUP
+$Vers: 1
+$Desc: Returns the position of specified character(s) in a STRING variable
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- - - - -----------------------------------
+ INPUT                                                           
+          Src=STRING          Source string                      
+          Pat=STRING          Pattern string                     
+ OUTPUT                                                          
+          {Pos}=INTEGER       Position (>0 position, 0 not found)
+ DEVICE                                                          
+ TERMINAL                                                        
+$-------- ------------- - - - -----------------------------------
+
+$Type: Algorithm
+$Name: STRING_SPLIT
+$Vers: 1
+$Desc: Returns data (without separators) from a STRING variable, which contains data separated by data separators
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------ --- - - --------------------
+ INPUT                                                   
+          Src=STRING                 Source string       
+          Del=STRING         " "     Delimiter           
+ OUTPUT                                                  
+          {Elem}=STRING[128]         Substrings          
+          {Count}=INTEGER            Number of substrings
+ DEVICE                                                  
+ TERMINAL                                                
+$-------- ------------------ --- - - --------------------
+
+$Type: Algorithm
+$Name: STRING_TIME
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- - - - -
+ INPUT                         
+          Time=REAL            
+                               
+ OUTPUT                        
+          Symbol=STRING        
+ DEVICE                        
+                               
+ TERMINAL                      
+$-------- ------------- - - - -
+
+$Type: Algorithm
+$Name: TIMEDATE
+$Vers: 1
+$Desc: Returns the present date and time
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - --- - ----------------------------
+ INPUT                                                        
+          {Digit}=INTEGER 2 2,4   # digits to represent a year
+ OUTPUT                                                       
+          {Date}=STRING           mm/dd/yy or mm/dd/yyyy      
+          {Time}=STRING           hh:mm:ss                    
+ DEVICE                                                       
+ TERMINAL                                                     
+$-------- --------------- - --- - ----------------------------
+
+$Type: Algorithm
+$Name: UPDATE_FWKCONF
+$Vers: 1
+$Desc: Store current configuration parameters.\n  SPECS2.5: Added type parameter.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------- - ----- - ---------------------------------------------------
+ INPUT                                                                               
+          File=STRING                                                                
+          Type=INTEGER  0 0,1,2   0:All vars, 1:Normal vars only, 2:Special vars only
+                                                                                     
+ OUTPUT                                                                              
+          Errno=INTEGER 0                                                            
+          Errmsg=STRING                                                              
+                                                                                     
+ DEVICE                                                                              
+                                                                                     
+ TERMINAL                                                                            
+$-------- ------------- - ----- - ---------------------------------------------------
+
+$Type: Algorithm
+$Name: VERIFY_FILE
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ------------------ -------- ------------------------------ - -
+ INPUT                                                                  
+          Filename=STRING                                               
+          Type=STRING        "Normal" "Normal","Directory","Special"    
+                                                                        
+ OUTPUT                                                                 
+          Exist=INTEGER                                                 
+          Readable=INTEGER                                              
+          Writable=INTEGER                                              
+          Executable=INTEGER                                            
+ DEVICE                                                                 
+                                                                        
+ TERMINAL                                                               
+$-------- ------------------ -------- ------------------------------ - -
+
+$Type: Algorithm
+$Name: WAIT
+$Vers: 1
+$Desc: Waits for the speicifed duration
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - - - -
+ INPUT                           
+          Wait=REAL,"Sec" 1      
+ OUTPUT                          
+ DEVICE                          
+ TERMINAL                        
+$-------- --------------- - - - -
+
+$Type: Algorithm
+$Name: WRITE_CHAR
+$Vers: 1
+$Desc: Writes a CHARACTER value to a STRING variable
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- ---- - - -------------------
+ INPUT                                                 
+          Format=STRING    "%c"     Format string      
+          Value=CHARACTER           Value to convert   
+ OUTPUT                                                
+          {String}=STRING           Formatted to string
+          {Length}=INTEGER          Length of string   
+ DEVICE                                                
+ TERMINAL                                              
+$-------- ---------------- ---- - - -------------------
+
+$Type: Algorithm
+$Name: WRITE_INTEGER
+$Vers: 1
+$Desc: Writes an INTEGER value to a STRING variable
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- ---- - - -------------------
+ INPUT                                                 
+          Format=STRING    "%d"     Format string      
+          Value=INTEGER             Value to convert   
+ OUTPUT                                                
+          {String}=STRING           Formatted to string
+          {Length}=INTEGER          Length of string   
+ DEVICE                                                
+ TERMINAL                                              
+$-------- ---------------- ---- - - -------------------
+
+$Type: Algorithm
+$Name: WRITE_REAL
+$Vers: 1
+$Desc: Writes a REAL value to a STRING variable
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- ---- - - -------------------
+ INPUT                                                 
+          Format=STRING    "%e"     Format string      
+          Value=REAL                Value to convert   
+ OUTPUT                                                
+          {String}=STRING           Formatted to string
+          {Length}=INTEGER          Length of string   
+ DEVICE                                                
+ TERMINAL                                              
+$-------- ---------------- ---- - - -------------------
+
+$Type: Algorithm
+$Name: WRITE_STRING
+$Vers: 1
+$Desc: Writes a STRING value to a STRING variable
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- ---------------- ---- - - -------------------
+ INPUT                                                 
+          Format=STRING    "%s"     Format string      
+          Value=STRING              Value to convert   
+ OUTPUT                                                
+          {String}=STRING           Formatted to string
+          {Length}=INTEGER          Length of string   
+ DEVICE                                                
+ TERMINAL                                              
+$-------- ---------------- ---- - - -------------------
+
+$Type: Algorithm
+$Name: WRITE_WAFER_SUM
+$Vers: 1
+$Desc: Description for this Algorithm spec.
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------- - - - -
+ INPUT                          
+          Slot=INTEGER          
+          Lot=STRING            
+          Wafer=STRING          
+          Yld_item=REAL         
+          Yld_die=REAL          
+          Judge=INTEGER         
+ OUTPUT                         
+          Summary=STRING        
+ DEVICE                         
+                                
+ TERMINAL                       
+$-------- -------------- - - - -
+
+$Type: Algorithm
+$Name: XWUD
+$Vers: 1
+$Desc: Executes the xwud(1) command to display a window image, which is stored in the specified dump file
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- --------------- - - - --------------------------
+ INPUT                                                    
+          File=STRING           xwd dump file (see xwd(1))
+          Xpos=INTEGER    0     X position                
+          Ypos=INTEGER    0     Y position                
+          Noclick=INTEGER 1     1 to ignore mouse click   
+ OUTPUT                                                   
+ DEVICE                                                   
+ TERMINAL                                                 
+$-------- --------------- - - - --------------------------
+
+$Type: Algorithm
+$Name: YIELDLOG_WAFEND
+$Vers: 1
+$Desc: Logs yield on the specified file. This uses user bin.\n
+$Date: 09/01/2000
+$Time: 09:00:00
+$User: specs
+$-------- -------------------- --------------------------------- - - -----------------------
+ INPUT                                                                                      
+          Filename=STRING      "/var/opt/SPECS/log/yieldlog.log"     Filename.              
+          Dieyield=INTEGER,"%" 0                                     Die yield target value.
+                                                                                            
+ OUTPUT                                                                                     
+                                                                                            
+ DEVICE                                                                                     
+                                                                                            
+ TERMINAL                                                                                   
+$-------- -------------------- --------------------------------- - - -----------------------
+
+$Type: Algorithm
+$Name: DTJX_MKDIR
+$Vers: 1
+$Desc: Jeremy @Raytrex add 20200615\nFor check and make directory if not exist
+$Date: 06/15/2020
+$Time: 15:52:22
+$User: wat
+$-------- ----------- - - - -
+ INPUT                       
+          DIR1=STRING        
+          DIR2=STRING        
+ OUTPUT                      
+ DEVICE                      
+ TERMINAL                    
+$-------- ----------- - - - -
+
+$Type: Algorithm
+$Name: DTJX_YLD_LST
+$Vers: 1
+$Desc: Jeremy @Raytrex 20200707.\nAdd for low-yield control. Check gta_yld_table and get YLD rate if recipe key match.
+$Date: 07/08/2020
+$Time: 14:14:02
+$User: wat
+$-------- ------------------ ---------------------------- - - --------------------------------------
+ INPUT                                                                                              
+          Test_recipe=STRING ""                               Key-in product key                    
+          Ctrl_table=STRING  "/WATSERV/ETC/gta_yld_table"     Yield control table                   
+ OUTPUT                                                                                             
+          Yld_rate=REAL                                       Output will assign to CTM_YLD_CTRL tag
+ DEVICE                                                                                             
+ TERMINAL                                                                                           
+$-------- ------------------ ---------------------------- - - --------------------------------------
+
+$Type: Algorithm
+$Name: DTJX_LOT2
+$Vers: 1
+$Desc: For check Product_ID and dataReport output lot2 if passed.\n\nJeremy @Raytrex 20210826
+$Date: 08/27/2021
+$Time: 07:01:50
+$User: wat
+$-------- ----------- - - - -
+ INPUT                       
+          In=STRING          
+ OUTPUT                      
+          Out=INTEGER        
+ DEVICE                      
+ TERMINAL                    
+$-------- ----------- - - - -
+

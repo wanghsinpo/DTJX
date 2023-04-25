@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="gets_Tcl_7_5"></A>
+<TITLE>gets Tcl Built-In Commands 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ gets - Read a line from a channel <P>
+<H2>SYNOPSIS</H2>
+ <B>gets <I>channelId</B></I> ?<I>varName</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command reads the next line from <I>channelId</I>, returns everything in the line up to (but not including) the end-of-line character(s), and discards the end-of-line character(s). <P>
+<I>ChannelId</I> must be an identifier for an open channel such as the Tcl standard input channel (<B>stdin</B>), the return value from an invocation of <B>open</B> or <B>socket</B>, or the result of a channel creation command provided by a Tcl extension. The channel must have been opened for input. <P>
+If <I>varName</I> is omitted the line is returned as the result of the command. If <I>varName</I> is specified then the line is placed in the variable by that name and the return value is a count of the number of characters returned. <P>
+If end of file occurs while scanning for an end of line, the command returns whatever input is available up to the end of file. If <I>channelId</I> is in nonblocking mode and there is not a full line of input available, the command returns an empty string and does not consume any input. If <I>varName</I> is specified and an empty string is returned in <I>varName</I> because of end-of-file or because of insufficient data in nonblocking mode, then the return count is -1. Note that if <I>varName</I> is not specified then the end-of-file and no-full-line-available cases can produce the same results as if there were an input line consisting only of the end-of-line character(s). The <B>eof</B> and <B>fblocked</B> commands can be used to distinguish these three cases. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/file.html">file</a>, <a href="../mann/eof.html">eof</a>, <a href="../mann/fblocked.html">fblocked</a>, Tcl_StandardChannels(3) <P>
+<P>
+<H2>KEYWORDS</H2>
+ blocking, channel, end of file, end of line, line, nonblocking, read 
+</BODY>
+</HTML>

@@ -1,0 +1,79 @@
+#!/bin/sh
+trap "" 23
+# DMH Installation
+# Run this script on POSIX systems to install the DMH Tcl/Tk software.
+#
+# Invokes setup.tcl from this directory
+# used from CD-ROM or from unpacked distribution.
+# Initiates SMART installation too if smart.zip is present.
+#
+
+ECHO=echo
+FA_ROOT=/opt/SPECS_FA/dmh
+FA_SETUP=/opt/SPECS_FA/install/bin
+
+#if [ ! -r bin.zip ]
+#then
+#    $ECHO "You must run SETUP in the directory where the zip files are."
+#    exit 3
+#fi
+if [ `id -un` != "root" ]; then
+    $ECHO "ERROR: You must log in as root."
+    exit
+fi
+	
+DMH_BIN=$FA_ROOT/bin; export DMH_BIN
+DMH_LIB=$FA_ROOT/lib; export DMH_LIB
+if [ "$DMH_LIBRARY" != "" ]; then
+	DMH_LIBRARY_INSTALLED=$DMH_LIBRARY
+	export DMH_LIBRARY_INSTALLED
+fi
+DMH_LIBRARY_INSTALL=/opt/SPECS_FA/dmh; export DMH_LIBRARY_INSTALL
+if [ `uname -s` = "HP-UX" ]; then
+	DMH_LIBRARY=$DMH_LIB/dmh83; export DMH_LIBRARY
+	TCL_LIBRARY=$DMH_LIB/tcl8_3; export TCL_LIBRARY
+	TK_LIBRARY=$DMH_LIB/tk8_3; export TK_LIBRARY
+else
+	DMH_LIBRARY=$DMH_LIB/dmh84; export DMH_LIBRARY
+	TCL_LIBRARY=$DMH_LIB/tcl8_4; export TCL_LIBRARY
+	TK_LIBRARY=$DMH_LIB/tk8_4; export TK_LIBRARY
+fi
+# AIX
+if [ -n "$LIBPATH" ]; then
+	LIBPATH=$LIBPATH:$DMH_LIB:/lib:/usr/lib; export LIBPATH
+else
+	LIBPATH=$DMH_LIB:/lib:/usr/lib; export LIBPATH
+fi
+# HP
+if [ -n "$SHLIB_PATH" ]; then
+	SHLIB_PATH=$SHLIB_PATH:$DMH_LIB; export SHLIB_PATH
+else
+	SHLIB_PATH=$DMH_LIB; export SHLIB_PATH
+fi
+# Linux
+if [ -n "LD_RUN_PATH" ]; then
+	LD_RUN_PATH=$LD_RUN_PATH:$DMH_LIB; export LD_RUN_PATH
+else
+	LD_RUN_PATH=$DMH_LIB; export LD_RUN_PATH
+fi
+# Sun/Solaris
+if [ -n "LD_LIBRARY_PATH" ]; then
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DMH_LIB; export LD_LIBRARY_PATH
+else
+	LD_LIBRARY_PATH=$DMH_LIB; export LD_LIBRARY_PATH
+fi
+
+cd $FA_SETUP
+if [ `uname -s` = "HP-UX" ]; then
+	if [ -x $DMH_BIN/dmh83. ]; then
+		exec $DMH_BIN/dmh83. -f setup.tcl
+	else
+		exec $DMH_BIN/dmh83 -f setup.tcl
+	fi
+else
+	if [ -x $DMH_BIN/dmh84. ]; then
+		exec $DMH_BIN/dmh84. -f setup.tcl
+	else
+		exec $DMH_BIN/dmh84 -f setup.tcl
+	fi
+fi

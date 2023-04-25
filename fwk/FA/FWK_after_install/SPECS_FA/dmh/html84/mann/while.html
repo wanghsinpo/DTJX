@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="while_Tcl_"></A>
+<TITLE>while Tcl Built-In Commands</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ while - Execute script repeatedly as long as a condition is met <P>
+<H2>SYNOPSIS</H2>
+ <B>while <I>test body</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>while</B> command evaluates <I>test</I> as an expression (in the same way that <B>expr</B> evaluates its argument). The value of the expression must a proper boolean value; if it is a true value then <I>body</I> is executed by passing it to the Tcl interpreter. Once <I>body</I> has been executed then <I>test</I> is evaluated again, and the process repeats until eventually <I>test</I> evaluates to a false boolean value.  <B>Continue</B> commands may be executed inside <I>body</I> to terminate the current iteration of the loop, and <B>break</B> commands may be executed inside <I>body</I> to cause immediate termination of the <B>while</B> command.  The <B>while</B> command always returns an empty string. <P>
+Note: <I>test</I> should almost always be enclosed in braces.  If not, variable substitutions will be made before the <B>while</B> command starts executing, which means that variable changes made by the loop body will not be considered in the expression. This is likely to result in an infinite loop.  If <I>test</I> is enclosed in braces, variable substitutions are delayed until the expression is evaluated (before each loop iteration), so changes in the variables will be visible. For an example, try the following script with and without the braces around <B>$x&lt;10</B>: <PRE>
+set x 0
+while {$x&lt;10} {
+	puts "x is $x"
+	incr x
+}
+</PRE>
+<P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/break.html">break</a>, <a href="../mann/continue.html">continue</a>, <a href="../mann/for.html">for</a>, <a href="../mann/foreach.html">foreach</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ boolean value, loop, test, while 
+</BODY>
+</HTML>

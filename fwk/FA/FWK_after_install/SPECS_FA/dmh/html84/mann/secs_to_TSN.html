@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="secs_to_TSN_tcl_"></A>
+<TITLE>secs_to_TSN Tcl Built-In Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ secs_to_TSN - Conversion to Tcl Secs Notation (TSN) <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh::secs_to_TSN</B> <B>?-nosize?</B> <I>integer_list</I> <P>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>secs_to_TSN</B> translates a list of integer codes representing the binary sequence of a SECS-II message into Tcl SECS Notation (TSN). This command is used internally by the <B><a href="../mann/secsport.html">hsms</a></B> and the <B><a href="../mann/secsport.html">secsport</a></B> commands.  The TSN output normally contains array size counts. To suppress this, the <B>-nosize</B> option is indicated. <P>
+This command performs the inverse function of the <B><a href="../mann/TSN_to_secs.html">TSN_to_secs</a></B> command.  These commands can be used by the application developer to verify proper construction and parsing of SECS-II messages. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <P>
+<a href="../mann/TSN.html">TSN</a> <a href="../mann/TSN_to_secs.html">TSN_to_secs</a> <a href="../mann/secsport.html">hsms</a> <a href="../mann/secsport.html">secsport</a> <P>
+<H2>AUTHOR</H2>
+ Ed Hume, Hume Integration Software, Austin TX <P>
+<H2>KEYWORDS</H2>
+ TSN SECS SEMI HSMS 
+</BODY>
+</HTML>

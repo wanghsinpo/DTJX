@@ -1,0 +1,117 @@
+#!/bin/sh
+# \
+exec dmh_wish -f "$0" "$@"
+
+#################################
+# GLOBAL VARIABLES
+#
+global selectedButton; 
+global widget; 
+
+#################################
+
+###################################################################
+#
+#  Initialization
+# jtaylor   April 07 2004   Added support for alternat input mailbox
+#                           for case of SMARTEST environment.
+#                           Also auto execute script and exit if
+#                           script name passed as input parm.
+#
+# jtaylor   Oct 28 2005     Modified structure of program to allow
+#                           binary version to be compiled for 
+#                           distribution.  All procs from vgem_simu
+#                           except main were moved to the src directory
+#                           and get compiled into tbc files.
+#
+#                           Simulator files are maintained in two
+#                           directories - ./src contains tcl source
+#                           files and ./bin contains tbc compiled
+#                           files for distribution.
+###################################################################
+
+proc {main} {argc argv} { 
+  
+  global VGEM
+
+  global current_script_name
+  
+  package require dmh
+  dmh_import  
+ 
+    set use_compiled 1
+    foreach cmd_option $argv {
+      if {[string range $cmd_option 0 0] == "-"} {
+        #remove the - character (ex. -show becomes show)
+        regsub -all {\-} $cmd_option {} cmd_option
+        if { $cmd_option == "source" } { set use_compiled 0 }
+         }
+       }
+
+
+if {$use_compiled == 1} {
+      cd bin
+      load libtbcload1.4.so
+      set allfiles [glob *.tbc]
+      foreach file $allfiles {
+         source $file
+      }
+      cd ..
+
+   } else { 
+      cd src
+      source source_system.tcl
+      source equip_sim.tcl
+      cd ..
+
+   }
+
+  read_settings "defaults.ini"
+
+  Window show .  
+  Window show .vgem_equip_simu
+
+  init $argc $argv
+  
+  if { $argc > 0 } {
+     if { $argc > 1 } {
+
+    set cnt 0
+    foreach cmd_option $argv {
+
+      if {[string range $cmd_option 0 0] == "-"} {
+        #remove the - character (ex. -show becomes show)
+        regsub -all {\-} $cmd_option {} cmd_option
+        puts $cmd_option
+        if { $cmd_option != "source" } { set current_script_name [lindex $argv cnt] }
+         }
+
+       incr cnt
+       }
+         #end of loop through all cmd options...
+  } else {
+     set current_script_name [lindex $argv 0]
+   }
+
+     if {$current_script_name != "-source" } {
+     puts "running -> $current_script_name"
+     gui_run_script
+     exit 0
+     }
+
+
+     }
+
+  Window show .top_manual_control
+  Window hide .top_manual_control  
+
+    set lockf /opt/SPECS/sys/tmp/pkey_lockf
+    if { [file exists $lockf] } {
+        file delete -force $lockf
+    }
+}
+
+
+main $argc $argv
+
+ 

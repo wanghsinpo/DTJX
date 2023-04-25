@@ -1,0 +1,102 @@
+#
+# (C) Copyright Keysight Technologies, Inc. 2001-2015.
+# All Rights are reserved.
+#
+# Copying Or Other Reproduction Of This Program Except For Archival Purposes
+# Is Prohibited Without The Prior Written Consent Of Keysight Technologies.
+#
+
+#!/bin/sh 
+
+# DMH Environment Variables
+if [ `uname -s` = "HP-UX" ]
+then
+  DMH=/opt/SPECS_FA/dmh;                   export DMH
+  DMH_BIN=$DMH/bin;                        export DMH_BIN
+  DMH_LIBRARY=$DMH/lib/dmh83;              export DMH_LIBRARY
+
+  TCL_LIBRARY=$DMH/lib/tcl8.3;             export TCL_LIBRARY
+  TK_LIBRARY=$DMH/lib/tk8.3;               export TK_LIBRARY
+  GEM_LOG=/var/tmp/secsgem.log;            export GEM_LOG
+  PATH=$DMH_BIN:$PATH;                     export PATH
+  SHLIB_PATH=$DMH/lib;                     export SHLIB_PATH
+
+  LD_RUN_PATH=$LD_RUN_PATH:$DMH/lib;       export LD_RUN_PATH
+  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DMH/lib:$DMH/lib/dmh83;
+else
+  DMH=/opt/SPECS_FA/dmh;                   export DMH
+  DMH_BIN=$DMH/bin;                        export DMH_BIN
+  DMH_LIBRARY=$DMH/lib/dmh84;              export DMH_LIBRARY
+
+  TCL_LIBRARY=$DMH/lib/tcl8.4;             export TCL_LIBRARY
+  TK_LIBRARY=$DMH/lib/tk8.4;               export TK_LIBRARY
+  GEM_LOG=/var/tmp/secsgem.log;            export GEM_LOG
+  PATH=$DMH_BIN:$PATH;                     export PATH
+  SHLIB_PATH=$DMH/lib;                     export SHLIB_PATH
+ 
+  LD_RUN_PATH=$LD_RUN_PATH:$DMH/lib;       export LD_RUN_PATH
+  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DMH/lib:$DMH/lib/dmh84;
+fi
+
+ECHO=echo
+
+# Check whether dmh83_server or dmh84_server is running
+# If not, start one
+if [ `uname -s` = "HP-UX" ]
+then
+  dmh_server=dmh83_server
+else
+  dmh_server=dmh84_server
+fi
+dmh_count=`ps -ef | grep $dmh_server | grep -v grep |grep -c GEMMBX`
+if [ $dmh_count -eq 0 ]
+then
+  $dmh_server GEMMBX -notk & 
+  
+  sleep 2
+
+  #if not running by now, stop!
+  dmh_count=`ps -ef | grep $dmh_server | grep -v grep |grep -c GEMMBX`
+  if [ $dmh_count -eq 0 ]
+  then
+    $ECHO "*************************"  
+    date  
+    $ECHO "Cannot start $dmh_server"  
+    $ECHO "*************************"  
+
+    $ECHO "*************************" >> $GEM_LOG
+    date >> $GEM_LOG
+    $ECHO "Cannot start $dmh_server" >> $GEM_LOG
+    $ECHO "*************************" >> $GEM_LOG
+    exit
+  fi
+fi
+
+#
+# Check whether gemequip is running
+# If not, start one
+dmh_count=`ps -ef | grep dmh_wish | grep -v grep |grep -c gemequip` 
+if [ $dmh_count -eq 0 ]
+then
+  # Start gemequip
+  cd ../vgem
+  ./gemequip &
+  
+  sleep 1
+
+  #if not running by now, stop!
+  dmh_count=`ps -ef | grep dmh_wish| grep -v grep |grep -c gemequip` 
+  if [ $dmh_count -eq 0 ]
+  then
+    $ECHO "*************************"  
+    date  
+    $ECHO "Cannot start gemequip"  
+    $ECHO "*************************"  
+
+    $ECHO "*************************" >> $GEM_LOG
+    date >> $GEM_LOG
+    $ECHO "Cannot start gemequip" >> $GEM_LOG
+    $ECHO "*************************" >> $GEM_LOG
+    exit
+  fi
+fi

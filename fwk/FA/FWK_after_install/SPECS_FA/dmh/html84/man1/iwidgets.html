@@ -1,0 +1,50 @@
+<HTML><HEAD>
+<A NAME="iwidgets"></A>
+<TITLE>Iwidgets Demo Application</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ iwidgets - Iwidgets Demo Application
+<HR>
+<P>
+<H2>SYNOPSIS</H2>
+<p>
+<B>iwidgets84</B>
+<P>
+<PRE>
+<B>dmh_wish -tclargs "package require Iwidgets" \
+  "cd [file join [set iwidgets::library] demos]" \
+  "source catalog"</B>
+</PRE>
+<HR>
+<P>
+<H2>DESCRIPTION</H2>
+<P>
+Iwidgets is a freely available package containing high quality
+composite graphical user interface widgets built with the
+[incr&nbsp;Tk] and [incr&nbsp;Tcl] extensions.
+The installation of Iwidgets usually includes the installation
+of demonstration scripts in the subdirectory <b>demos</b> of the Iwidgets
+library directory.  These scripts are very useful to see capabilities
+of the package, and example code.
+The script named <b>catalog</b> is the usual one to execute
+from the command line, or to source from a wish shell prompt.
+The SYNOPSIS shows the Tcl code needed to load the catalog script
+into a dmh_wish shell using statements that are not sensitive
+to the version or the installation path of Iwidgets.
+For your convenience, on Windows platforms a Start menu program 
+item is installed for the catalog script.  
+On POSIX platforms, the script <b>iwidgets84</B> is installed 
+in the DMH_BIN directory for starting the catalog script.
+<P>
+<H2>SEE ALSO</H2>
+  <a href="dmh_wish.html">dmh_wish</A>
+
+<H2>AUTHOR</H2>
+Hume Integration wrote this document.  The authors of Iwidgets
+provided the catalog script and supporting scripts.
+<H2>KEYWORDS</H2>
+Iwidgets demonstration  GUI Itk
+</BODY>
+</HTML>

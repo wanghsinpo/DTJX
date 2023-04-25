@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Header: /usr/cvsroot/dmh84bin/datahub84,v 1.1.1.1 2002/10/06 18:13:21 hume Exp $
+#
+# Combined DMH Message Server and Realtime Data Hub
+#
+p=${DMH_BIN:-/usr/local/bin}
+# 
+exec dmh84 -msgargs "source \$::dmh::dmh_library/server.dmh" "set server=DATAHUB" "$@" -f "$p/hub84"

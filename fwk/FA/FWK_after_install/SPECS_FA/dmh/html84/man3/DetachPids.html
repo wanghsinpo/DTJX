@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_DetachPids_Tcl_"></A>
+<TITLE>Tcl_DetachPids Tcl Library Procedures</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_DetachPids, Tcl_ReapDetachedProcs, Tcl_WaitPid - manage child processes in background <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+<B>Tcl_DetachPids</B>(<I>numPids, pidPtr</I>)
+<P>
+<B>Tcl_ReapDetachedProcs</B>()
+<P>
+Tcl_Pid
+<B>Tcl_WaitPid</B>(<I>pid, statPtr, options</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>int <I>numPids</I></B> (in)
+<DD>Number of process ids contained in the array pointed to by <I>pidPtr</I>.
+<P><DT><B>int <I>*pidPtr</I></B> (in)
+<DD>Address of array containing <I>numPids</I> process ids.
+<P><DT><B>Tcl_Pid <I>pid</I></B> (in)
+<DD>The id of the process (pipe) to wait for.
+<P><DT><B>int* <I>statPtr</I></B> (out)
+<DD>The result of waiting on a process (pipe). Either 0 or ECHILD.
+<P><DT><B>int <I>options</I></B> ()
+<DD>The options controlling the wait. WNOHANG specifies not to wait when
+checking the process.
+<HR>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tcl_DetachPids</B> and <B>Tcl_ReapDetachedProcs</B> provide a
+mechanism for managing subprocesses that are running in background.
+These procedures are needed because the parent of a process must
+eventually invoke the <B>waitpid</B> kernel call (or one of a few other
+similar kernel calls) to wait for the child to exit.  Until the
+parent waits for the child, the child's state cannot be completely
+reclaimed by the system.  If a parent continually creates children
+and doesn't wait on them, the system's process table will eventually
+overflow, even if all the children have exited.
+<P>
+<B>Tcl_DetachPids</B> may be called to ask Tcl to take responsibility
+for one or more processes whose process ids are contained in the
+<I>pidPtr</I> array passed as argument.  The caller presumably
+has started these processes running in background and doesn't
+want to have to deal with them again.
+<P>
+<B>Tcl_ReapDetachedProcs</B> invokes the <B>waitpid</B> kernel call
+on each of the background processes so that its state can be cleaned
+up if it has exited.  If the process hasn't exited yet,
+<B>Tcl_ReapDetachedProcs</B> doesn't wait for it to exit;  it will check again
+the next time it is invoked.
+Tcl automatically calls <B>Tcl_ReapDetachedProcs</B> each time the
+<B>exec</B> command is executed, so in most cases it isn't necessary
+for any code outside of Tcl to invoke <B>Tcl_ReapDetachedProcs</B>.
+However, if you call <B>Tcl_DetachPids</B> in situations where the
+<B>exec</B> command may never get executed, you may wish to call
+<B>Tcl_ReapDetachedProcs</B> from time to time so that background
+processes can be cleaned up.
+<P>
+<B>Tcl_WaitPid</B> is a thin wrapper around the facilities provided by
+the operating system to wait on the end of a spawned process and to
+check a whether spawned process is still running. It is used by
+<B>Tcl_ReapDetachedProcs</B> and the channel system to portably access
+the operating system.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+background, child, detach, process, wait
+
+</BODY>
+</HTML>

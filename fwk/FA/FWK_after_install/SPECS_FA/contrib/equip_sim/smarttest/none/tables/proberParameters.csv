@@ -1,0 +1,33 @@
+parameters,,,,,,
+spname,command,pname,varname,varmethod,required,description
+gemprober,Bind,PortID,,,0,The PortID for which processing may proceed.
+gemprober,Bind,CarrierID,,,0,The CarrierID for which processing may proceed.
+gemprober,Bind,PropertiesList,,,0,A list of name value pairs providing attributes for the carrier object. 
+gemprober,CancelCarrier,CarrierID,,,0,Any carrier that exists on the load port specified shall be made ready for unloading.
+gemprober,CancelCarrierAtPort,PortID,,,0,Any carrier that exists on the load port specified shall be made ready for unloading. 
+gemprober,CarrierReCreate,PortID,,,0,The PortID for which processing may proceed.
+gemprober,CarrierReCreate,CarrierID,,,0,The CarrierID for which processing may proceed.
+gemprober,CarrierReCreate,PropertiesList,,,0,A list of name value pairs providing attributes for the carrier object. 
+gemprober,CarrierRelease,LocationID,,,0,The ID for the location of the carrier. Either LocationID or CarrierID must be used.
+gemprober,CarrierRelease,CarrierID,,,0,The CarrierID of the carrier. Either LocationID or CarrierID must be used.
+gemprober,ProceedWithCarrier,PortID,,,0,The PortID for which processing may proceed.
+gemprober,ProceedWithCarrier,CarrierID,,,0,The CarrierID for which processing may proceed.
+gemprober,ProceedWithCarrier,PropertiesList,,,0,A list of name value pairs providing attributes for the carrier object.
+gemprober,ReserveAtPort,PortID,,,0,The PortID for which processing may proceed.
+gemprober,CancelReservationAtPort,PortID,,,0,The PortID for which processing may proceed.
+gemprober,JOB_CANCEL,ProberJobID,EventJobID,,1,Job ID to be deleted.
+gemprober,JOB_CREATE,ProberJobID,EventJobID,,1,ID of job to be created (to be used as lot ID).
+gemprober,JOB_CREATE,PROCID,,,1,Process ID.
+gemprober,JOB_CREATE,LOC,PortID,,1,Cassette port number on which materials to be processed are placed.
+gemprober,JOB_CREATE,PRODID,,,0,Product name.
+gemprober,JOB_CREATE,PPID,,,0,"Product type parameter file name. The current PPID is used, if not specified."
+gemprober,JOB_CREATE,NO-OF-WAFER,,,0,The number of wafers stored in a cassette. (Regardless of whether or not the wafers are objects to be processed)
+gemprober,JOB_CREATE,TEST-TYPE,,,1,Specification of basic process type.
+gemprober,JOB_CREATE,TEST-TYPE_A,,,0,Specification of detail process type in case of re-measurement.
+gemprober,JOB_CREATE,TEST-TYPE_B,,,0,Specification of detail process type in case of marking.
+gemprober,JOB_CREATE,TEST-BIN,,,0,Specifies a bin that is in an object of marking.
+gemprober,JOB_CREATE,SLOT-ORD,,,0,Specifies a removal sequence of wafers to be follwed when taking them out of a cassette.
+gemprober,JOB_CREATE,SLOT-INFO,,,0,Specifies a wafer ID and whether or not the wafer is an object to be processed.
+gemprober,JOB_CREATE,SLOT-RECIPE,,,0,Specifies a list of 25 prober recipes, one prober recipe per slot.
+gemprober,START,ProberJobID,EventJobID,,1,Job ID to be started.
+gemprober,ABORT,LOC,,,1,PortID.

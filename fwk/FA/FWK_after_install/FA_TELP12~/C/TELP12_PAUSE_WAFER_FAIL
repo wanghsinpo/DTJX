@@ -1,0 +1,9 @@
+The current wafer has been judged as Fail wafer.
+You can choose one of the following actions on  
+the prober console.                             
+
+ o Continue testing the current wafer.          
+
+ o Load the next wafer.                         
+
+ o Finish the lot.                              

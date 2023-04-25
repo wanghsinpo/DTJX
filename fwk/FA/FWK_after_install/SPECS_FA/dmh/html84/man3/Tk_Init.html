@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_Init_Tk_8_0"></A>
+<TITLE>Tk_Init Tk Library Procedures 8.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_Init, Tk_SafeInit - add Tk to an interpreter and make a new Tk application. <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+int
+<B>Tk_Init</B>(<I>interp</I>)
+<P>
+int
+<B>Tk_SafeInit</B>(<I>interp</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter in which to load Tk.  Tk should not already be loaded
+in this interpreter.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tk_Init</B> is the package initialization procedure for Tk.
+It is normally invoked by the <B>Tcl_AppInit</B> procedure
+for an application or by the <B>load</B> command.
+<B>Tk_Init</B> adds all of Tk's commands to <I>interp</I>
+and creates a new Tk application, including its main window.
+If the initialization is successful <B>Tk_Init</B> returns
+<B>TCL_OK</B>;  if there is an error it returns <B>TCL_ERROR</B>.
+<B>Tk_Init</B> also leaves a result or error message
+in <I>interp-&gt;result</I>.
+<P>
+If there is a variable <B>argv</B> in <I>interp</I>, <B>Tk_Init</B>
+treats the contents of this variable as a list of options for the
+new Tk application.
+The options may have any of the forms documented for the
+<B>wish</B> application (in fact, <B>wish</B> uses Tk_Init to process
+its command-line arguments).
+<P>
+<B>Tk_SafeInit</B> is identical to <B>Tk_Init</B> except that it removes
+all Tk commands that are considered unsafe.  Those commands and the
+reasons for their exclusion are:
+
+<DT><B>bell</B>
+<DD>Continuous ringing of the bell is a nuisance. 
+<DT><B>clipboard</B>
+<DD>A malicious script could replace the contents of the clipboard with the string <B>"rm -r *"</B> and lead to surprises when the contents of the clipboard are pasted. 
+<DT><B>grab</B>
+<DD>Grab can be used to block the user from using any other applications. 
+<DT><B>menu</B>
+<DD>Menus can be used to cover the entire screen and to steal input from the user. 
+<DT><B>selection</B>
+<DD>See clipboard. 
+<DT><B>send</B>
+<DD>Send can be used to cause unsafe interpreters to execute commands. 
+<DT><B>tk</B>
+<DD>The tk command recreates the send command, which is unsafe. 
+<DT><B>tkwait</B>
+<DD>Tkwait can block the containing process forever 
+<DT><B>toplevel</B>
+<DD>Toplevels can be used to cover the entire screen and to steal input from the user. 
+<DT><B>wm</B>
+<DD>If toplevels are ever allowed, wm can be used to remove decorations, move windows around, etc. <P>
+<P>
+<H2>KEYWORDS</H2>
+ safe, application, initialization, load, main window 
+</BODY>
+</HTML>

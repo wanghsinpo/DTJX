@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="mbx_commands"></A>
+<TITLE>mbx_commands Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ mbx commands - higher-level mailbox message system commands. <P>
+<H2>SYNOPSIS</H2>
+<B>dmh::mbx_do_xact <I>boxname msg ?replybox timeout replyct?</B></I> <P>
+<B>dmh::mbx_timed_get <I>replybox ?timeout?</B></I> <P>
+<B>dmh::mbx_xact_pat <I>boxname msg ?replybox timeout pattern?</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+These commands build upon the low-level mbx commands and features of Tcl
+to provide higher-level functions for applications.   <P>
+The commands that monitor for timing out, namely, <B>mbx_do_xact</B>, 
+<B>mbx_timed_get</B>, and <B>mbx_xact_pat</B>, 
+can all be safely used in multiple instances.  
+While waiting, your Tcl/Tk application continues to respond to events 
+such as GUI actions, or mbx messages being received. <P>
+The command <B>mbx_timed_get</B> is used to wait for a message 
+to arrive in a particular mailbox.  The data of the message is 
+returned or the literal text <B>TIMEOUT</B> is returned 
+if the message is not received within the specified interval.  
+The argument <B><I>timeout</B></I> is used to specify the timeout 
+interval in milliseconds.  The default value of this argument is 
+10000 (ten seconds). A typical use might be to send a message to a 
+server using <B>mbx putr</B> and then use this command to obtain the reply. <P>
+The command <B>mbx_do_xact</B> is used to send a message 
+to a server and receive a list of replies within a timeout period.  
+The command is used  when the developer knows how many 
+replies to expect.  The command returns when <B><I>replyct</B></I> 
+messages have been received, or the <B><I>timeout</B></I> interval 
+has expired.  If the latter does occur, the last message of the
+returned list will be the literal string <B>TIMEOUT</B>.  
+Default values for the optional arguments are: <B><I>replybox</B></I>, 
+reply mailbox of <B>TKREPLY</B>; <B><I>replyct</B></I>, 
+reply message count of 1; <B><I>timeout</B></I>, 
+timeout interval of 10000 milliseconds.  There is no problem 
+having several instances of  <B>mbx_do_xact</B> simultaneously 
+active as might occur from having multiple <B>mbx whenmsg</B> 
+callbacks setup. <P>
+The command <B>mbx_xact_pat</B> is used to send a message 
+to a server and receive a list of replies within a timeout period.  
+The command returns when the last message received contains the 
+argument <B><I>pattern</B></I> or when the timeout period has elapsed.  
+The <B><I>pattern</B></I>  argument defaults to <B>//c</B> 
+which is used by SEMATECH servers to distinguish the final reply message.  
+The arguments <B><I>replybox</B></I> and <B><I>timeout</B></I> 
+default to <B>TKREPLY</B> and 10000 milliseconds respectively. <P>
+<P>
+<H2>AUTHOR</H2>
+ Ed Hume <P>
+<P>
+<H2>KEYWORDS  </H2>
+  mbx, message hub, DMH, RPC
+</BODY>
+</HTML>

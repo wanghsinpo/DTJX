@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="configbody_itcl_3_0"></A>
+<TITLE>configbody [incr\ Tcl] 3.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ configbody - change the "config" code for a public variable <P>
+<H2>SYNOPSIS</H2>
+ <B>configbody <I>className::varName body</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>configbody</B> command is used outside of an <B>[incr&nbsp;Tcl]</B> class definition to define or redefine the configuration code associated with a public variable.  Public variables act like configuration options for an object.  They can be modified outside the class scope using the built-in <B>configure</B> method. Each variable can have a bit of "config" code associate with it that is automatically executed when the variable is configured. The <B>configbody</B> command can be used to define or redefine this body of code. <P>
+Like the <B>body</B> command, this facility allows a class definition to have separate "interface" and "implementation" parts. The "interface" part is a <B>class</B> command with declarations for methods, procs, instance variables and common variables. The "implementation" part is a series of <B>body</B> and <B>configbody</B> commands.  If the "implementation" part is kept in a separate file, it can be sourced again and again as bugs are fixed, to support interactive development. When using the "tcl" mode in the <B>emacs</B> editor, the "interface" and "implementation" parts can be kept in the same file; as bugs are fixed, individual bodies can be highlighted and sent to the test application. <P>
+The name "<I>className<B>::varName</B></I>" identifies the public variable being updated. If the <I>body</I> string starts with "<B>@</B>", it is treated as the symbolic name for a C procedure.  Otherwise, it is treated as a Tcl command script. <P>
+Symbolic names for C procedures are established by registering procedures via <B>Itcl_RegisterC()</B>.  This is usually done in the <B>Tcl_AppInit()</B> procedure, which is automatically called when the interpreter starts up.  In the following example, the procedure My_FooCmd() is registered with the symbolic name "foo".  This procedure can be referenced in the <B>configbody</B> command as "@foo". <PRE>
+int
+Tcl_AppInit(interp)
+    Tcl_Interp *interp;     /* Interpreter for application. */
+{
+    if (Itcl_Init(interp) == TCL_ERROR) {
+        return TCL_ERROR;
+    }
+<P>
+    if (Itcl_RegisterC(interp, "foo", My_FooCmd) != TCL_OK) {
+        return TCL_ERROR;
+    }
+}
+</PRE>
+<P>
+<P>
+<H2>EXAMPLE</H2>
+ In the following example, a "File" class is defined to represent open files.  Whenever the "-name" option is configured, the existing file is closed, and a new file is opened.  Note that the "config" code for a public variable is optional.  The "-access" option, for example, does not have it. <PRE>
+class File {
+    private variable fid ""
+<P>
+    public variable name ""
+    public variable access "r"
+<P>
+    constructor {args} {
+        eval configure $args
+    }
+    destructor {
+        if {$fid != ""} {
+            close $fid
+        }
+    }
+<P>
+    method get {}
+    method put {line}
+    method eof {}
+}
+<P>
+body File::get {} {
+    return [gets $fid]
+}
+body File::put {line} {
+    puts $fid $line
+}
+body File::eof {} {
+    return [::eof $fid]
+}
+<P>
+configbody File::name {
+    if {$fid != ""} {
+        close $fid
+    }
+    set fid [open $name $access]
+}
+<P>
+#
+# See the File class in action:
+#
+File x
+<P>
+x configure -name /etc/passwd
+while {![x eof]} {
+    puts "=&gt; [x get]"
+}
+delete object x
+</PRE>
+<P>
+<P>
+<H2>KEYWORDS</H2>
+ class, object, variable, configure 
+</BODY>
+</HTML>

@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_SetGrid_Tk_4_0"></A>
+<TITLE>Tk_SetGrid Tk Library Procedures 4.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_SetGrid, Tk_UnsetGrid - control the grid for interactive resizing <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+<B>Tk_SetGrid</B>(<I>tkwin, reqWidth, reqHeight, widthInc, heightInc</I>)
+<P>
+<B>Tk_UnsetGrid</B>(<I>tkwin</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tk_Window <I>tkwin</I></B> (in)
+<DD>Token for window.
+<P><DT><B>int <I>reqWidth</I></B> (in)
+<DD>Width in grid units that corresponds to the pixel dimension <I>tkwin</I>
+has requested via <B>Tk_GeometryRequest</B>.
+<P><DT><B>int <I>reqHeight</I></B> (in)
+<DD>Height in grid units that corresponds to the pixel dimension <I>tkwin</I>
+has requested via <B>Tk_GeometryRequest</B>.
+<P><DT><B>int <I>widthInc</I></B> (in)
+<DD>Width of one grid unit, in pixels.
+<P><DT><B>int <I>heightInc</I></B> (in)
+<DD>Height of one grid unit, in pixels.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tk_SetGrid</B> turns on gridded geometry management for <I>tkwin</I>'s
+toplevel window and specifies the geometry of the grid.
+<B>Tk_SetGrid</B> is typically invoked by a widget when its <B>setGrid</B>
+option is true.
+It restricts interactive resizing of <I>tkwin</I>'s toplevel window so
+that the space allocated to the toplevel is equal to its requested
+size plus or minus even multiples of <I>widthInc</I> and <I>heightInc</I>.
+Furthermore, the <I>reqWidth</I> and <I>reqHeight</I> values are
+passed to the window manager so that it can report the window's
+size in grid units during interactive resizes.
+If <I>tkwin</I>'s configuration changes (e.g., the size of a grid unit
+changes) then the widget should invoke <B>Tk_SetGrid</B> again with the new
+information.
+<P>
+<B>Tk_UnsetGrid</B> cancels gridded geometry management for
+<I>tkwin</I>'s toplevel window.
+<P>
+For each toplevel window there can be at most one internal window
+with gridding enabled.
+If <B>Tk_SetGrid</B> or <B>Tk_UnsetGrid</B> is invoked when some
+other window is already controlling gridding for <I>tkwin</I>'s
+toplevel, the calls for the new window have no effect.
+<P>
+See the <B>wm</B> manual entry for additional information on gridded geometry
+management.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+grid, window, window manager
+
+</BODY>
+</HTML>

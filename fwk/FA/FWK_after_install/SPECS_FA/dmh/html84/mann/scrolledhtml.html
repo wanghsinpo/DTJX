@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="iwidgets__scrolledhtml_iwid_"></A>
+<TITLE>iwidgets::scrolledhtmlSection iwid</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ iwidgets::scrolledhtml - Create and manipulate a scrolled text widget with the capability of displaying HTML formatted documents. <P>
+<H2>SYNOPSIS</H2>
+ <B>iwidgets::scrolledhtml<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Widget &lt;- iwidgets::Labeledwidget &lt;- iwidgets::Scrolledtext &lt;- iwidgets::Scrolledhtml <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+
+<B>
+activeBackground  background         borderWidth       cursor
+exportSelection   foreground         highlightColor    highlightThickness
+insertBackground  insertBorderWidth  insertOffTime     insertOnTime
+insertWidth       padX               padY              relief
+repeatDelay       repeatInterval     selectBackground  selectBorderWidth
+selectForeground  setGrid</B> 
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>ASSOCIATED OPTIONS</H2>
+ <P>
+
+<B>activeRelief</B>	<B>elementBorderWidth</B>	<B>jump</B>	<B>troughColor</B>
+ <P>
+See the <a href="../mann/scrollbar.html">scrollbar</a> widget manual entry for details on the above associated options. <P>
+
+<B>spacing1</B>	<B>spacing2</B>	<B>spacing3</B>	<B>state</B>
+<B>tabs</B>	<B>wrap</B>
+ <P>
+See the <a href="../mann/text.html">text</a> widget manual entry for details on the above associated options. <P>
+<H2>INHERITED OPTIONS</H2>
+ <P>
+
+<B>labelBitmap</B>	<B>labelFont</B>	<B>labelImage</B>	<B>labelMargin</B>
+<B>labelPos</B>	<B>labelText</B>	<B>labelVariable</B> 		<B>height</B>
+<B>hscrollMode</B>	<B>sbWidth</B>	<B>scrollMargin</B>	<B>visibleitems</B>
+<B>vscrollMode</B>	<B>width</B>
+ <P>
+See the <a href="../mann/scrolledtext.html">scrolledtext</a> class manual entry for details on the inherited options. <P>
+
+<B>sticky</B>
+ <P>
+See the <a href="../mann/labeledwidget.html">labeledwidget</a> class manual entry for details on the inherited options. <P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+
+Name:	<B>feedback</B>
+Class:	<B>FeedBack</B>
+Command-Line Switch:	<B>-feedback</B>
+ 
+<DD> Specifies the callback command to use to give feedback on current status. The command is executed in the form <I>command</I> <I>&lt;number of  characters remaining&gt;</I> <P>
+
+Name:	<B>fixedfont</B>
+Class:	<B>FixedFont</B>
+Command-Line Switch:	<B>-fixedfont</B>
+ 
+<DD> Specifies the name of the font to be used for fixed-width character text (such as &lt;pre&gt;...&lt;/pre&gt; or &lt;tt&gt;...&lt;/tt&gt;.) The size, style, and  other font attributes are determined by the format tags in the  document. The default is courier. <P>
+
+Name:	<B>fontname</B>
+Class:	<B>FontName</B>
+Command-Line Switch:	<B>-fontname</B>
+ 
+<DD> Specifies the name of the font to be used for normal-width character  spaced text. The size, style, and other font attributes are  determined by the format tags in the document. The default is times. <P>
+
+Name:	<B>fontsize</B>
+Class:	<B>FontSize</B>
+Command-Line Switch:	<B>-fontsize</B>
+ 
+<DD> Specifies the general size of the fonts used. One of small, medium, large, or huge. The default is medium. <P>
+
+Name:	<B>foreground</B>
+Class:	<B>Foreground</B>
+Command-Line Switch:	<B>-foreground</B>
+ 
+<DD> Specifies the color of text other than hypertext links, in any  of the forms acceptable to <B>Tk_GetColor</B>. This value may be overridden in a particular document by the <I>text</I> attribute  of the <B>Body</B> HTML tag. <P>
+
+Name:	<B>link</B>
+Class:	<B>Link</B>
+Command-Line Switch:	<B>-link</B>
+ 
+<DD> Specifies the default color of hypertext links in any of the forms acceptable to <B>Tk_GetColor</B>. This value may be overridden in a particular document by the <I>link</I> attribute of the <B>Body</B>  HTML tag. The default is blue. <P>
+
+Name:	<B>linkcommand</B>
+Class:	<B>LinkCommand</B>
+Command-Line Switch:	<B>-linkcommand</B>
+ 
+<DD> Specifies the command to execute when the user clicks on a hypertext link. Execution is of the form <B>linkcommand href</B>, where <B>href</B> is the value given in the <I>href</I> attribute of the <B>A</B> HTML tag. <P>
+
+Name:	<B>alink</B>
+Class:	<B>alink</B>
+Command-Line Switch:	<B>-alink</B>
+ 
+<DD> Specifies the color of hypertext links when the cursor is over the link in any of the forms acceptable to <B>Tk_GetColor</B>. The default is red. <P>
+
+Name:	<B>textBackground</B>
+Class:	<B>Background</B>
+Command-Line Switch:	<B>-textbackground</B>
+ 
+<DD> Specifies the background color for the text area in any of  the forms acceptable to <B>Tk_GetColor</B>. This value may be  overridden in a particular document by the <I>bgcolor</I> attribute  of the <B>Body</B> HTML tag. <P>
+
+Name:	<B>unknownimage</B>
+Class:	<B>UnknownImage</B>
+Command-Line Switch:	<B>-unknownimage</B>
+ 
+<DD> Specifies the name of the image file to display when an <B>img</B> specified in the html document cannot be loaded. <P>
+
+Name:	<B>update</B>
+Class:	<B>Update</B>
+Command-Line Switch:	<B>-alink</B>
+ 
+<DD> A boolean value indicating whether to call update during html rendering. <P>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>iwidgets::scrolledhtml</B> command creates  a scrolled text widget with the additional capability to display html formatted documents. An import method is provided to read an html document file, and a render method is provided to display a html formatted text string. <P>
+<P>
+<H2>METHODS</H2>
+ <P>
+The <B>iwidgets::scrolledhtml</B> command creates a new Tcl command whose name is <I>pathName</I>.  This command may be used to invoke various operations on the widget.  It has the following general form: <PRE>
+<I>pathName option </I>?<I>arg arg ...</I>?
+</PRE>
+<I>Option</I> and the <I>arg</I>s determine the exact behavior of the command.  The following commands are possible for scrolledhtml widgets: <P>
+<H2>ASSOCIATED METHODS</H2>
+ <P>
+
+<B>bbox</B>	<B>compare</B>	<B>debug</B>	<B>delete</B>	
+<B>dlineinfo</B>	<B>get</B>	<B>index</B>	<B>insert</B>
+<B>mark</B>	<B>scan</B>	<B>search</B>	<B>see</B>
+<B>tag</B>	<B>window</B>	<B>xview</B>	<B>yview</B>
+ <P>
+See the <a href="../mann/text.html">text</a> manual entry for details on the standard methods. <P>
+<H2>INHERITED METHODS</H2>
+ <P>
+
+<B>export</B>	<B>clear</B>
+ <P>
+See the <a href="../mann/scrolledhtml.html">scrolledhtml</a> manual entry for details on the inherited methods. <P>
+<P>
+<H2>WIDGET-SPECIFIC METHODS</H2>
+ 
+<DT><I>pathName <B>cget</B></I> <I>option</I>
+<DD>Returns the current value of the configuration option given by <I>option</I>. <I>Option</I> may have any of the values accepted by the <B>iwidgets::scrolledhtml</B> command. 
+<DT><I>pathName</I> <B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?
+<DD>Query or modify the configuration options of the widget. If no <I>option</I> is specified, returns a list describing all of the available options for <I>pathName</I> (see <B>Tk_ConfigureInfo</B> for information on the format of this list).  If <I>option</I> is specified with no <I>value</I>, then the command returns a list describing the one named option (this list will be identical to the corresponding sublist of the value returned if no <I>option</I> is specified).  If one or more <I>option-value</I> pairs are specified, then the command modifies the given widget option(s) to have the given value(s);  in this case the command returns an empty string. <I>Option</I> may have any of the values accepted by the <B>iwidgets::scrolledhtml</B> command. 
+<DT><I>pathName</I> <B>import</B> ?<I>option</I>? <I>href</I>
+<DD>Load html formatted text from a file.  <I>Href</I> must exist. If <I>option</I> is -link, <I>href</I> is assumed to be relative to the application's current working directory. Otherwise,  <I>href</I> is assumed to be relative to the path of the last page loaded. <I>Href</I> is either a filename, or a reference of the form <I>filename</I>#<I>anchorname</I>. In the latter form, fIFilename and/or <I>anchorname</I> may be empty.  If <I>filename</I> is empty, the current document is assumed.  If <I>anchorname</I> is empty, the top of the document is assumed. 
+<DT><I>pathName</I> <B>pwd</B>
+<DD>Print the current working directory of the widget, i.e. the directory of the last page loaded. 
+<DT><I>pathName</I> <B>render</B> <I>htmltext</I> ?<I>wd</I>?
+<DD>Display HTML formatted text <I>htmltext</I>. <I>Wd</I> gives the base path to use for all links and images in the document. <I>Wd</I> defaults to the application's current working directory. 
+<DT><I>pathName</I> <B>title</B>
+<DD>Return the title of the current page, as given in the &lt;title&gt;...&lt;/title&gt; field in the document. <P>
+<P>
+<H2>HTML COMPLIANCE</H2>
+ <P>
+This widget is compliant with HTML 3.2 with the following exceptions: <P>
+No features requiring a connection to an http server are supported. <P>
+Some image alignments aren't supported, because they are not supported by the text widget. <P>
+The &lt;br&gt; attributes dealing with image alignments aren't supported. <P>
+Automatic table sizing is not supported very well, due to limitations of the text widget </DL>
+<P>
+<H2>EXAMPLE</H2>
+ <PRE>
+ package require Iwidgets 4.0
+ option add *textBackground white
+<P>
+ iwidgets::scrolledhtml .sh -fontname helvetica -linkcommand "this import -link"
+<P>
+ pack .sh -padx 10 -pady 10 -fill both -expand yes
+<P>
+ .sh import ~/public_html/index.html
+</PRE>
+<P>
+<H2>BUGS</H2>
+ 
+<DD> Cells in a table can be caused to overlap. ex:     &lt;table border width="100%"&gt;     &lt;tr&gt;&lt;td&gt;cell1&lt;/td&gt;&lt;td align=right rowspan=2&gt;cell2&lt;/td&gt;&lt;/tr&gt;     &lt;tr&gt;&lt;td colspan=2&gt;cell3 w/ overlap&lt;/td&gt;     &lt;/table&gt; It hasn't been fixed because 1) it's a pain to fix, 2) it will slow tables down by a significant amount, and 3) netscape has the same bug, as of V3.01. <P>
+<H2>ACKNOWLEDGEMENTS</H2>
+ Sam Shen 
+<DD> This code is based largely on his tkhtml.tcl code from tk inspect. Tkhtml is copyright 1995 Lawrence Berkeley Laboratory. <P>
+<P>
+<H2>AUTHOR</H2>
+ Kris Raney <P>
+<H2>KEYWORDS</H2>
+ scrolledhtml, html, text, widget 
+</BODY>
+</HTML>

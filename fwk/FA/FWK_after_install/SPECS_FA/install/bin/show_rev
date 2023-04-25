@@ -1,0 +1,15 @@
+#!/usr/bin/ksh
+
+ECHO=print
+CAT=/usr/bin/cat
+
+if [ -f /opt/SPECS_FA/install/sysid/sys_rev ]; then
+  $ECHO "SPECS-FA system revision:"
+  $CAT /opt/SPECS_FA/install/sysid/sys_rev
+fi
+if [ -f /opt/SPECS_FA/install/sysid/patch_rev ]; then
+  $ECHO
+  $ECHO "SPECS-FA patch revision:"
+  $CAT /opt/SPECS_FA/install/sysid/patch_rev
+fi
+

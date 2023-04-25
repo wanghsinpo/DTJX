@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="iwidgets__mainwindow_iwid_"></A>
+<TITLE>iwidgets::mainwindowSection iwid</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ iwidgets::mainwindow - Create and manipulate a mainwindow widget <P>
+<H2>SYNOPSIS</H2>
+ <B>iwidgets::mainwindow<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Toplevel &lt;- iwidgets::Shell &lt;- iwidgets::Mainwindow <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+
+<B>
+background  cursor               disabledForeground  font
+foreground  highlightBackground  highlightColor      highlightThickness</B>
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>ASSOCIATED OPTIONS</H2>
+ <P>
+
+<B>balloonBackground</B>	<B>balloonDelay1</B>	<B>balloonDelay2</B>	<B>ballonFont</B>
+<B>balloonForeground</B>
+ <P>
+See the <a href="../mann/toolbar.html">toolbar</a> manual entry for details on the above associated options. <P>
+<H2>INHERITED OPTIONS</H2>
+ <P>
+
+<B>title</B> 
+ <P>
+See the <a href="../mann/toplevel.html">toplevel</a> manual entry for details on the above inherited options. <P>
+
+<B>height</B>	<B>master</B>	<B>modality</B>	<B>padX</B>
+<B>padY</B>	<B>width</B>
+ <P>
+See the <a href="../mann/shell.html">shell</a> manual entry for details on the above inherited options. <P>
+<P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+
+Name:	<B>helpLine</B>
+Class:	<B>HelpLine</B>
+Command-Line Switch:	<B>-helpline</B>
+ 
+<DD> Specifies whether or not to display the help line.  The value may be given in any of the forms acceptable to Tk_GetBoolean. The default is yes. <P>
+
+Name:	<B>menuBarBackground</B>
+Class:	<B>Background</B>
+Command-Line Switch:	<B>-menubarbackground</B>
+ 
+<DD> Specifies the normal background color for the menubar. <P>
+
+Name:	<B>menuBarFont</B>
+Class:	<B>Font</B>
+Command-Line Switch:	<B>-menubarfont</B>
+ 
+<DD> Specifies the font to use when drawing text inside the menubar. <P>
+
+Name:	<B>menuBarForeround</B>
+Class:	<B>Foreground</B>
+Command-Line Switch:	<B>-menubarforeground</B>
+ 
+<DD> Specifies the normal foreground color for the menubar. <P>
+
+Name:	<B>statusLine</B>
+Class:	<B>StatusLine</B>
+Command-Line Switch:	<B>-statusline</B>
+ 
+<DD> Specifies whether or not to display the status line.  The value may be given in any of the forms acceptable to Tk_GetBoolean. The default is yes. <P>
+
+Name:	<B>toolBarBackground</B>
+Class:	<B>Background</B>
+Command-Line Switch:	<B>-toolbarbackground</B>
+ 
+<DD> Specifies the normal background color for the toolbar. <P>
+
+Name:	<B>toolBarFont</B>
+Class:	<B>Font</B>
+Command-Line Switch:	<B>-toolbarfont</B>
+ 
+<DD> Specifies the font to use when drawing text inside the toolbar. <P>
+
+Name:	<B>toolBarForeround</B>
+Class:	<B>Foreground</B>
+Command-Line Switch:	<B>-toolbarforeground</B>
+ 
+<DD> Specifies the normal foreground color for the toolbar. <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>iwidgets::mainwindow</B> command creates a mainwindow shell which contains a menubar, toolbar, mousebar, childsite, status line, and help line.   Each item may be filled and configured to suit individual needs. <P>
+<P>
+<H2>METHODS</H2>
+ <P>
+The <B>iwidgets::mainwindow</B> command create a new Tcl command whose name is <I>pathName</I>.  This command may be used to invoke various operations on the widget.  It has the following general form: <PRE>
+<I>pathName option </I>?<I>arg arg ...</I>?
+</PRE>
+<I>Option</I> and the <I>arg</I>s determine the exact behavior of the command.  The following commands are possible for mainwindow widgets: <P>
+<H2>INHERITED METHODS</H2>
+ <P>
+
+<B>activate</B>	<B>center</B>	<B>deactivate</B>
+ <P>
+See the <a href="../mann/shell.html">shell</a> manual entry for details on the above inherited methods. <P>
+<H2>WIDGET-SPECIFIC METHODS</H2>
+ 
+<DT><I>pathName <B>cget</B></I> <I>option</I>
+<DD>Returns the current value of the configuration option given by <I>option</I>. <I>Option</I> may have any of the values accepted by the <B>iwidgets::mainwindow</B> command. 
+<DT><I>pathName <B>childsite</B></I>
+<DD>Returns the pathname of the child site widget. 
+<DT><I>pathName</I> <B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?
+<DD>Query or modify the configuration options of the widget. If no <I>option</I> is specified, returns a list describing all of the available options for <I>pathName</I> (see <B>Tk_ConfigureInfo</B> for information on the format of this list).  If <I>option</I> is specified with no <I>value</I>, then the command returns a list describing the one named option (this list will be identical to the corresponding sublist of the value returned if no <I>option</I> is specified).  If one or more <I>option-value</I> pairs are specified, then the command modifies the given widget option(s) to have the given value(s);  in this case the command returns an empty string. <I>Option</I> may have any of the values accepted by the <B>iwidgets::mainwindow</B> command. 
+<DT><I>pathName <B>menubar</B></I> ?<I>args</I>?
+<DD>The <B>menubar</B> method provides access to the menubar.  Invoked with no arguments it returns the pathname of the menubar.  With arguments, they are evaluated against the menubar which in effect provides access to the entire API of the menubar.  See the "menubar" manual entry for details on the commands available in the menubar. 
+<DT><I>pathName <B>mousebar</B></I> ?<I>args</I>?
+<DD>The <B>mousebar</B> method provides access to the mousebar which is a  vertical toolbar.  Invoked with no arguments it returns the pathname  of the mousebar.  With arguments, they are evaluated against the mousebar  which in effect provides access to the entire API of the underlying  toolbar.  See the <a href="../mann/toolbar.html">toolbar</a> manual entry for details on the commands  available in the mousebar. 
+<DT><I>pathName <B>msgd</B></I> ?<I>args</I>?
+<DD>The <B>msgd</B> method provides access to the messagedialog contained in the mainwindow.  Invoked with no arguments it returns the pathname  of the messagedialog.  With arguments, they are evaluated against the  messagedialog which in effect provides access to the entire API of the  messagedialog.  See the "messagedialog" manual entry for details on the commands available in the messagedialog. 
+<DT><I>pathName <B>toolbar</B></I> ?<I>args</I>?
+<DD>The <B>toolbar</B> method provides access to the toolbar.  Invoked with no arguments it returns the pathname of the toolbar.  With arguments, they are evaluated against the toolbar which in effect provides access to the entire API of the toolbar.  See the "toolbar" manual entry for details on the commands available in the toolbar. <P>
+<P>
+<H2>COMPONENTS</H2>
+ <P>
+
+Name:	<B>help</B>
+Class:	<B>Label</B>
+ 
+<DD> The help component provides a location for displaying any help strings provided in the menubar, toolbar, or mousebar.  See the "label"  widget manual entry for details on the help component item. <P>
+
+Name:	<B>menubar</B>
+Class:	<B>Menubar</B>
+ 
+<DD> The menubar component is the menubar located at the top of the window. See the <a href="../mann/menubar.html">menubar</a> widget manual entry for details on the menubar  component item. <P>
+
+Name:	<B>mousebar</B>
+Class:	<B>Toolbar</B>
+ 
+<DD> The mousebar component is the vertical toolbar located on the right side of the window.  See the <a href="../mann/toolbar.html">toolbar</a> widget manual entry for details on  the mousebar component item. <P>
+
+Name:	<B>msgd</B>
+Class:	<B>Messagedialog</B>
+ 
+<DD> The msgd component is a messagedialog which may be reconfigured as needed  and used repeatedly throughout the application.  See the "messagedialog"  widget manual entry for details on the messagedialog component item. <P>
+
+Name:	<B>status</B>
+Class:	<B>Label</B>
+ 
+<DD> The status component provides a location for displaying application status information.  See the <a href="../mann/label.html">label</a> widget manual entry for details  on the status component item. <P>
+
+Name:	<B>toolbar</B>
+Class:	<B>Toolbar</B>
+ 
+<DD> The toolbar component is the horizontal toolbar located on the top  of the window.  See the <a href="../mann/toolbar.html">toolbar</a> widget manual entry for details on  the toolbar component item.  <P>
+<P>
+<H2>EXAMPLE</H2>
+ <PRE>
+ package require Iwidgets 4.0
+ iwidgets::mainwindow .mw
+<P>
+ #
+ # Add a File menubutton
+ #
+ .mw menubar add menubutton file -text "File" -underline 0 -padx 8 -pady 2 \
+    -menu {options -tearoff no
+	   command new -label "New" -underline 0 \
+	       -helpstr "Create a new file"
+	   command open -label "Open ..." -underline 0 \
+	       -helpstr "Open an existing file"
+	   command save -label "Save" -underline 0 \
+	       -helpstr "Save the current file"
+	   command saveas -label "Save As ..." -underline 5 \
+	       -helpstr "Save the file as a differnet name"
+	   command print -label "Print" -underline 0 \
+	       -helpstr "Print the file"
+           separator sep1
+	   command close -label "Close" -underline 0 \
+	       -helpstr "Close the file"
+	   separator sep2
+	   command exit -label "Exit" -underline 1 \
+	       -helpstr "Exit this application" 
+    }
+<P>
+ #
+ # Install a scrolledtext widget in the childsite.
+ #
+ iwidgets::scrolledtext [.mw childsite].st
+ pack [.mw childsite].st -fill both -expand yes
+<P>
+ #
+ # Activate the main window.
+ #
+ .mw activate
+</PRE>
+<P>
+<H2>AUTHOR</H2>
+ Mark L. Ulferts </PRE>
+John A. Tucker <P>
+<P>
+<H2>KEYWORDS</H2>
+ mainwindow, shell, widget 
+</BODY>
+</HTML>

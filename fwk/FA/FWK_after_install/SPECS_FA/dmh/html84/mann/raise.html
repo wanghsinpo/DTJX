@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="raise_Tk_3_3"></A>
+<TITLE>raise Tk Built-In Commands 3.3</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ raise - Change a window's position in the stacking order <P>
+<H2>SYNOPSIS</H2>
+ <B>raise <I>window </B></I>?<I>aboveThis</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+If the <I>aboveThis</I> argument is omitted then the command raises <I>window</I> so that it is above all of its siblings in the stacking order (it will not be obscured by any siblings and will obscure any siblings that overlap it). If <I>aboveThis</I> is specified then it must be the path name of a window that is either a sibling of <I>window</I> or the descendant of a sibling of <I>window</I>. In this case the <B>raise</B> command will insert <I>window</I> into the stacking order just above <I>aboveThis</I> (or the ancestor of <I>aboveThis</I> that is a sibling of <I>window</I>); this could end up either raising or lowering <I>window</I>. <P>
+<P>
+<H2>SEE ALSO</H2>
+ lower <P>
+<P>
+<H2>KEYWORDS</H2>
+ obscure, raise, stacking order 
+</BODY>
+</HTML>

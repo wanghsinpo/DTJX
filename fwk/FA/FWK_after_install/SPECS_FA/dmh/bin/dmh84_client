@@ -1,0 +1,42 @@
+#!/bin/sh
+# Simple client of a DMH Server
+#
+# restart \
+exec dmh84 -f "$0" "$@"
+
+set group [lindex $argv 0]
+if { ![llength $group] } {
+   puts {DMH Message Hub Client: $Revision: 1.1.1.1 $}
+   puts "Usage: $argv0 <groupname> \[statements\]*"
+   exit
+   }
+
+# if there are added command line arguments, we execute them
+foreach arg [lreplace $argv 0 0] {
+    if { $arg == "" } break
+    eval $arg
+    }
+
+# initialize DMH
+dmh_import
+mbx init $group
+
+global tk_library 
+if { [info exists tk_library] } {
+  set varname [dmh_var dmh notk]
+  if { [info exists $varname] && [set $varname] } {} \
+  else {
+    wm title . "[lindex $argv 0] Client"
+    button .b -text "Exit" -command "destroy ."
+    bind .b <Destroy> "+mbx end"
+    pack .b -padx 5m -ipadx 5m -pady 5m -ipady 1m
+    }
+  }
+
+# exit if the server connection is lost
+proc mh_app_lostserver {group connID} {
+   # forget about the mbx end binding
+   proc ::dmh::mbx {args} {}
+   # let this call return and exit
+   after 1 exit
+   }

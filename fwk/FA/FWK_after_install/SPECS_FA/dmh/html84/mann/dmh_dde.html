@@ -1,0 +1,147 @@
+<!doctype html public "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="dmh_dde_cmds_"></A>
+<TITLE>dmh_dde Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME </H2>
+ dmh_dde - dynamic data exchange support for Win32 <P>
+<H2>SYNOPSIS </H2>
+<P>
+<B> dmh::dmh_dde help</B>
+<P>
+<B> dmh::dmh_dde init</B> <I><B>?service?</B></I>
+<P>
+<B> dmh::dmh_dde end</B>
+<P>
+<B> dmh::dmh_dde connect  <I>service  topic</I></B>  
+<P>
+<B> dmh::dmh_dde disconnect  <I>hconv</I></B>
+<P>
+<B> dmh::dmh_dde execute  <I>hconv  command</I>  ?<I>timeout_msecs</I>?</B>
+<P>
+<B> dmh::dmh_dde poke  <I>hconv</I>  <I>item  data  ?timeout_msecs?</I></B>
+<P>
+<B> dmh::dmh_dde query  <I>?service?  ?topic?</I></B>
+<P>
+<B> dmh::dmh_dde request <I>hconv  item ?timeout_msecs?</I></B>
+<P>
+<B> dmh::dmh_dde service  <I>?hconv?</I></B>
+<HR>
+<P>
+<H2>DESCRIPTION </H2>
+<P>
+The <B>dmh_dde</B> command is implemented in Win32 versions of
+the Tcl/Tk software provided by Hume Integration Software.  The
+command pre-dates the
+recent addition of the <A href="dde.html">dde</A> command to the
+publically available Tcl/Tk version.
+The command can
+be used to integrate commercially available Windows software such
+as web browsers, fax applications, databases, spreadsheets, or 
+speech applications with your Tcl applications.
+<P>
+The command <B>dmh_dde help</B> returns a short usage summary of the
+<B>dmh_dde</B> command.
+<P>
+The command <B>dmh_dde init</B>  is called to initialize the dde package
+and enable external DDE communication between the interpreter
+and other DDE applications.  The interpreter becomes a DDE server
+for the <I><B>service</B></I> name argument.  If no service name
+is supplied, the package uses the name of the program from the
+program's command line.  With the usual Hume Integration Software
+installation for Windows,  the startup file $dmh_library/init.tcl
+executes <B>dmh_dde init</B>.  This
+is done to enable the Tk <B>send </B>command, and the <B>winfo
+interps</B> command.  In the role of a DDE server, the interpreter's
+topic name is <B>tcl74</B>.  The send command interoperates with 
+earlier releases of the Tcl/Tk software starting with Tcl 7.4.
+<P>
+ The command<B> dmh_dde end </B>is used to recover all resources allocated
+for DDE and disable DDE functionality.  Calling <B>dmh_dde end </B>will
+disable the <B>send</B> command.
+<P>
+The command <B>dmh_dde query </B>is used to determine the DDE servers
+on your computer that are online and responsive.  The command
+returns a list of pairs where each pair is the DDE server's <I><B>service
+</B></I>and <I><B> topic </B></I>names.  DDE is insensitive to
+the case of these names.  Not all DDE servers respond to a poll.
+Also, the interpreter
+does not include itself in the list, because it does not allow
+self-connections.  For example:
+<PRE><TT>% dmh_dde query</TT>
+<P>
+<TT>{Shell AppIcon} {Excel System}{Excel {[FUNCRES.XLA]RES}} {hub81
+tcl74} {WinWord E:\ECH_HELP\MANN\DDE.RTF}} {WinWord System} {tkinspect tcl74}</TT> <P>
+<TT>% dmh_dde query winword</TT> <P>
+<TT>{winword {E:\ECH_HELP\MANN\LSET.RTF}} {winword E:\ECH_HELP\MANN\DDE.RTF}}
+{winword System}</TT> <P></PRE>
+The optional <I><B>service</B></I> and <I><B>topic</B></I> arguments
+to <B>dde query</B> are used to restrict the scope of the polling
+to those servers which implement the service and or topic.  Use
+an empty argument (&quot;&quot; or {}) or a missing argument to
+represent a wildcard.  This feature seems to work well when the
+topic is wildcarded but currently if you specify a specific topic
+and wildcard the service, nothing is returned.  We'll see if this
+starts working in future versions of Win32....
+<P>
+Most of the dde functions require that a conversation or communication
+connection be established between the communicating partners.
+ Use <B> dmh_dde connect  </B>to  establish a conversation to a DDE
+server on the indicated <I><B>service</B></I> and <I><B>topic</B></I>
+names.  The connect command returns a connection handle <I><B>hconv
+</B></I>which is used in the <B>execute</B>, <B>poke</B> and <B>request</B>
+actions.  Use <B>dmh_dde disconnect</B> when communication with a
+server is no longer desired.
+<P>
+The command <B>dmh_dde service </B>when used with no argument indicates
+the service and topic that the interpreter supports for external
+clients.  If DDE functionality has not been initialized or has
+been ended, an empty string is returned.  An optional <I><B>hconv
+</B></I>argument can be given to dde service.  With this usage,
+the service and topic of the server that is being conversed with
+is returned.  This usage is also a way to test the validity of
+the conversation connection.  If the external application has
+disconnected, an empty string is returned.
+<P>
+The command <B>dmh_dde execute </B>invokes the DDE execute action
+with an external server.  Most servers will try to execute the
+<I><B>command</B></I>  argument as a macro invocation or an interpreted
+command; check your vendor's documentation.  It is a design limit
+of DDE that the execute action cannot return data; only a success
+or failure flag is returned.  The command is executed synchronously
+with an optional timeout period indicated in milliseconds.  The
+Tcl interpreter responds to an execute request by executing the
+<I><B>command </B></I>argument as Tcl code.  You have to get clever
+to workaround the inability of <B>dde execute</B> to return data.
+ We implement Tk <B>send</B> by asking the remote interpreter
+to perform a nested <B>dmh_dde execute</B> back to us.  It isn't pretty
+but it works.  The source code is in $dmh_library/dde.tcl.
+<P>
+The <B>dmh_dde poke</B> command performs the DDE Poke action with
+an external DDE application.  The command is usually used to asynchronously
+send unsolicited data.  An example use would be to write data
+values into a spreadsheet.
+<P>
+The <B>dmh_dde request</B> command is used to request a data item.
+ The command executes synchronously with an optional timeout indicated
+in milliseconds.  It is an undocumented aspect of DDE that the
+<I><B>item</B></I> string is limited to 200 bytes or so.  The
+returned data can be large. The Tcl interpreter responds to the
+<B>request</B> command by executing the <I><B>item</B></I> string
+as a Tcl command and returning the result. This command can be
+used with Excel to read data values from a spreadsheet.  
+<P>
+You should be cautious in basing CIM applications on synchronous
+RPC-like calls such as <B>dmh_dde request </B>or <B>dmh_dde execute</B>.
+ Without message queuing, the system can unexpectely fail with
+timeouts during processing peaks.  In general it is safer to use
+message queues such as provided with the <a href="mbx.html">mbx</a> command.
+<P>
+<H2>AUTHOR </H2>
+ Ed Hume, Hume Integration Software, Austin TX <P>
+<H2>KEYWORDS   </H2>
+DDE, Win32, Windows, IPC 
+</BODY>
+</HTML>

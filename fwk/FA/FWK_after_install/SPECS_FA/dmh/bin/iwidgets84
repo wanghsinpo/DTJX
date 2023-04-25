@@ -1,0 +1,6 @@
+#!/bin/sh
+# Iwidgets demo program "catalog" \
+exec dmh84 -f "$0" "$@"
+package require Iwidgets
+cd [file join $iwidgets::library demos]
+source catalog

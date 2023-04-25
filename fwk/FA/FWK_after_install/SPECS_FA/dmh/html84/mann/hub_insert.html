@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>hub_insert Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ hub_insert - insert list data into an SQL table <P>
+<H2>SYNOPSIS</H2>
+ <B>package require Humelib</B><BR>
+ <B>hub_insert <I>table column_names rows</I> </B>
+<HR>
+<P>
+<H2>DESCRIPTION</H2>
+<P>
+This command is a convenient way to add data to an in-memory
+SQL table, when the data exists as Tcl lists.  The command 
+looks up the schema of the <I>table</I>, converts the 
+<I>rows</I> of data to SQL insert statements, and executes
+them.  The return value is the count of rows added to the
+table.
+<P>
+The command is part of the <B>Humelib</B> package and it exists
+in the global namespace.
+<H2>EXAMPLE</H2>
+<PRE>
+package require Humelib
+set reply [SQL "select * from table_A"]
+set cols [lindex $reply 2]
+set rows [lindex $reply 6]
+set count [lindex $reply 4]
+if { $count > 0 } {
+    set ct [hub_insert A_archive $cols $rows]
+} else { set ct 0 }
+if { $ct < $count } { .... }
+
+</PRE>
+<H2>AUTHOR</H2>
+ Hume Integration Software, www.hume.com  <P>
+<H2>SEE ALSO</H2>
+ <a href="../man1/datahub.html#INSERT">SQL insert</A><P>
+<H2>KEYWORDS</H2>
+ datahub, insert, list, SQL
+</BODY>
+</HTML>

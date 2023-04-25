@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_GetScrollInfo_Tk_8_0"></A>
+<TITLE>Tk_GetScrollInfo Tk Library Procedures 8.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_GetScrollInfo, Tk_GetScrollInfoObj - parse arguments for scrolling commands <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+int
+<B>Tk_GetScrollInfo(<I>interp, argc, argv, dblPtr, intPtr)</B></I>
+<P>
+int
+<B>Tk_GetScrollInfoObj(<I>interp, objc, objv, dblPtr, intPtr)</B></I>
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter to use for error reporting.
+<P><DT><B>int <I>argc</I></B> (in)
+<DD>Number of strings in <I>argv</I> array.
+<P><DT><B>CONST char <I>*argv[]</I></B> (in)
+<DD>Argument strings.  These represent the entire widget command, of
+which the first word is typically the widget name and the second
+word is typically <B>xview</B> or <B>yview</B>.
+<P><DT><B>int <I>objc</I></B> (in)
+<DD>Number of Tcl_Obj's in <I>objv</I> array.
+<P><DT><B>Tcl_Obj *CONST <I>objv[]</I></B> (in)
+<DD>Argument objects.  These represent the entire widget command, of
+which the first word is typically the widget name and the second
+word is typically <B>xview</B> or <B>yview</B>.
+<P><DT><B>double <I>*dblPtr</I></B> (out)
+<DD>Filled in with fraction from <B>moveto</B> option, if any.
+<P><DT><B>int <I>*intPtr</I></B> (out)
+<DD>Filled in with line or page count from <B>scroll</B> option, if any.
+The value may be negative.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tk_GetScrollInfo</B> parses the arguments expected by widget
+scrolling commands such as <B>xview</B> and <B>yview</B>.
+It receives the entire list of words that make up a widget command
+and parses the words starting with <I>argv</I>[2].
+The words starting with <I>argv</I>[2] must have one of the following forms:
+<PRE>
+<B>moveto <I>fraction</B></I>
+<B>scroll <I>number units</B></I>
+<B>scroll <I>number pages</B></I>
+</PRE>
+<P>
+Any of the <B>moveto</B>, <B>scroll</B>, <B>units</B>, and <B>pages</B> keywords may be abbreviated. If <I>argv</I> has the <B>moveto</B> form, <B>TK_SCROLL_MOVETO</B> is returned as result and <I>*dblPtr</I> is filled in with the <I>fraction</I> argument to the command, which must be a proper real value. If <I>argv</I> has the <B>scroll</B> form, <B>TK_SCROLL_UNITS</B> or <B>TK_SCROLL_PAGES</B> is returned and <I>*intPtr</I> is filled in with the <I>number</I> value, which must be a proper integer. If an error occurs in parsing the arguments, <B>TK_SCROLL_ERROR</B> is returned and an error message is left in <I>interp-&gt;result</I>. <P>
+<B>Tk_GetScrollInfoObj</B> is identical in function to <B>Tk_GetScrollInfo</B>.  However, <B>Tk_GetScrollInfoObj</B> accepts Tcl_Obj style arguments, making it more appropriate for use with new development. <P>
+<P>
+<H2>KEYWORDS</H2>
+ parse, scrollbar, scrolling command, xview, yview 
+</BODY>
+</HTML>

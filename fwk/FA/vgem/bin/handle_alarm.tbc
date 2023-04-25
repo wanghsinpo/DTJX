@@ -1,0 +1,106 @@
+#
+# (C) Copyright Agilent Technologies, Inc. 2001.
+# All Rights are reserved.
+#
+# Copying Or Other Reproduction Of This Program Except For Archival Purposes
+# Is Prohibited Without The Prior Written Consent Of Agilent Technologies.
+#
+# TclPro::Compiler::Include
+
+if {[catch {package require tbcload 1.4} err] == 1} {
+    return -code error "[info script]: The TclPro ByteCode Loader is not available or does not support the correct version -- $err"
+}
+tbcload::bceval {
+TclPro ByteCode 2 0 1.4 8.4
+1 0 11 5 0 0 12 0 4 1 1 -1 -1
+11
+(<E<!(H&s!+-!!
+1
+z
+1
++!
+5
+x
+4
+,CHr@
+x
+12
+HgY8A>2n!6w's/D
+x
+28
+*%^;@u,B3@w's/DnjkSAp?K;@:&)`Fs|/bE
+p
+7 0 83 15 0 0 36 0 6 7 7 -1 -1
+83
+,|&v!-BW<!/5C3w0;L3w+ivUv1Z/s!&<`W!3ZyTv2|vpv3f8X!'3E<!3H<<!6TN<!:/Gpv2#
+|X!-c58-Hk?4w3DkUvAv70%Ppm<v0K!!
+7
+J65J&;B3!
+7
+xT5J&Mr`!
+15
+x
+6
+q'-W@Dhw
+x
+3
+g6-)
+x
+31
+v>X:@<@(sFja0;@s/K(F9MfCF6,aaE0Kk_F@p0%
+x
+19
+UvA9Gq?DTA>Y'KDuC#D+Pm/%
+x
+25
+8YFID(cN<@&=..DYi^?+W4J;@96Mq6H!
+x
+17
+UvA9Gq?DTA>Y'KD=J8_4H!
+x
+29
+8YFID(cN<@&=..DYi^?+W4J;@recf;&@VTAH!
+x
+42
+v>X:@'-B3@w's/D8uJTA=bl(F67k`4klA=+.p/bE5.!-EnjkSA0Bv
+x
+13
+?x?3@U|0p58k_x4H!
+x
+1
+H!
+i
+10000
+x
+6
+?r5DFByw
+x
+15
+FeTfD&ot)FtQ?<@wKD%
+x
+200
+tsU<+0bA!=avLb;Tu7Q8Vlc87v<@w,,7rm#LdV<+wiVP8:6cK/tsU<+v9oK8I8OF;EPYx=EA
+!8w5dV<+FRJq6P>OJ:Nx+t5Vrj<+,B/:+N!8s+@*-87^/r58Bu*F;Y`j<+D%O@wLdV<+LdV<
++LdV<+|(j:@BFVE+%C/:+LdV<++;3w<iOjY?mv;EFLLHR8%IYA+`9-W@Q)EdC-.lD+pGo(FC
+e0L9g2pT,mc`aE!=..DcVW6w5dV<+')um#
+x
+0
+
+0
+0
+3 3
+6
+*%^;@ISw
+0 0 257
+9
+mc`aE!=..D1v
+1 0 257
+11
+mc`aE5`90DxX2-
+2 0 257
+x
+15
+rpwhC;Z2b3<?<+EfqT+
+0
+0
+}

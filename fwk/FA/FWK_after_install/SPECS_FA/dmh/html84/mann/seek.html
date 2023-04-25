@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="seek_Tcl_8_1"></A>
+<TITLE>seek Tcl Built-In Commands 8.1</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ seek - Change the access position for an open channel <P>
+<H2>SYNOPSIS</H2>
+ <B>seek <I>channelId offset </B></I>?<I>origin</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+Changes the current access position for <I>channelId</I>. <P>
+<I>ChannelId</I> must be an identifier for an open channel such as a Tcl standard channel (<B>stdin</B>, <B>stdout</B>, or <B>stderr</B>), the return value from an invocation of <B>open</B> or <B>socket</B>, or the result of a channel creation command provided by a Tcl extension. <P>
+The <I>offset</I> and <I>origin</I> arguments specify the position at which the next read or write will occur for <I>channelId</I>. <I>Offset</I> must be an integer (which may be negative) and <I>origin</I> must be one of the following: 
+<DT><B>start</B>
+<DD>The new access position will be <I>offset</I> bytes from the start of the underlying file or device. 
+<DT><B>current</B>
+<DD>The new access position will be <I>offset</I> bytes from the current access position; a negative <I>offset</I> moves the access position backwards in the underlying file or device. 
+<DT><B>end</B>
+<DD>The new access position will be <I>offset</I> bytes from the end of the file or device.  A negative <I>offset</I> places the access position before the end of file, and a positive <I>offset</I> places the access position after the end of file. <P>
+The <I>origin</I> argument defaults to <B>start</B>. <P>
+The command flushes all buffered output for the channel before the command returns, even if the channel is in nonblocking mode. It also discards any buffered and unread input. This command returns an empty string. An error occurs if this command is applied to channels whose underlying file or device does not support seeking. <P>
+Note that <I>offset</I> values are byte offsets, not character offsets.  Both <B>seek</B> and <B>tell</B> operate in terms of bytes, not characters, unlike <B>read</B>. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/file.html">file</a>, <a href="../mann/open.html">open</a>, <a href="../mann/close.html">close</a>, <a href="../mann/gets.html">gets</a>, <a href="../mann/tell.html">tell</a>, Tcl_StandardChannels(3) <P>
+<P>
+<H2>KEYWORDS</H2>
+ access position, file, seek 
+</BODY>
+</HTML>

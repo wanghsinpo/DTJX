@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="fcopy_Tcl_8_0"></A>
+<TITLE>fcopy Tcl Built-In Commands 8.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ fcopy - Copy data from one channel to another. <P>
+<H2>SYNOPSIS</H2>
+ <B>fcopy <I>inchan</B></I> <I>outchan</I> ?<B>-size <I>size</B></I>? ?<B>-command <I>callback</B></I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>fcopy</B> command copies data from one I/O channel, <I>inchan</I> to another I/O channel, <I>outchan</I>. The <B>fcopy</B> command leverages the buffering in the Tcl I/O system to avoid extra copies and to avoid buffering too much data in main memory when copying large files to slow destinations like network sockets. <P>
+The <B>fcopy</B>  command transfers data from <I>inchan</I> until end of file or <I>size</I> bytes have been  transferred. If no <B>-size</B> argument is given, then the copy goes until end of file. All the data read from <I>inchan</I> is copied to <I>outchan</I>. Without the <B>-command</B> option, <B>fcopy</B> blocks until the copy is complete and returns the number of bytes written to <I>outchan</I>. <P>
+The <B>-command</B> argument makes <B>fcopy</B> work in the background. In this case it returns immediately and the <I>callback</I> is invoked later when the copy completes. The <I>callback</I> is called with one or two additional  arguments that indicates how many bytes were written to <I>outchan</I>. If an error occurred during the background copy, the second argument is the error string associated with the error. With a background copy, it is not necessary to put <I>inchan</I> or <I>outchan</I> into non-blocking mode; the <B>fcopy</B> command takes care of that automatically. However, it is necessary to enter the event loop by using the <B>vwait</B> command or by using Tk. <P>
+You are not allowed to do other I/O operations with <I>inchan</I> or <I>outchan</I> during a background fcopy. If either <I>inchan</I> or <I>outchan</I> get closed while the copy is in progress, the current copy is stopped and the command callback is <I>not</I> made. If <I>inchan</I> is closed, then all data already queued for <I>outchan</I> is written out. <P>
+Note that <I>inchan</I> can become readable during a background copy. You should turn off any <B>fileevent</B> handlers during a background copy so those handlers do not interfere with the copy. Any I/O attempted by a <B>fileevent</B> handler will get a "channel busy" error. <P>
+<B>Fcopy</B> translates end-of-line sequences in <I>inchan</I> and <I>outchan</I> according to the <B>-translation</B> option for these channels. See the manual entry for <B>fconfigure</B> for details on the <B>-translation</B> option. The translations mean that the number of bytes read from <I>inchan</I> can be different than the number of bytes written to <I>outchan</I>. Only the number of bytes written to <I>outchan</I> is reported, either as the return value of a synchronous <B>fcopy</B> or as the argument to the callback for an asynchronous <B>fcopy</B>. <P>
+<B>Fcopy</B> obeys the encodings configured for the channels. This means that the incoming characters are converted internally first UTF-8 and then into the encoding of the channel <B>fcopy</B> writes to. See the manual entry for <B>fconfigure</B> for details on the <B>-encoding</B> option. No conversion is done if both channels are set to encoding "binary". If only the output channel is set to encoding "binary" the system will write the internal UTF-8 representation of the incoming characters. If only the input channel is set to encoding "binary" the system will assume that the incoming bytes are valid UTF-8 characters and convert them according to the output encoding. The behaviour of the system for bytes which are not valid UTF-8 characters is undefined in this case. <P>
+<P>
+<H2>EXAMPLE</H2>
+ <P>
+This first example shows how the callback gets passed the number of bytes transferred. It also uses vwait to put the application into the event loop. Of course, this simplified example could be done without the command  callback. <PRE>
+proc Cleanup {in out bytes {error {}}} {
+    global total
+    set total $bytes
+    close $in
+    close $out
+    if {[string length $error] != 0} {
+	# error occurred during the copy
+    }
+}
+set in [open $file1]
+set out [socket $server $port]
+fcopy $in $out -command [list Cleanup $in $out]
+vwait total
+<P>
+</PRE>
+<P>
+The second example copies in chunks and tests for end of file in the command callback <PRE>
+proc CopyMore {in out chunk bytes {error {}}} {
+    global total done
+    incr total $bytes
+    if {([string length $error] != 0) || [eof $in] {
+	set done $total
+	close $in
+	close $out
+    } else {
+	fcopy $in $out -command [list CopyMore $in $out $chunk] \
+	    -size $chunk
+    }
+}
+set in [open $file1]
+set out [socket $server $port]
+set chunk 1024
+set total 0
+fcopy $in $out -command [list CopyMore $in $out $chunk] -size $chunk
+vwait done
+<P>
+</PRE>
+<P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/eof.html">eof</a>, <a href="../mann/fblocked.html">fblocked</a>, <a href="../mann/fconfigure.html">fconfigure</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ blocking, channel, end of line, end of file, nonblocking, read, translation 
+</BODY>
+</HTML>

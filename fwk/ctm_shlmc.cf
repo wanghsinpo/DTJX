@@ -1,0 +1,44 @@
+andywang 2023/4/25 test
+
+!-----------------------------------------------------------
+! Agilent Technologies Taiwan ltd.
+! This file is used to define variables in framework. You can
+! modify these variables as you want. 
+! NOTE:
+! 1: All of these variables are defines in TAG spec of framework
+! 2: The variable is assigned to a value or string afetr ":", not "=" 
+!-----------------------------------------------------------
+
+!--------- About Probe-Card --------------------------------
+CTM_CHECK_PCID:0
+CTM_CHECK_PCLEAK:0
+CTM_PC_LEAK_VOL:10
+CTM_PC_LEAK_CRI:3
+CTM_PC_STOP_TEST:0
+CTM_PC_COUNT:0
+CTM_RFID_IP:/WAT/ETC/IP_RFID
+CTM_PCIL:/WATSERV/ETC/PCIL
+CTM_PCIL_MGR:/WATSERV/ETC/PCIL
+CTM_PC_RM_VF:0.1
+CTM_PC_RM_HI:47
+CTM_PC_RM_LO:48
+
+!--------- 1: PIL file ------------------------------------- 
+CTM_PIL_PROD:PIL_PROD.rec
+CTM_PIL_ENG:PIL_PROD.rec
+
+!--------- 2: watserv's root dir ---------------------------
+CTM_ROOT_DIR:/WATSERV
+CTM_LOCAL_DIR:/WAT
+CTM_LIMIT_DIR:/LIMIT
+CTM_DATA_DIR:/DATA
+CTM_RCP_DIR: /RCP
+
+!-------- Customer Info ------------------------------------
+CTM_NAME:CTM_NAME
+CTM_FAB:FAB
+
+!--------- Error handling setting --------------------------
+! Orange: DeepSkyBlue3: YellowGreen: 5C75AF: Yellow: Redi: Orange
+CTM_ERR_COLOR:DeepSkyBlue3
+CTM_WARN_COLOR:Blue

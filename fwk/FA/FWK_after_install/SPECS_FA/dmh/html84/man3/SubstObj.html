@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_SubstObj_Tcl_8_4"></A>
+<TITLE>Tcl_SubstObj Tcl Library Procedures 8.4</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_SubstObj - perform substitutions on Tcl objects <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+Tcl_Obj *
+<B>Tcl_SubstObj</B>(<I>interp, objPtr, flags</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter in which to execute Tcl scripts and lookup variables.  If
+an error occurs, the interpreter's result is modified to hold an error
+message.
+<P><DT><B>Tcl_Obj <I>*objPtr</I></B> (in)
+<DD>A Tcl object containing the string to perform substitutions on.
+<P><DT><B>int <I>flags</I></B> (in)
+<DD>ORed combination of flag bits that specify which substitutions to
+perform.  The flags <B>TCL_SUBST_COMMANDS</B>,
+<B>TCL_SUBST_VARIABLES</B> and <B>TCL_SUBST_BACKSLASHES</B> are
+currently supported, and <B>TCL_SUBST_ALL</B> is provided as a
+convenience for the common case where all substitutions are desired.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+The <B>Tcl_SubstObj</B> function is used to perform substitutions on
+strings in the fashion of the <B>subst</B> command.  It gets the value
+of the string contained in <I>objPtr</I> and scans it, copying
+characters and performing the chosen substitutions as it goes to an
+output object which is returned as the result of the function.  In the
+event of an error occurring during the execution of a command or
+variable substitution, the function returns NULL and an error message
+is left in <I>interp</I>'s result.
+<P>
+Three kinds of substitutions are supported.  When the
+<B>TCL_SUBST_BACKSLASHES</B> bit is set in <I>flags</I>, sequences that
+look like backslash substitutions for Tcl commands are replaced by
+their corresponding character.
+<P>
+When the <B>TCL_SUBST_VARIABLES</B> bit is set in <I>flags</I>,
+sequences that look like variable substitutions for Tcl commands are
+replaced by the contents of the named variable.
+<P>
+When th <B>TCL_SUBST_COMMANDS</B> bit is set in <I>flags</I>, sequences
+that look like command substitutions for Tcl commands are replaced by
+the result of evaluating that script.  Where an uncaught continue
+exception occurs during the evaluation of a command substitution, an
+empty string is substituted for the command.  Where an uncaught break
+exception occurs during the evaluation of a command substitution, the
+result of the whole substitution on <I>objPtr</I> will be truncated at
+the point immediately before the start of the command substitution,
+and no characters will be added to the result or substitutions
+performed after that point.
+<P>
+<P>
+<H2>SEE ALSO</H2>
+
+<a href="../mann/subst.html">subst</a>
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+backslash substitution, command substitution, variable substitution
+
+</BODY>
+</HTML>

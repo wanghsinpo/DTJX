@@ -1,0 +1,21 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="tkerror_Tk_4_1"></A>
+<TITLE>tkerror Tk Built-In Commands 4.1</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ tkerror - Command invoked to process background errors <P>
+<H2>SYNOPSIS</H2>
+ <B>tkerror <I>message</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+Note: as of Tk 4.1 the <B>tkerror</B> command has been renamed to <B>bgerror</B> because the event loop (which is what usually invokes it) is now part of Tcl.  For backward compatibility the <B>bgerror</B> provided by the current Tk version still tries to call <B>tkerror</B> if there is one (or an auto loadable one),  so old script defining that error handler should still work, but you should anyhow modify your scripts to use <B>bgerror</B> instead  of <B>tkerror</B> because that support for the old name might vanish in the near future. If that call fails, <B>bgerror</B>  posts a dialog showing the error and offering to see the stack trace to the user. If you want your own error management you should directly override <B>bgerror</B> instead of <B>tkerror</B>. Documentation for <B>bgerror</B> is available as part of Tcl's documentation. <P>
+<P>
+<H2>KEYWORDS</H2>
+ background error, reporting 
+</BODY>
+</HTML>

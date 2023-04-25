@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>ep_timer Humelib [incr Tcl] class</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ ep_timer - An [incr Tcl] class for periodic or one-shot timing.
+<P>
+<H2>SYNOPSIS</H2>
+<B>package require Humelib</B><BR>
+<b>ep_timer <i>timer_id</i> [-<i>option_name</i> <i>option_value</i>]*</b>
+<br><b><i>timer_id</i>&nbsp; at <i>timestamp</i> [<i>UTC&nbsp;</i> [<i>action</i>]]</b>
+<br><b><i>timer_id</i>&nbsp; cancel</b>
+<br><b><i>timer_id</i>&nbsp; next_time</b>
+<br><b><i>timer_id</i>&nbsp; run [<i>action</i>]</b>
+<br><b><i>timer_id</i>&nbsp; run_at <i>timestamp</i> [<i>UTC&nbsp;</i> [<i>action</i>]]</b>
+<HR>
+<H2>INHERITANCE</H2>
+ None
+<H2>OPTIONS (PUBLIC VARIABLES)</H2>
+<P>
+Command-Line Switch: <B>-MB_EPC</B> 
+Default value:	<B>{}</B>
+<DD>The default future action of the ep_timer is to send a timer event message
+to the Event Processing Component, EPC.  The <B>MB_EPC</B> option influences how
+a timer event is posted to the EPC.
+<OL>
+<LI>If the MB_EPC value is non-blank, it is used as the DMH mailbox name of
+the EPC, and the event message is sent using the mbx command.
+<LI>Else if the MB_EPC value is blank, if the command ep_post_event is available, it is used to post the event.
+<LI>Otherwise a background error is issued.
+</OL>
+<P>
+Command-Line Switch: <B>-MID</B> 
+Default value:	<B>{}</B>
+<DD>If the MID value is non-blank, when posting a timer event, the ep_timer
+will add the name-value pair of MID and $MID to the timer event data.
+<P>
+Command-Line Switch: <B>-offset</B> 
+Default value:	<B>00:00</B>
+<DD>The offset value is formatted as hh:mm or hh:mm:ss.
+Periodic actions can be configured using the <b>period</b>
+and <b>offset</b> public variables combined with calling the <b>run</b>
+method.&nbsp; With this alternative,&nbsp; the offset time is added to
+the beginning of the current day, and then an integral number of periods
+is added until a future event time is computed.&nbsp; Subsequent future
+event times are computed by adding the period interval to each future event
+time.
+<P>
+Command-Line Switch: <B>-period</B> 
+Default value:	<B>00:01</B>
+<DD>The period value is formatted as hh:mm, hh:mm:ss, hhhh:mm, or hhhh:mm:ss.&nbsp;
+The period value should be less than or equal to a year's duration.  The
+period value specifies the time interval between periodic actions and is only
+used with the <B>run</B> and <B>run_at</B> methods.
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>ep_timer</B> command creates 
+a new Tcl command whose name is <I>timer_id</I>.  The command
+is then used to initiate actions in the future - either one-shot or
+periodic.&nbsp; The ep_timer class was developed as part of the Event
+Processing Component (EPC), but it can be used generally.
+<p>There are two ways to initiate periodic actions.&nbsp; The first way
+is to set the period using the public variable, <b>period</b>, and to call
+the <b>run_at</b> method to begin periodic actions from a specified time.&nbsp;
+Alternatively, periodic actions can be configured using the <b>period</b>
+and <b>offset</b> public variables combined with calling the <b>run</b>
+method.&nbsp; With this alternative,&nbsp; the offset time is added to
+the beginning of the current day, and then an integral number of periods
+is added until a future event time is computed.&nbsp; Subsequent future
+event times are computed by adding the period interval to each future event
+time.
+<p>The class can be used for general timing purposes by supplying Tcl code
+for the <i>action </i>argument to the <b>run</b>, <b>run_at</b>, or
+<b>at</b>
+methods.&nbsp; The default <i>action</i> is to send a timer event message
+to the EPC.&nbsp; The format of the timer event message sent to the EPC
+is:<PRE>
+"<b>event_id TIMER.<i>timer_id</i> timer_id <i>timer_id</i></b>"
+</PRE>
+or
+<PRE>
+"<b>event_id TIMER.<i>timer_id</i> timer_id <i>timer_id</i> MID <i>MID</i></b>"
+</PRE>
+if the MID value is non-blank.
+<P>
+The <b>cancel</b> method is used to stop the periodic actions, or to stop
+a one-shot action.
+<p>One-shot actions are scheduled for future execution by calling the <b>at</b>
+method.&nbsp; 
+<p>A timer is designed to be used for only a single future action, either
+one-shot or periodic.&nbsp; Use multiple timer instances to have multiple
+future actions.&nbsp; Timers use the Tcl <a href="../mann/after.html">after</a>
+command for implementation which is supported by the Tcl/Tk event loop,
+and does not incur busy polling.&nbsp; A timer can be used for a new action
+after it has become idle from being cancelled or from executing a one-shot
+action.&nbsp; 
+<p>The temporal accuracy of the timer event is typically well within a
+tenth of a second of the specified time, but may vary depending on the
+busyness of processing.&nbsp;&nbsp; Accuracy is diminished by scheduling
+multiple tasks to occur at the same instant.&nbsp; For best accuracy in
+measuring rates, use the timer events as a data acquisition trigger,
+and divide the occurrence count over the actual time period instead
+of the scheduled period.
+<P>
+
+<H2>CLASS METHODS</H2>
+
+<DT><B><I>timer_id</I> at <i>timestamp</i> [<i>UTC&nbsp;</i> [<i>action</i>]]</b>
+<DD>One-shot actions are scheduled for future execution by calling the <b>at</b>
+method.&nbsp; The <i>timestamp</i> argument to the <b>at</b> method specifies
+the time when the action should be executed in the <a href="../mann/localtime.html">localtime</a>
+9 or 15 formats.&nbsp; When the&nbsp; <i>UTC</i> argument is set to 1,
+the <i>timestamp</i> argument is interpreted as a Universal Coordinated
+Time value.
+<P>
+<DT><B><I>timer_id</I> cancel</b>
+<DD>The <b>cancel</b> method is used to stop the periodic actions, or to stop
+a one-shot action.
+<P>
+<DT><B><I>timer_id</I> next_time</b>
+<DD>When the timer is idle, the <b>next_time</b> method returns
+an empty string value.&nbsp; When the timer is in active use, the
+<b>next_time</b> method returns the timestamp when the next action is scheduled to occur
+in the localtime 16 format.&nbsp; When the <b>next_time</b> method is called
+during execution of periodic action code, the value obtained is for the
+next future execution and not the current one.
+<P>
+<DT><B><I>timer_id</I> run [<i>action</i>]</b>
+<DD>The <b>run</b> method is called to begin periodic actions starting from the closest future
+time computed from the <B>offset</B> and <B>period</B> values.
+<P>
+<DT><B><I>timer_id</I> run_at <i>timestamp</i> [<i>UTC&nbsp;</i> [<i>action</i>]]</b> 
+<DD>The <b>run_at</b> method is called to begin periodic actions from a specified time.
+<P>
+
+<H2>EXAMPLE</H2>
+ <PRE>
+package require Humelib
+catch {delete object timer_$mid}
+# send an event to the EPC every minute
+ep_timer timer_$mid -period 00:01 -MID $mid 
+timer_$mid run
+</PRE>
+
+<H2>AUTHOR</H2>
+Hume Integration Software, www.hume.com
+
+<H2>KEYWORDS  </H2>
+after, EPC, one-shot, periodic, schedule, time
+</BODY>
+</HTML>

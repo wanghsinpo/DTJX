@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_Concat_Tcl_7_5"></A>
+<TITLE>Tcl_Concat Tcl Library Procedures 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_Concat - concatenate a collection of strings <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+CONST char *
+<B>Tcl_Concat</B>(<I>argc, argv</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>int <I>argc</I></B> (in)
+<DD>Number of strings.
+<P><DT><B>CONST char * CONST <I>argv[]</I></B> (in)
+<DD>Array of strings to concatenate.  Must have <I>argc</I> entries.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tcl_Concat</B> is a utility procedure used by several of the
+Tcl commands.  Given a collection of strings, it concatenates
+them together into a single string, with the original strings
+separated by spaces.  This procedure behaves differently than
+<B>Tcl_Merge</B>, in that the arguments are simply concatenated:
+no effort is made to ensure proper list structure.
+However, in most common usage the arguments will all be proper
+lists themselves;  if this is true, then the result will also have
+proper list structure.
+<P>
+<B>Tcl_Concat</B> eliminates leading and trailing white space as it
+copies strings from <B>argv</B> to the result.  If an element of
+<B>argv</B> consists of nothing but white space, then that string
+is ignored entirely.  This white-space removal was added to make
+the output of the <B>concat</B> command cleaner-looking.
+<P>
+The result string is dynamically allocated
+using <B>Tcl_Alloc</B>;  the caller must eventually release the space
+by calling <B>Tcl_Free</B>.
+<P>
+<H2>SEE ALSO</H2>
+
+Tcl_ConcatObj
+<P>
+<H2>KEYWORDS</H2>
+
+concatenate, strings
+
+</BODY>
+</HTML>

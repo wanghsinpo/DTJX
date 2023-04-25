@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>tsdiff Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ tsdiff - compute the time between two timestamps <BR>
+<H2>SYNOPSIS</H2>
+ <B>package require Humelib</B><BR>
+ <B>humelib::tsdiff <I>ts_start</I> {<I>ts_end</I> {}}</B>
+<HR>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command is used to compute the floating point time interval in seconds from a start time in
+<a href="localtime.html">localtime</a> 16 or 11 format, "YYYY-MM-DD HH:MM:SS[.uuuuuu]". 
+The optional <I>ts_end</I> value defaults to the current time. 
+<P>
+The command is part of the <B>Humelib</B> package and can be 
+imported from the namespace <B>humelib</B>.
+<H2>EXAMPLE</H2>
+<PRE>
+package require Humelib
+namespace import -force humelib::*
+set start [localtime 16]
+tk_dialog .stopwatch {Timer Running} {Press Ok when done.} info 0 Ok
+set seconds [tsdiff $start]
+puts "elapsed time=$seconds"
+
+</PRE>
+<H2>AUTHOR</H2>
+ Hume Integration Software, www.hume.com  <P>
+<H2>SEE ALSO</H2>
+ <a href="localtime.html">localtime</a>&nbsp;
+ <a href="mktime.html">mktime</a>&nbsp;
+ <a href="timediff.html">timediff</a>&nbsp;
+<H2>KEYWORDS</H2>
+ time, timestamp
+</BODY>
+</HTML>

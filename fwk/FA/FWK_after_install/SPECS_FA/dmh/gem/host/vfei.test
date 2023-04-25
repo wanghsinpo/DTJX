@@ -1,0 +1,50 @@
+# example VFEI commands - cut and paste into console for manual testing 
+
+# full disable/delete
+ei_vfei_cmd gemhost {CMD/A="EVENT_SETUP" MID/A="X" MTY/A="C" TID/U4=5 ENABLE/U1=0}
+# full enable
+ei_event_enable gemhost {}
+# next line gets error reply
+ei_vfei_cmd gemhost {CMD/A="EVENT_SETUP" MID/A="X" MTY/A="C" TID/U4=5 ENABLE/U1=1}
+
+ei_vfei_cmd gemhost {CMD/A="EVENT_SETUP" MID/A="X" MTY/A="C" TID/U4=5 ENABLE/U1=1 EVENT_ID/A=4050 VAR_ID/A[4]=["CLOCK" "PREV_PROC_STATE" "PROCESS_STATE" "VFEI_VER"]}
+
+ei_vfei_cmd gemhost {CMD/A="DISPLAY_MSG" MID/A="X" MTY/A="C" TID/U4=5 TERMINAL/B=0 MESSAGE/A="Calibration check is due before 4PM."}
+
+ei_vfei_cmd gemhost {CMD/A="INITIALIZE" MID/A="X" MTY/A="C" TID/U4=5}
+
+ei_vfei_cmd gemhost {CMD/A="TRACE_SETUP" MID/A="X" MTY/A="C" TID/U4=5 ENABLE/U1=1 TRACE_ID/U2=1 FREQUENCY/U4=60 SAMPLES/U2=10 REPORT_SIZE/U2=1 VAR_ID/A[2]=["CLOCK" "PROCESS_STATE"]}
+
+# the standard implies parameters are mandatory even on disable
+ei_vfei_cmd gemhost {CMD/A="TRACE_SETUP" MID/A="X" MTY/A="C" TID/U4=5 ENABLE/U1=0 TRACE_ID/U2=1 FREQUENCY/U4=60 SAMPLES/U2=0 REPORT_SIZE/U2=1 VAR_ID/A=""}
+
+ei_vfei_cmd gemhost {CMD/A="STATUS_QUERY" MID/A="X" MTY/A="C" TID/U4=5 VAR_ID/A="VFEI_EVENTS"}
+
+ei_vfei_cmd gemhost {CMD/A="STATUS_QUERY" MID/A="X" MTY/A="C" TID/U4=5 VAR_ID/A[2]=["VFEI_ALARMS" "VFEI_MACH_CMDS"]}
+
+ei_vfei_cmd gemhost {CMD/A="SET_PARAM" MID/A="X" MTY/A="C" TID/U4=5 TYPE/A="VFEI" CLOCK/A="1999-05-26 11:58:04"}
+
+ei_vfei_cmd gemhost {CMD/A="SET_PARAM" MID/A="X" MTY/A="C" TID/U4=5 TYPE/A="VFEI" CLOCK/A="1999-05-26 11:58:04" SNTP_SERVER/A="192.168.2.8"}
+
+ei_vfei_cmd gemhost {CMD/A="SET_PARAM" MID/A="X" MTY/A="C" TID/U4=5 TYPE/A="MACHINE" ANNOTATE_EVENT_REPORTS/BL=1 SPOOL_MAX/U4=400}
+
+ei_vfei_cmd gemhost {CMD/A="ABORT" MID/A="X" MTY/A="C" TID/U4=5"}
+ei_vfei_cmd gemhost {CMD/A="START" MID/A="X" MTY/A="C" TID/U4=5"}
+ei_vfei_cmd gemhost {CMD/A="PAUSE" MID/A="X" MTY/A="C" TID/U4=5"}
+ei_vfei_cmd gemhost {CMD/A="RESUME" MID/A="X" MTY/A="C" TID/U4=5"}
+
+ei_vfei_cmd gemhost {CMD/A="RES_ACTIVATE" MID/A="X" MTY/A="C" TID/U4=5" TYPE/A="RECIPE" RES_ID/A="fudge"}
+ei_vfei_cmd gemhost {CMD/A="RES_ACTIVATE" MID/A="X" MTY/A="C" TID/U4=5" TYPE/A="RECIPE" RES_ID/A="vanilla fudge"}
+ei_vfei_cmd gemhost {CMD/A="RES_DELETE" MID/A="X" MTY/A="C" TID/U4=5" TYPE/A="RECIPE" RES_ID/A="notfound"}
+ei_vfei_cmd gemhost {CMD/A="RES_QUERY" MID/A="X" MTY/A="C" TID/U4=5" TYPE/A="RECIPE"}
+ei_vfei_cmd gemhost {CMD/A="RES_REQUEST" MID/A="X" MTY/A="C" TID/U4=5" TYPE/A="RECIPE" RES_ID/A="fudge"}
+ei_vfei_cmd gemhost {CMD/A="RES_REQUEST" MID/A="X" MTY/A="C" TID/U4=5" TYPE/A="RECIPE" RES_ID/A="fudge" RES_FILE/A="fudgefile"}
+ei_vfei_cmd gemhost {CMD/A="RES_TRANSFER" MID/A="X" MTY/A="C" TID/U4=5"  TYPE/A="RECIPE" RES_ID/A="fudgetest" RES_FILE/A="fudgefile"}
+
+ei_vfei_cmd gemhost {CMD/A="STATUS_QUERY" MID/A="X" MTY/A="C" TID/U4=5 VAR_ID/A="VFEI_MACH_CMDS"}
+ei_vfei_cmd gemhost {CMD/A="STATUS_QUERY" MID/A="X" MTY/A="C" TID/U4=5 VAR_ID/A="EVENTS_ENABLED"}
+ei_vfei_cmd gemhost {CMD/A="MACH_CMD" MID/A="X" MTY/A="C" TID/U4=5 CMD_TYPE/A="HELLO"}
+ei_vfei_cmd gemhost {CMD/A="MACH_CMD" MID/A="X" MTY/A="C" TID/U4=5 CMD_TYPE/A="NOTFOUND"}
+ei_vfei_cmd gemhost {CMD/A="MACH_CMD" MID/A="X" MTY/A="C" TID/U4=5 "}
+
+ei_vfei_cmd gemhost {CMD/A="STATUS_QUERY" MID/A="X" MTY/A="C" TID/U4=5 VAR_ID/A="COM_STATE"}

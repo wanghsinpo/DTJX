@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="iwidgets__selectionbox_iwid_"></A>
+<TITLE>iwidgets::selectionboxSection iwid</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ iwidgets::selectionbox - Create and manipulate a selection box widget <P>
+<H2>SYNOPSIS</H2>
+ <B>iwidgets::selectionbox<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Widget &lt;- iwidgets::Selectionbox <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+
+<B>
+activeBackground  background         borderWidth     cursor
+exportSelection   foreground         highlightColor  highlightThickness
+insertBackground  insertBorderWidth  insertOffTime   insertOnTime
+insertWidth       relief             repeatDelay     repeatInterval
+selectBackground  selectBorderWidth  selectForeground</B>
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>ASSOCIATED OPTIONS</H2>
+ <P>
+
+<B>textBackground</B>	<B>textFont</B>
+ <P>
+See the "entryfield" widget class manual entry for details on the above associated options. <P>
+
+<B>labelFont</B>	<B>labelMargin</B>
+ <P>
+See the <a href="../mann/labeledwidget.html">labeledwidget</a> class manual entry for details on the above associated options. <P>
+
+<B>activeRelief</B>	<B>elementBorderWidth</B>	<B>jump</B>	<B>troughColor</B>
+ <P>
+See the "scrollbar" widget class manual entry for details on the above associated options. <P>
+
+<B>dblClickCommand</B>	<B>hscrollMode</B>	<B>sbWidth</B>	<B>scrollMargin</B>
+<B>textBackground</B>	<B>textFont</B>	<B>vscrollMode</B>
+ <P>
+See the "scrolledlistbox" widget class manual entry for details on the above associated options. <P>
+<P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+
+Name:	<B>childSitePos</B>
+Class:	<B>Position</B>
+Command-Line Switch:	<B>-childsitepos</B>
+ 
+<DD> Specifies the position of the child site in the selection box: <B>n</B>,  <B>s</B>, <B>e</B>, <B>w</B>, or <B></B>.  The default is center <P>
+
+Name:	<B>height</B>
+Class:	<B>Height</B>
+Command-Line Switch:	<B>-height</B>
+ 
+<DD> Specifies the height of the selection box.  The value may be specified in  any of the forms acceptable to Tk_GetPixels.  The default is 320 pixels. <P>
+
+Name:	<B>itemsCommand</B>
+Class:	<B>Command</B>
+Command-Line Switch:	<B>-itemscommand</B>
+ 
+<DD> Specifies a command to be evaluated following selection of an item. <P>
+
+Name:	<B>itemsLabel</B>
+Class:	<B>Text</B>
+Command-Line Switch:	<B>-itemslabel</B>
+ 
+<DD> Specifies the text of the label for the items list.  The default is "List". <P>
+
+Name:	<B>itemsLabelPos</B>
+Class:	<B>Position</B>
+Command-Line Switch:	<B>-itemslabelpos</B>
+ 
+<DD> Specifies the position of the label along the side of the items list: <B>n</B>, <B>ne</B>, <B>e</B>, <B>se</B>, <B>s</B>, <B>sw</B>, <B>w</B>,  or <B>nw</B>.  The default is nw. <P>
+
+Name:	<B>itemsOn</B>
+Class:	<B>ItemsOn</B>
+Command-Line Switch:	<B>-itemson</B>
+ 
+<DD> Specifies whether or not to display the items list in any of the forms acceptable to <B>Tcl_GetBoolean</B>.  The default is true. <P>
+
+Name:	<B>margin</B>
+Class:	<B>Margin</B>
+Command-Line Switch:	<B>-margin</B>
+ 
+<DD> Specifies distance between the items list and selection entry in any of the forms acceptable to <B>Tk_GetPixels</B>.  The default is 7 pixels. <P>
+
+Name:	<B>selectionCommand</B>
+Class:	<B>Command</B>
+Command-Line Switch:	<B>-selectioncommand</B>
+ 
+<DD> Specifies a Tcl procedure to be associated with a return key press event in the selection entry field. <P>
+
+Name:	<B>selectionLabel</B>
+Class:	<B>Text</B>
+Command-Line Switch:	<B>-selectionlabel</B>
+ 
+<DD> Specifies the text of the label for the selection entry field.  The default is "Selection". <P>
+
+Name:	<B>selectionLabelPos</B>
+Class:	<B>Position</B>
+Command-Line Switch:	<B>-selectionlabelpos</B>
+ 
+<DD> Specifies the position of the label along the side of the selection:  <B>n</B>, <B>ne</B>, <B>e</B>, <B>se</B>, <B>s</B>, <B>sw</B>, <B>w</B>,  or <B>nw</B>.  The default is nw. <P>
+
+Name:	<B>selectionOn</B>
+Class:	<B>SelectionOn</B>
+Command-Line Switch:	<B>-selectionon</B>
+ 
+<DD> Specifies whether or not to display the selection entry in any of the forms acceptable to <B>Tcl_GetBoolean</B>.  The default is true. <P>
+
+Name:	<B>width</B>
+Class:	<B>Width</B>
+Command-Line Switch:	<B>-width</B>
+ 
+<DD> Specifies the width of the selection box.  The value may be specified in  any of the forms acceptable to Tk_GetPixels.  The default is 260 pixels. <P>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>iwidgets::selectionbox</B> command creates a scrolled list of items and a selection entry field.  The user may choose any of the items displayed in the scrolled list of alternatives and the selection field will be filled with the choice.  The user is also free to enter a new value in the selection entry field.  Both the list and entry areas have labels. A child site is also provided in which the user may create other widgets to be used in conjunction with the selection box. <P>
+<P>
+<H2>METHODS</H2>
+ <P>
+The <B>iwidgets::selectionbox</B> command creates a new Tcl command whose name is <I>pathName</I>.  This command may be used to invoke various operations on the widget.  It has the following general form: <PRE>
+<I>pathName option </I>?<I>arg arg ...</I>?
+</PRE>
+<I>Option</I> and the <I>arg</I>s determine the exact behavior of the command.   <P>
+<P>
+<H2>ASSOCIATED METHODS</H2>
+ <P>
+
+<B>curselection</B>	<B>delete</B>	<B>index</B>	<B>nearest</B>
+<B>scan</B>	<B>selection</B>	<B>size</B>
+ <P>
+See the "listbox" widget class manual entry for details on the  associated methods. <P>
+<P>
+<H2>WIDGET-SPECIFIC METHODS</H2>
+ 
+<DT><I>pathName <B>cget</B></I> <I>option</I>
+<DD>Returns the current value of the configuration option given by <I>option</I>. <I>Option</I> may have any of the values accepted by the <B>iwidgets::selectionbox</B> command. 
+<DT><I>pathName <B>childsite</B></I>
+<DD>Returns the child site widget path name. 
+<DT><I>pathName <B>clear</B></I> <I>component</I>
+<DD>Delete the contents of either the selection entry widget or  items list.  The <I>component</I> argument may be either <B>items</B> or <B>selection</B>. 
+<DT><I>pathName</I> <B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?
+<DD>Query or modify the configuration options of the widget. If no <I>option</I> is specified, returns a list describing all of the available options for <I>pathName</I> (see <B>Tk_ConfigureInfo</B> for information on the format of this list).  If <I>option</I> is specified with no <I>value</I>, then the command returns a list describing the one named option (this list will be identical to the corresponding sublist of the value returned if no <I>option</I> is specified).  If one or more <I>option-value</I> pairs are specified, then the command modifies the given widget option(s) to have the given value(s);  in this case the command returns an empty string. <I>Option</I> may have any of the values accepted by the <B>iwidgets::selectionbox</B> command. 
+<DT><I>pathName <B>get</B></I>
+<DD>Returns the current value of the selection entry widget. 
+<DT><I>pathName <B>insert</B></I> <I>component</I> <I>args</I>
+<DD>Insert element(s) into either the selection entry widget or items list.  The <I>component</I> argument may be either <B>items</B> or <B>selection</B>.  The <I>args</I> follow the rules of either an entry or list widget depending on the <I>component</I> value. 
+<DT><I>pathName <B>selectitem</B></I>
+<DD>Replace the selection entry field contents with the currently  selected items value. <P>
+<P>
+<H2>COMPONENTS</H2>
+ <P>
+
+Name:	<B>childsite</B>
+Class:	<B>Frame</B>
+ 
+<DD> The childsite component is the user child site for the selection box.  See  the <a href="../mann/frame.html">frame</a> widget manual entry for details on the childsite component item. <P>
+
+Name:	<B>items</B>
+Class:	<B>Scrolledlistbox</B>
+ 
+<DD> The items component provides the scrolled list box of items for the selection box.  See the <a href="../mann/scrolledlistbox.html">scrolledlistbox</a> widget manual entry for details on the  items component item. <P>
+
+Name:	<B>selection</B>
+Class:	<B>Entryfield</B>
+ 
+<DD> The selection component provides the entry field in the selection box for display of the selected item in the items component.  See the "entryfield"  widget manual entry for details on the selection component item.  <P>
+<P>
+<H2>EXAMPLE</H2>
+ <PRE>
+ package require Iwidgets 4.0
+ option add *textBackground white
+<P>
+ iwidgets::selectionbox .sb -items {Hello {Out There} World}
+ pack .sb -padx 10 -pady 10 -fill both -expand yes 
+<P>
+ set cs [label [.sb childsite].label -text "Child Site"]
+ pack $cs -fill x -padx 10 -pady 10
+<P>
+ .sb insert items 2 {Cruel Cruel}
+<P>
+ .sb selection set 1
+</PRE>
+<P>
+<H2>AUTHOR</H2>
+ Mark L. Ulferts <P>
+<H2>KEYWORDS</H2>
+ selectionbox, widget 
+</BODY>
+</HTML>

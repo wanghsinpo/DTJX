@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_Main_Tk_4_0"></A>
+<TITLE>Tk_Main Tk Library Procedures 4.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_Main - main program for Tk-based applications <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+<B>Tk_Main</B>(<I>argc, argv, appInitProc</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>int <I>argc</I></B> (in)
+<DD>Number of elements in <I>argv</I>.
+<P><DT><B>char <I>*argv[]</I></B> (in)
+<DD>Array of strings containing command-line arguments.
+<P><DT><B>Tcl_AppInitProc <I>*appInitProc</I></B> (in)
+<DD>Address of an application-specific initialization procedure.
+The value for this argument is usually <B>Tcl_AppInit</B>.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tk_Main</B> acts as the main program for most Tk-based applications.
+Starting with Tk 4.0 it is not called <B>main</B> anymore because it 
+is part of the Tk library and having a function <B>main</B>
+in a library (particularly a shared library) causes problems on many
+systems.
+Having <B>main</B> in the Tk library would also make it hard to use
+Tk in C++ programs, since C++ programs must have special C++
+<B>main</B> functions.
+<P>
+Normally each application contains a small <B>main</B> function that does
+nothing but invoke <B>Tk_Main</B>.
+<B>Tk_Main</B> then does all the work of creating and running a
+<B>wish</B>-like application.
+<P>
+When it is has finished its own initialization, but before
+it processes commands, <B>Tk_Main</B> calls the procedure given by
+the <I>appInitProc</I> argument.  This procedure provides a ``hook''
+for the application to perform its own initialization, such as defining
+application-specific commands.  The procedure must have an interface
+that matches the type <B>Tcl_AppInitProc</B>:
+<PRE>
+typedef int Tcl_AppInitProc(Tcl_Interp *<I>interp</I>);
+</PRE>
+<I>AppInitProc</I> is almost always a pointer to <B>Tcl_AppInit</B>; for more details on this procedure, see the documentation for <B>Tcl_AppInit</B>. <P>
+<P>
+<H2>KEYWORDS</H2>
+ application-specific initialization, command-line arguments, main program 
+</BODY>
+</HTML>

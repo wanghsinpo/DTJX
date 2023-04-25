@@ -1,0 +1,50 @@
+#!/usr/bin/ksh
+trap "" 23
+
+ECHO=print
+INSDIR=/opt/SPECS/install/bin
+CFGDIR=/opt/SPECS/sys/config
+FWKDIR=/opt/SPECS/usr/fwk
+
+setup_assign()
+{
+    $ECHO
+    $ECHO "#### Wafer Auto Reassignment Setting!! ####"
+    $ECHO "Which do you want a mode to use Auto-Reassignment or No?"
+    $ECHO "Type y (Auto reassignment facility of SPECS is enabled) or n (Auto reassignment facility of SPECS is disabled), then press Return."
+    $ECHO
+    $ECHO "Default = 'y'. [quit='q'] : \c"
+    read ASSIGN
+    $ECHO
+    if [ "$ASSIGN" = "q" ]; then
+        exit
+    elif [ "$ASSIGN" = "y" ]; then
+        AssignVal="1"
+        $ECHO
+    elif [ "$ASSIGN" = "n" ]; then
+        AssignVal="0"
+        $ECHO
+    elif [ "$ASSIGN" = "" ]; then
+        ASSIGN="y"
+        AssignVal="1"
+    else
+        exit
+    fi
+    TEMPMAK=/opt/SPECS_FA/dmh/vgem/defaults.ini
+    if [ -f $TEMPMAK ]; then
+        if $USRBIN/grep Auto_Reassignment $TEMPMAK >/dev/null;then
+            sed -e "s/^VGEM Auto_Reassignment .*/VGEM Auto_Reassignment $AssignVal/" $TEMPMAK > $TEMPMAK.tmp
+            mv $TEMPMAK.tmp $TEMPMAK
+            chmod 444 $TEMPMAK
+            chown root:sys $TEMPMAK
+            $ECHO "Customizing $TEMPMAK..."
+        fi
+    fi
+}
+
+if [ `id -un` != "root" ]; then
+    $ECHO "ERROR: You must log in as root."
+    exit
+else
+    setup_assign
+fi

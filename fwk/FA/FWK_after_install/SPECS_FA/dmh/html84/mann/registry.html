@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="registry_registry_1_1"></A>
+<TITLE>registry Tcl Bundled Packages 1.1</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ registry - Manipulate the Windows registry <P>
+<H2>SYNOPSIS</H2>
+ <P>
+<B>package require registry 1.1</B> <P>
+<B>registry <I>option</B></I> <I>keyName</I> ?<I>arg arg ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>registry</B> package provides a general set of operations for manipulating the Windows registry.  The package implements the <B>registry</B> Tcl command.  This command is only supported on the Windows platform.  Warning: this command should be used with caution as a corrupted registry can leave your system in an unusable state. <P>
+<I>KeyName</I> is the name of a registry key.  Registry keys must be one of the following forms: 
+<DD> <B>\\<I>hostname\rootname\keypath</B></I> 
+<DD> <I>rootname<B>\keypath</B></I> 
+<DD> <I>rootname</I> <P>
+<I>Hostname</I> specifies the name of any valid Windows host that exports its registry.  The <I>rootname</I> component must be one of <B>HKEY_LOCAL_MACHINE</B>, <B>HKEY_USERS</B>, <B>HKEY_CLASSES_ROOT</B>, <B>HKEY_CURRENT_USER</B>, <B>HKEY_CURRENT_CONFIG</B>, <B>HKEY_PERFORMANCE_DATA</B>, or <B>HKEY_DYN_DATA</B>.  The <I>keypath</I> can be one or more registry key names separated by backslash (<B>\</B>) characters. <P>
+<I>Option</I> indicates what to do with the registry key name.  Any unique abbreviation for <I>option</I> is acceptable.  The valid options are: 
+<DT><B>registry broadcast <I>keyName</B></I> ?<I>-timeout milliseconds</I>?
+<DD>. Sends a broadcast message to the system and running programs to notify them of certain updates.  This is necessary to propagate changes to key registry keys like Environment.  The timeout specifies the amount of time, in milliseconds, to wait for applications to respond to the broadcast message. It defaults to 3000.  The following example demonstrates how to add a path to the global Environment and notify applications of the change without reguiring a logoff/logon step (assumes admin privileges): <PRE>
+set regPath {HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment}
+set curPath [registry get $regPath "Path"]
+registry set $regPath "Path" "$curPath;$addPath"
+registry broadcast "Environment"
+</PRE>
+
+<DT><B>registry delete <I>keyName</B></I> ?<I>valueName</I>?
+<DD>. If the optional <I>valueName</I> argument is present, the specified value under <I>keyName</I> will be deleted from the registry.  If the optional <I>valueName</I> is omitted, the specified key and any subkeys or values beneath it in the registry hierarchy will be deleted.  If the key could not be deleted then an error is generated.  If the key did not exist, the command has no effect. 
+<DT><B>registry get <I>keyName valueName</B></I>
+<DD>. Returns the data associated with the value <I>valueName</I> under the key <I>keyName</I>.  If either the key or the value does not exist, then an error is generated.  For more details on the format of the returned data, see SUPPORTED TYPES, below. 
+<DT><B>registry keys <I>keyName</B></I> ?<I>pattern</I>?
+<DD>. If <I>pattern</I> isn't specified, returns a list of names of all the subkeys of <I>keyName</I>.  If <I>pattern</I> is specified, only those names matching <I>pattern</I> are returned.  Matching is determined using the same rules as for <B>string</B> <B>match</B>.  If the specified <I>keyName</I> does not exist, then an error is generated. 
+<DT><B>registry set <I>keyName</B></I> ?<I>valueName data </I>?<I>type</I>??
+<DD>. If <I>valueName</I> isn't specified, creates the key <I>keyName</I> if it doesn't already exist.  If <I>valueName</I> is specified, creates the key <I>keyName</I> and value <I>valueName</I> if necessary.  The contents of <I>valueName</I> are set to <I>data</I> with the type indicated by <I>type</I>.  If <I>type</I> isn't specified, the type <B>sz</B> is assumed.  For more details on the data and type arguments, see SUPPORTED TYPES below. 
+<DT><B>registry type <I>keyName valueName</B></I>
+<DD>. Returns the type of the value <I>valueName</I> in the key <I>keyName</I>.  For more information on the possible types, see SUPPORTED TYPES, below. 
+<DT><B>registry values <I>keyName</B></I> ?<I>pattern</I>?
+<DD>. If <I>pattern</I> isn't specified, returns a list of names of all the values of <I>keyName</I>.  If <I>pattern</I> is specified, only those names matching <I>pattern</I> are returned.  Matching is determined using the same rules as for <B>string</B> <B>match</B>. <P>
+<P>
+<H2>SUPPORTED TYPES</H2>
+ Each value under a key in the registry contains some data of a particular type in a type-specific representation.  The <B>registry</B> command converts between this internal representation and one that can be manipulated by Tcl scripts.  In most cases, the data is simply returned as a Tcl string.  The type indicates the intended use for the data, but does not actually change the representation.  For some types, the <B>registry</B> command returns the data in a different form to make it easier to manipulate.  The following types are recognized by the registry command: 
+<DT><B>binary</B>
+<DD>. The registry value contains arbitrary binary data.  The data is represented exactly in Tcl, including any embedded nulls. 
+<DT><B>none</B>
+<DD>. The registry value contains arbitrary binary data with no defined type.  The data is represented exactly in Tcl, including any embedded nulls. 
+<DT><B>sz</B>
+<DD>. The registry value contains a null-terminated string.  The data is  represented in Tcl as a string. 
+<DT><B>expand_sz</B>
+<DD>. The registry value contains a null-terminated string that contains unexpanded references to environment variables in the normal Windows style (for example, "%PATH%").  The data is represented in Tcl as a string. 
+<DT><B>dword</B>
+<DD>. The registry value contains a little-endian 32-bit number.  The data is represented in Tcl as a decimal string. 
+<DT><B>dword_big_endian</B>
+<DD>. The registry value contains a big-endian 32-bit number.  The data is represented in Tcl as a decimal string. 
+<DT><B>link</B>
+<DD>. The registry value contains a symbolic link.  The data is represented exactly in Tcl, including any embedded nulls. 
+<DT><B>multi_sz</B>
+<DD>. The registry value contains an array of null-terminated strings.  The data is represented in Tcl as a list of strings. 
+<DT><B>resource_list</B>
+<DD>. The registry value contains a device-driver resource list.  The data is represented exactly in Tcl, including any embedded nulls. <P>
+In addition to the symbolically named types listed above, unknown types are identified using a 32-bit integer that corresponds to the type code returned by the system interfaces.  In this case, the data is represented exactly in Tcl, including any embedded nulls. <P>
+<P>
+<H2>PORTABILITY ISSUES</H2>
+ The registry command is only available on Windows. <P>
+<P>
+<H2>KEYWORDS</H2>
+ registry 
+</BODY>
+</HTML>

@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="eof_Tcl_7_5"></A>
+<TITLE>eof Tcl Built-In Commands 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ eof - Check for end of file condition on channel <P>
+<H2>SYNOPSIS</H2>
+ <B>eof <I>channelId</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+Returns 1 if an end of file condition occurred during the most recent input operation on <I>channelId</I> (such as <B>gets</B>), 0 otherwise. <P>
+<I>ChannelId</I> must be an identifier for an open channel such as a Tcl standard channel (<B>stdin</B>, <B>stdout</B>, or <B>stderr</B>), the return value from an invocation of <B>open</B> or <B>socket</B>, or the result of a channel creation command provided by a Tcl extension. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/file.html">file</a>, <a href="../mann/open.html">open</a>, <a href="../mann/close.html">close</a>, <a href="../mann/fblocked.html">fblocked</a>, Tcl_StandardChannels(3) <P>
+<P>
+<H2>KEYWORDS</H2>
+ channel, end of file 
+</BODY>
+</HTML>

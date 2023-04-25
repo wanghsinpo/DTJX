@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_GetPixmap_Tk_4_0"></A>
+<TITLE>Tk_GetPixmap Tk Library Procedures 4.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_GetPixmap, Tk_FreePixmap - allocate and free pixmaps <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+Pixmap
+<B>Tk_GetPixmap(<I>display, d, width, height, depth)</B></I>
+<P>
+<B>Tk_FreePixmap(<I>display, pixmap)</B></I>
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Display <I>*display</I></B> (in)
+<DD>X display for the pixmap.
+<P><DT><B>Drawable <I>d</I></B> (in)
+<DD>Pixmap or window where the new pixmap will be used for drawing.
+<P><DT><B>int <I>width</I></B> (in)
+<DD>Width of pixmap.
+<P><DT><B>int <I>height</I></B> (in)
+<DD>Height of pixmap.
+<P><DT><B>int <I>depth</I></B> (in)
+<DD>Number of bits per pixel in pixmap.
+<P><DT><B>Pixmap <I>pixmap</I></B> (in)
+<DD>Pixmap to destroy.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+These procedures are identical to the Xlib procedures <B>XCreatePixmap</B>
+and <B>XFreePixmap</B>, except that they have extra code to manage X
+resource identifiers so that identifiers for deleted pixmaps can be
+reused in the future.
+It is important for Tk applications to use these procedures rather
+than <B>XCreatePixmap</B> and <B>XFreePixmap</B>;  otherwise long-running
+applications may run out of resource identifiers.
+<P>
+<B>Tk_GetPixmap</B> creates a pixmap suitable for drawing in <I>d</I>,
+with dimensions given by <I>width</I>, <I>height</I>, and <I>depth</I>,
+and returns its identifier.
+<B>Tk_FreePixmap</B> destroys the pixmap given by <I>pixmap</I> and makes
+its resource identifier available for reuse.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+pixmap, resource identifier
+
+</BODY>
+</HTML>

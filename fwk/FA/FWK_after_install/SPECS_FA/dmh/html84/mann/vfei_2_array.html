@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="vfei_2_array_tcl_"></A>
+<TITLE>vfei_2_array Tcl Built-In Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ vfei_2_array - Parse VFEI messages into arrays <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh::vfei_2_array</B> &nbsp;<B>?-global?</B>&nbsp; <I>vfei_msg</I>&nbsp; <I>value_array</I>&nbsp; <I>?type_array?</I> <P>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+<P>
+VFEI is a SEMATECH standard for the format of messages used for equipment integration. This command parses a VFEI version 2.2 (or 2.1) message for the name, format, and value of the data items.  The names of the data items become array subscripts in the array whose name is <I>value_array</I>. The value of a vfei data item becomes the value of the <I>value_array</I> array element.  When the optional array name <I>type_array</I> is specified, the vfei data item format code becomes the value of the <I>type_array</I> array element.  The return value of the command is a list of the data item names that were successfully converted.  If an error occurs, the global variable errorInfo is set to a descriptive message, but the command returns normally. </P>
+<P>
+The <I>value_array</I> and <I>type_array</I> variables are given whatever scope,
+global or local, that they have in the calling procedure.  This is a change -
+versions of this procedure prior to Tcl 8.0 as of 3/12/98 always worked with
+the array variables as global data items.  If your application declares the
+array names as global data items before calling <B>vfei_2_array</B>, the behavior
+of the new version and the old version are identical.  The optional <B>-global</B>
+argument can be passed to the command to force it to work with the arrays as
+global data items.  The advantage of the new version is that the caller can control
+whether the arrays are created and destroyed as local data, or whether they
+are global and must be explicitly managed.</P>
+<P>
+An example use of the command: <PRE>
+% vfei_2_array {CMD/A="INITIALIZE" TID/U4=2} va ta
+CMD TID
+% parray va
+va(CMD) = INITIALIZE
+va(TID) = 2
+% parray ta
+ta(CMD) = A
+ta(TID) = U4
+</PRE>
+<P>
+When a list is parsed, the named items in the list are written into the array as <I>list_name.item_name</I>.  Lists items can be lists, ad infinitum. The item names are concatenated repeatedly.  There is no imposed limit to the depth of the recursion or the length of the resulting names.  Any single name element should be less than 100 characters, and composed of alphanumeric characters, the underscore, or characters in the string "~!@#&amp;-|:?".   <P>
+A list parsing example: <PRE>
+% set m {CMD/A="DEMO" REPORT/L[3]=[EVENT_ID/A="MB_COMPLETE" YEAR/A="1996" X/I2=2]}
+CMD/A="DEMO" REPORT/L[3]=[EVENT_ID/A="MB_COMPLETE" YEAR/A="1996" X/I2=2]
+% vfei_2_array $m vv
+CMD REPORT.EVENT_ID REPORT.YEAR REPORT.X
+% parray vv
+vv(CMD)             = DEMO
+vv(REPORT.EVENT_ID) = MB_COMPLETE
+vv(REPORT.X)        = 2
+vv(REPORT.YEAR)     = 1996
+<P>
+</PRE>
+<P>
+This implementation succeeds in parsing VFEI messages that do not strictly adhere to the SEMATECH description.  In general, quotes are only needed to delineate a data item that has imbedded white space.  There is no problem with additional white space between any of the lexical elements.  The "/" and format code are optional and may be omitted.  It is also possible to imbed special characters in a data value using backslash  sequences as described in the <a href="../mann/Tcl.html">Tcl</a> document. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <P>
+<a href="../mann/TSN.html">TSN</a> <a href="../mann/secs_to_TSN.html">secs_to_TSN</a> <a href="../mann/secsport.html">secsport</a>  <P>
+<P>
+<H2>AUTHOR</H2>
+ Ed Hume, Hume Integration Software, Austin, TX <P>
+<H2>KEYWORDS</H2>
+ SEMATECH VFEI SECS SEMI  
+</BODY>
+</HTML>

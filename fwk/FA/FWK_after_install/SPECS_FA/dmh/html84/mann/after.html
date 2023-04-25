@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="after_Tcl_7_5"></A>
+<TITLE>after Tcl Built-In Commands 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ after - Execute a command after a time delay <P>
+<H2>SYNOPSIS</H2>
+ <B>after <I>ms</B></I> <P>
+<B>after <I>ms </B></I>?<I>script script script ...</I>? <P>
+<B>after cancel <I>id</B></I> <P>
+<B>after cancel <I>script script script ...</B></I> <P>
+<B>after idle </B>?<I>script script script ...</I>? <P>
+<B>after info </B>?<I>id</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command is used to delay execution of the program or to execute a command in background sometime in the future.  It has several forms, depending on the first argument to the command: 
+<DT><B>after <I>ms</B></I>
+<DD><I>Ms</I> must be an integer giving a time in milliseconds. The command sleeps for <I>ms</I> milliseconds and then returns. While the command is sleeping the application does not respond to events. 
+<DT><B>after <I>ms </B></I>?<I>script script script ...</I>?
+<DD>In this form the command returns immediately, but it arranges for a Tcl command to be executed <I>ms</I> milliseconds later as an event handler. The command will be executed exactly once, at the given time. The delayed command is formed by concatenating all the <I>script</I> arguments in the same fashion as the <B>concat</B> command. The command will be executed at global level (outside the context of any Tcl procedure). If an error occurs while executing the delayed command then the <B>bgerror</B> mechanism is used to report the error. The <B>after</B> command returns an identifier that can be used to cancel the delayed command using <B>after cancel</B>. 
+<DT><B>after cancel <I>id</B></I>
+<DD>Cancels the execution of a delayed command that was previously scheduled. <I>Id</I> indicates which command should be canceled;  it must have been the return value from a previous <B>after</B> command. If the command given by <I>id</I> has already been executed then the <B>after cancel</B> command has no effect. 
+<DT><B>after cancel <I>script script ...</B></I>
+<DD>This command also cancels the execution of a delayed command. The <I>script</I> arguments are concatenated together with space separators (just as in the <B>concat</B> command). If there is a pending command that matches the string, it is cancelled and will never be executed;  if no such command is currently pending then the <B>after cancel</B> command has no effect. 
+<DT><B>after idle <I>script </B></I>?<I>script script ...</I>?
+<DD>Concatenates the <I>script</I> arguments together with space separators (just as in the <B>concat</B> command), and arranges for the resulting script to be evaluated later as an idle callback. The script will be run exactly once, the next time the event loop is entered and there are no events to process. The command returns an identifier that can be used to cancel the delayed command using <B>after cancel</B>. If an error occurs while executing the script then the <B>bgerror</B> mechanism is used to report the error. 
+<DT><B>after info </B>?<I>id</I>?
+<DD>This command returns information about existing event handlers. If no <I>id</I> argument is supplied, the command returns a list of the identifiers for all existing event handlers created by the <B>after</B> command for this interpreter. If <I>id</I> is supplied, it specifies an existing handler; <I>id</I> must have been the return value from some previous call to <B>after</B> and it must not have triggered yet or been cancelled. In this case the command returns a list with two elements. The first element of the list is the script associated with <I>id</I>, and the second element is either <B>idle</B> or <B>timer</B> to indicate what kind of event handler it is. <P>
+The <B>after <I>ms</B></I> and <B>after idle</B> forms of the command assume that the application is event driven:  the delayed commands will not be executed unless the application enters the event loop. In applications that are not normally event-driven, such as <B>tclsh</B>, the event loop can be entered with the <B>vwait</B> and <B>update</B> commands. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/bgerror.html">bgerror</a>, <a href="../mann/concat.html">concat</a>, <a href="../mann/update.html">update</a>, <a href="../mann/vwait.html">vwait</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ cancel, delay, idle callback, sleep, time 
+</BODY>
+</HTML>

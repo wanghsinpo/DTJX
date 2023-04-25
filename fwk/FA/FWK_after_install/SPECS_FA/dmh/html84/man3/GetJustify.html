@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_GetJustifyFromObj_Tk_8_1"></A>
+<TITLE>Tk_GetJustifyFromObj Tk Library Procedures 8.1</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_GetJustifyFromObj, Tk_GetJustify, Tk_NameOfJustify - translate between strings and justification styles <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+int
+<B>Tk_GetJustifyFromObj(<I>interp, objPtr, justifyPtr)</B></I>
+<P>
+int
+<B>Tk_GetJustify(<I>interp, string, justifyPtr)</B></I>
+<P>
+CONST char *
+<B>Tk_NameOfJustify(<I>justify)</B></I>
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter to use for error reporting, or NULL.
+<P><DT><B>Tcl_Obj <I>*objPtr</I></B> (in/out)
+<DD>String value contains name of justification style (<B>left</B>, <B>right</B>, or
+<B>center</B>).  The
+internal rep will be modified to cache corresponding justify value.
+<P><DT><B>CONST char <I>*string</I></B> (in)
+<DD>Same as <I>objPtr</I> except description of justification style is passed as
+a string.
+<P><DT><B>int <I>*justifyPtr</I></B> (out)
+<DD>Pointer to location in which to store justify value corresponding to
+<I>objPtr</I> or <I>string</I>.
+<P><DT><B>Tk_Justify <I>justify</I></B> (in)
+<DD>Justification style (one of the values listed below).
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tk_GetJustifyFromObj</B> places in <I>*justifyPtr</I> the justify value
+corresponding to <I>objPtr</I>'s value.
+This value will be one of the following:
+
+<DT><B>TK_JUSTIFY_LEFT</B>
+<DD>Means that the text on each line should start at the left edge of the line;  as a result, the right edges of lines may be ragged. 
+<DT><B>TK_JUSTIFY_RIGHT</B>
+<DD>Means that the text on each line should end at the right edge of the line;  as a result, the left edges of lines may be ragged. 
+<DT><B>TK_JUSTIFY_CENTER</B>
+<DD>Means that the text on each line should be centered;  as a result, both the left and right edges of lines may be ragged. <P>
+Under normal circumstances the return value is <B>TCL_OK</B> and <I>interp</I> is unused. If <I>objPtr</I> doesn't contain a valid justification style or an abbreviation of one of these names, <B>TCL_ERROR</B> is returned, <I>*justifyPtr</I> is unmodified, and an error message is stored in <I>interp</I>'s result if <I>interp</I> isn't NULL. <B>Tk_GetJustifyFromObj</B> caches information about the return value in <I>objPtr</I>, which speeds up future calls to <B>Tk_GetJustifyFromObj</B> with the same <I>objPtr</I>. <P>
+<B>Tk_GetJustify</B> is identical to <B>Tk_GetJustifyFromObj</B> except that the description of the justification is specified with a string instead of an object.  This prevents <B>Tk_GetJustify</B> from caching the return value, so <B>Tk_GetJustify</B> is less efficient than <B>Tk_GetJustifyFromObj</B>. <P>
+<B>Tk_NameOfJustify</B> is the logical inverse of <B>Tk_GetJustify</B>. Given a justify value it returns a statically-allocated string corresponding to <I>justify</I>. If <I>justify</I> isn't a legal justify value, then ``unknown justification style'' is returned. <P>
+<P>
+<H2>KEYWORDS</H2>
+ center, fill, justification, string 
+</BODY>
+</HTML>

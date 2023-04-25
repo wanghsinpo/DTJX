@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="for_Tcl_"></A>
+<TITLE>for Tcl Built-In Commands</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ for - ``For'' loop <P>
+<H2>SYNOPSIS</H2>
+ <B>for <I>start test next body</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+<B>For</B> is a looping command, similar in structure to the C <B>for</B> statement.  The <I>start</I>, <I>next</I>, and <I>body</I> arguments must be Tcl command strings, and <I>test</I> is an expression string. The <B>for</B> command first invokes the Tcl interpreter to execute <I>start</I>.  Then it repeatedly evaluates <I>test</I> as an expression; if the result is non-zero it invokes the Tcl interpreter on <I>body</I>, then invokes the Tcl interpreter on <I>next</I>, then repeats the loop.  The command terminates when <I>test</I> evaluates to 0.  If a <B>continue</B> command is invoked within <I>body</I> then any remaining commands in the current execution of <I>body</I> are skipped; processing continues by invoking the Tcl interpreter on <I>next</I>, then evaluating <I>test</I>, and so on.  If a <B>break</B> command is invoked within <I>body</I> or <I>next</I>, then the <B>for</B> command will return immediately. The operation of <B>break</B> and <B>continue</B> are similar to the corresponding statements in C. <B>For</B> returns an empty string. <P>
+Note: <I>test</I> should almost always be enclosed in braces.  If not, variable substitutions will be made before the <B>for</B> command starts executing, which means that variable changes made by the loop body will not be considered in the expression. This is likely to result in an infinite loop.  If <I>test</I> is enclosed in braces, variable substitutions are delayed until the expression is evaluated (before each loop iteration), so changes in the variables will be visible. For an example, try the following script with and without the braces around <B>$x&lt;10</B>: <PRE>
+for {set x 0} {$x&lt;10} {incr x} {
+	puts "x is $x"
+}
+</PRE>
+<P>
+<P>
+<H2>SEE ALSO</H2>
+ break, continue, foreach, while <P>
+<P>
+<H2>KEYWORDS</H2>
+ for, iteration, looping 
+</BODY>
+</HTML>

@@ -1,0 +1,7 @@
+WARNING 70-00005
+Wafer Loading mode is going to be changed
+to Random Wafer Testing mode.
+Are you sure to change it?
+
+(Please make sure if the GPIB parameter
+of prober is set to the random mode.)

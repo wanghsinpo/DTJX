@@ -1,0 +1,377 @@
+#!/bin/sh
+# emacs mode: -*- TCL -*-
+#
+# Restart using Tcl/Tk with the hub UI script.
+# Additional command line arguments can be Tcl statements
+#
+# Use -notk to run detached from X-windows.
+# \
+exec dmh_wish -f "$0" "$@"
+
+
+# ******************************************************************
+# Description:
+#              this function displays the command-line options
+#
+#
+#
+# INPUTS:  none
+#
+# OUTPUTS: none
+#
+# ******************************************************************
+
+proc displayOptions {} {
+
+  puts ""
+  puts "Virtual GEM Version 3"
+  puts "Copyright Agilent Technologies 2001-2003"
+  puts ""
+  puts "-source      : use source code (vgem/src)"   
+  puts "-options     : this message" 
+  puts ""
+ 
+}
+
+############################################################################
+# Proc name:  main
+#
+# Desc:       Starting procedure for the VGEM system.
+#
+# Parameters:
+#   none
+#
+# Return:     none
+# Change Log:
+# pdoane     01/16/2001 first draft for hstd
+# jgilmore   04/03/2001 removed hard-coded client directory reference
+# Jmcneill   08/16/2001 Moved source of source_system.tcl to use 
+#                       current directory.
+#                       Rearranged the no-config.ini message. 
+# PGauthier  11/20/2001 Added VGEM_READY mailbox message for 
+#                       startup
+# JTaylor    02/19/2002 Merged trace options into gemequip.  Debug parameter
+#                       now used to enable/disable trace option.
+#
+# PGauthier  06/18/2002 Added code to support the VGEM compiled version
+#
+# JTaylor    07/29/2002 Added code to read revision info for 'about' box
+# JTaylor    08/06/2002 Fixed problem of closing rev info file if not there
+# PGauthier  11/01/2002 Added support for BWidget
+# PGauthier  11/25/2002 Added support for LogFilesDateStamp option (allows
+#                       the creation of gemprober and gemport log files with 
+#                       a timstamp in the name so that each file is unique.
+# JTaylor    12/11/2002 Changed revision source to SPECS_FA sys_rev file.
+# PGauthier  12/12/2002 Initialized the VGEM elements pointing to the revision number
+#                       in case the revision file cannot be read properly
+# PGauthier  01/14/2003 Compiled version is now the default
+# JTaylor    01/14/2004 Added support for log file directory to be specified in defaults
+#
+############################################################################
+
+
+proc main {} {
+    global VGEM JobQueue host_spname argc argv
+    set host_spname GEMPORT
+    global $host_spname
+    set JobQueue {}
+    
+    #process command-line arguments
+    set use_compiled 1
+    
+    foreach cmd_option $argv {
+         
+      if {[string range $cmd_option 0 0] == "-"} {   
+    
+        #remove the - character (ex. -show becomes show)
+        regsub -all {\-} $cmd_option {} cmd_option 
+         
+        switch $cmd_option {
+  
+           source  {
+                        set use_compiled 0
+                        
+
+                     } 
+        
+           
+           options     {
+                       #display usage
+                       displayOptions               
+                       exit 
+                    } 
+           
+           default {   
+                       puts ""
+                       puts "Wrong option : $cmd_option"
+                       displayOptions
+                       exit
+          
+                    }
+           
+         }
+       
+       } 
+       
+    }
+
+    #############################################
+    #load BWidget library
+
+    global tcl_platform
+    global auto_path
+
+    package require dmh 
+    dmh_import 
+
+    if { [file exists "../BWidget-1.7.0"] } {
+       lappend auto_path "../BWidget-1.7.0"
+    } elseif { [file exists "/opt/BWidget-1.7.0"] } {
+       lappend auto_path "/opt/BWidget-1.7.0"
+    } else {
+       puts "Cannot locate ../BWidget-1.7.0 or /opt/BWidget-1.7.0"
+       puts "Terminating VGEM"
+       exit
+    }
+       
+    package require BWidget
+
+    ##############################################
+     
+    if {$use_compiled == 0} {
+      if {[file exists ./src/source_system.tcl] == 1} {
+          source ./src/source_system.tcl
+      } elseif {[file exists ./source_system.tcl] == 1} {
+          source ./source_system.tcl
+      } else {
+          puts ""
+          puts "Error! Source code source_system.tcl does not exist in vgem or vgem/src." 
+          exit
+      }
+        
+    } else {
+      ######## load compiled code #########
+      #
+      # load the library that allows to read compiled code
+      if {[file exists bin] == 0} {
+        puts ""
+        puts "Error! Compiled code does not exist in vgem/bin. Use gemequip -source"
+        puts "if source code is available"
+        exit
+      }
+      
+      cd bin
+      load libtbcload1.4.so
+      set allfiles [glob *.tbc]
+
+      foreach file $allfiles {
+         source $file
+      }
+
+      cd ..
+      #
+      #####################################
+    }
+
+    #
+    # Read the global settings and print them to stdout
+    #
+
+    read_settings "defaults.ini"
+    read_settings "revision.ini"
+    read_settings "$VGEM(testerType)/defaults.ini"
+    read_settings "$VGEM(testerType)/$VGEM(proberType)/defaults.ini"
+   
+    if {![info exists VGEM(testerType)] || ![info exists VGEM(proberType)]} {
+	set noCfgMsg "**  ERROR  ** \ \n\n VGEM testerType and VGEM proberType"
+	append noCfgMsg " variables \ \n are required in the defaults.ini "
+	append noCfgMsg "file.\ \n\n VGEM will exit."
+	tk_messageBox -message $noCfgMsg -icon error
+	exit
+    }
+
+    #
+    # Standard SGI initialization
+    # 
+    # 
+    if {$use_compiled == 0} {
+    
+       #load the code source (.tcl extension).
+       #load from the reference vgem/src
+       #load from vgem
+       #load from vgem/custom. 
+    
+       source_system "vgem/src \
+                   vgem \
+	           vgem/$VGEM(testerType) \
+		   vgem/$VGEM(testerType)/$VGEM(proberType) \
+		   vgem/custom"
+    } else {
+    
+       # we loaded before the compiled code in vgem/bin
+       # we now load here custom source code or code
+       # specific to a platform
+      
+       source_system "vgem/$VGEM(testerType) \
+		      vgem/$VGEM(testerType)/$VGEM(proberType) \
+		      vgem/custom"
+    } 
+     
+		
+    init_colorbase
+    VGEM_init
+   
+    set VGEM(equipVersion)  "Unknown"
+    set VGEM(equipVersion1) "Unknown" 
+    set VGEM(equipVersion2) "Unknown" 
+    set VGEM(equipVersion3) "Unknown"
+    set VGEM(equipVersion4) ""
+    set VGEM(equipVersion5) ""
+    set VGEM(equipVersion6) ""
+    set VGEM(equipVersion7) ""
+    set VGEM(equipVersion8) ""
+    set VGEM(equipVersion9) ""
+    set VGEM(equipVersion10) ""
+
+
+    if {$VGEM(testerType)== "specs" } {
+    set filename "/opt/SPECS_FA/install/sysid/sys_rev"
+    if {[catch {set fileId [open $filename r]}] == 0} {
+
+	    # get the first line of the file 
+	    if {[gets $fileId line] != -1 } {
+		set VGEM(equipVersion1) $line
+                }
+	    if {[gets $fileId line] != -1 } {
+		set VGEM(equipVersion2) $line
+                }
+	    if {[gets $fileId line] != -1 } {
+		set VGEM(equipVersion3) $line
+                }
+
+
+		close $fileId
+		}
+
+     set filename "/opt/SPECS_FA/install/sysid/patch_rev"
+    if {[catch {set fileId [open $filename r]}] == 0} {
+
+            # get the first line of the file
+            if {[gets $fileId line] != -1 } {
+                set VGEM(equipVersion4) $line
+                }
+            if {[gets $fileId line] != -1 } {
+                set VGEM(equipVersion5) $line
+                }
+            if {[gets $fileId line] != -1 } {
+                set VGEM(equipVersion6) $line
+                }
+            if {[gets $fileId line] != -1 } {
+                set VGEM(equipVersion7) $line
+                }
+            if {[gets $fileId line] != -1 } {
+                set VGEM(equipVersion8) $line
+                }
+            if {[gets $fileId line] != -1 } {
+                set VGEM(equipVersion9) $line
+                }
+            if {[gets $fileId line] != -1 } {
+                set VGEM(equipVersion10) $line
+                }
+
+
+                close $fileId
+                }
+
+   }								       
+
+
+    ######################################################
+    # If (Debug) then enable trace to gemport logfile.
+    ######################################################
+    global gpFile
+
+    if {$VGEM(Debug)} {
+      if {$VGEM(LogFilesDateStamp)} {
+         set currentTime [clock format [clock seconds] -format "%Y%m%d%H%M%S"]
+         set gpFile [open $VGEM(logdirectory)/gemport_${currentTime}.log w]
+      } else {
+         set gpFile [open $VGEM(logdirectory)/gemport.log w]  
+      } 
+      
+      trace variable GEMPORT(rtrace) w rdump
+      trace variable GEMPORT(strace) w sdump
+    }
+
+    #####################################################
+    #end of trace code
+    ####################################################
+
+
+    client_settings
+
+    # New initialization
+    trace variable ${host_spname}(control_state) w tester_notify_control_state
+
+    # Prober initialization
+     if {$VGEM(proberType) != "none" } {
+	prober_init 
+    } else {
+	global host_spname
+	global $host_spname
+	if { $VGEM(InitCommState) != "DISABLED" } {
+	    set ${host_spname}(comm_enable) 1
+	}
+	eq_ui_comm_enable $host_spname
+    }
+
+    ######################################################
+    # If (Debug) then enable trace to gemprober logfile.
+    ######################################################
+    global pFile
+    global GEMPROBER
+
+    if {$VGEM(Debug)} {    
+      if {$VGEM(LogFilesDateStamp)} {
+         set currentTime [clock format [clock seconds] -format "%Y%m%d%H%M%S"]
+         set pFile [open $VGEM(logdirectory)/gemprober_${currentTime}.log w]
+      } else {
+         set pFile [open $VGEM(logdirectory)/gemprober.log w]  
+      } 
+         trace variable GEMPROBER(rtrace) w rdump
+         trace variable GEMPROBER(strace) w sdump
+    }
+    ########################################
+    #end of trace code
+    ###########################################
+    
+    ########### source embedded web server component if it exists ########
+    # 
+
+    if { [info exists VGEM(LoadWebServer)] == 1} { 
+    
+       global auto_path env argv tcl_platform Config
+       
+       if { $VGEM(LoadWebServer) == 1 } {
+
+          puts "**************************************"
+          puts "Loading embedded web server component"
+          source ../webserver/bin/httpd.tcl
+          source ../webserver/htdocs/libtml/vgem_web.tcl
+
+       } 
+    }
+
+    
+
+    #
+    #place the message VGEM_READY into the mailbox VGEM_STATE. 
+    #external applications can read this mailbox to determine
+    #when VGEM is ready.
+    #
+
+    mbx flush VGEM_STATE
+    mbx put VGEM_STATE "VGEM_READY"    
+}
+
+main

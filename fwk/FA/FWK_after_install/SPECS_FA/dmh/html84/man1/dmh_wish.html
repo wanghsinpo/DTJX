@@ -1,0 +1,447 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="dmh_cmds"></A>
+<TITLE>dmh_wish Tcl Tk Shell</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ dmh_wish - Distributed programming/windowing shell <P>
+ dmh84 - Version specific name of dmh_wish <P>
+ libdmh84.so, libdmh84.sl, dmh84.dll - shared libraries for <A href="#dynamic_loading">dynamic loading</A> <p>
+<HR>
+<P>
+<H2>SYNOPSIS</H2>
+<B>dmh_wish</B> ?<I>options</I>? ?<I>arg arg ...</I>? <P>
+<B>dmh84</B> ?<I>options</I>? ?<I>arg arg ...</I>? <P>
+<H2>OPTIONS</H2>
+
+<DT><B>-console</B>
+<DD>Enable using console input with an input file.
+Without this option, console input is disabled when an input
+file is specified.
+<P>
+<DT><B>-display <I>display</B></I>
+<DD>Display (and screen) on which to display window.  Ignored if <B>-notk</B> is specified. 
+<P>
+<DT><B>-file <I>fileName</B></I>
+<DD>
+Read commands from <I>fileName</I> rather than standard input.  The last element in <I>fileName</I> will be used as the title for the application and name of its interpreter for <B>send</B> commands (unless overridden by the <B>-name</B> option). 
+<P>
+When the <B>-file</B> option is used without the <B>-console</B> option,
+console input is disabled on POSIX systems, and the
+<A href="../mann/console.html">console is hidden</A> on NT systems.
+<P>
+<DT><B>-geometry <I>geometry</B></I>
+<DD>
+Initial geometry to use for window.  Ignored if <B>-notk</B> is specified. 
+<P> 
+<DT><B>-help</B>
+<DD>Print a summary of the command-line options and exit. 
+<P>
+<DT><B>-msgargs</B>
+<DD>
+Execute the command line arguments that are not options as  SEMATECH Generic Server message commands.  When used with  the <B>-file</B> option, if the <B>-msgargs</B> option is first on the command line, the commands are executed first, before the file is sourced.  Similarly, if the <B>-file</B> option  appears first, the file is sourced first. 
+This feature is used by Tcl application scripts such as the <A href="datahub.html">Datahub</A> 
+to provide command line usage which is compatible with legacy SEMATECH applications.
+<P>
+<DT><B>-name <I>name</B></I>
+<DD>
+Use <I>name</I> as the title to be displayed in the window, and as the name of the interpreter for <B>send</B> commands.  Ignored if <B>-notk</B> is specified. 
+<P>
+<DT><B>-notk</B>
+<DD>
+Do not connect to the X server.  This mode is useful for daemon/server processes.  Windows developers can acheive similar results by running as an <a href="srvany.html">NT service</A>.
+<P>
+<DT><B>-sync</B>
+<DD>
+Execute all display server commands synchronously, so that errors are reported immediately.  This will result in much slower execution, but it is useful for debugging.  Ignored if <B>-notk</B> is specified. 
+<P>
+<DT><B>-tclargs</B>
+<DD>
+Evalute the command line arguments that are not options as Tcl statements.  When used with the <B>-file</B> option,  if the <B>-tclargs</B> option preceeds the <B>-file</B> option on the command line, the statements are evaluated before the file is sourced.  Similarly, if the <B>-file</B> option appears first, the file is sourced first.   <P>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The Hume Integration Datahub SDK installs an extended
+Tcl/Tk program having a version specific name such as <b>dmh84</b> as well as
+installing the same program under the version independent name <b>dmh_wish</b>.
+<B>Dmh_wish</B> is a single program consisting of the Tcl command language, 
+the Tk toolkit, DMH mailbox messaging extensions, Hume Datahub extensions, 
+and logic that reads commands from standard input or from a file. 
+By default, it creates a main window and then processes Tcl commands. If <B>dmh_wish</B> is invoked with no <B>-f</B> option then it reads Tcl commands interactively from standard input. It will continue processing commands until all windows have been deleted or until end-of-file is reached on standard input. <P>
+When used interactively, if there exists a file <B>.dmhrc</B> in the home directory of the user, <B>dmh_wish</B> evaluates the file as a Tcl script just before reading the first command from standard input. On Windows NT, the home directory is established by creating the  environment variable HOME, with a value of a Unix style slash delimited pathname such as c:/users/joe.  Use the Control Panel application System or the Tcl command regset to do this. <P>
+If the <B>-file</B> option is provided to Tk, then <B>dmh_wish</B> reads Tcl commands from the file named in the <B>-file</B> option.  These commands will normally create an interactive interface consisting of one or more widgets.  When the end of the command file is reached, <B>dmh_wish</B> will continue to respond to window events until all windows have been deleted. There is no automatic evaluation of <B>.dmhrc</B> in this case, but the script file can always <B>source</B> it if desired. <P>
+<h3>Automatic Loading of Packages</H3>
+The <b>dmh_wish</b> executeable has the ability to automatically load a
+package of your choosing without requiring the user to provide any command
+line arguments.&nbsp; If the <b>dmh_wish</b> executeable is renamed so that the name no longer
+starts with <b>dmh</b>, and there is no <b>-file <i>filename</i></b> option specified
+on the command line, then the startup logic will evaluate <b>package require <i>exename</i></b>
+where <b><i>exename</i></b> is equivalent to 
+<b>file rootname [file tail <i>executeable_name</i>]</b>.&nbsp; 
+For example, the executeable name, <b>inspect.exe</b> causes the package <b>inspect</b> to
+be loaded.&nbsp; 
+Other arguments on the command line are processed normally and available to the
+application logic in the global variable <b>argv</b> as is the usual case.
+When the package loading feature is triggered, it is an alternative to running with 
+a script file, so by default a console is not provided.&nbsp; The <b>-console</b> command
+line option may be used to force having a console.&nbsp;
+<p>
+This feature has the following advantages for deploying your applications:
+<ul>
+<li>The correct Tcl/Tk executeable is run instead of one chosen by
+the command interpreter working with a script or batch file.</li>
+<li>The user can run the application without having a batch
+file, a command line argument, or a program start menu item 
+that specifies a script to run.&nbsp; For example, he can
+double-click on the executeable name from a file system browser.</li>
+<li>On windows, you do not have to code around problems with
+passing command line arguments in a .bat file.</li>
+<li>Task manager or process status lists show directly which
+applications are running.</li>
+<li>You do not have to code installation paths into batch or
+script files, or use environment variables to pass them.&nbsp;
+The package loading mechanism will find the correct version
+of your package and its associated files under the Tcl/Tk 
+library directory.</li>
+<li>You can customize pkgIndex.tcl files so that the executeable
+version is run with the correct version of your application.&nbsp;
+For example, you can add a statement such as 
+<b>if { [package provide Tcl] < 8.4 } return</b> to the beginning
+of the file to prevent versions earlier than 8.4 from using the
+package.</li>
+</ul>
+<p>
+<A NAME="dynamic_loading"></A>
+<h3>Dynamic Loading of the DMH Package</H3>
+The features provided by the Hume Integration SDK can also be dynamically
+loaded into a stock or custom Tcl/Tk executable.  Depending on your system, 
+one of the following shared library files is built and installed for this purpose:
+ <b>dmh84.dll</b>, <b>libdmh84.so</b>, <b>libdmh84.so.1.0</b> or <b>libdmh84.sl</b>.  
+In practice, the
+entire directory, <b>dmh84</b>, which is usually installed in /usr/local/lib, is
+copied into the lib directory of the Tcl/Tk installation.  The Hume provided features 
+become available after executing the Tcl command <b>package require dmh</b>.
+<P>
+<H2>ENVIRONMENT</H2>
+ <P>
+Recent versions of Tcl/Tk are built with shared libraries on all platforms.
+On Windows, the shared library DLL files are found by the operating system
+in the same directory as the executeable.  On POSIX systems, the shared
+libraries are found by the operating system if they are installed in
+the system directories, /lib, /usr/lib, or /usr/local/lib.  If the libraries
+are installed elsewhere, an environment variable must be set.  The proper
+environment variable differs for the specific operating system:
+<dl>
+<dt><b>AIX</b>
+<dd>LIBPATH<p>
+<pre>
+# example
+LIBPATH=$LIBPATH:$pwd/usr/local/lib:/lib:/usr/lib; export LIBPATH
+</pre>
+<dt><b>HP-UX</b>
+<dd>SHLIB_PATH<p>
+<pre>
+# example
+SHLIB_PATH=$SHLIB_PATH:$pwd/usr/local/lib; export SHLIB_PATH
+</pre>
+<dt><b>Linux</b>
+<dd>LD_RUN_PATH<p>
+<pre>
+# example
+LD_RUN_PATH=$LD_RUN_PATH:$pwd/usr/local/lib; export LD_RUN_PATH
+</pre>
+<dt><b>SunOS/Solaris</b>
+<dd>LD_LIBRARY_PATH<p>
+<pre>
+# example
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$pwd/usr/local/lib; export LD_LIBRARY_PATH
+</pre>
+
+</dl>
+<P>&nbsp;
+<p>
+The following environment variables affect various aspects of using Tcl/Tk
+and the DMH package.  For convenience, this list includes items that
+are more closely related to other programs and application scripts than
+to dmh_wish.  
+<DL>
+<DT>
+<B>DMH_BIN</B>
+<DD>This variable gives the path where the
+DMH executeable programs and application scripts are found.
+The path defaults to /usr/local/bin.  If the DMH_BIN 
+variable value is not correct,
+the invocation of certain script applications such as the
+<a href="datahub.html">datahub</a> will fail.
+<DT>
+<B>DMH_LIBRARY</B>
+<DD>Ordinarily the directory containing the DMH runtime library
+including the file <B>dmh.tcl</B> is found relative to the
+executable program, as in "../lib/dmh84/".  In unusual
+circumstances such as when using DMH in an application
+that is not in the DMH_BIN directory,
+the environment variable DMH_LIBRARY can be defined to
+override the usual search, or to indicate a specific runtime
+library directory.  Once the DMH software is successfully
+initialized, the global variable <b>dmh_library</B> shows
+the directory that is being used.
+<DT>
+<B>HUB_ROW_MAX</B>
+<DD>
+In order to prevent excessive memory usage, the hub table
+display logic ordinarily shows only the first 1000 rows
+of a table's data.  To show more rows than this default,
+the environment variable HUB_ROW_MAX can be set.  This
+environment variable is used for both display of in-memory
+tables, and display of persistent database tables using dmh_SQLsrv.
+<DT>
+<B>NO_DDE_IMPORT</B>
+<DD>Prior to Tcl version 8.4, the DMH software always created the
+<a href="../mann/mh_eval.html">mh_eval</a> command in the global namespace.&nbsp;
+The presence of this command is relied upon by the <a href="../mann/mbx_RPC.html">mbx_RPC</a> 
+command which is used to support the <a href="dmh_inspect.html">inspect</a> application.&nbsp;
+In order to have compatibilty of Tcl 8.4 applications with inspect,
+the <b>mh_eval</b> command is imported into the global namespace from
+the <b>::dmh</b> namespace during initialization on all platforms unless the 
+<B>NO_DDE_IMPORT</B> environment variable is defined.&nbsp; On Windows platforms, the 
+<b>send</b> and <b>dde_execute</b> commands are also imported into
+the global namespace for the same purpose during initialization 
+unless this environment variable is defined.
+<DT>
+<B>NO_DDE_QUERY</B>
+<DD>When the DMH software is run on the Windows platforms,
+it ordinarily uses the Microsoft DDE query call to determine 
+which DMH processes already exist, so it can choose a unique
+name for its <a href="../mann/send.html">send</a> command identity.  
+Defining the NO_DDE_QUERY environment variable prevents this
+query from happening.  This is needed if a dmh_wish process
+execs a child dmh_wish process without requesting background execution
+using &amp..  The child process and parent deadlock since the
+parent will not answer the child's query until after the child
+exits.  The usual situation is to exec dmh_wish processes in
+background, so the problem does not occur.  The NO_DDE_QUERY
+variable should also be set when software
+that does not respond properly to a DDE query, such as
+IBM's Visual Age Smalltalk, or IBM's Automation Connection.  
+In this situation it appears that the dmh_wish 
+program cannot be started, but in reality, the dmh_wish 
+process is blocked by the rogue application, and is not 
+able to finish its initialization.
+<DT>
+<B>NO_SQL_ROW_COUNT</B>
+<DD>The User Interface of the <a href="dmh_SQLsrv.html">dmh_SQLsrv</a> 
+application ordinarily lists the tables that exist in a persistent 
+database, and the number of data rows in each table.  If the
+tables are very large, obtaining the number of rows can be
+time-consuming.  Therefore, counting the rows can be disabled
+by setting the environment variable NO_SQL_ROW_COUNT to the value 1.
+This value can be overridden by the dmh_SQLsrv menu, so the
+environment variable is actually an initialization preference.
+<DT>
+<B>TCL_LIBRARY</B>
+<DD>Ordinarily the directory containing the Tcl runtime library
+including the file <B>init.tcl</B> is found relative to the 
+executable program, as in "../lib/tcl8.4/".  In unusual 
+circumstances such as when using Tcl in an embedded application,
+the environment variable TCL_LIBRARY can be defined to
+override the usual search, and indicate a specific runtime
+library directory.
+<DT>
+<B>TK_LIBRARY</B>
+<DD>Ordinarily the directory containing the Tk runtime library
+including the file <B>tk.tcl</B> is found relative to the 
+Tcl library path, as in "../tk8.4/".  In unusual 
+circumstances such as when using Tk in an uninstalled application,
+the environment variable TK_LIBRARY can be defined to
+override the usual search, and indicate a specific runtime
+library directory.
+library directory.
+<DT>
+<B>TCLLIBPATH</B>
+<DD>A colon separated list of directories to supply the initial
+value to the Tcl <A href="../mann/library.html">auto_path</A> variable
+which is used to find Tcl procedures that are sourced when first
+used.
+</DL>
+ <P>
+<H2>VARIABLES</H2>
+ <P>
+<DL>
+<B>Dmh_wish</B> sets the following Tcl variables: 
+<DT><B>argc</B>
+<DD>Contains a count of the number of <I>arg</I> arguments (0 if none), not including the options described above. 
+<DT><B>argv</B>
+<DD>Contains a Tcl list whose elements are the <I>arg</I> arguments (not including the options described above), in order, or an empty string if there are no <I>arg</I> arguments. 
+<DT><B>argv0</B>
+<DD>Contains <I>fileName</I> if it was specified. Otherwise, contains the name by which <B>dmh_wish</B> was invoked. 
+<DT><B>dmh_library</B>
+<DD>Set to the path where the program finds the DMH Tcl library. 
+<DT><B>dmh(notk)</B>
+<DD>Set to 1 if the <b>-notk</B> command line option was used to indicate
+background operation without windows is desired.  On Unix systems, <b>-notk</B>
+causes the executable not use X-windows, and Tk variables such as <b>tk_library</b>
+are not defined.  On Windows when using <b>-notk</B>, all of the usual Tk
+commands and variables still exist, so this flag is set to indicate that 
+windows are not wanted.  Dmh_wish.exe can also
+be run in the background as an <a href="srvany.html">NT service</A>.
+<DT><B>dmh_version</B>
+<DD>Set to 1.1.  This version interoperates with all previous releases, but some earlier releases did not define this variable. 
+<DT><B>tcl_interactive</B>
+<DD>Contains 1 if <B>dmh_wish</B> is reading commands interactively (no <B>-file</B> option was specified and standard input is a terminal-like device), 0 otherwise. 
+<DT><B>tcl_library</B>
+<DD>Set to the path where the program has found the Tcl runtime library. 
+<DT><B>tcl_version</B>
+<DD>Set to 8.4 for Tcl 8.4. 
+<DT><B>tk_library</B>
+<DD>Set to the path where the program has found the Tk runtime library. 
+<DT><B>tk_version</B>
+<DD>Set to 8.4 for Tk 8.4.  Releases prior to 4.0 set variable <B>tkVersion</B>. <P>
+</DL>
+<P>
+<H2>SCRIPT FILES</H2>
+ <P>
+On Unix systems, if you create a Tcl script in a file whose first line is <PRE>
+<B>#!/usr/local/bin/dmh_wish -f</B>
+</PRE>
+then you can invoke the script file directly from your shell if you mark it as executable. This assumes that <B>dmh_wish</B> has been installed in the default location in /usr/local/bin;  if it's installed somewhere else then you'll have to modify the above line to match. <P>
+A better alternative on Unix systems is to start your script programs with: <PRE>
+<B>#!/bin/sh</B>
+<B># restart using first dmh_wish on PATH \ </B>
+<B>exec dmh_wish -f "$0" "$@"</B>
+</PRE>
+<P>
+See wish(1) for an explanation. <P>
+On Windows NT, you can create batch files with the filename extension of 
+.bat or .cmd to have the command interpreter recognize them as executable.  
+The contents of a batch file might be: 
+<PRE>
+  start /b dmh_wish -f /users/joe/myscript.tcl
+</PRE>
+Another trick on Windows NT is to have a .bat file that contains Tcl
+code, and can start itself.  For example, you might create a file, myscript.bat,
+that starts out with:
+<PRE>
+  start dmh_wish -tclargs "proc start args {} ; proc goto args {} ; source myscript.bat"
+  goto EndOfTcl
+  #
+  # Insert Tcl code HERE
+
+  #
+  # \
+  :EndOfTcl
+</PRE>
+<P>
+As a rule of thumb, you use Unix style slash pathnames for any pathname 
+that is processed by the Tcl/Tk logic, and DOS style backslashes 
+for  Windows programs.  Windows NT 3.51 needs the "start" command
+to run a program independent of the current shell process, 
+but Windows NT 4.0 does not.
+Another example is: 
+<PRE>
+  start /b d:\usr\local\bin\dmh_wish -f /users/joe/myscript.tcl
+</PRE>
+<P>
+On Macintosh systems, if there is file named <B>autoexec.tcl</B> in the
+working folder of the program, the file is executed when the program
+starts.  In this file you can place Tcl code to set the command line
+variable <B>argv</B>, and to source specific scripts.  Use the colon
+as the pathname delimiter when referring to the Mac filesystem, or
+use the <B>file join</B> command.
+<PRE>
+  source [file join $env(DESK_FOLDER) "My App Folder" myapp.tcl]
+</PRE>
+On the Macintosh you can also
+use the commands <B>console hide</B> and <B>console show</B> to hide 
+the command line console or make it visible.
+<P>
+<H2>PROMPTS</H2>
+ <P>
+When <B>dmh_wish</B> is invoked interactively it normally prompts for each command with ``<B>% </B>''.  You can change the prompt by setting the variables <B>tcl_prompt1</B> and <B>tcl_prompt2</B>.  If variable <B>tcl_prompt1</B> exists then it must consist of a Tcl script to output a prompt;  instead of outputting a prompt <B>dmh_wish</B> will evaluate the script in <B>tcl_prompt1</B>. The variable <B>tcl_prompt2</B> is used in a similar way when a newline is typed but the current command isn't yet complete; if <B>tcl_prompt2</B> isn't set then no prompt is output for incomplete commands. <P>
+<P>
+<H2>RESOURCES</H2>
+ <P>
+On Unix, you can set X-Windows resources in your .Xdefaults file in your 
+home directory.  The options(n) man page describes the Name and Class 
+of window system widget attributes that you can set.   
+You need to refer to your X-Windows documentation to fully understand 
+use of resources. For example, to change the default 
+foreground and background colors, of the "ui" Tcl/Tk application,
+you could use the following lines in your .Xdefaults file: 
+<PRE>
+  Ui*Background: Grey
+  Ui*Foreground: Black
+<P>
+</PRE>
+Note that the application name, ui, was mapped to the resource name, Ui,
+by folding the first letter to uppercase.
+On Unix, you can use the X-windows applications <B>xfontsel</B> 
+and <B>xcolors</B> to see the available font and color choices. 
+<P>
+On Windows NT and the Macintosh there is no .Xdefaults or xrdb application.  
+You can change your window system attributes using the <B>option</B> 
+command inside of your Tcl source code as in: 
+<PRE>
+  option add *Background Grey
+  option add *Canvas*Background LightGray
+  option add *Scrollbar.foreground SlateGrey
+  option add *activeBackground SlateGrey
+  option add *disabledForeground SlateGrey
+  option add *Text*Background LightGray
+  option add *selectBackground LightBlue2
+  option add *selectForeground Black
+  #option add *font -adobe-helvetica-bold-r-normal-*-12-120-*-*-*-*-*-*
+  #option add *font -misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-1
+  # font "Ansi" is for Windows only
+  option add *font Ansi
+  # on the Macintosh:
+  option add *font {monaco 9 normal}
+  option add Reporthighlight*font {monaco 9 {bold italic}}
+<P>
+</PRE>
+These lines of code can be added to your .dmhrc file for interactive usage 
+of dmh_wish, or put in a file and source'd into a  non-interactive 
+Tcl/Tk application. <P>
+<P>
+On Windows NT, you specify colors just as you do in Unix, 
+using X-windows colornames or RGB numeric values
+(see <a href="../mann/colors.html">colors</A>).
+<P>
+In addition, the following names are also supported on Windows NT for the system colors: <PRE>
+    System3dDarkShadow
+    System3dLight
+    SystemActiveBorder
+    SystemActiveCaption
+    SystemAppWorkspace
+    SystemBackground
+    SystemButtonFace
+    SystemButtonHighlight
+    SystemButtonShadow
+    SystemButtonText
+    SystemCaptionText
+    SystemDisabledText
+    SystemGrayText
+    SystemHighlight
+    SystemHighlightText
+    SystemInactiveBorder
+    SystemInactiveCaption
+    SystemInactiveCaptionText
+    SystemInfoBackground
+    SystemInfoText
+    SystemMenu
+    SystemMenuText
+    SystemScrollbar
+    SystemWindow
+    SystemWindowFrame
+    SystemWindowText
+
+</PRE>
+<P>
+<P>
+<H2>KEYWORDS</H2>
+ shell, toolkit, DMH, color, font, resource
+</BODY>
+</HTML>

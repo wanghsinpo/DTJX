@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="udp_tcl_"></A>
+<TITLE>udp Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ udp - UDP protocol communication for Tcl/Tk scripts <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh::udp</B> <I>name</I> &nbsp;&nbsp;?<B>-port</B> <I>port</I>? &nbsp;&nbsp; ?<B>-myaddr</B> <I>IP_or_hostname</I>? <P>
+<I>name</I> <B>close</B> <P>
+<I>name</I> <B>put</B> <I>destination</I> <I>message</I> <P>
+<I>name</I> <B>putl</B> <I>destination</I> <I>code_list</I> <P>
+<I>name</I> <B>receive</B> <I>callback</I> <P>
+<I>name</I> <B>recvbin</B> <I>callback</I> <P>
+<HR>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>udp</B> command is used to send and receive UDP datagram messages over an IP network.
+In contrast to the stream oriented nature of TCP/IP, UDP is connectionless protocol 
+where individual datagrams are sent with little overhead beyond IP address management.
+There is no support in the UDP protocol for sending messages
+that exceed the size of a datagram (approximately 64k).  
+<P>
+<H2>COMMAND SUMMARY</H2>
+ <P>
+
+<DT>
+ <B>udp</B> <I>name</I> &nbsp;&nbsp;?<B>-port</B> <I>port</I>? &nbsp;&nbsp; ?<B>-myaddr</B> <I>IP_or_hostname</I>?
+<DD>The <B>udp</B> command creates a new Tcl command, and a new global data array with the name <I>name</I> for using UDP communication.   
+The optional <B>-port</B> <I>port</I> arguments are used to specify a port
+number for receiving.  If no <I>port</I> is specified, a system chosen value is used.  
+The optional <B>-myaddr</B> <I>IP_or_hostname</I> arguments are used in the case of a computer that
+supports multiple IP numbers and/or multiple hostnames.  You are able to specify which
+network interface should be used.
+<DL>
+<P>
+The global array of the name <I>name</I> is used to store configuration parameters 
+for the network connection and related data.  Do not try to use the same name 
+in your application as a global scalar variable.  You may add your own 
+data elements to the array, if you avoid naming conflicts with this software. 
+The data item <I>name</I><B>(port)</B> is set to the port number used for receiving.
+The data item <I>name</I><B>(sender)</B> is set to the IP number and port of the
+sender of the latest received datagram.</DL>
+<P>
+<DT><I>name</I> <B>close</B>
+<DD>The <B>close</B> subcommand is used to discontinue communication. 
+The subcommand erases the global array associated with the connection, 
+and removes the <I>name</I> as a command. 
+<P>
+<DT><I>name</I> <B>put</B> <I>destination</I> <I>message</I>
+<DD>The <B>put</B> subcommand sends the text of the <I>message</I> to the specified
+<I>destination</I>.  The <I>destination</I> is either a Tcl list of the destination
+hostname (or IP address) and the destination port, or the same two values separated
+by a colon.  The software caches a network address structure for each <I>destination</I>
+the first time it is used.  The system you are running on can be determined using
+the commands <B>dp_hostname</B>, or <B>info hostname</B>.   You can also specify
+a port on your own system using the hostname of <B>localhost</B>.  Examples: <DL>
+<PRE>
+uconn put localhost:5692 "Is anybody home?"
+uconn put [info hostname]:5692 "Is anybody home?"
+$conn put baloo:7890 "Testing 1,2,3"
+</PRE>
+</DL>
+<DT><I>name</I> <B>putl</B> <I>destination</I> <I>code_list</I>
+<DD>The <B>putl</B> subcommand is similar to the <B>put</B> subcommand except that it is called with a list of integer codes representing the binary sequence of characters to be sent.  This subcommand allows you to send binary zeroes as in: <DL>
+<PRE>
+$udp_if putl system109:6600 {0 0 0x1b 0x41}
+</PRE>
+<P>
+The above example demonstrates that hexadecimal notation may be used for members of the <I>code_list</I> argument. </DL>
+
+<DT><I>name</I> <B>receive</B> <I>callback</I>
+<DD>Use the <B>receive</B> subcommand to receive and process messages.
+When a UDP message has been received, your <I>callback</I> Tcl code is executed 
+as follows.  It is treated as a list, concatenated with two arguments, 
+and evaluated at the topmost, global level of the interpreter. 
+The two concatenated arguments are (i) the udp instance <I>name</I>, and (ii) the received 
+message text.  
+For example: <PRE>
+<P>
+proc my_callback {name msg} {
+  puts "Udp $name received: $msg"
+  }
+<P>
+u1 receive my_callback 
+<P>
+</PRE>
+<P>
+If your <I>callback</I> argument is an empty string, receiving is stopped. 
+Use the <B>receive</B> or <B>recvbin</B> command again, 
+possibly with a different <I>callback</I> to resume receiving. 
+During the time your <I>callback</I> code is being executed,
+you will not receive additional UDP messages on the active udp instance.
+This is done deliberately so that you do not have to code for re-entrant
+execution in your <I>callback</I>.
+</DL>
+
+<DT><I>name</I> <B>recvbin</B> <I>callback </I>
+<DD>The <B>recvbin</B> subcommand is the same as the <B>receive</B> subcommand except 
+that the message argument to the callback is formatted as a list of integer codes.  
+This lets you deal with receiving binary messages including null characters in Tcl.
+At any given time, only the <B>receive</B> or the <B>recvbin</B> subcommand is active. 
+In other words the incoming data is parsed as text or binary, but not both.  
+The latest executed subcommand is the one that is active.   <DL>
+<P>
+In Tcl, a common method to convert characters to integers and vice-versa is to use the <a href="../mann/scan.html">scan</a> and <a href="../mann/format.html">format</a> commands: <PRE>
+<P>
+set ch "E"
+# convert character $ch to integer i
+scan $ch %c i
+# and back
+set ch2 [format %c $i]
+if { $ch == $ch2 } { puts "The example works" }
+<P>
+</PRE>
+</DL>
+<P>
+<H2>CONFIGURATION OPTIONS</H2>
+ <P>
+When you create a udp communication object, <I>name</I>, a global array is 
+created with the name <I>name</I>. Some of the elements of this array are 
+actually configuration parameters, that you may inspect or modify.  
+We suggest using the <a href="../man1/dmh_inspect.html">inspect</a> application during development for this purpose. 
+<P>
+The software is designed to react and utilize your updated configuration 
+values immediately.  
+The remainder of this section is a description of the available 
+configuraton options in alphabetical order. <P>
+
+<DT><B>BLOCKING</B>, type: boolean, default: 1
+<DD>This parameter is used to change the low level blocking behavior on system read
+and write calls.  Under ordinary circumstances this will not affect your application
+since the <B>receive</B> command does not attempt a read call until data is ready, and
+the put command should be able to write a datagram without getting stuck.
+<P>
+<DT><B>BUFFSIZE</B>, type: integer, default: 8192
+<DD>This parameter is used to change the size of buffers that are used in the
+kernel to read and write UDP messages.  You will not be able to receive a UDP
+message that exceeds this size.  Depending on the platform, you will get an error
+or your received message will be truncated if it is bigger than the buffer size.
+You can specify a size between 1000 and 1000000 bytes.
+<P>
+<DT><B>TRACE</B>, type: unsigned (bits), default 0
+<DD>Turns on diagnostic output.
+Diagnostic output is written to the global variable <I>name</I>(<B>trace</B>)
+<PRE>
+<P>
+General Tracing: Output to <I>name</I>(<B>trace</B>)
+<P>
+TRACE Bit  Output Description
+<P>
+0x0001     Read and write calls
+<P>
+</PRE>
+
+<P>
+<H2>SEE ALSO</H2>
+<P>
+The <A href="mbx.html">mbx</A> command provides interprocess communication with
+support for large messages, queue management, reply address management, and 
+notification on lost connections.
+<P>
+<H2>AUTHOR</H2>
+Hume Integration Software.  
+This is licensed and supported software,  (C)Copyright 1998 All Rights Reserved. <P>
+<H2>KEYWORDS</H2>
+ UDP TCP/IP communication <P>
+</BODY>
+</HTML>

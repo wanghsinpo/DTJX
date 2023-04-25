@@ -1,0 +1,185 @@
+#!/usr/bin/ksh
+trap "" 23
+
+ECHO=print
+SYSBIN=/opt/SPECS/sys/bin
+CFGDIR=/opt/SPECS/sys/config
+INSDIR=/opt/SPECS/install/bin
+CNFUSR=`$INSDIR/get_user $CFGDIR/sysconf`
+CNFGRP=`$INSDIR/get_group $CFGDIR/sysconf`
+BALGDIR=/opt/SPECS/usr/alg
+CALGDIR=/opt/SPECS/usr/calg
+BTELLIB=/opt/SPECS_FA/SPECS/alg/prober/TELP12_FACOM.lib
+BTSKLIB=/opt/SPECS_FA/SPECS/alg/prober/TSKUF300_FACOM.lib
+CTELLIB=/opt/SPECS_FA/SPECS/calg/prober/TELP12_FACOM.lib
+CTSKLIB=/opt/SPECS_FA/SPECS/calg/prober/TSKUF300_FACOM.lib
+FWKDIR=/opt/SPECS/usr/fwk
+TYP=PROBERLIB
+if [ `uname -s` = "HP-UX" ]; then
+    RMB=/opt/rmb/rmb`$SYSBIN/rmbrev`/bin/rmb`$SYSBIN/rmbrev`
+else
+    RMB=/opt/rmb/bin/rmb
+fi
+LNGNAM=`sed -n '/^ALGTYPE=\(.*\)$/s/^ALGTYPE=\(.*\)$/\1/p' $CFGDIR/sysconf`
+typeset -i ADRS=-1
+
+setup_system_config()
+{
+    $ECHO "#### Customizing /opt/SPECS/sys/config/sysconf ... ####"
+    if [ ! -r $CFGDIR/sysconf.org ]; then
+        cp -f $CFGDIR/sysconf $CFGDIR/sysconf.org           # keep original as .org
+        chown $CNFUSR:$CNFGRP $CFGDIR/sysconf.org
+        chmod 644 $CFGDIR/sysconf.org
+    fi
+    $INSDIR/update_sysconf
+
+    sed 's%^'$TYP'=.*$%'$TYP'='$NAM'%' $CFGDIR/sysconf > $CFGDIR/sysconf.tmp        
+    cp -f $CFGDIR/sysconf $CFGDIR/sysconf.bakup               # create backup as .bak
+    cp -f $CFGDIR/sysconf.tmp $CFGDIR/sysconf               # update sysconf
+    rm -f $CFGDIR/sysconf.tmp
+    chown $CNFUSR:$CNFGRP $CFGDIR/sysconf
+    chmod 644 $CFGDIR/sysconf
+    $ECHO "#### Previous sysconf was saved as sysconf.bakup. ####"
+    $ECHO
+}
+
+setup_prober()
+{
+    $ECHO "#### Prober Setting ####"
+    $ECHO
+    $ECHO "#### Port Setting ####"
+    $ECHO "Enter number of prober port (1 or 2) to use and press return key."
+    $ECHO "Default = '2'. [skip='s'] : \c"
+    read NUMOFPORT
+    $ECHO
+    if [ "$NUMOFPORT" = "s" ]; then
+        exit
+    elif [ "$NUMOFPORT" = "" ]; then
+        PORTTYPE="1"
+    elif [ "$NUMOFPORT" = "2" ]; then
+        PORTTYPE="1"
+    elif [ "$NUMOFPORT" = "1" ]; then
+        PORTTYPE="0"
+    else
+       $ECHO "ERROR: Invalid number of port.  Customization canceled."
+       exit
+    fi
+    TEMPMAK=/opt/SPECS_FA/dmh/vgem/specs/tables/LMP_configuration.csv
+    if [ -f $TEMPMAK ]; then
+        sed -e "s/^DualPort,.*/DualPort,$PORTTYPE/" $TEMPMAK > $TEMPMAK.tmp
+        mv $TEMPMAK.tmp $TEMPMAK
+    fi
+
+    $ECHO
+    $ECHO "#### Prober algorithm library Setting ####"
+    $ECHO "Prober algorithm library list"
+    $ECHO
+    $ECHO "  Prober library  Description"
+    $ECHO "  --------------- ------------------------------------------------------"
+    if [ -f $BTELLIB -a -f $CTELLIB ]; then
+        $ECHO "  TELP12_FACOM    Algorithm Library for TEL P12XL"
+    fi
+    if [ -f $BTSKLIB -a -f $CTSKLIB ]; then
+        $ECHO "  TSKUF300_FACOM  Algorithm Library for ACCRETECH UF300"
+    fi
+    $ECHO "  (others)        User created algorithm library"
+    $ECHO
+
+    $ECHO "Enter name of prober library to use and press return key."
+    if [ -f $BTELLIB -a -f $CTELLIB ]; then
+        $ECHO "Default = 'TELP12_FACOM'. [skip='s'] : \c"
+    elif [ -f $BTSKLIB -a -f $CTSKLIB ]; then
+        $ECHO "Default = 'TSKUF300_FACOM'. [skip='s'] : \c"
+    fi
+    read LOGNAM
+    $ECHO
+    if [ "$LOGNAM" = "s" ]; then
+        exit
+    fi
+    if [ "$LOGNAM" = "" ]; then
+        if [ -f $BTELLIB -a -f $CTELLIB ]; then
+            LOGNAM="TELP12_FACOM"
+        elif [ -f $BTSKLIB -a -f $CTSKLIB ]; then
+            LOGNAM="TSKUF300_FACOM"
+        fi
+    fi
+    NAM=prober/$LOGNAM
+    setup_system_config
+
+    PRBNAM=""
+    if [ "$LOGNAM" = "TELP12_FACOM" ]; then
+        PRBNAM="tel"
+    elif [ "$LOGNAM" = "TSKUF300_FACOM" ]; then
+        PRBNAM="tsk"
+    else
+        if [ -f $BTELLIB -a -f $CTELLIB ]; then
+            PRBNAM="tel"
+        elif [ -f $BTSKLIB -a -f $CTSKLIB ]; then
+            PRBNAM="tsk"
+        fi
+    fi
+    if [ "$PRBNAM" != "" ]; then
+        TEMPMAK=/opt/SPECS_FA/dmh/vgem/defaults.ini
+        if [ -f $TEMPMAK ]; then
+            sed -e "s/^VGEM proberType .*/VGEM proberType $PRBNAM/" $TEMPMAK > $TEMPMAK.tmp
+            mv $TEMPMAK.tmp $TEMPMAK
+            chmod 444 $TEMPMAK
+            chown root:sys $TEMPMAK
+        fi
+        TEMPMAK=/opt/SPECS_FA/contrib/equip_sim/defaults.ini
+        if [ -f $TEMPMAK ]; then
+            sed -e "s/^VGEM proberType .*/VGEM proberType $PRBNAM/" $TEMPMAK > $TEMPMAK.tmp
+            mv $TEMPMAK.tmp $TEMPMAK
+            chmod 444 $TEMPMAK
+            chown root:sys $TEMPMAK
+        fi
+        TEMPMAK=/opt/SPECS_FA/contrib/tools/defaults.ini
+        if [ -f $TEMPMAK ]; then
+            sed -e "s/^VGEM proberType .*/VGEM proberType $PRBNAM/" $TEMPMAK > $TEMPMAK.tmp
+            mv $TEMPMAK.tmp $TEMPMAK
+            chmod 444 $TEMPMAK
+            chown root:sys $TEMPMAK
+        fi
+    fi
+}
+
+setup_framework_config()
+{
+    $ECHO "Checking framework configuration files..."
+    if [ `ls $FWKDIR/*.cf | wc -l` != 0 ]; then
+        for i in $FWKDIR/*.cf; do
+            if grep -q "PRB_HPIB_ADRS" $i; then
+                if test $ADRS -eq -1; then
+                    $ECHO "Enter address of wafer prober (ex. 2501)"
+                    $ECHO "[skip='-1'] : \c"
+                    read ADRS
+                    $ECHO
+                fi
+
+                if test $ADRS -eq -1; then
+                    exit
+                fi
+                if test $ADRS -lt 1 -o $ADRS -gt 3030; then
+                    $ECHO "ERROR: Invalid GPIB address.  Customization canceled."
+                    exit
+                fi
+
+                sed -e 's/^PRB_HPIB_ADRS:.*$/PRB_HPIB_ADRS:'$ADRS'/' $i > $i.tmp
+                cp -f $i.tmp $i
+                rm -f $i.tmp
+                chmod 666 $i
+                chown root:sys $i
+                $ECHO "Customizing $i..."
+            fi
+        done
+    fi
+    $ECHO
+}
+
+if [ `id -un` != "root" ]; then
+    $ECHO "ERROR: You must log in as root."
+    exit
+else
+    setup_prober
+    setup_framework_config
+fi

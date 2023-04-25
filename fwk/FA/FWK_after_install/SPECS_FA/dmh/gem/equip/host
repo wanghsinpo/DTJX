@@ -1,0 +1,122 @@
+# A simple "host" to demonstrate testing or exercising an equipment interface.
+# This script can be sourced into a dmh_wish shell.
+#  (1) start the equipment, enable communication 
+#        c:\usr\local\gem\equip> gemsim
+#  (2) start dmh_wish.exe,  type "source host" at the command prompt
+#       command shell:  c:\usr\local\gem\equip>  dmh_wish
+#       Tcl console:     % source host
+#     OR, you can give dmh_wish command line arguments to show the console and source the file
+#          dmh_wish -console -f host
+#          (by default the console is not shown when a file is specified)
+#  (3) you can type commands for testing or copy and paste from commented commands
+#      or write your own test procedures and invoke them
+#  (4) type "h1 close" to end the connection
+#  (5) type "exit" or choose File/Exit menu item to end dmh_wish
+#
+##----------------------------------------------------------------------------
+dmh_import    ;# bring Hume dmh package commands into the global namespace
+              ;# and make commands like "::dmh::hsms" accessible as "hsms"
+
+hsms h1 active 5555 localhost      ;# create an Active HSMS connection 
+                                   ;# you can edit the port, 5555, and the host, localhost
+#secsport h1 COM1                  ;# example for SECS-I
+                                   ;# show the communication trace window
+set h1(TRACE) 0x440E
+h1 tracewin
+                                   ;# setup some message reply handling
+h1 whenever S1F13 {h1 put S1F14 "L {B 0} L" }
+h1 whenever S1F1  {h1 put S1F2 L }
+h1 whenever S6F5  {h1 put S6F6 {B 0}}
+h1 whenever S6F11 {h1 put S6F12 {B 0}}
+h1 whenever S6F13 {h1 put S6F14 {B 0}}
+
+# we want use the secs_xact command, the source code is in ...gem/lib/secs_xact.tcl
+# add the lib directory to the auto_path so the command can be found
+global auto_path env 
+if { [info exists env(DMH_BIN)] } {
+    lappend auto_path [file join $env(DMH_BIN) ../gem/lib]
+    } \
+else { lappend auto_path [pwd]/../lib }
+
+
+# enable HSMS communication
+# trap an error if equipment is not communicating
+if { [catch {h1 online}] } {
+    puts "Failed going online - equipment must not be online"
+    }
+
+# an example of capturing and parsing a reply, send S1F13 and 
+# capture MDLN and SOFTREV in the reply
+# also, we will use a procedure to demonstrate coding your own test procedures
+proc showMDLN {spname} {
+    set reply [secs_xact $spname S1F13R L]
+    puts "S1F13R reply was $reply"
+    if { $reply == "TIMEOUT" } {
+        puts "communication failure, reason=[secs_xact_failure $spname]"
+        return
+        }
+    # standard reply is "L:2 <COMMACK> {L:2 <MDLN> <SOFTREV>}"
+    # in other words, something like "L:2 {B:1 0x00} {L:2 {A:6 gemsim} {A:3 1.0}}"
+    # the rset command can recursively assign a data structure to a corresponding structure of names
+    rset $reply {tag1 {tag2 commack} {tag3 {tag4 mdln} {tag5 softrev}}}
+    if { $tag1 != "L:2" || $tag3 != "L:2" } {
+        puts "S1F13 reply data is not proper"
+        return
+        }
+    # <COMMACK> should be binary, you can test using the hex notation 0x00,
+    # or the expr command will convert to integer
+    if { $commack != "0x00" } {   
+        puts "SECS Communication request was denied (hex code=$commack)"
+        }\
+    else { puts "SECS Communication has been established" }
+    # if { [expr $commack] != 0 } { ... }
+    if { [string index $tag4 0] != "A" || [string index $tag5 0] != "A" } {
+        puts "MDLN or SOFTREV were not sent as ASCII data"
+        return
+        }
+    puts "MDLN=$mdln  SOFTREV=$softrev"
+    }
+    
+
+# execute the above procedure
+showMDLN h1
+
+# if the equipment is not trying to go to an online control state, 
+# then the host may want to ask, many commands are only for online control
+set reply [secs_xact h1 S1F17R]
+if { $reply == "B:1 0x00" || $reply == "B:1 0x02" } {
+    # we have an online control state
+    puts "Equipment is in an online control state"
+    # the host needs to purge or unload the spool
+    # if spooling is active, new messages are added to the spool and not sent across the interface
+    set reply [secs_xact h1 S6F23R {U1 1}] 
+    if { $reply == "B:1 0x00" } { puts "Spool purge reply - success (0)" }\
+    else { ;# convert code from hex notation to integer value
+        set code [expr [lindex $reply 1]]
+        puts "Spool purge not successful, <RSDA> code was $code"
+        }
+    } \
+else {
+    puts "Equipment is in an offline control state"
+    }
+
+puts "you can type or cut-and-paste commands for testing..."
+puts "typing \"h1 close\" ends the connection"
+puts "type \"exit\" or choose the File/Exit menu item when done"
+puts "Here are some example commands, look at the \"h1 Trace\" window to see the replies"
+puts "h1 put S2F33R {L:2 {B 0} {L {L:2 {U4 1} {L {U4 250} {U4 301}}}}}"
+puts "h1 put S2F35R {L:2 {B 0} {L {L:2 {U4 4001} {L {U4 1}}}}}"
+puts "h1 put S10F3 {L {B 0} {A \"hello world\"}}"
+puts "h1 put S6F15R {U4 4001}"
+puts "h1 put S1F11R L"
+puts "h1 put S2F29R L"
+puts "h1 put S5F5R U4"
+puts "h1 put S2F41R {L {A select} {L {L {A ppexecname} {A doit}}}}"
+puts "h1 put S2F21R {A start}"
+puts "h1 put S2F21R {A pause}"
+puts "h1 put S2F21R {A resume}"
+puts "h1 put S2F41R {L {A stop} L}"
+puts "h1 put S2F21R {A abort}"
+puts "you can use secs_xact for a send-and-reply"
+puts "secs_xact h1 S5F5R U4"
+

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="info_Tcl_8_4"></A>
+<TITLE>info Tcl Built-In Commands 8.4</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ info - Return information about the state of the Tcl interpreter <P>
+<H2>SYNOPSIS</H2>
+ <B>info <I>option </B></I>?<I>arg arg ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command provides information about various internals of the Tcl interpreter. The legal <I>option</I>'s (which may be abbreviated) are: 
+<DT><B>info args <I>procname</B></I>
+<DD>Returns a list containing the names of the arguments to procedure <I>procname</I>, in order.  <I>Procname</I> must be the name of a Tcl command procedure. 
+<DT><B>info body <I>procname</B></I>
+<DD>Returns the body of procedure <I>procname</I>.  <I>Procname</I> must be the name of a Tcl command procedure. 
+<DT><B>info cmdcount</B>
+<DD>Returns a count of the total number of commands that have been invoked in this interpreter. 
+<DT><B>info commands </B>?<I>pattern</I>?
+<DD>If <I>pattern</I> isn't specified, returns a list of names of all the Tcl commands in the current namespace, including both the built-in commands written in C and the command procedures defined using the <B>proc</B> command. If <I>pattern</I> is specified, only those names matching <I>pattern</I> are returned. Matching is determined using the same rules as for <B>string match</B>. <I>pattern</I> can be a qualified name like <B>Foo::print*</B>. That is, it may specify a particular namespace using a sequence of namespace names separated by <B>::</B>s, and may have pattern matching special characters at the end to specify a set of commands in that namespace. If <I>pattern</I> is a qualified name, the resulting list of command names has each one qualified with the name of the specified namespace. 
+<DT><B>info complete <I>command</B></I>
+<DD>Returns 1 if <I>command</I> is a complete Tcl command in the sense of having no unclosed quotes, braces, brackets or array element names, If the command doesn't appear to be complete then 0 is returned. This command is typically used in line-oriented input environments to allow users to type in commands that span multiple lines;  if the command isn't complete, the script can delay evaluating it until additional lines have been typed to complete the command. 
+<DT><B>info default <I>procname arg varname</B></I>
+<DD><I>Procname</I> must be the name of a Tcl command procedure and <I>arg</I> must be the name of an argument to that procedure.  If <I>arg</I> doesn't have a default value then the command returns <B>0</B>. Otherwise it returns <B>1</B> and places the default value of <I>arg</I> into variable <I>varname</I>. 
+<DT><B>info exists <I>varName</B></I>
+<DD>Returns <B>1</B> if the variable named <I>varName</I> exists in the current context (either as a global or local variable) and has been defined by being given a value, returns <B>0</B> otherwise. 
+<DT><B>info functions </B>?<I>pattern</I>?
+<DD>If <I>pattern</I> isn't specified, returns a list of all the math functions currently defined. If <I>pattern</I> is specified, only those functions whose name matches <I>pattern</I> are returned.  Matching is determined using the same rules as for <B>string match</B>. 
+<DT><B>info globals </B>?<I>pattern</I>?
+<DD>If <I>pattern</I> isn't specified, returns a list of all the names of currently-defined global variables. Global variables are variables in the global namespace. If <I>pattern</I> is specified, only those names matching <I>pattern</I> are returned.  Matching is determined using the same rules as for <B>string match</B>. 
+<DT><B>info hostname</B>
+<DD>Returns the name of the computer on which this invocation is being executed. Note that this name is not guaranteed to be the fully qualified domain name of the host.  Where machines have several different names (as is common on systems with both TCP/IP (DNS) and NetBIOS-based networking installed,) it is the name that is suitable for TCP/IP networking that is returned. 
+<DT><B>info level</B> ?<I>number</I>?
+<DD>If <I>number</I> is not specified, this command returns a number giving the stack level of the invoking procedure, or 0 if the command is invoked at top-level.  If <I>number</I> is specified, then the result is a list consisting of the name and arguments for the procedure call at level <I>number</I> on the stack.  If <I>number</I> is positive then it selects a particular stack level (1 refers to the top-most active procedure, 2 to the procedure it called, and so on); otherwise it gives a level relative to the current level (0 refers to the current procedure, -1 to its caller, and so on). See the <B>uplevel</B> command for more information on what stack levels mean. 
+<DT><B>info library</B>
+<DD>Returns the name of the library directory in which standard Tcl scripts are stored. This is actually the value of the <B>tcl_library</B> variable and may be changed by setting <B>tcl_library</B>. See the <B>tclvars</B> manual entry for more information. 
+<DT><B>info loaded </B>?<I>interp</I>?
+<DD>Returns a list describing all of the packages that have been loaded into <I>interp</I> with the <B>load</B> command. Each list element is a sub-list with two elements consisting of the name of the file from which the package was loaded and the name of the package. For statically-loaded packages the file name will be an empty string. If <I>interp</I> is omitted then information is returned for all packages loaded in any interpreter in the process. To get a list of just the packages in the current interpreter, specify an empty string for the <I>interp</I> argument. 
+<DT><B>info locals </B>?<I>pattern</I>?
+<DD>If <I>pattern</I> isn't specified, returns a list of all the names of currently-defined local variables, including arguments to the current procedure, if any. Variables defined with the <B>global</B>, <B>upvar</B>  and <B>variable</B> commands will not be returned. If <I>pattern</I> is specified, only those names matching <I>pattern</I> are returned.  Matching is determined using the same rules as for <B>string match</B>. 
+<DT><B>info nameofexecutable</B>
+<DD>Returns the full path name of the binary file from which the application was invoked.  If Tcl was unable to identify the file, then an empty string is returned. 
+<DT><B>info patchlevel</B>
+<DD>Returns the value of the global variable <B>tcl_patchLevel</B>; see the <B>tclvars</B> manual entry for more information. 
+<DT><B>info procs </B>?<I>pattern</I>?
+<DD>If <I>pattern</I> isn't specified, returns a list of all the names of Tcl command procedures in the current namespace. If <I>pattern</I> is specified, only those procedure names in the current namespace matching <I>pattern</I> are returned. Matching is determined using the same rules as for <B>string match</B>. 
+<DT><B>info script</B> ?<I>filename</I>?
+<DD>If a Tcl script file is currently being evaluated (i.e. there is a call to <B>Tcl_EvalFile</B> active or there is an active invocation of the <B>source</B> command), then this command returns the name of the innermost file being processed.  If <I>filename</I> is specified, then the return value of this command will be modified for the duration of the active invocation to return that name.  This is useful in virtual file system applications. Otherwise the command returns an empty string. 
+<DT><B>info sharedlibextension</B>
+<DD>Returns the extension used on this platform for the names of files containing shared libraries (for example, <B>.so</B> under Solaris). If shared libraries aren't supported on this platform then an empty string is returned. 
+<DT><B>info tclversion</B>
+<DD>Returns the value of the global variable <B>tcl_version</B>; see the <B>tclvars</B> manual entry for more information. 
+<DT><B>info vars</B> ?<I>pattern</I>?
+<DD>If <I>pattern</I> isn't specified, returns a list of all the names of currently-visible variables. This includes locals and currently-visible globals. If <I>pattern</I> is specified, only those names matching <I>pattern</I> are returned.  Matching is determined using the same rules as for <B>string match</B>. <I>pattern</I> can be a qualified name like <B>Foo::option*</B>. That is, it may specify a particular namespace using a sequence of namespace names separated by <B>::</B>s, and may have pattern matching special characters at the end to specify a set of variables in that namespace. If <I>pattern</I> is a qualified name, the resulting list of variable names has each matching namespace variable qualified with the name of its namespace. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/global.html">global</a>, <a href="../mann/proc.html">proc</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ command, information, interpreter, level, namespace, procedure, variable <P>
+
+</BODY>
+</HTML>

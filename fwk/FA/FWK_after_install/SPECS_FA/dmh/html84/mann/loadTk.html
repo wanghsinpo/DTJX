@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Safe_Tk_Tk_8_0"></A>
+<TITLE>Safe Tk Tk Built-In Commands 8.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ loadTk - Load Tk into a safe interpreter. <P>
+<H2>SYNOPSIS</H2>
+ <B>::safe::loadTk <I>slave</B></I> ?<B>-use</B> <I>windowId</I>? ?<B>-display</B> <I>displayName</I>?  <HR>
+<P>
+Safe Tk is based on Safe Tcl, which provides a mechanism  that allows restricted and mediated access to auto-loading and packages for safe interpreters. Safe Tk adds the ability to configure the interpreter for safe Tk operations and load Tk into safe  interpreters. <P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>::safe::loadTk</B> command initializes the required data structures in the named safe interpreter and then loads Tk into it. The interpreter must have been created with <B>::safe::interpCreate</B> or have been initialized with <B>::safe::interpInit</B>. The command returns the name of the safe interpreter. If <B>-use</B> is specified, the window identified by the specified system dependent identifier <I>windowId</I> is used to contain the ``.'' window of the safe interpreter; it can be any valid id, eventually  referencing a window belonging to another application. As a convenience, if the window you plan to use is a Tk Window of the application you can use the window name (eg: <B>.x.y</B>) instead of its window Id  (<B>[winfo id .x.y]</B>). When <B>-use</B> is not specified, a new toplevel window is created for the ``.'' window of the safe interpreter. On X11 if you want the embedded window to use another display than the default one, specify it with <B>-display</B>. See the <B>SECURITY ISSUES</B> section below for implementation details. <P>
+<P>
+<H2>SECURITY ISSUES</H2>
+ <P>
+Please read the <B>safe</B> manual page for Tcl to learn about the basic security considerations for Safe Tcl. <P>
+<B>::safe::loadTk</B> adds the value of <B>tk_library</B> taken from the master interpreter to the virtual access path of the safe interpreter so that auto-loading will work in the safe interpreter. <P>
+<P>
+Tk initialization is now safe with respect to not trusting the slave's state for startup. <B>::safe::loadTk</B> registers the slave's name so when the Tk initialization (<B>Tk_SafeInit</B>) is called and in turn calls the master's <B>::safe::InitTk</B> it will return the desired <B>argv</B> equivalent (<B>-use</B>  <I>windowId</I>, correct <B>-display</B>, etc...). <P>
+When <B>-use</B> is not used, the new toplevel created is specially decorated so the user is always aware that the user interface presented comes from a potentially unsafe code and can easily delete the corresponding interpreter. <P>
+On X11, conflicting <B>-use</B> and <B>-display</B> are likely to generate a fatal X error. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/safe.html">safe</a>, <a href="../mann/interp.html">interp</a>, <a href="../mann/library.html">library</a>, <a href="../mann/load.html">load</a>, <a href="../mann/package.html">package</a>, <a href="../mann/source.html">source</a>, <a href="../mann/unknown.html">unknown</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ alias, auto-loading, auto_mkindex, load, master interpreter, safe interpreter, slave interpreter, source 
+</BODY>
+</HTML>

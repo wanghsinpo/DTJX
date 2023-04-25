@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="read_Tcl_8_1"></A>
+<TITLE>read Tcl Built-In Commands 8.1</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ read - Read from a channel <P>
+<H2>SYNOPSIS</H2>
+ <B>read </B>?<B>-nonewline</B>? <I>channelId</I> <P>
+<B>read <I>channelId numChars</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+In the first form, the <B>read</B> command reads all of the data from <I>channelId</I> up to the end of the file.  If the <B>-nonewline</B> switch is specified then the last character of the file is discarded if it is a newline.  In the second form, the extra argument specifies how many characters to read.  Exactly that many characters will be read and returned, unless there are fewer than <I>numChars</I> left in the file; in this case all the remaining characters are returned.  If the channel is configured to use a multi-byte encoding, then the number of characters read may not be the same as the number of bytes read. <P>
+<I>ChannelId</I> must be an identifier for an open channel such as the Tcl standard input channel (<B>stdin</B>), the return value from an invocation of <B>open</B> or <B>socket</B>, or the result of a channel creation command provided by a Tcl extension. The channel must have been opened for input. <P>
+If <I>channelId</I> is in nonblocking mode, the command may not read as many characters as requested: once all available input has been read, the command will return the data that is available rather than blocking for more input.  If the channel is configured to use a multi-byte encoding, then there may actually be some bytes remaining in the internal buffers that do not form a complete character.  These bytes will not be returned until a complete character is available or end-of-file is reached.  The <B>-nonewline</B> switch is ignored if the command returns before reaching the end of the file. <P>
+<B>Read</B> translates end-of-line sequences in the input into newline characters according to the <B>-translation</B> option for the channel. See the <B>fconfigure</B> manual entry for a discussion on ways in which <B>fconfigure</B> will alter input. <P>
+<P>
+<H2>USE WITH SERIAL PORTS</H2>
+ <P>
+For most applications a channel connected to a serial port should be configured to be nonblocking: <B>fconfigure <I>channelId -blocking 0</B></I>.  Then <B>read</B> behaves much like described above.  Care must be taken when using <B>read</B> on blocking serial ports: 
+<DT><B>read <I>channelId numChars</B></I> 
+<DD>In this form <B>read</B> blocks until <I>numChars</I> have been received from the serial port. 
+<DT><B>read <I>channelId</B></I> 
+<DD>In this form <B>read</B> blocks until the reception of the end-of-file character, see <B>fconfigure -eofchar</B>. If there no end-of-file character has been configured for the channel, then <B>read</B> will block forever. <P>
+<P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/file.html">file</a>, <a href="../mann/eof.html">eof</a>, <a href="../mann/fblocked.html">fblocked</a>, <a href="../mann/fconfigure.html">fconfigure</a>, Tcl_StandardChannels(3) <P>
+<P>
+<H2>KEYWORDS</H2>
+ blocking, channel, end of line, end of file, nonblocking, read, translation, encoding 
+</BODY>
+</HTML>

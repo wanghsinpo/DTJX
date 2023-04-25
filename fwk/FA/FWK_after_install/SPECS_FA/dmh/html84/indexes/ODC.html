@@ -1,0 +1,721 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Ed Hume">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <meta name="Description" content="A high-level software component for high-performance access to transient or persistentobject data.">
+   <meta name="KeyWords" content="datahub, database, in-memory database, SQL, Tcl, Hume, persistent objects">
+   <title>The Hume Object Data Component</title>
+</head>
+<body>
+
+<center>
+<h2>
+The Object Data Component</h2></center>
+
+<center><b>Licensed and Supported Software</b>
+<br><b>(C) Copyright 2002, Hume Integration Software</b>
+<br><b>All Rights Reserved</b></center>
+
+<h3>
+<a NAME="Introduction"></a><b>Introduction</b></h3>
+The Object Data Component (ODC) provides for simplified, high-performance
+access to SQL table data with configurable persistence.&nbsp; The simplified
+access to SQL table data uses the normal array variable syntax of the Tcl
+programming environment.&nbsp; By using the ODC, your application is able
+to manipulate global array data with high-performance, and to have changes
+asynchronously posted to a persistent database by the queuing of DMH subscription
+messages.&nbsp; By default, table data that is manipulated in this way
+is persistent.&nbsp;&nbsp; The same simplified access to attribute data
+can also be used for manipulating&nbsp; transient data.&nbsp; The design
+of the ODC provides for hiding these less significant changes from a persistent
+database using one-time method calls to set selected attributes as transient.&nbsp;
+The current object data is always available with high performance by directly
+accessing in-memory SQL tables.&nbsp; The simplified array variable access
+is a high-level alternative to executing SQL statements.
+<h3>
+<a NAME="Installation"></a><b>Installation</b></h3>
+The ODC is provided as a Tcl package with the package name of HumeODC.&nbsp;
+The files associated with the package, are usually distributed and installed
+as part of the "Hume Component Libraries" installation choice.&nbsp; The
+setup program creates the directory, <b>humelib1.0</b>, under the <b>lib</b>
+directory of your Tcl installation.&nbsp; So the files in the package are
+typically found in the directory path /usr/local/lib/humelib1.0/*.
+<p>The files needed for the HumeODC package include
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Filename</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td><b>en.msg</b></td>
+
+<td>Definitions of English language messages for all English locales including
+<b>en_US</b>.&nbsp;
+The ODC uses the <a href="../mann/msgcat.html">msgcat</a> package to support
+multi-lingual deployment.</td>
+</tr>
+
+<tr>
+<td><b>od_load_data.tcl</b></td>
+
+<td>Tcl code to load the ODC tables from a persistent database.</td>
+</tr>
+
+<tr>
+<td><b>od_save_subs_init.tcl</b></td>
+
+<td>Tcl code to open table subscriptions for saving ODC data.</td>
+</tr>
+
+<tr>
+<td><b>od_schema_db_init.tcl</b></td>
+
+<td>Tcl code to create the ODC schema in a persistent database.</td>
+</tr>
+
+<tr>
+<td><b>od_transient.tcl</b></td>
+
+<td>Tcl code that implements the od_*transient* commands.</td>
+</tr>
+
+<tr>
+<td><b>odc.tcl</b></td>
+
+<td>The core logic of the ODC.</td>
+</tr>
+
+<tr>
+<td><b>pkgIndex.tcl</b></td>
+
+<td>An index of available Tcl packages in the directory.&nbsp; Needed by
+Tcl to find the HumeODC package when required.</td>
+</tr>
+
+<tr>
+<td><b>tclIndex</b></td>
+
+<td>An index of available Tcl commands in the directory.&nbsp; Needed by
+Tcl to find the od_* commands after the HumeODC package has been required.</td>
+</tr>
+</table>
+
+<h3>
+<a NAME="Initialization"></a><b>Initialization</b></h3>
+If you are using the Event Processing Component (EPC), initialization of
+the ODC component is done automatically when the EPC is initialized.&nbsp;
+The usual startup sequence to use the ODC follows:
+<ol>
+<li>
+Your application processes start and establish DMH communication to each
+other.&nbsp; The <a href="../man1/datahub.html">datahub</a> Tcl application
+is commonly used to provide the DMH server function.&nbsp;&nbsp; If you
+are running your application as NT services, it is common just to start
+the DMH server process as a service, and then have the server start the
+other application processes.</li>
+
+<li>
+If you are using a persistent database, you establish a DMH mailbox for
+SQL commands directed to the persistent database.&nbsp; The <a href="../man1/dmh_SQLsrv.html">dmh_SQLsrv</a>
+Tcl application is commonly used to provide this function.</li>
+
+<li>
+You usually use in-memory tables in the DMH server process for the ODC.&nbsp;
+The next step is to initialize the DMH server process and its in-memory
+tables to serve your application needs.&nbsp; During your application initialization,
+a&nbsp; typical sequence of&nbsp; commands to use the ODC looks like the
+following:</li>
+</ol>
+
+<dl>
+<dl>
+<dd>
+<tt>global env</tt></dd>
+
+<dd>
+<tt>if { ![info exists env(LANG)] } { set env(LANG) en_US }</tt></dd>
+
+<dd>
+<tt>package require HumeODC</tt></dd>
+
+<dd>
+<tt>namespace import -force HumeODC::*</tt></dd>
+
+<dd>
+<tt>od_init DB</tt></dd>
+</dl>
+</dl>
+In order for messages to be presented with English text, there should be
+a definition of the environment variable LANG.&nbsp; So the first two statements
+above supply a default LANG setting if the user has not specified one.&nbsp;
+The next statement, <tt>package require HumeODC</tt>, causes the ODC installation
+directory to be added to the interpreter's <a href="../mann/library.html">auto_path</a>
+variable, so package commands are found and can be used as necessary.&nbsp;
+The namespace import statement is done for convenience so that command
+names do not have to be prefixed with the namespace name, <b>HumeODC</b>.&nbsp;
+After the namespace import statement is executed, the <b>od_init</b> command
+can be called as <b>od_init</b> instead of <b>HumeODC::od_init</b>.&nbsp;
+Calling the <b>od_init</b> procedure creates the in-memory SQL tables for
+object data, and initializes the simplified array access logic.
+<p>Some applications that use the ODC will not use a persistent database,
+since the high-level array access to table data is also very useful just
+for in-memory SQL tables.&nbsp; When a persistent database is in use, the
+name of the mailbox that is used to process SQL commands for the persistent
+database is passed as an argument to the <b>od_init</b> call.&nbsp; When
+the persistent mailbox name is not blank, (1) the ODC logic create tables
+in the persistent database if they are not present, (2) the ODC loads the
+initial data into the in-memory tables from the persistent database, and
+(3) the ODC opens data saving table subscriptions.&nbsp; If for some reason
+a persistent database is in use but this initialization is not desired,
+pass an empty string for the mailbox name argument to the <b>od_init</b>
+call, and then when the call returns set the value of <b>HumeODC::MB_DB</b>
+to the persistent database mailbox name.&nbsp; The value of the persistent
+database mailbox name is needed after startup only for the <a href="#od_transient">od_*transient*</a>
+commands.
+<h3>
+<a NAME="Usage"></a><b>Usage Concepts</b></h3>
+The ODC manages two SQL tables; <b>od_attributes</b>, which is used to
+store data attributes of items, and <b>od_assoc</b>, which is used to store
+associations of items to other items.
+<p>You define your own types of items.&nbsp; To make this discussion more
+concrete, lets suppose we have defined a type of item called a LotBox which
+is type of container.&nbsp; Lets also define Wafer as an item type.&nbsp;
+The new types are easiest to define using Tcl code:
+<blockquote><tt>global ODC</tt>
+<br><tt>lappend ODC(:Type) LotBox Wafer</tt></blockquote>
+As the result of executing the above statements, two new rows are added
+to the <b>od_assoc</b> table, and variable traces are created so that we
+can use LotBox and Wafer as global arrays.&nbsp; Now we can have instances
+of the new types.&nbsp; Suppose that every LotBox has a unique serial number,
+and that every Wafer has a unique identifying scribe.&nbsp; Suppose there
+are three Wafers, w1, w2, and w3, currently in LotBox lb100.&nbsp; We can
+save the association of these Wafers to the LotBox with the following statements:
+<blockquote><tt>global LotBox</tt>
+<br><tt>set LotBox(lb100:Wafer) {w1 w2 w3}</tt></blockquote>
+Later in our code, we can easily determine the Wafer items associated with
+the LotBox:
+<blockquote><tt>puts $LotBox(lb100:Wafer)</tt>
+<br><tt>w1 w2 w3</tt></blockquote>
+If you display the contents of table <b>od_assoc</b>, you will see three
+separate rows representing the association of each of these Wafer items
+to the LotBox.
+<p>Data attributes are simply named values that we wish to use.&nbsp; Suppose
+we tested the wafers and we now have some test results we wish to save.&nbsp;
+Each result has a name, and a value.&nbsp; So the results can be saved
+as attribute data using statements like:
+<blockquote><tt>global Wafer</tt>
+<br><tt>set Wafer(w1.bin1) 237</tt>
+<br><tt>set Wafer(w2.bin1) 242</tt>
+<br><tt>set Wafer(w3.bin1) 244</tt>
+<br><tt>set Wafer(w1.Yield) 89.3</tt>
+<br><tt>set Wafer(w2.Yield) 91.2</tt>
+<br><tt>set Wafer(w3.Yield) 92.4</tt></blockquote>
+Each of the above assignment statements causes a row to be added to the
+<b>od_attribute</b>
+table.&nbsp; If we examine a particular item, such as Wafer w3, we can
+determine all of its attribute values by using a wildcard attribute name,
+<b>*</b>:
+<blockquote><tt>puts $Wafer(w3.*)</tt>
+<br><tt>Yield 92.4 bin1 244</tt></blockquote>
+The result is a list of alternating name and value elements.
+<p>The wildcard attribute expression also works for writing, too.&nbsp;
+We can add other name, value attributes to the list, and easily save them
+in one statement:
+<blockquote><tt>set Wafer(w3.*) {Yield 92.4 bin1 244 bin2 22 bin3 13}</tt></blockquote>
+Another feature is the ability to save attribute values for the <i>item
+type</i>, and have them be the default values for item instances.&nbsp;
+Suppose that most of the Wafers in our example are 200mm diameter, but
+there are some whose sizes are different.&nbsp; We can set the default
+for all wafers as follows, and verify that it shows up for the particular
+wafer w3:
+<blockquote><tt>set Wafer(diameterMM) 200</tt>
+<br><tt>puts $Wafer(w3.*)</tt>
+<br><tt>Yield 92.4 bin1 92.4 bin2 92.4 bin3 92.4 diameterMM 200</tt></blockquote>
+Wafer w99 is different.&nbsp; We can specifically set a different attribute
+value for it:
+<blockquote><tt>puts $Wafer(w99.*)</tt>
+<br><tt>diameterMM 200</tt>
+<br><tt>set Wafer(w99.diameterMM) 300</tt>
+<br><tt>puts $Wafer(w99.*)</tt>
+<br><tt>diameterMM 300</tt></blockquote>
+
+<h4>
+<b>User-Defined Object&nbsp;<a NAME="Types"></a>Types</b></h4>
+In the above discussion, the phrase "type of item" was used.&nbsp; We have
+used the name <i>item_type</i> in the ODC tables for this concept.
+<p>The system user defines a set of <i>item_types</i>, such as Lot, Event,
+etc.&nbsp; The <i>item_types</i> known to the system are stored in the
+<b>od_assoc</b>
+table.&nbsp; Tcl programming statements have simplified access to the table
+data using global arrays.&nbsp; Simplified access is supported for reading
+or writing.
+<p>The list of known <i>item_type</i> values in a newly installed system,
+includes only <b>ODC</b>.&nbsp;&nbsp; A new installation of the Event Processing
+Component (EPC)&nbsp; includes the following:
+<ul>
+<li>
+EPC - for configuration of the EPC</li>
+
+<li>
+Lot - for Lot data</li>
+
+<li>
+MID - a short name for machines whether they are physical or finite state
+machines</li>
+
+<li>
+ODC - for configuration of the ODC</li>
+
+<li>
+Shooter - a player for the EPC CrapsDemo demonstration.</li>
+</ul>
+These values are represented in the <b>od_assoc</b> table with item_type='ODC',
+item_id='*', child_type='Type', and the child_id values being the type
+names.&nbsp; Reading the value of ODC(*:Type) or&nbsp; ODC(:Type) returns
+the list of known <i>item_type</i> values.
+<p>You can add new types to the <b>od_assoc</b> table using the SQL statements
+or the Datahub GUI.&nbsp; It is also simple to append them as list items
+to the current list:
+<blockquote><tt>global ODC</tt>
+<br><tt>lappend ODC(:Type) <i>NewType1</i> <i>NewType2</i> ...</tt></blockquote>
+If you are using a persistent database, adding new types need only be done
+once.
+<p>The system user should configure new <i>item_type</i> values before
+attempting to use the global array access techniques.
+<h4>
+<a NAME="Attributes"></a><b>Attributes</b></h4>
+The <b>od_attribute</b> table is used for the storage of attribute data.&nbsp;
+The data in the table may be manipulated directly using SQL, but it is
+also convenient to access the data using global Tcl array variables as
+described next.
+<p>There is simplified access to the attribute values of specific <i>item_type</i>
+instances using the following notation:
+<blockquote><tt>set <i>item_type</i>(<i>item_id</i>.<i>attribute</i>)
+<i>value</i></tt>
+<p><tt>global MID Lot</tt>
+<br><tt>set MID(hp34au.Softbin) 24</tt>
+<br><tt>set Lot(6809AUQ5.case_quantity) 100</tt></blockquote>
+&nbsp;There is simplified access to the <i>item_type</i> level to create
+attribute values which are default values for any instances of the <i>item_type</i>.&nbsp;
+This data is stored in the table with the value of the <i>item_id</i> field
+set to <b>*</b>.
+<blockquote><tt>set <i>item_type</i>(<i>attribute</i>) <i>value</i>&nbsp;&nbsp;
+;# the implied item_id is '*'</tt>
+<p><tt>$EPC(StateLogInterval)&nbsp; is the same as&nbsp; $EPC(*.StateLogInterval)</tt>
+<br><tt>$EPC(EventLogInterval)</tt>
+<br><tt>set Lot(case_quantity) 500</tt></blockquote>
+There is "inheritance" from the type to the instance.&nbsp; If a lookup
+for the value of&nbsp; <i>item_type</i>(<i>item_id</i>.<i>attribute</i>)
+is not found, the value of <i>item_type</i>(<i>attribute</i>) is returned
+if it exists - powerful and simple.&nbsp; The mechanism is convenient to
+configure defaults for the creation of new items, and for the compact representation
+of repeated items.&nbsp; If you explicitly write to <i>item_type</i>(<i>item_id</i>.<i>attribute</i>),
+it is written out for the instance whether or not it is the same as the
+type level default.
+<p>There is wildcard access to all the attributes for an instance.&nbsp;
+If you lookup $<i>item_type</i>(<i>item_id</i>.<b>*</b>) we specially trap
+the "*" and return a list of alternating name and value for all of the
+attribute values.&nbsp; We do this by looking up the attributes defined
+for the <i>item_type</i> first, $<i>item_type</i>(*.<i>attribute</i>),
+and then overlaying the instance data.&nbsp; There is direct writing of
+all the attributes of an instance, the exact reverse of the lookup.&nbsp;
+With this mode of writing, if the attribute of an instance is the same
+as it is for the <i>item_type</i>, it is not written out for the instance.&nbsp;
+Any attributes of the instance that are in the table but are not found
+in the wildcard write, are deleted.
+<blockquote><tt>set <i>item_type</i><b>(</b><i>item_id</i><b>.*)</b> [list
+<i>name</i>1
+<i>value</i>1
+<i>name</i>2
+<i>value</i>2
+\</tt>
+<br><i><tt>&nbsp;&nbsp;&nbsp; name</tt></i><tt>3
+<i>value</i>3 ...
+<i>nameNvalueN</i>]</tt>
+<p><tt>set MID(hp34au.*) {Softbin 24 location h-15 engineer {J. Bond}\</tt>
+<br><tt>&nbsp;&nbsp; IP_address 192.168.2.3 MID_class hp3000 ... }</tt></blockquote>
+You cannot use the Tcl upvar command to work with the arrays using a different
+name since the array name is a key to the table mapping.
+<h4>
+<a NAME="Transient"></a><b>Transient Attributes</b></h4>
+By default, attributes that are represented in the <a href="#od_attribute">od_attribute</a>
+table are persistent.&nbsp; In other words, their value changes are posted
+to the persistent database as they happen.&nbsp; The same simplified access
+to attribute data can also be used for manipulating less significant, transient
+data such as counts and state information that change many times per second.&nbsp;
+It is a desirable performance boost to hide these busy, and less significant
+data changes from the persistent database.&nbsp; The design of the <b>od_attribute</b>
+table supports this idea by having the column <i>is_transient</i> which
+is used as a boolean flag and set to 1 to hide the updates of selected
+rows from the persistent database.
+<p>There are a set of procedures, <a href="#od_transient">documented below</a>,&nbsp;
+provided with the ODC to help manage transient data.&nbsp; There are some
+subtle aspects to how the subscriptions work that make using these procedures
+desirable.&nbsp; For example, if you simply update the <i>is_transient</i>
+field for selected attributes, the persistent database does not save that
+you want a non-zero <i>is_transient</i> value.&nbsp; So when you startup
+again, the attributes are back to being completely persistent.&nbsp; Using
+the <a href="#od_transient">od_transient</a> procedure to declare specified
+attributes as being transient takes care of making sure the persistent
+database saves that the specified attributes are transient.
+<h4>
+<b>Object&nbsp;<a NAME="Associations"></a>Associations</b></h4>
+There is simplified access to the association data stored in the <a href="#od_assoc">od_assoc</a>
+table using the following notation:
+<blockquote><tt>set <i>item_type</i><b>(</b><i>item_id</i><b>:</b><i>child_type</i><b>)
+</b><i>id1
+id2 ... idN</i></tt></blockquote>
+Using a different separator in the array subscript, the colon, <b>:</b>,&nbsp;
+tells the software that an association is implied.
+<p>If the <i>item_id</i> portion of the array subscript is blank, it defaults
+to '*'.&nbsp; So ODC(*:Type) or ODC(:Type) can both be used to access the
+same set of table records.
+<p>Similarly, if the <i>child_type</i> array subscript term is left blank,
+it defaults to the value <b>*</b> with a wildcard meaning.&nbsp; The wildcard
+behavior is not so useful for reading because <i>child_id</i> values of
+different <i>child_type</i> values are mixed, but it can be very powerful
+for deleting everything associated with an item by assigning an empty string.&nbsp;
+For example:
+<dl>
+<dd>
+<tt>% set Shooter(Buff:Friend) {Bill Barney Buddy}</tt></dd>
+
+<dd>
+<tt>Bill Barney Buddy</tt></dd>
+
+<dd>
+<tt>% set Shooter(Buff:pocket_item) {Comb Wallet gum keys notepad passport
+pen}</tt></dd>
+
+<dd>
+<tt>Comb Wallet gum keys notepad passport pen</tt></dd>
+
+<dd>
+<tt>% set Shooter(Buff:)</tt></dd>
+
+<dd>
+<tt>Barney Bill Buddy Comb Wallet gum keys notepad passport pen</tt></dd>
+
+<dd>
+<tt>% set Shooter(Buff:) {}</tt></dd>
+
+<dd>
+<tt>% set Shooter(Buff:)</tt></dd>
+</dl>
+
+<hr WIDTH="100%">
+<h3>
+<b>Server&nbsp;<a NAME="API"></a>API</b></h3>
+Your logic needs to call <a href="#od_init">od_init</a><b> </b>if you are
+not using a component such as the EPC that calls it for you.
+<p>You optionally make use of the <a href="#od_transient">od_*transient*</a>
+calls to manage whether your attributes are transient.
+<br>
+<hr WIDTH="100%">
+<br><a NAME="od_init"></a><font size=+1><b>od_init</b> -&nbsp; initialization
+of the ODC.</font>
+<p><b>Tcl Command Syntax</b>
+<blockquote><b>od_init {<i>mb_db</i> {}} {<i>NAMELEN</i> 32}</b></blockquote>
+<b>Return Value</b>
+<blockquote><b>"Object Data Component (ODC) Initialized Successfully."
+</b>is
+returned for the usual successful case.
+<p>The procedure will return a Tcl error if the system cannot be initialized.</blockquote>
+<b>Description</b>
+<blockquote>This is the entry procedure to initialize the ODC.&nbsp; The
+<i>MB_DB</i>
+argument is the DMH mailbox of the persistent database interface.&nbsp;
+If a persistent database is not being used, the <i>MB_DB</i> argument value
+should be an empty string.&nbsp; See the discussion of <a href="#Initialization">application
+initialization</a>.
+<p>The optional <i>NAMELEN</i> argument is passed through to the schema
+create logic where it sets the number of characters specified in the varchar(
+) table fields that are used for names.
+<br>&nbsp;</blockquote>
+
+<hr WIDTH="100%">
+<br><a NAME="od_schema_write"></a><font size=+1><b>od_schema_write</b>
+-&nbsp; Write SQL statements representing the database table</font>
+<br><font size=+1>schema to a file.</font>
+<p><b>Tcl Command Syntax</b>
+<blockquote><b>od_schema_write {filename dc_schema.sql} {DBtype hub}</b></blockquote>
+<b>Return Value</b>
+<blockquote><b>None</b></blockquote>
+<b>Description</b>
+<blockquote>This procedure calls <b>od_schema</b> and writes the result
+to a file with each create statement being written as a new line of text.&nbsp;
+The file is not used by the ODC, this procedure exists for your use.&nbsp;
+Set the <i>DBtype</i> argument to any value other than <b>hub</b> to have
+the primary table keys declared as NOT NULL.</blockquote>
+
+<hr WIDTH="100%">
+<br><a NAME="od_transient"></a><font size=+1><b>od_transient</b> - setting
+of the is_transient od_attribute table field value</font>
+<br><b><font size=+1>od_not_transient </font></b><font size=+1>- clearing
+of the is_transient od_attribute table field value</font>
+<br><b><font size=+1>od_is_transient </font></b><font size=+1>- reading
+of the is_transient od_attribute table field value</font>
+<br><b><font size=+1>od_transient_save </font></b><font size=+1>- post
+current transient values to the persistent database</font>
+<p><b>Tcl Command Syntax</b>
+<blockquote><b>od_transient [<i>attribute_name</i>]+</b>
+<br><b>od_not_transient [<i>attribute_name</i>]+</b>
+<br><b>od_is_transient <i>attribute_name</i></b>
+<br><b>od_transient_save [<i>attribute_name</i>]+</b></blockquote>
+<b>Return Value</b>
+<blockquote><b>od_transient, od_not_transient, od_transient_save: <i>row_count</i></b>
+<br><b>od_is_transient: <i>boolean</i></b></blockquote>
+<b>Description</b>
+<blockquote>One of the key benefits of the ODC&nbsp; is the simplified
+access to SQL table data using the normal array variable syntax of the
+Tcl programming environment.&nbsp; The application is able to manipulate
+data with high-performance in the datahub process, and to have changes
+posted to the persistent database by the queuing of DMH subscription messages.&nbsp;
+By default, attributes that are manipulated in this way, and represented
+in the <b>od_attribute</b> table are persistent.&nbsp; In other words,
+their value changes are posted to the persistent database as they happen.&nbsp;
+The same simplified access to attribute data can also be used for manipulating
+less significant, transient data such as counts and state information that
+change many times per second.&nbsp; It is a desirable performance boost
+to hide these busy, and less significant data changes from the persistent
+database.&nbsp; The design of the <a href="#od_attribute">od_attribute</a>
+table supports this idea by having the column <i>is_transient</i> which
+is used as a boolean flag and set to 1 to hide the updates of selected
+rows from the persistent database.
+<p>These procedures are used to help manage transient data.&nbsp; There
+are some subtle aspects to how the subscriptions work that make using these
+procedures desirable.&nbsp; For example, if you simply update the <i>is_transient</i>
+field for selected attributes, the persistent database does not save that
+you want a non-zero <i>is_transient</i> value.&nbsp; So when you startup
+again, the attributes are back to being completely persistent.&nbsp; Using
+the <b>od_transient</b> procedure to declare specified attributes as being
+transient takes care of making sure the persistent database saves that
+the specified attributes are transient.
+<p>The format of the <i>attribute_name</i> arguments is expected to be
+one of the following:
+<ol>
+<li>
+<b><i>Item_type</i>(<i>item_id</i>.*)</b></li>
+
+<li>
+<b><i>Item_type</i>(*.<i>attribute</i>)</b> or equivalently <b><i>Item_type</i>(<i>attribute</i>)</b></li>
+
+<li>
+<b><i>Item_type</i>(<i>item_id</i>.<i>attribute</i>)</b></li>
+</ol>
+Case 1 identifies all existing attributes of a specified item.&nbsp; For
+this case, the <b>od_is_transient</b> call returns 1 if any of the existing
+attributes of the item are transient.&nbsp; Case 2 affects the single record
+for item_id='*' which is used as a default value for new instances, or
+as a working value for "Singleton" types.&nbsp; Case 3 affects the single
+record; a specific attribute of a specified item.&nbsp; For the <b>od_transient</b>
+call and case 3, if the record does not already exist, a table insertion
+is made with an empty value and the is_transient flag set.&nbsp; For this
+case and the <b>od_not_transient</b> call, no insertion is made if the
+row does not already exist since the default behavior will insert a new
+row as not being transient.
+<p>The <i>row_count</i> value returned by the <b>od_transient</b>, <b>od_not_transient</b>,
+and <b>od_transient_save</b> calls show the number of table rows matching
+the input specifications and subject to the implied action of updating
+the <i>is_transient</i> value or being posted to the persistent database.
+<br>&nbsp;</blockquote>
+
+<hr WIDTH="100%">
+<hr WIDTH="100%">
+<h3>
+<b>Table&nbsp;<a NAME="Schema"></a>Schema</b></h3>
+Identical sets of tables are created in the Tcl/Tk process that initializes
+the ODC, and in the persistent database, when a persistent database is
+being used.&nbsp; The tables created and used by the ODC are described
+below.&nbsp; The Tcl/Tk process where the ODC is executing is almost always
+a <a href="../man1/datahub.html">Datahub</a> process.
+<br>
+<hr WIDTH="100%">
+<h4>
+<a NAME="od_assoc"></a>od_assoc Table - Configuration of 1::N associations</h4>
+There is simplified access to the association data stored in this table
+as presented <a href="#Associations">above</a>.
+<p>The suggested behavior for a configuration user interface follows.&nbsp;
+The list of known <i>item_type</i> values is consulted by the configuration
+GUI and the user is only allowed to configure instances, attributes, and
+associations of known types.&nbsp; There is also provision from the GUI
+to add or delete known types.&nbsp; The GUI is integrated with the <a href="datacoll.html">DCC</a>
+security features, and it requires a different privilege to add or delete
+types than to edit instances.&nbsp; The <i>item_types</i> that are in use
+have to be configured in order to setup variable traces to support the
+simplified access.
+<p>You cannot use upvar to work with the arrays using a different name
+since the name is a key to the table mapping.
+<p>The allowed size of <i>child_id</i> records is substantially smaller
+than that allowed for attributes.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>item_type</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>A system or user defined type such as <b>EPC</b>, <b>Lot</b> or <b>MID</b>.&nbsp;
+Should be a single alphanumeric token without imbedded whitespace or punctuation.&nbsp;</td>
+</tr>
+
+<tr>
+<td>item_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>A user defined name for the instance of a type.&nbsp; May contain whitespace.&nbsp;
+Should not contain the colon,&nbsp; the period, or other punctuation.</td>
+</tr>
+
+<tr>
+<td>child_type</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>Usually, a system or user defined type such as <b>Lot</b> or <b>MID</b>.&nbsp;
+Generally, the field can also be used as the name of the associated <i>child_id</i>
+value.&nbsp; Should be a single alphanumeric token without imbedded whitespace
+or punctuation.</td>
+</tr>
+
+<tr>
+<td>child_id</td>
+
+<td>PCK</td>
+
+<td>varchar(150)</td>
+
+<td>Usually, an identifier for a <i>child_type</i>, but generally just
+an associated named value.&nbsp; The length of this field is limited because
+some persistent databases limit the total length of a composite key.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<h4>
+<a NAME="od_attribute"></a>od_attribute Table - Persistent Object Attribute
+Data</h4>
+The <b>od_attribute</b> table is used for the storage of attribute data.&nbsp;
+The data in the table may be manipulated directly using SQL, but it is
+also convenient to access the data using Tcl array variables as described
+<a href="#Attributes">above</a>.
+<p>The EPC runtime system assumes that there is a Type <b>MID</b> representing
+machines or state machines, and that instances of this type have the following
+attributes represented in this table:
+<ul>
+<li>
+<b>class</b> - the class or type of the machine.&nbsp; This value is represented
+in several tables as MID_class.&nbsp; A lot of the configuration is done
+for a particular machine class, and then used for all instances of the
+class.</li>
+
+<li>
+<b>state</b> - the current state of the machine.&nbsp; The value can be
+constant if you are not using the finite state machine execution features.</li>
+</ul>
+
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>item_type</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>A system or user defined type such as <b>Lot</b> or <b>MID</b>.&nbsp;
+Should be a single alphanumeric token without imbedded whitespace or punctuation.&nbsp;
+All types should be represented in the <b>od_assoc</b> table in order to
+access the table data as global Tcl arrays.</td>
+</tr>
+
+<tr>
+<td>item_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>A user defined name for the instance of a type.&nbsp; May contain whitespace.&nbsp;
+Should not contain the colon,&nbsp; the period, or other punctuation.</td>
+</tr>
+
+<tr>
+<td>attribute</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>A system defined or user defined name for an attribute such as <b>state</b>
+or <b>recipe_id</b>.</td>
+</tr>
+
+<tr>
+<td>value</td>
+
+<td></td>
+
+<td>varchar(2000)</td>
+
+<td>The value of the named attribute for the instance of the type.</td>
+</tr>
+
+<tr>
+<td>is_transient</td>
+
+<td></td>
+
+<td>int</td>
+
+<td>A boolean flag to determine whether updates to the record should also
+be fed to the persistent database.&nbsp; Similar to the DCC dc_data discard_flag.&nbsp;
+If the value is 1, updates are not passed on to the persistent database.&nbsp;
+Inserts and deletes are always passed on to the persistent database so
+that records are present at startup.&nbsp; Initial values at startup are
+usually set by business rules.&nbsp; This field is desirable so the attribute
+system can be used for very busy data changes without worrying about the
+overhead.</td>
+</tr>
+</table>
+
+<hr>
+<h3>
+<b>Document&nbsp;<a NAME="Version"></a>Version</b></h3>
+Date of last revision: $Date: 2002/10/25 16:44:26 $
+<p>This document covers the Hume Integration Software developed Object
+Data Component which is available for the Tcl 8.3/Tk 8.3 environment on
+the Windows 2000/NT and UNIX/POSIX platforms.
+</body>
+</html>

@@ -1,0 +1,33 @@
+#Wafer	FA300_G	1	04/02/2009	00:00:00	root	Wafer Spec of SPECS-FA demonstaration
+
+$Type: Wafer
+$Name: FA300_G
+$Vers: 1 /opt/SPECS/demo/FA300_G
+$Desc: Wafer Spec of SPECS-FA demonstaration
+$Date: 04/02/2009
+$Time: 00:00:00
+$User: root
+$--------- ------------------- ------------ - - -
+ ATTRIBUTE                                       
+           SIZE=REAL,"mm"      300.000000        
+           STEPX=REAL,"um"     10000.000000      
+           STEPY=REAL,"um"     10000.000000      
+           FLAT=INTEGER,"deg"  180               
+           ALIGNDIEX=INTEGER   0                 
+           ALIGNDIEY=INTEGER   0                 
+           ALIGNMODX=REAL,"um" 17775.000000      
+           ALIGNMODY=REAL,"um" 19150.000000      
+           CENTERDIEX=INTEGER  15                
+           CENTERDIEY=INTEGER  15                
+           OFFSETDIEX=REAL     0.000000          
+           OFFSETDIEY=REAL     0.000000          
+           COORDINATE=INTEGER  4                 
+           WAFERSHAPE=INTEGER  1                 
+ BODY                                            
+           `FA300_A`           10,11        A    
+           `FA300_A`           18,11        B    
+           `FA300_A`           14,14        C    
+           `FA300_A`           10,17        A    
+           `FA300_A`           18,17        D    
+$--------- ------------------- ------------ - - -
+

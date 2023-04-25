@@ -1,0 +1,1680 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Ed Hume">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <meta name="Description" content="User Guide and Reference Information for the com.hume.DMH Java Package">
+   <title>The com.hume.DMH Java Package</title>
+</head>
+<body>
+
+<h1>
+The com.hume.DMH Java Package</h1>
+
+<p><br>Hume Integration has created a Java package for integrating Java
+and web-based applications into a distributed system using the Distributed
+Message Hub (DMH) message system.&nbsp;&nbsp; The Java package consists
+of classes to use the DMH message system, a class to use text structured
+as Tcl lists, a class to parse VFEI formatted strings, and a class that
+provides interval timing.&nbsp;&nbsp; High-level methods are provided for
+sending and receiving messages, with either send-and-reply synchronous-style
+interactions, or higher performance asynchronous-style interactions.&nbsp;&nbsp;&nbsp;
+Message exchanges are typically directed to application servers such as
+the Hume Integration Datahub, or the dmh_SQLsrv persistent database interface.&nbsp;
+The DMH message system is remarkably easy to use with these DMH Tcl processes
+because the messages are typically SQL, Tcl, or VFEI text that is directly
+interpreted by the receiver.&nbsp;&nbsp; To extend this ease of use to
+the Java client, methods are provided&nbsp; to parse Tcl list text strings,
+and to create Tcl list text strings from string elements.&nbsp; The package
+has been recently enhanced to include DMH server capabilities.
+<p><a NAME="features"></a>
+<h2>
+Feature Summary</h2>
+
+<ul>
+<li>
+A proven component for creating web-based GUI's that are integrated with
+the factory systems.</li>
+
+<li>
+High performance asynchronous message sending and receiving</li>
+
+<li>
+Convenient synchronous send-and-reply server or peer interaction provided
+as well</li>
+
+<li>
+Comprehensive support of DMH message system features such as mailbox manipulation</li>
+
+<li>
+Methods provided for convenient manipulation of Datahub SQL replies or
+similar Tcl list results in Java applications and applets.</li>
+
+<li>
+Lost server and lost client events provided for application recovery and
+resume logic</li>
+
+<li>
+DMHClient class is usable in multiple instances for high performance access
+to multiple DMH servers.</li>
+
+<li>
+Fully integrated into the Java runtime environment with high-performance
+use of threading, event dispatching, controllable trace output, and error
+handling</li>
+
+<li>
+No static maximum sizes for DMH messages</li>
+
+<li>
+VFEI2Map class provided to parse SEMATECH VFEI formatted messages.</li>
+</ul>
+
+<hr WIDTH="100%"><a NAME="userguide"></a>
+<h2>
+<b>User Guide</b></h2>
+The package distribution consists of the following files.&nbsp; Only the
+.class files are needed in a runtime environment.&nbsp; The interface definition
+files are provided for the convenience of the developer.&nbsp; They are
+usually loaded into an integrated development environment to provide class
+information.
+<br>&nbsp;
+<ul>
+<li>
+<b><a href="#Reference">DMHClient.class</a></b> - the compiled DMHClient
+class.&nbsp; This class implements the DMHClientItf interface.&nbsp; You
+declare instances of this class in your Java code to use the DMH message
+system as a client.</li>
+
+<li>
+<b>DMHClientItf.java</b>, <b>DMHClientItf.class</b> - The source code and
+compiled version of the DMHClientItf interface.&nbsp; An interface is similar
+to an abstract base class.&nbsp; The interface defines the methods and
+the parameters that have been implemented to use the DMH message system
+from Java code.</li>
+
+<li>
+<b>DMHReceiveItf.java</b>, <b>DMHReceiveItf.class</b> - The source and
+compiled version of the DMHReceiveItf interface.&nbsp; To perform asynchronous
+receiving, you develop one or more classes that implement the DMHReceiveItf.</li>
+
+<li>
+<b>DMHLostServerItf. java DMHLostServerItf.class</b> - The source and compiled
+version of the DMHLostServerItf interface.&nbsp; To receive the callback
+event that the connection to the DMH server has been lost, you develop
+a class that implements the DMHLostServerItf interface.</li>
+
+<li>
+<b><a href="#DMHServer">DMHServer.class</a></b> - the compiled DMHServer
+class which implements both the DMHClientItf and the DMHServerItf.&nbsp;
+An instance of this class can be used to provide the DMH message system
+server functionality for a specified DMH group.&nbsp;&nbsp; The class provides
+"client" functions such as sending and receiving messages, in addition
+to managing the DMH server mailbox message queues.</li>
+
+<li>
+<b>DMHServerItf.java, DMHServerItf.class</b> - This interface defines the
+public methods and their arguments that are supported for providing DMH
+message system server functions.</li>
+
+<li>
+<b>DMHTraceItf.java, DMHTraceItf.class</b> - The source and compiled version
+of the interface which is used to receive TRACE messages.&nbsp; When DMH
+applications send messages to the DMH mailbox named TRACE, they are routed
+to the DMH server.&nbsp; The default handling of these messages is to timestamp
+them and print them to the Java console.</li>
+
+<li>
+<b>DMHLostClientItf.java, DMHLostClientItf.class</b> - To receive the callback
+event that a client has disconnected from the DMH server, you develop a
+class that implements the DMHLostClientItf interface.</li>
+
+<li>
+<b><a href="#TclListRef">TclList.class</a></b> - The compiled version of
+the Tcl list class.&nbsp; This class has methods to parse or build Tcl
+lists, or extract list elements.</li>
+
+<li>
+<b><a href="#TclListModel">TclListModel.class</a></b> - the compiled version
+of the TclListModel class which is designed to support Swing ComboxBox
+or ListBox displays of Tcl list data.</li>
+
+<li>
+<b>HISTimeoutItf.java</b>, <b>HISTimeoutItf.class</b> - The source and
+compiled version of the HISTimeoutItf interface.&nbsp; In order to use
+the <b><a href="#TimerRef">HISTimer class</a></b>, you write classes that
+implement the HISTimeoutItf interface.&nbsp; When the timer interval expires,
+the timeout method of your class object is executed.</li>
+
+<li>
+<b><a href="#VFEI2MapRef">VFEI2Map.class</a></b> - The compiled version
+of the VFEI2Map class.&nbsp; The class has the static method parse() which
+is used to convert VFEI formatted text Strings into (name,value) Map (hashtable)
+entries.</li>
+
+<li>
+<b>VFEI2MapTest.java, VFEI2MapTest.class</b> - A test and demonstration
+program that will parse VFEI text entered at the console or from a file.</li>
+
+<li>
+<b>hostname.class</b> - A class to provide the hostname of the machine
+that the software is running on.&nbsp; Similar to java.net.InetAddress.getLocalHost(
+) except that it strips domain information.&nbsp; The class needs to be
+present to support proper operation.</li>
+
+<li>
+<b>dmh_msg.class</b>, <b>dmh_packet.class</b>, <b>tcl_result.class</b>
+- These classes are used internally by the DMH package software.&nbsp;
+They need to be present to support use of DMH messaging but are private
+in nature.</li>
+
+<li>
+<b>dmhQ.class, dmhQmsg.class, dmh_client.class, dmh_last_read.class, dmh_msg.class</b>
+- These classes are used internally by the DMH server software.&nbsp; They
+need to be present to support proper DMH server operation but are private
+in nature.</li>
+
+<li>
+<b>HISjava.html</b>, <b>HISjava_cmds.html</b>, <b>index.html</b> - Online
+documentation.&nbsp; The index.html file is the starting point since it
+creates a viewing frame.</li>
+</ul>
+The distribution is designed for the portable Java virtual machine platform,
+versions 1.2 and later.&nbsp;&nbsp; The class library is designed to successfully
+interoperate with recent versions of the Tcl/Tk DMH software running on
+any platform.
+<br>&nbsp;
+<p><a NAME="Installation"></a>
+<h3>
+Installation</h3>
+The DMH Java software is distributed as two .zip archive files:
+<dl>
+<dt>
+<b>comhumeDMH.zip</b></dt>
+
+<dd>
+The Java classes for the com.hume.DMH package. The .zip archive contains
+files with the path com/hume/DMH/*.*, so it is extracted to the root of
+your Java class directory tree.</dd>
+
+<dt>
+<b>DMHApplet.zip</b></dt>
+
+<dd>
+Example Swing and Swingx Applets, coded for package <b>DMHApplet</b> and
+containing pathnames of the form DMHApplet/*.*. This archive can also be
+extracted to the root of your Java class directory tree. Example HTML documents
+are included to activate the Applets.</dd>
+</dl>
+If you received the DMH software on CDROM, the .zip archive files are located
+in the subdirectory <b>LAN_IMAGE</b>. Installation consists of unzipping
+these archive files into directories of your choice.
+<p>The class files are all placed in a subdirectory structure as determined
+by the package name,&nbsp; "com.hume.DMH".&nbsp; The "com/hume/DMH" directory
+is usually located at the root of your http web server document directory
+for deploying Java applets on the web.&nbsp; You can place this entire
+subdirectory in another file system location if you use CODEBASE tags in
+your documents to specify the non-default location. The demonstration applets
+included with this DMH package, are coded with the package name "DMHApplet".
+For the simplest deployment, a directory of this name, DMHApplet, is created
+from the root directory of your web server, and the files are installed
+in that directory. For development, see your Java documentation about adding
+the directory to your CLASSPATH, or loading it into your integrated development
+environment.
+<p>There are alternatives for web server deployment.&nbsp; It is possible
+to create jar file archives that contain the class files and your application
+files.&nbsp; The startup of your application is sped up if the jar file
+is pre-installed at the client.&nbsp; When you use jar files, you need
+to specify the name of the jar file as one of the options to the HTML markups
+that identify your Applet.
+<p>As a developer, you should know how to display the Java console from
+your web browser.&nbsp; Microsoft's IE does in fact feature a console window,
+but it is not on the menu until the program options are set to make it
+available.&nbsp; There are usually informational messages on the console
+in error situations.
+<p><a NAME="Development"></a>
+<h3>
+Development</h3>
+In your java source code, you will usually include the statement, "import
+com.hume.DMH.*" near the top of your file. This statement makes the package
+classes available without full package name references.
+<p>Your design will typically use one instance of the DMHClient class.&nbsp;
+You can declare the instance as part of your application class, and then
+make it public or pass references to your window and dialog classes.&nbsp;&nbsp;
+A single instance of the class can be used for sending and receiving with
+multiple mailboxes simultaneously.&nbsp; More than one instance of the
+class is only needed if you wish to communicate directly with multiple
+DMH servers.&nbsp; You should not use multiple instances of the class to
+communicate with a single DMH server.
+<p>As a developer, per the licensing terms, you are required to have the
+Tcl/Tk DMH software installed on your development system.&nbsp;&nbsp; One
+reason for this requirement is to insure that you have the <a href="../index.html" target="_blank">online
+documentation</a> for the DMH system.&nbsp; A second major reason is so
+that you can run your own DMH server process to test and debug against
+without affecting a production system.
+<p>If you are not familiar with the DMH message system, you may want to
+read the mbx document which is usually installed at <a href="../mann/mbx.html" target="_blank">\usr\local\htm83\mann\mbx.html</a>.&nbsp;
+Your&nbsp; application acts a DMH message system client, and attaches to
+a running DMH server.&nbsp; Once you are connected to the DMH system, you
+can exchange messages with other attached processes.
+<p>To get started, you only need to know the hostname where the DMH server
+is running, and the DMH Groupname that has been assigned to the server.&nbsp;&nbsp;
+If you click on the NT "Programs"/"Tcl 8.3 - Tk 8.3 - DMH"/"Datahub" program
+item, or start a Datahub process on your POSIX system ("datahub eof &amp;"),
+you will start a DMH server running on your host, with the default DMH
+groupname of "mbx".
+<p>The usual application design, and the one that provides the best performance,&nbsp;
+is to connect to the DMH server during initialization, and to use this
+connection during the life of the application.&nbsp; The <a href="#Init">Init(
+) method</a> is used to connect to the server.&nbsp; The server's hostname
+and groupname are provided as arguments to the Init( ) method.&nbsp; If
+the application disconnects from the server, the Init( ) command can be
+used again to restore the connection.
+<p>So in your application class you might have code that looks like:
+<br>&nbsp;
+<p><tt>import com.hume.DMH.*;&nbsp;&nbsp; // Hume Integration DMH message
+system</tt>
+<p><tt>// class declaration</tt>
+<br><tt>public class MyApp extends JApplet implements DMHLostServerItf,
+... {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; // ...</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; public static DMHClient dmh = null;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; // ...</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; public void init() {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ...</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // construct a single
+class instance if needed</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(dmh == null) { dmh
+= new DMHClient(); }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // connect to the DMH
+server on the web server host</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // if not already connected</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( dmh.getState() ==
+0) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+String serverhost;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+try {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// throws exception if called from static main</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+java.net.URL thisURL = getCodeBase();</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+serverhost =thisURL.getHost();</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+} catch (Exception e) { ; }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if ( serverhost == null || serverhost.equals(""))&nbsp; {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+serverhost = dmh.Hostname();</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+System.out.println("Connecting to the DMH Server, host=" + serverhost +
+"group=mbx");</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+try {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+dmh.Init(serverhost, "mbx");</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+} catch (Exception e) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+String msg="Communication to the application server failed.&nbsp; Try reloading
+this web page later.";</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+JOptionPane.showMessageDialog(null,</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+msg, "DMH Server Not Online", JOptionPane.WARNING_MESSAGE);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//setContentPane(offline_panel());</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ...</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; public void DMHLostServer(DMHClientItf dmh) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String msg="Communication
+to the DMH server has been lost.&nbsp; The system has probably been shutdown";</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; msg = msg + " Reload this
+web page to try reconnecting.";</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JOptionPane.showMessageDialog(null,</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+msg, "Communication Lost", JOptionPane.WARNING_MESSAGE);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; // now disable transaction buttons...</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<br>&nbsp;
+<p><a NAME="Errors"></a>
+<h4>
+Error Handling</h4>
+A long running program such as a user interface or automation application
+needs to handle intermittent errors with network outages or server shutdowns.&nbsp;
+There are two styles of handling errors; you can mix both styles in your
+application as you see fit.
+<p>The first style of error handling is to avoid them by disabling buttons
+and window controls that make use of DMH features when there is not a server
+connection.&nbsp; You write the statements that enable your buttons after
+a successful Init( ) call, and you write statements that disable the buttons
+in your DMHLostServer( ) event handler.&nbsp; During initialization, before
+you have a connection, call a procedure that you have written to disable
+the buttons.&nbsp; Also during initialization, call the Init( ) method.&nbsp;
+The Init( ) method is a synchronous call that does not return until you
+have setup a connection to the DMH server, or have failed.&nbsp; When the
+Init( ) call succeeds, call a procedure that you have written to enable
+your buttons.
+<p>The second style of error handling is to add explicit error trapping
+to your procedures.&nbsp;&nbsp; The methods that involve network communication
+can throw exceptions which can be caught with a try{ } and catch( ) statement.
+<p>Here is a summary of the kinds of errors that the DMH control will report.&nbsp;
+When you make a method call that requires a DMH server connection, and
+you do not have one, an Exception will be thrown with the text "No DMH
+server connection".&nbsp; If you use an improper mailbox name such as one
+with whitespace in it, an Exception will be thrown with the text, "mailbox
+name must contain only letters, digits, -, _, ., !, :, or @".&nbsp;&nbsp;
+These are the two main errors when calling most of the methods.&nbsp;&nbsp;
+Most of the DMH&nbsp; method calls are then processed asynchronously.&nbsp;
+In other words, your method call returns, and the message communication
+you initiated happens as events are processed.&nbsp; An error that occurs
+during event processing results in the DMHLostServer( ) callback being
+processed.&nbsp; You do not need to write a DMHLostServer( ) callback handler,&nbsp;
+but you probably should to communicate to the users of your program if
+an error occurs.&nbsp; You can place logic in your DMHLostServer( )&nbsp;
+handler to initiate recovery and resume logic, exit the program, etc.&nbsp;
+The Init( ) can result in a wider variety of exception returns - see the
+reference pages.
+<br>&nbsp;
+<p><a NAME="basicDMH"></a>
+<h4>
+Sending and Receiving - Basics</h4>
+The programming model of the DMH message system is that you send a plain
+text message to a destination mailbox.&nbsp; When sending the message,
+you can optionally specify the name of a second mailbox for the recipient
+to send a reply message to.&nbsp; Usually you send a message to an application
+logic server such as a Datahub.&nbsp; The message is usually SQL,&nbsp;
+Tcl, or VFEI code that the recipient executes.&nbsp; If the sender has
+designated a reply mailbox, the result of executing the command is sent
+to the reply mailbox.
+<p>You can send messages without asking for replies using the <a href="#Put">Put(
+) method</a> .&nbsp; For example,&nbsp; suppose you are integrating a barcode
+reader.&nbsp; When data is read from the barcode reader device, your code
+is supposed to update a record in a Datahub table.&nbsp; You will send
+messages without asking for reply messages - if there is a system shutdown
+or communication failure, your application will know from the DMHLostServer(
+) callback.&nbsp; This is more efficient than asking for a reply message
+at every barcode read.&nbsp; When you send a message without waiting for
+a reply, it is referred to as an asynchronous send.
+<p>Often, you will want to send a message to obtain reply data.&nbsp; The
+most convenient method to use is the <a href="#DoXact">DoXact( ) method</a>.&nbsp;
+This method will take care of specifying and using a unique mailbox for
+your reply message, and it will take care of managing a timer in case a
+reply message is not forthcoming.&nbsp; Suppose you want to query a database
+table, and the DB variable is assigned the mailbox name of the <a href="../man1/dmh_SQLsrv.html">dmh_SQLsrv</a>
+process.&nbsp;&nbsp; The online documentation shows that the SQL standard
+"select" command sends multiple reply messages, but the "telect" command
+sends a single reply message with all of the requested data formatted as
+a Tcl list.&nbsp; The DoXact( ) method is designed for a single reply message,
+so your code looks like:
+<p><tt>String reply;</tt>
+<br><tt>String msg;</tt>
+<br><tt>msg = "telect device_id from barcode_config where display='" +
+new hostname() +" '");</tt>
+<br><tt>reply = dmh.DoXact(DB, msg);</tt>
+<br><tt>if (reply.equals("TIMEOUT")) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; // timeout or error</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; return;</tt>
+<br><tt>}</tt>
+<br><tt>// Parse the result- a Tcl List</tt>
+<br><tt>// element(6) = rows of data, then (0) = first row, then (0) =
+first item in row</tt>
+<br><tt>String device_id = TclList.ListElement(selection, 6, 0, 0);</tt>
+<br>&nbsp;
+<br>&nbsp;
+<p><a NAME="advancedDMH"></a>
+<h4>
+Sending and Receiving - Advanced</h4>
+If your application needs to receive unsolicited messages from other processes,
+you use the <a href="#Whenmsg">whenmsg( ) method</a> to setup asynchronous
+receiving.&nbsp; When an unsolicited message is received, your specified
+<a href="#DMHReceiveItf">DMHReceiveItf
+handler</a> is called.&nbsp;&nbsp;&nbsp; By convention you should use mailbox
+names for receiving that end in _SQL if SQL messages are expected, _VFEI
+if VFEI messages are expected, and _RPC if Tcl messages are expected.&nbsp;&nbsp;
+There is no limit to the number of mailboxes that you use for receiving,
+but the design convention is that you use unique names based on the server
+function(s) provided.&nbsp; There should be only one receiving process
+per mailbox name in a DMH group.&nbsp; You may wish to create a unique
+mailbox name for receiving by basing the name on your hostname - see the
+<a href="#Hostname">Hostname(
+)</a> method.
+<p>The <a href="#Disarm">Disarm( ) method</a> can be used to unregister
+an existing whenmsg setup, or all whenmsg setups.
+<p>The <a href="#Whenmsg">Whenmsg( ) method</a>&nbsp; functions to receive
+only one message.&nbsp; If <a href="#WhenmsgAgain">WhenmsgAgain( )</a>
+is executed from your receiving event handler, then the logic is re-armed
+to receive the next message.&nbsp; So the combination of Whenmsg( ) and
+WhenmsgAgain( ) are used for ongoing asynchronous receiving.
+<p>Lets revisit the DoXact( ) method.&nbsp; In some situations, you may
+want higher performance by sending messages and collecting the replies
+asynchronously, instead of waiting for each reply before sending the next
+message.&nbsp; You do this by setting up one or more reply mailboxes and
+arming them for receiving using the Whenmsg( )&nbsp; method.&nbsp; Instead
+of using DoXact( ) use the Putr( ) command and specify the reply mailbox
+argument.&nbsp; Typically a high&nbsp; performance application will create
+a small number of unique mailbox names for replies, and re-use them.&nbsp;
+If you are creating unique mailboxes for each reply message, use the <a href="#Close">Close(
+) method</a> when you are done with each one, to recover resource usage.
+<p>Your application should not "live" inside of your message receive handling
+code.&nbsp; Be sure to return in due course.&nbsp; Avoid performing long
+running computations.
+<br>&nbsp;
+<h4>
+<a NAME="TclLists"></a>Tcl Lists</h4>
+The Hume Java package also includes the <a href="#TclListRef">class TclList</a>,
+which is able to split text that is formatted as a Tcl list into string
+elements.&nbsp; The class has the ability to create Tcl lists that are
+constructed from multiple list append calls.&nbsp; The method names and
+functions are based on corresponding commands found in Tcl.&nbsp; This
+class is useful to work with the String values that are returned from SQL
+table selections from the <a href="../man1/datahub.html">Hume Datahub</a>
+or from the <a href="../man1/dmh_SQLsrv.html">dmh_SQLsrv</a> persistent
+database server.&nbsp; Also, there is the class <a href="#TclListModel">TclListModel</a>
+which behaves like the <b>TclList</b> class and also implements the <b>ListModel</b>
+and <b>ComboBoxModel</b> interfaces in order to support displaying list
+data in Swing widgets.
+<br>&nbsp;
+<h4>
+<a NAME="VFEI"></a>VFEI Text</h4>
+The Hume Java package includes the <a href="#VFEI2MapRef">class VFEI2Map</a>
+which is used to parse text that is formatted according to the SEMATECH
+VFEI 2.2 (or 2.1)&nbsp; specification.&nbsp; VFEI is a self-describing,
+name-equals-value text format that is used for equipment integration in
+the Semiconductor industry.&nbsp; The parser creates or updates entries
+in the caller's java.util.Hashtable (or other class implementing the Map
+interface).&nbsp; The item name String is used as the table entry key,
+and the entry value is the value String.&nbsp; A demonstration program,
+VFEI2MapTest, is provided.&nbsp; The program is run at the console by entering,
+"java com.hume.DMH.VFEI2MapTest".&nbsp; The program parses console input,
+or file input.&nbsp; See the source for details.
+<br>&nbsp;
+<p><a NAME="International"></a>
+<h4>
+International Character Sets</h4>
+Java is an excellent choice for International applications because double
+byte characters are used consistently.&nbsp; Multibyte UTF-8 character
+sequences are used by Tcl and DMH to represent International characters.&nbsp;
+Conversion between these two formats happens transparently as you send
+and receive messages.&nbsp; You should stick with ANSI characters for mailbox
+names and datahub table names, but feel free to use International text
+in your message data.
+<p>When declaring database tables to hold International text, base the
+VARCHAR( ) sizes on UTF-8 byte counts, not on the number of characters.&nbsp;
+In the most conservative case,&nbsp; you need to allow 3 bytes per displayed
+character.
+<p>To be successful with International applications you need to make sure
+that you have installed fonts and chosen fonts in your application that
+are capable of displaying the characters you require.
+<br><a NAME="Termination"></a>
+<h4>
+Termination</h4>
+When your application is shutting down, you should call the <a href="#Disconnect">Disconnect(
+) method</a> to disconnect gracefully from the DMH server.&nbsp; Practically
+speaking the DMH server routinely takes care of situations where clients
+leave ungracefully, but proper software manners are encouraged.
+<br><a NAME="Miscellaneous"></a>
+<br>&nbsp;
+<h4>
+Miscellaneous Notes</h4>
+An actual network connection is not attempted until Init() is called.
+<p>The programming model is that you will not have more than one connection
+to a particular DMH server.&nbsp; It is typical to have only one DMH connection
+per application process.&nbsp; It is possible to use multiple controls,
+each connected to a different DMH Group.
+<p>There should be only one reader per mailbox name in a given DMH group.
+<p>The&nbsp; DMHClient class is able to use and resolve DMH groupname aliases
+as described in the online Tcl documentation.&nbsp; Groupname aliases are
+resolved at the DMH server and not at the client.
+<p>Mailbox Naming rules:
+<ul>
+<li>
+A mailbox name should be limited to 31 or fewer characters, but there is
+no firm limit.</li>
+
+<li>
+The name must start with an ANSI letter, digit, or the underscore</li>
+
+<li>
+Other characters in the name may include - or&nbsp; !.</li>
+
+<li>
+The period, colon, or @ symbol should only be used to specify optional
+groupname qualification of a mailbox name as in <i>boxname</i>[<b>@</b><i>host_or_ip_address</i><b>:</b><i>groupname</i>]</li>
+</ul>
+
+<p><br>
+<hr WIDTH="100%"><a NAME="Reference"></a>
+<h2>
+DMHClient Class Reference</h2>
+<a NAME="Properties"></a>
+<table BORDER WIDTH="100%" >
+<caption><b>&nbsp;DMHClient "Properties"</b></caption>
+
+<tr>
+<td><b>Property Access</b><a NAME="getClientID"></a></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>String get<b>ClientID</b>()<a NAME="DefaultTimeout"></a></td>
+
+<td>The DMH server assigns a unique string to each client for identification
+purposes.&nbsp; This value is a readonly runtime value providing the server's
+ID string or an empty string if a connection has not been established.&nbsp;</td>
+</tr>
+
+<tr>
+<td>int get<b>DefaultTimeout</b>( )<a NAME="ClientDescription"></a>
+<br>int setDefaultTimeout(int)</td>
+
+<td>The default timeout interval for send and reply transactions, or timed
+receive invocations.&nbsp;&nbsp; In seconds - the default value is 30.&nbsp;
+Settable range: 1 - 86399.</td>
+</tr>
+
+<tr>
+<td>String get<b>Description</b>( )<a NAME="State"></a>
+<br>void setDescription(String)</td>
+
+<td>One of the features of the Tcl/Tk DMH Status Window is to provide an
+action for identifying connected clients.&nbsp; The default description
+provided for a Java DMH client is similar to "&lt;hostname>: Java DMH client".&nbsp;
+Using the setDescription( ) method, you are able to provide your own description
+string for your Java application.</td>
+</tr>
+
+<tr>
+<td>int get<b>State</b>( )
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The state property is a read-only value available at runtime.&nbsp;
+The value can be read to determine if a healthy communication connection
+exists, etc.&nbsp;&nbsp;&nbsp; Applications will ordinarily use event methods
+and not poll the state property value.&nbsp; The transient and error states
+do not last long, so testing for the values 0 or 7 is the most common scenario.&nbsp;
+<dl>
+<dl>
+<pre>&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; disconnected</pre>
+
+<pre>&nbsp; 4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hostname is being resolved</pre>
+
+<pre>&nbsp; 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connection setup in progress&nbsp;</pre>
+
+<pre>&nbsp; 7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; healthy connection exists</pre>
+
+<pre>&nbsp; 8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connection close in progress</pre>
+
+<pre>&nbsp; 9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a communication error has occurred&nbsp;&nbsp;</pre>
+&nbsp;
+<pre><a NAME="Tracebits"></a>519&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DMH protocol setup in progress (519 = &amp;H100 Or 7)</pre>
+</dl>
+</dl>
+</td>
+</tr>
+
+<tr>
+<td>int get<b>Tracebits</b>( )
+<br>int setTracebits(int)<a NAME="mhgroup"></a></td>
+
+<td>The Tracebits property controls output of diagnostic data to the Trace
+event.&nbsp; This value is used as a bitfield with the bit values controlling
+the following categories of output:
+<p>01 data reads
+<br>02 data writes
+<br>04 message receiving
+<br>08 message sending
+<br>16 logic tracing</td>
+</tr>
+
+<tr>
+<td>String <b>mhgroup</b>()</td>
+
+<td>The mhgroup property is a readonly runtime value indicating the <i>hostname<b>:</b>port&nbsp;</i>
+of the DMH server when connected, else an empty string.&nbsp; <i>Hostname</i>
+is the server's idea of his hostname which may be different from the hostname
+that was specified at the client.</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+<p><a NAME="ControlEvents"></a>
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>DMHClient Callback Events</b></caption>
+
+<tr>
+<td><a NAME="Connected"></a><b>Event Callback&nbsp; and Set Method</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>All callback methods - NOTES
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>You write your own callback class or classes, and you declare that
+a class implements the callback interface.&nbsp; It is possible to implement
+any or all of the interfaces in one class,&nbsp; or multiple classes.
+<p><tt>// Demonstration of repeated receiving</tt>
+<br><tt>class whenever_receive implements DMHReceiveItf {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; public void&nbsp; DMHReceive(</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DMHClientItf dmh,&nbsp;&nbsp;&nbsp;
+// the DMH connection</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String msg,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// the message</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String destboxname,&nbsp;
+// destination mailbox&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String replyboxname) // reply
+mailbox name&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throws Exception {</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dmh.WhenmsgAgain();&nbsp; // rearm
+for next message</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // process the received message</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //DMHApplet.theApp.OutputAppend(</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp; "DMHReceive()
+called: dest=" +</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp; destboxname + " replybox="
++ replyboxname +</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp; " msg=" + msg);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>}</tt>
+<p>Then, you register instances of your class(es) to receive the event
+with the DMHClient:
+<p><tt>whenever_receive wr=new whenever_receive();</tt>
+<br><tt>dmh.Whenmsg("CLIENTDEMO", wr);</tt>
+<p>When the event happens, your callback function is called.&nbsp; A reference
+to the DMHClient is provided as an argument, in case you are using the
+same callback with multiple instances of the DMHClient class.&nbsp;
+<p><a NAME="LostServer"></a>When registering the LostServer or Trace callbacks,
+the previous value is returned.&nbsp; This lets you chain, or swap and
+restore callbacks.&nbsp;</td>
+</tr>
+
+<tr>
+<td><tt>public interface</tt>
+<br><tt><b>DMHLostServerItf</b> {</tt>
+<br><tt>&nbsp; public void DMHLostServer(</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; DMHClientItf dmh);</tt>
+<br><tt>&nbsp; }</tt><a NAME="DMHReceiveItf"></a>
+<p><tt>// DMHClient set method</tt>
+<br><tt>DMHLostServerItf <b>setLostServer</b>(DMHLostServerItf handler);</tt></td>
+
+<td>The LostServer event happens when the DMH connection has been closed
+from any circumstance such as remote closure, communication failure, error,
+or invocation of the Disconnect method.&nbsp; This event is similar to
+the Tcl lostserver procedure invocation.&nbsp; The event may happen more
+than once if multiple errors are being processed.</td>
+</tr>
+
+<tr>
+<td>
+<br><tt>public interface <b>DMHReceiveItf</b> {</tt>
+<br><tt>&nbsp; public void DMHReceive(</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; DMHClientItf dmh,</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; String Data,&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; String DestinationBox,&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; String ReplyMailbox)&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp; throws Exception;</tt>
+<br><a NAME="DMHTraceItf"></a><tt>}</tt></td>
+
+<td>The Receive callback is executed when a message has arrived.&nbsp;
+You can register different callback objects for each destination mailbox
+using the <a href="#Whenmsg">Whenmsg</a> method, described in the next
+table.&nbsp;
+<p>The DestinationBox parameter is a mailbox name that your application
+has specified when initiating receiving.&nbsp; If the sender of the message
+indicated a reply mailbox, it is passed as the ReplyMailbox.&nbsp; If no
+reply mailbox has been specified, the ReplyMailbox argument is an empty
+string.&nbsp; The Data argument is the text of the sent message.&nbsp;
+The DMHClient&nbsp; logic protects you from receiving another message for
+the DestinationMailbox, and re-entering your handler logic until you have
+returned from the current callback execution.&nbsp;</td>
+</tr>
+
+<tr>
+<td><tt>public interface&nbsp;</tt>
+<br><tt><b>DMHTraceItf</b> {</tt>
+<br><tt>&nbsp; public void DMHTrace(</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; DMHClientItf dmh,&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; String tracemessage);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<p><tt>// DMHClient set method</tt>
+<br><tt>DMHTraceItf <b>setTrace</b>(DMHTraceItf handler)</tt></td>
+
+<td>This event provides diagnostic and debug information per the Tracebit
+property setting.&nbsp; Your application needs to avoid creating new DMH
+activity in the Trace event callback, that in return causes Trace events.&nbsp;
+A cycle of positive feedback is possible which will cause a software fission
+reaction.</td>
+</tr>
+</table>
+
+<p><a NAME="Methods"></a>
+<table BORDER WIDTH="100%" >
+<caption><b>DMHClient Methods</b></caption>
+
+<tr>
+<td><b>METHOD</b></td>
+
+<td><b>DESCRIPTION</b></td>
+</tr>
+
+<tr>
+<td>
+<br><a NAME="Close"></a>All methods - NOTES</td>
+
+<td>If the method throws Exceptions, it is generally true that if the method
+is called when there is not a connection to the DMH server, an Exception
+will be raised.&nbsp;&nbsp; In this situation, the text of the Exception
+is "No DMH server connection".</td>
+</tr>
+
+<tr>
+<td>void <b>Close</b>(String boxname) throws Exception;<a NAME="Count"></a></td>
+
+<td>Stop using a mailbox - Disarm receiving if listening, Flush if not
+empty,&nbsp; and remove from existence if it exists.&nbsp; The Tcl version
+of this call, differs because it will not flush existing messages.</td>
+</tr>
+
+<tr>
+<td>int[] <b>Count</b>(String boxname) throws Exception;
+<br><a NAME="Disarm"></a></td>
+
+<td>Returns an array of three numbers, the total count of messages that
+have been sent to the mailbox, the total count of messages that have been
+consumed from the mailbox, and last, the current count of pending messages.&nbsp;
+A pending message is one that exists in the queue associated with the mailbox,
+and has not been consumed by reading or flushing.</td>
+</tr>
+
+<tr>
+<td>public void <b>Disarm</b>(String boxname) throws Exception;
+<br>public void <b>Disarm</b>() throws Exception;<a NAME="Disconnect"></a></td>
+
+<td>Un-register the listener from a specified&nbsp; mailbox.&nbsp; This
+call may be used to cancel an earlier Whenmsg( ) call.&nbsp;
+<p>If called with no arguments, all Whenmsg( ) receiving registrations
+are canceled.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void <b>Disconnect</b>();<a NAME="DoXact"></a></td>
+
+<td>The counterpart of Init( ); disconnects from the DMH server.&nbsp;
+The call also cancels all receiving.&nbsp; Has no effect if not connected.</td>
+</tr>
+
+<tr>
+<td>String <b>DoXact</b>(String destbox, String msg) throws Exception;
+<p>String <b>DoXact</b>(String destbox, String msg, int seconds_timeout)
+throws Exception;
+<p>String <b>DoXact</b>(String destbox, String msg, String replybox) throws
+Exception;
+<p><a NAME="Flush"></a>String <b>DoXact</b>(String destbox, String msg,
+String replybox, int seconds_timeout) throws Exception;
+<p>&nbsp;</td>
+
+<td>Performs a complete send and reply transaction with timeout management.&nbsp;
+Creates and manages a unique reply mailbox for the send and reply transaction
+if the replybox argument is defaulted.&nbsp; If the timeout is not specified,
+the <a href="#DefaultTimeout">DefaultTimeout</a> value is used.&nbsp; The
+usual reply is the text of the reply message. The String literal <b>TIMEOUT</b>
+is returned in case of failure.
+<p>If you specify a ReplyMailbox, you need to insure that the name you
+specify is only used by your application.&nbsp; It is usual to create a
+unique reply mailbox name, perhaps based on the hostname, assign it to
+a variable, and use it repeatedly.
+<p>If you are not connected, the call fails immediately with an Exception.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void <b>Flush</b>(String boxname) throws Exception;
+<br><a NAME="GroupnamePort"></a></td>
+
+<td>Empty a mailbox of any pending messages.&nbsp; A pending message is
+one that has been sent to the mailbox but has not been consumed.&nbsp;
+In other words, a pending message is waiting in a queue associated with
+the&nbsp; mailbox name.&nbsp; Messages are consumed by reading or flushing.</td>
+</tr>
+
+<tr>
+<td>int <b>GroupnamePort</b>(String Groupname)
+<br><a NAME="Hostname"></a></td>
+
+<td>Used to determine the TCP/IP port number that is used by the DMH server
+to listen for client connections.&nbsp; The method is equivalent to the
+mh_name_to_socket Tcl procedure.&nbsp; Most applications will not have
+a use for this method since the server socket port is managed by the DMH
+software.&nbsp;</td>
+</tr>
+
+<tr>
+<td>String <b>Hostname</b>();
+<br><a NAME="Init"></a></td>
+
+<td>Returns the TCP/IP hostname of the computer that the control is executing
+on.&nbsp; The name is guaranteed to be stripped of domain information.&nbsp;
+We have seen that the Microsoft Java VM provides the useless result "localhost"
+when running in an Applet.</td>
+</tr>
+
+<tr>
+<td>String <b>Init</b>(String hostname, String groupname) throws Exception;
+<p>String <b>Init</b>(String hostname, int port) throws Exception;
+<p>&nbsp;</td>
+
+<td>Performs the initial connection to the DMH message server. The connection
+will be setup or an exception result will be obtained before returning.
+<p>If the connection to the DMH server is ever lost, the LostServer( )
+event is fired.<a NAME="Product"></a>
+<p>&nbsp;</td>
+</tr>
+
+<tr>
+<td><b>String Product</b>()&nbsp;<a NAME="Put"></a></td>
+
+<td>If this interface is implemented for another product, a different Product()
+string should be returned in case the using software needs to know the
+difference. The Hume DMH software returns a two element list with "DMH"
+as the first element, and a Copyright message as the second element.</td>
+</tr>
+
+<tr>
+<td>void <b>Put</b>(String mailbox, String message) throws Exception;<a NAME="Putr"></a></td>
+
+<td>The Put( ) method sends a message to a mailbox with no reply mailbox
+indicated.&nbsp;
+<p>The doublebyte String characters are converted to UTF-8 encoding, so
+that you can safely send&nbsp; International characters.
+<p>Sending to the mailbox name "TRACE" sends the message to the DMH Server
+Trace Facility.</td>
+</tr>
+
+<tr>
+<td>void <b>Putr</b>(String destbox, String replybox, String message) throws
+Exception;<a NAME="ServerStatus"></a></td>
+
+<td>Sends a message to a mailbox with a reply mailbox indicated.&nbsp;&nbsp;
+By convention, when a reply mailbox is indicated for a command message
+sent to a Datahub mailbox or equipment interface mailbox, the command is
+processed, and a reply message is sent to the reply mailbox.&nbsp;
+<p>Sending to the mailbox name "TRACE" sends the message to the DMH Server
+Trace Facility.</td>
+</tr>
+
+<tr>
+<td>String <b>ServerStatus</b>() throws Exception;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Returns a Tcl list containing the information presented in the Tcl
+DMH status window.&nbsp; The information can be parsed by the application
+to determine&nbsp; status information on every mailbox that is currently
+in use.&nbsp; This command may be useful for debugging, and is not used
+by ordinary applications.
+<p>The first element of the list is a list of 5 elements:
+<br>{ <i>hostname</i><b>:</b><i>port messages_received messages_sent messages_queued
+tcl_version </i>}
+<p>Subsequent elements in the list are lists of four or five elements:
+<br>{ <i>mailboxname count_in count_out count_pending </i>[<i>reader_handle</i>]
+}
+<p><a NAME="TimedReceive"></a>Additional elements may exist in the list
+if there are DMH clients that are not currently waiting to receive messages.&nbsp;
+These elements are formatted as:
+<br>{{{no whenmsg pending}} - - - <i>reader_handle</i>}</td>
+</tr>
+
+<tr>
+<td>String <b>TimedReceive</b>(String boxname, int secs_timeout) throws
+Exception;<a NAME="Version"></a></td>
+
+<td>Waits for a message to be received in the specified mailbox.&nbsp;
+If the call succeeds,&nbsp; the return value is the message data.&nbsp;
+If the call fails, the return value is the literal string "TIMEOUT".&nbsp;
+<p>If you are not connected, the call fails immediately with an Exception.</td>
+</tr>
+
+<tr>
+<td>String<b> Version</b>( )<a NAME="Whenmsg"></a></td>
+
+<td>Returns a two element list consisting of the DMH protocol version,
+and the library component configuration management Id string. Current software
+returns the "1.1" to&nbsp; as the first element to indicate compatibility
+with DMH protocol version 1.1.</td>
+</tr>
+
+<tr>
+<td>void <b>Whenmsg</b>(String boxname, <a href="#DMHReceiveItf">DMHReceiveItf</a>
+handler) throws Exception;
+<br><a NAME="WhenmsgAgain"></a></td>
+
+<td>Register for receiving the next available message directed to the specified
+mailbox.&nbsp; Calling WhenmsgAgain( ) in your DMHReceive( ) event handling
+code re-arms the receive registration for the next message.</td>
+</tr>
+
+<tr>
+<td><a NAME="WhenmsgDump"></a>void <b>WhenmsgAgain</b>() throws Exception;</td>
+
+<td>The Whenmsg( ) method functions as a one-shot.&nbsp; In other words,
+receiving is stopped after receiving one message.&nbsp; Calling the WhenmsgAgain
+method from the receive handler re-registers to receive the next message.</td>
+</tr>
+
+<tr>
+<td>String[][] <b>WhenmsgDump</b>();</td>
+
+<td>The WhenmsgDump method returns an array of string pairs (String [N][2]).&nbsp;
+Each pair consists of [][0] a mailbox name, and [][1] the result of executing
+the toString( ) method of the dmh_receive_itf object.&nbsp; This command
+may be useful for debugging, and is not used by ordinary applications.
+<br>&nbsp; <tt>String reply[][];</tt>
+<br><tt>&nbsp; try {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reply = dmh.WhenmsgDump();</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OutputAppend("WhenmsgDump:");</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int i=0; i&lt; reply.length;
+i++) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OutputAppend("box="
++ reply[i][0] +</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"&nbsp; obj=" + reply[i][1]);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp; } catch (Exception e) {&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OutputAppend( "Exception:" + e);</tt>
+<br><tt>&nbsp; }&nbsp;</tt><a NAME="DMHServer"></a></td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<h2>
+DMHServer Class Reference</h2>
+The DMHServer class implements both the DMHClientItf interface and the
+DMHServerItf interface.&nbsp;&nbsp; All of the reference material for the
+DMHClient Class, above, is relevant, with the understanding that the "connection"
+between the client and server is directly made without network communication.&nbsp;
+The initialization methods, Init( ), create an instance of a server socket
+on your TCP/IP host that other DMH clients can connect to and exchange
+DMH messages.&nbsp; The client connection may be made from any supported
+platform and language environment including the C++, Java, Tcl/Tk, and
+the Visual Basic OCX.&nbsp; The DMHServer reference, below, only highlights
+the additions and changes to the DMHClient reference material, above.<a NAME="serverProperties"></a>
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>&nbsp;DMHServer&nbsp; Additional "Properties"</b></caption>
+
+<tr>
+<td><b>Property Access</b><a NAME="addAlias"></a></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>public void <b>addAlias</b>(String&nbsp; groupname);
+<p>public String [] <b>getAliases</b>();<a NAME="ServerDescription"></a></td>
+
+<td>A DMH mailbox name can have an optional DMH group name specification,
+for example, HUB@TESTFLOOR.&nbsp; The software recognizes and removes group
+names that map to the actual DMH group served by the DMHServer instance.&nbsp;
+This feature can be exploited to provide the concept of multiple virtual
+DMH groups in a single physical server.&nbsp; A typical user will not need
+to use these methods.&nbsp; The present Java server version does not provide
+gateway forwarding across groups as the Tcl server does.&nbsp; So the alias
+definitions should all resolve to the server's own group.<a NAME="serverEvents"></a></td>
+</tr>
+
+<tr>
+<td>public String get<b>Description</b>( )
+<br>public void setDescription(String)</td>
+
+<td>After the Init( ) call is made, the default description for the server
+is set to a string like "(DMH Server &lt;mh_group>) (java port)".&nbsp;
+To customize the identity description, the setDescription( ) call should
+be used after the Init( ) call is made.&nbsp; The description is seen from
+the DMH Status window of Tcl/Tk clients by using the "Identity" action.</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>&nbsp;DMHServer&nbsp; Additional Callback Events</b></caption>
+
+<tr>
+<td><b>Event Callback&nbsp; and Set Method</b><a NAME="LostClient"></a></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>public interface <b>DMHLostClientItf</b> {
+<br>&nbsp;&nbsp;&nbsp; public void DMHLostClient(
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+DMHServerItf server, String clientID, boolean superseded);
+<br>&nbsp;&nbsp;&nbsp; }
+<p>public DMHLostClientItf&nbsp;
+<br><b>setLostClient</b>(DMHLostClientItf dlc);<a NAME="setTraceMsg"></a></td>
+
+<td>The LostClient event happens when the DMH connection to a client has
+been closed from any circumstance such as remote closure, communication
+failure, error, or invocation of the clientDisconnect() method.&nbsp; The
+clientID string can be used in conjunction with the ServerStatus() result
+to determine which mailboxes were in use.</td>
+</tr>
+
+<tr>
+<td><tt>public interface <b>DMHReceiveItf</b> {</tt>
+<br><tt>&nbsp; public void DMHReceive(</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; DMHClientItf dmh,</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; String Data,&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; String DestinationBox,&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; String ReplyMailbox)&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp; throws Exception;</tt>
+<br><tt>}</tt>
+<p>public DMHReceiveItf&nbsp;
+<br><b>setTraceMsg</b>(DMHReceiveItf traceReceive);<a NAME="serverMethods"></a></td>
+
+<td>The TRACE message event happens when messages are sent to the TRACE
+mailbox.&nbsp; The default handler is System.out.println( ) with timestamp
+decoration.&nbsp; You can replace the handling of TRACE messages in your
+application.&nbsp; Do not perform time-consuming manipulation in your TRACE
+message handling logic.</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>&nbsp;DMHServer&nbsp; Additional &amp; Revised Methods</b></caption>
+
+<tr>
+<td><b>METHOD</b><a NAME="clientDisconnect"></a></td>
+
+<td><b>DESCRIPTION</b></td>
+</tr>
+
+<tr>
+<td>public void <b>clientDisconnect</b>(String clientID);<a NAME="clientIdentify"></a></td>
+
+<td>Close a client's DMH connection to the server.</td>
+</tr>
+
+<tr>
+<td>public String <b>clientIdentify</b>(String clientID)<a NAME="clientPing"></a></td>
+
+<td>Ask the client to provide his hostname, command line, and DISPLAY name
+as a String result.</td>
+</tr>
+
+<tr>
+<td>public void <b>clientPing</b>(String clientID);<a NAME="clientTerminate"></a></td>
+
+<td>Exercise the network connection to a client which causes an error and
+connection close if the client is gone.&nbsp; The Tcl hubclient offers
+this function in conjunction with refreshing the ServerStatus( ) view which
+is how the user sees the outcome.</td>
+</tr>
+
+<tr>
+<td>public void <b>clientTerminate</b>(String clientID);<a NAME="serverClose"></a></td>
+
+<td>Tell the client to exit, which is honored by Tcl &amp; Java clients,&nbsp;
+and by VB clients if the developer codes the Shutdown() callback.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void <b>Close</b>(String boxname) throws Exception;<a NAME="serverInit"></a></td>
+
+<td>Unlike the client Close() the server version is compatible with the
+Tcl Server.&nbsp; The logic will disarm the box for receiving, but it will
+not flush pending messages.&nbsp; The mailbox is removed from existence
+only if there are no pending messages.&nbsp; To achieve the same result
+as the Java client Close(), both Flush() and Close() need to be called.</td>
+</tr>
+
+<tr>
+<td>public String <b>Init</b>(String groupname) throws Exception;
+<p>public String <b>Init</b>(int port) throws Exception;
+<p>String <b>Init</b>(String hostname, String groupname) throws Exception;
+<p>String <b>Init</b>(String hostname, int port) throws Exception<a NAME="lastRead"></a></td>
+
+<td>Begin functioning on a TCP/IP port as a DMH server.&nbsp; The DMH group
+may be specified as a name, or as a socket port.&nbsp; The default group
+name for clients has been "mbx" which is mapped to the port number 5328.&nbsp;
+The mapping of a group name can be determined using the DMHClient method
+GroupnamePort().&nbsp; You can optionally specify which of your network
+interfaces to serve on.&nbsp; The name "localhost" will make the server
+visible to other processes on the same computer who also specify the hostname
+"localhost", and leave the server invisible on the network.&nbsp;
+<p>If you have more than one network interface on your computer, you may
+specify the one to serve on.&nbsp; If you do not specify a hostname or
+dotted IP address, you get default behavior.&nbsp; It seems that default
+behavior will always make your server visible on the "localhost" and on
+the default hostname interface.&nbsp; On some platforms, default behavior
+will also make your server visible on all enabled network interfaces.&nbsp;
+You can determine your default hostname by executing the command "hostname"
+at the prompt of a command shell window.</td>
+</tr>
+
+<tr>
+<td>public String <b>lastRead</b>(String boxname);<a NAME="main"></a></td>
+
+<td>To support debugging, the DMH server keeps a copy of the last message
+sent to each mailbox.&nbsp; In the Tcl versions, the global array&nbsp;
+mh_last_read is used.&nbsp; You can know what mailboxes are in use from
+the ServerStatus() call.&nbsp; A typical user will not need this method.</td>
+</tr>
+
+<tr>
+<td>public static void <b>main</b>(String argv[]);</td>
+
+<td>For simple use and testing, there is a static main method which allows
+the com.hume.DMHServer class to be run as a standalone application.&nbsp;
+The optional command line arguments are of the form [&lt;group> [&lt;Tracebits>]].&nbsp;
+The server listens to mailbox "DMH" for the following command messages:
+<br>&nbsp;
+<dl>
+<dl>
+<dt>
+<b>addAlias </b>&lt;<b>groupname</b>></dt>
+
+<dd>
+Equivalent to the Java method of the same name.</dd>
+
+<dt>
+<b>echo</b> [&lt;<b>arg</b>>]*</dt>
+
+<dd>
+Echoes the message text to the reply mailbox.</dd>
+
+<dt>
+<b>exit</b></dt>
+
+<dd>
+Does a shutdown and calls System.exit(0).</dd>
+
+<dt>
+<b>getAliases</b></dt>
+
+<dd>
+Equivalent to the Java method of the same name.</dd>
+
+<dt>
+<b>getClientID</b> [&lt;<b>boxname</b>>]</dt>
+
+<dd>
+Returns the client ID of the DMH client who is waiting to receive on a
+specified boxname.&nbsp; If no boxname is specified, the result is for
+the client who is receiving the reply message.</dd>
+
+<dt>
+<b>lastRead</b> &lt;<b>boxname</b>></dt>
+
+<dd>
+Equivalent to the Java method of the same name.</dd>
+
+<dt>
+<b>mh_msgs</b> &lt;<b>boxname</b>></dt>
+
+<dd>
+Equivalent to the Java method of the same name.</dd>
+
+<dt>
+<b>set tracebits</b> [&lt;<b>n</b>>]</dt>
+
+<dd>
+Used to set or query the Tracebits property. The tracebits should be set
+to 0 in a production system since tracing activity has a huge detrimental
+impact on server performance.</dd>
+
+<dt>
+<b>shutdown</b></dt>
+
+<dd>
+Equivalent to the Java method of the same name.&nbsp; Since the application
+has no other threads running, the process exits.</dd>
+</dl>
+</dl>
+An example command to invoke the server is:
+<blockquote>
+<pre>set CLASSPATH=c:\hume;</pre>
+
+<pre>c:\jdk1.3.1\bin\java com.hume.DMH.DMHServer mbx&nbsp;<a NAME="mh_msgs"></a>0</pre>
+</blockquote>
+</td>
+</tr>
+
+<tr>
+<td>public String <b>mh_msgs</b>(String boxname);<a NAME="shutdown"></a></td>
+
+<td>The Tcl server makes it seem like there is a global array mh_msgs which
+has all of the queued DMH messages.&nbsp; The array does not physically
+exist as a Tcl array - the read accesses are trapped and the queue data
+is converted to Tcl variable form on demand.&nbsp; There is risk of the
+user causing huge amounts of additional memory use by viewing a message
+queue that has a lot pending message data.&nbsp;&nbsp; This is a documented
+feature, and an acceptable design, because&nbsp; computing history has
+shown that what we consider huge today is ordinary and reasonable in two
+years.&nbsp; So we are supporting the equivalent feature, which is used
+for debugging and diagnosis.&nbsp; The String result is a Tcl formatted
+list of pairs, where each pair is a Tcl list of the message body and the
+reply mailbox.&nbsp; If there is&nbsp; no reply mailbox, the second element
+of the pair is an empty list. For example:
+<p>&nbsp;"{{hello world message} MY_REPLYBOX} {{sent w/o replybox} {}}"</td>
+</tr>
+
+<tr>
+<td>public void <b>shutdown</b>();</td>
+
+<td>Shutdown the server and close all existing client connections.</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<p>
+<hr WIDTH="100%"><a NAME="TclListRef"></a>
+<h2>
+TclList Class Reference</h2>
+The TclList class provides methods to parse or construct text Strings that
+are formatted per the list conventions of the Tcl programming environment.&nbsp;
+Tcl uses braces to delimit white space, and backslash character sequences
+are also possible.&nbsp; Most of the methods listed in the table below
+throw Exceptions because not all strings are valid Tcl lists.&nbsp; The
+class also implements <b>java.io.Serializable</b> and <b>java.lang.Cloneable</b>.&nbsp;
+The class and methods are safe for use from multiple threads.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>TclList Public Methods</b></caption>
+
+<tr>
+<td><b>METHOD</b></td>
+
+<td><b>DESCRIPTION</b></td>
+</tr>
+
+<tr>
+<td><b>TclList</b>(String s)
+<br><b>TclList</b>()</td>
+
+<td>The constructors.&nbsp; To work with String text that is formatted
+as a Tcl list, pass the text as the constructor argument.&nbsp; For creating
+a new empty Tcl list, use the empty constructor.&nbsp; A new empty list
+can also be constructed by passing a null or empty string constructor argument.</td>
+</tr>
+
+<tr>
+<td>String <b>join</b>()</td>
+
+<td>Used to obtain the text of the constructed Tcl list.</td>
+</tr>
+
+<tr>
+<td>void <b>lappend</b>(String element) throws Exception<br>
+void <b>lappend</b>(String e1, String e2) throws Exception<br>
+void <b>lappend</b>(String e1, String e2, String e3) throws Exception<br>
+void <b>lappend</b>(String e1, String e2, String e3, String e4) throws Exception</td>
+
+<td>List append - adds one to four string elements at the end of the list.&nbsp;</td>
+</tr>
+
+<tr>
+<td>String <b>lindex</b>(int n) throws Exception</td>
+
+<td>Obtain the string element at the specified index.&nbsp; Indexing starts
+with 0.&nbsp; An empty string is returned if the index is out of range.</td>
+</tr>
+
+<tr>
+<td>static String <b>lindex</b>(String s, int n) throws Exception</td>
+
+<td>Use this method to grab elements in a list without constructing a TclList
+object.&nbsp; The method caches a parsed representation of the last String
+argument, so successive calls to lindex on the same string are processed
+rapidly.</td>
+</tr>
+
+<tr>
+<td>void <b>linsert</b>(String e, int index) throws Exception</td>
+
+<td>List insert - add an element at index N, sliding existing elements
++1.</td>
+</tr>
+
+<tr>
+<td>static String <b>ListElement</b>(String s, int index1) throws Exception
+<p>static String <b>ListElement</b>(String s, int index1, int index2) throws
+Exception
+<p>static String <b>ListElement</b>(String s, int index1, int index2, int
+index3) throws Exception</td>
+
+<td>These are convenience methods to parse elements in a list without constructing
+a TclList object.&nbsp; If a single index is specified, the method is identical
+to the static lindex( ) method.&nbsp; Additional indexes may be specified
+to parse lists that are nested inside of lists.&nbsp; If a specified index
+is out of bounds, an empty string is returned.&nbsp;&nbsp; Similar methods
+are provided with the DMH Active-X control, and the DMH C++ client software.</td>
+</tr>
+
+<tr>
+<td>int <b>llength</b>() throws Exception</td>
+
+<td>Returns the number of elements in the list - the list length.</td>
+</tr>
+
+<tr>
+<td>void <b>remove</b>(int index) throws Exception</td>
+
+<td>Removes a single element at a given index, shortening the list.&nbsp;
+The index must be in the range of 0 to llength( )-1.</td>
+</tr>
+
+<tr>
+<td>void <b>remove</b>(int indexes[]) throws Exception</td>
+
+<td>Removes multiple elements at specified indexes, shortening the list.</td>
+</tr>
+
+<tr>
+<td>void <b>replace</b>(int index, String element) throws Exception</td>
+
+<td>Replaces a single element at a given index.</td>
+</tr>
+
+<tr>
+<td>String[] <b>split</b>() throws Exception<br>
+static String [] <b>split</b>(String s) throws Exception</td>
+
+<td>Returns a string array representing the elements of the list. There is
+also a static version for parsing a list without creating a TclList instance.</td>
+</tr>
+
+<tr>
+<td>String <b>toString</b>()</td>
+
+<td>Returns the result of join( ).&nbsp; This method causes operations
+like string concatenation to work with TclList objects.</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<br>&nbsp;
+<p>
+<hr WIDTH="100%"><a NAME="TclListModel"></a>
+<h2>
+TclListModel Class Reference</h2>
+The <b>TclListModel</b> class provides the list data manipulation of the
+<b>TclList</b>
+class, and also implements the <b>ListModel</b> and <b>ComboBoxModel
+</b>interfaces
+that are needed to support Swing listbox and combobox display widgets.&nbsp;
+The class also implements <b>java.io.Serializable</b> and
+<b>java.lang.Cloneable</b>.&nbsp;
+The class and methods are safe for use from multiple threads.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>TclListModel Public Methods</b></caption>
+
+<tr>
+<td><b>METHOD</b></td>
+
+<td><b>DESCRIPTION</b></td>
+</tr>
+
+<tr>
+<td><b>TclListModel</b>(String s)
+<br><b>TclListModel</b>()</td>
+
+<td>The constructors.&nbsp; To work with String text that is formatted
+as a Tcl list, pass the text as the constructor argument.&nbsp; For creating
+a new empty Tcl list, use the empty constructor.&nbsp; A new empty list
+can also be constructed by passing a null or empty string constructor argument.</td>
+</tr>
+
+<tr>
+<td>void <b>addListDataListener</b>(ListDataListener l)</td>
+
+<td>Supports the ListModel interface.</td>
+</tr>
+
+<tr>
+<td>Object <b>getElementAt</b>(int i)</td>
+
+<td>Similar to lindex( ).&nbsp; Returns null if the list is invalid.&nbsp;
+Supports the ListModel interface.</td>
+</tr>
+
+<tr>
+<td>Object <b>getSelectedItem</b>()</td>
+
+<td>Supports the ComboBoxModel interface.</td>
+</tr>
+
+<tr>
+<td>int <b>getSize</b>()</td>
+
+<td>Similar to llength().&nbsp; Returns -1 if the list is invalid.&nbsp;
+Supports the ListModel interface.</td>
+</tr>
+
+<tr>
+<td>String <b>join</b>()</td>
+
+<td>Used to obtain the text of the constructed Tcl list.</td>
+</tr>
+
+<tr>
+<td>void <b>lappend</b>(String element) throws Exception</td>
+
+<td>List append - adds a string element at the end of the list.&nbsp;</td>
+</tr>
+
+<tr>
+<td>String <b>lindex</b>(int n) throws Exception</td>
+
+<td>Obtain the string element at the specified index.&nbsp; Indexing starts
+with 0.&nbsp; An empty string is returned if the index is out of range.</td>
+</tr>
+
+<tr>
+<td>void <b>linsert</b>(String e, int index) throws Exception</td>
+
+<td>List insert - add an element at index N, sliding existing elements
++1.</td>
+</tr>
+
+<tr>
+<td>int <b>llength</b>() throws Exception</td>
+
+<td>Returns the number of elements in the list - the list length.</td>
+</tr>
+
+<tr>
+<td>Object <b>remove</b>(int index)&nbsp;</td>
+
+<td>Removes a single element at a given index, shortening the list.&nbsp;
+The index must be in the range of 0 to llength( )-1.</td>
+</tr>
+
+<tr>
+<td>void <b>removeListDataListener</b>(ListDataListener l</td>
+
+<td>Supports the ListModel interface.</td>
+</tr>
+
+<tr>
+<td>void <b>replace</b>(int index, String element) throws Exception</td>
+
+<td>Replaces a single element at a given index.</td>
+</tr>
+
+<tr>
+<td>void <b>setSelectedItem</b>()</td>
+
+<td>Supports the ComboBoxModel interface.</td>
+</tr>
+
+<tr>
+<td>String[] <b>split</b>() throws Exception</td>
+
+<td>Returns a string array representing the elements of the list.</td>
+</tr>
+
+<tr>
+<td>String <b>toString</b>()</td>
+
+<td>Returns the result of join( ).&nbsp; This method causes operations
+like string concatenation to work with TclList objects.</td>
+</tr>
+</table>
+
+<p><a NAME="TimerRef"></a>
+<br>
+<hr WIDTH="100%">
+<h2>
+HISTimer Class Reference</h2>
+The HISTimer class has the ability to call a timeout method on your object
+after a specified time interval.&nbsp; The timer starts running when it
+is instantiated and is discarded after one use.
+<br>&nbsp;
+<table BORDER COLS=2 WIDTH="100%" >
+<caption><b>HISTimer Callback Events</b></caption>
+
+<tr>
+<td><b>Event Callback</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td><tt>package com.hume.DMH;</tt>
+<p><tt>public interface HISTimeoutItf {</tt>
+<br><tt>&nbsp;&nbsp; public void HISTimeout(Object obj) throws Exception;</tt>
+<br><tt>&nbsp;&nbsp; }</tt></td>
+
+<td>This is the callback interface that a timer uses to notify you that
+your interval has expired.&nbsp; The Object argument references the timer
+so you can see which timer has expired.&nbsp; We let you throw exceptions
+so you do not have to code everything in try blocks.</td>
+</tr>
+</table>
+
+<table BORDER COLS=2 WIDTH="100%" >
+<caption><b>HISTimer Methods</b></caption>
+
+<tr>
+<td><b>Method</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>public HISTimer(long millisecs, HISTimeoutItf target);</td>
+
+<td>The constructor.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%"><a NAME="VFEI2MapRef"></a>
+<h2>
+VFEI2Map Class Reference</h2>
+The VFEI2Map class is used to parse text that is formatted according to
+the SEMATECH VFEI Specification #95113016A-TR.
+<br>&nbsp;
+<table BORDER COLS=2 WIDTH="100%" >
+<caption><b>VFEI2Map Methods</b></caption>
+
+<tr>
+<td><b>Method</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>public static int <b>parse</b>(String VFEItext, java.util.Map NameValues)
+throws Exception</td>
+
+<td>The parse method is static which means that no instances of the class
+are needed to call the method.&nbsp;
+<p>The Map interface is implemented by the java.util.Hashtable class, and
+instances of this class are usually passed as the second argument.&nbsp;
+<p>The return value is the count of new entries that were added to the
+Map table.&nbsp; Usually, the caller empties the table before calling the
+method, in which case the count indicates the number of (name, value) pairs
+parsed from the string.
+<p>Backslashes can be used to escape imbedded quotes.&nbsp; Other backslash
+escape sequences are left in the value strings as they are found.&nbsp;
+Otherwise, the parsing is the same as the Hume developed Tcl <a href="../mann/vfei_2_array.html">vfei_2_array</a>
+command.
+<p>The method can throw Exceptions for input text that is not proper VFEI.&nbsp;
+No Exception is thrown for blank text.
+<p>See the com.hume.DMH.VFEI2MapTest.java file for example code that uses
+this class.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%"><a NAME="LicenseTerms"></a>
+<h2>
+License Terms</h2>
+Subject to Change Without Notice
+<p>The Hume DMHClient Java software is licensed for development and runtime
+use at no additional charge for computers that are licensed for development use of the
+Hume Integration Datahub SDK.&nbsp; We ask that
+developers install the Tcl executables and actively use the Tcl executables
+for testing and development, instead of developing against production servers.&nbsp;
+Also, we ask that developers install the Tcl online documentation and use
+it to supplement the material presented in this document.
+<p>Hume Integration is also pleased to offer separate runtime licenses for using
+the DMHClient Java software on systems that are not licensed as development systems.
+Runtime usage of the DMH client 
+software is licensed separately from the Datahub SDK runtime license.
+<P>
+The Java DMHServer software is a new application which is separately licensed
+from the Datahub SDK Development or Runtime DMH client licenses. Contact Hume
+Integration directly for current terms.
+<p>
+<hr WIDTH="100%">
+<h2>
+<a NAME="DocVersion"></a>Document Version</h2>
+Date of last revision: $Date: 2005/05/27 12:47:07 $
+</body>
+</html>

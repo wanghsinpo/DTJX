@@ -1,0 +1,1322 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Ed Hume">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <meta name="Description" content="User Guide and Reference Information for the POSIX C DMH Client Library">
+   <title>POSIX C DMH Client LIBRARY</title>
+</head>
+<body>
+
+<h1>
+A DMH Client Library for POSIX C Applications</h1>
+
+<p><br>Hume Integration has created a library for integrating POSIX C or
+C++ programs into a distributed system using the Distributed Message Hub
+(DMH) message system.&nbsp;&nbsp; The library provides high-level methods
+for sending and receiving binary or text messages, with either send-and-reply
+synchronous-style interactions, or higher performance asynchronous-style
+interactions.&nbsp; POSIX threads are used to implement buffered sending,
+and well as asynchronous receiving, so there is not a need for the application
+to support an event loop, or a need to integrate the library code into
+an event loop.
+<p>The DMH Client library has also been ported to Windows using an open
+source POSIX threads library, PTHREADS-WIN32. The PTHREADS-WIN32 library
+is distributed per the terms of the GNU Library License, and source code
+is available for the PTHREADS-WIN32 library at <a href="http://sources.redhat.com/pthreads-win32/">http://sources.redhat.com/pthreads-win32/</a>
+and through Hume Integration.
+<p>Message exchanges are typically directed to application servers such
+as the Hume Integration Datahub, or the dmh_SQLsrv persistent database
+interface.&nbsp; The DMH message system is remarkably easy to use with
+these DMH Tcl processes because the messages are typically SQL, Tcl, or
+VFEI text that is directly interpreted by the receiver.&nbsp;&nbsp; To
+extend this ease of use to the C or C++ client, functions are provided
+to parse Tcl list text strings,&nbsp; or to create Tcl list text strings
+from string elements.&nbsp; The library can also be used to exchange binary
+messages which can be useful for equipment controller and device integration.
+<p><a NAME="features"></a>
+<h2>
+Feature Summary</h2>
+
+<ul>
+<li>
+High performance asynchronous message sending and receiving</li>
+
+<li>
+Both text and binary messages are supported</li>
+
+<li>
+Convenient synchronous send-and-reply server or peer interaction provided
+as well</li>
+
+<li>
+Comprehensive support of DMH message system features such as mailbox manipulation</li>
+
+<li>
+Tcl List manipulation functions provided for convenient parsing of Datahub
+SQL replies or similar Tcl list results in C/C++ applications</li>
+
+<li>
+Disconnected events and Error events provided for application recovery
+and resume logic</li>
+
+<li>
+Usable in multiple instances for high performance access to multiple DMH
+servers</li>
+
+<li>
+Fully integrated into the POSIX runtime environment with high-performance
+use of threading, event dispatching, controllable trace output, and error
+handling</li>
+
+<li>
+No static maximum sizes for DMH messages</li>
+</ul>
+
+<hr WIDTH="100%"><a NAME="userguide"></a>
+<h2>
+<b>User Guide</b></h2>
+
+<p><br>The DMH client library for POSIX C applications is provided as the
+following files:
+<ul>
+<li>
+<b>libdmh.a</b>&nbsp;&nbsp;&nbsp; - the library file for linking during
+development (<b>dmh.dll</b>, <b>dmh.lib</b> for Win32 Microsoft Visual
+C/C++; <b>dmh_bcc.dll</b>, <b>dmh_bcc.lib</b> for Win32 Borland C/C++.)</li>
+
+<li>
+<b>dmh.h</b>&nbsp;&nbsp;&nbsp; - API specification for development</li>
+
+<li>
+<b>demo.c</b>&nbsp;&nbsp;&nbsp; - source code for an example application
+and test utility</li>
+
+<li>
+<b>demo</b>&nbsp;&nbsp;&nbsp; - the compiled example application (<b>demo.exe</b>
+for Win32)</li>
+
+<li>
+<b>pthreadVC.dll </b>(<b>pthreadVC.lib</b>)&nbsp;&nbsp;&nbsp; - A port
+of POSIX thread support for Win32 and the Microsoft Visual C/C++ compiler.
+The Win32 Borland version of this library is named <b>pthreadBCC.dll</b>.&nbsp;
+The distribution of this library is per the terms of the GNU Library License.</li>
+</ul>
+The files are distributed in a .zip archive named&nbsp; <b>posix_dmh_xxx.zip</b>.
+where <b>xxx</b> indicates the platform or compiler version.&nbsp; If you
+received the DMH software on CDROM, this archive is in the subdirectory
+<b>LAN_IMAGE</b>.
+<p>The distribution is designed and tested for specific POSIX platforms
+such as HP-UX, Solaris, Linux, or AIX.&nbsp; Recently the library has also
+been ported to Win32, where it is the recommended client library for multi-threaded
+applications.&nbsp; Hume Integration also offers the <a href="DMHclient.html">DMHclient</a>
+class library and the <a href="DMHocx.html">DMH.ocx</a> Active-X control
+for Win32 platforms. The POSIX library is designed to successfully interoperate
+with recent versions of the Tcl/Tk DMH software running on any platform.
+<p><a NAME="Installation"></a>
+<h3>
+Installation</h3>
+Installation consists of extracting files in the <b>posix_dmh_xxx.zip</b>
+archive to a directory or directories of your choice. If you are installing
+the software for shared usage, you may want to put dmh.h in the /usr/local/include
+directory, and put the libdmh.a file in the /usr/local/lib directory.&nbsp;<a NAME="Development"></a>
+<h3>
+Development</h3>
+Your design will typically use one instance of a DMH client connection
+per process.&nbsp; A single client connection is used for sending and receiving
+with multiple mailboxes simultaneously from multiple threads.&nbsp; More
+than one instance of a client connection per process is only needed if
+you wish to communicate directly with multiple DMH servers.&nbsp; You should
+not use multiple connection instances within a single process to communicate
+with a single DMH server.
+<p>As a developer, per the licensing terms, you are required to have the
+Tcl/Tk DMH software installed on your development system.&nbsp;&nbsp; One
+reason for this requirement is to insure that you have the <a href="../index.html" target="_blank">online
+documentation</a> for the DMH system.&nbsp; A second major reason is so
+that you can run your own DMH server process to test and debug against
+without affecting a production system.
+<p>If you are not familiar with the DMH message system, you may want to
+read the mbx document which is usually installed at <a href="../mann/mbx.html">/usr/local/htm84/mann/mbx.html</a>.&nbsp;
+Your application acts a DMH message system client, and attaches to a running
+DMH server.&nbsp; Once you are connected to the DMH system, you can exchange
+messages with other attached processes.
+<p>To get started, you only need to know the hostname where the DMH server
+is running, and the DMH Groupname that has been assigned to the server.&nbsp;&nbsp;
+If you execute a Datahub process on your system from the command line,
+for example:
+<pre>&nbsp;&nbsp;&nbsp;&nbsp; $ /usr/local/bin/datahub84 eof &amp;</pre>
+you will start a DMH server running on your host, with the default DMH
+groupname of "mbx".
+<p>The usual application design, and the one that provides the best performance,&nbsp;
+is to connect to the DMH server during initialization, and to use this
+connection during the life of the application.&nbsp; The <a href="#new">dmh_new()</a>
+function is used to allocate a connection instance. The <a href="#Init">dmh_init(
+)</a> function is subsequently used to connect to the server.&nbsp; The
+server's hostname and groupname are provided as arguments to the dmh_init(
+) method.&nbsp; If the application disconnects from the server, the dmh_init(
+) command can be used again to restore the connection.
+<br><a NAME="Errors"></a>
+<h4>
+Error Handling</h4>
+A long running program such as an automation application needs to handle
+intermittent errors with network outages or server shutdowns.
+<p>Here is a summary of the kinds of errors that the DMH functions will
+report.&nbsp; When you make a function call that requires a DMH server
+connection, and you do not have one, the function call will return "No
+DMH server connection".&nbsp; If you use an improper mailbox name such
+as one with whitespace in it, the function call will return a string such
+as, "mailbox name must contain only ANSI letters, digits, -, _, ., !, :,
+or @".&nbsp;&nbsp; These are the two main errors when initiating a function
+call.&nbsp;&nbsp; Most of the DMH&nbsp; function calls are then processed
+asynchronously.&nbsp; In other words, your function call returns, and the
+message communication you initiated happens as events are processed.&nbsp;
+An error that occurs during event processing results in an Error event
+occurring.&nbsp; You do not need to write an Error event handler,&nbsp;
+but you probably should to communicate to the users of your program if
+an error occurs.&nbsp; When the Error event occurs, in most cases, the
+Disconnected event will also occur.&nbsp; You can place logic in your Disconnected(
+) event handler to initiate recovery and resume logic, exit the program,
+etc.
+<p><a NAME="basicDMH"></a>
+<h4>
+Sending and Receiving - Basics</h4>
+The programming model of the DMH message system is that you send a message
+to a destination mailbox.&nbsp; When sending the message, you can optionally
+specify the name of a second mailbox for the recipient to send a reply
+message to.&nbsp; Usually you send a message to an application logic server
+such as a Datahub.&nbsp; The message is usually SQL,&nbsp; Tcl, or VFEI
+command text that the recipient executes.&nbsp; If the sender has designated
+a reply mailbox, the result of executing the command is sent to the reply
+mailbox.
+<p>Lets discuss sending without asking for replies using the <a href="#Send">dmh_send(
+) function</a>&nbsp; or its equivalent, the <a href="#Put">dmh_put( ) function</a>
+.&nbsp; These functions are used to send text messages, and the <a href="#binsend">dmh_binsend()</a>
+function is used in a similar fashion to send binary messages.&nbsp; For
+example,&nbsp; suppose you are integrating a barcode reader.&nbsp; When
+data is read from the barcode reader device, your code is supposed to update
+a record in a Datahub table.&nbsp; You will send messages without asking
+for reply messages - if there is a system shutdown or communication failure,
+your application will know from the Disconnected event.&nbsp; This is more
+efficient than asking for a reply message at every barcode read.
+<p><tt>// update latest read record in table barcode_reader at the Datahub</tt>
+<br><tt>char *HUB="DATAHUB";</tt>
+<br><tt>char message[200];</tt>
+<br><tt>sprintf(message, "update barcode_reader set data_in='%s' where
+device_id='%s'",</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newdata,
+myID);</tt>
+<br><tt>dmh_send(dmh, HUB, message, NULL);</tt>
+<p>When you send a message without waiting for a reply, it is referred
+to as an asynchronous send.
+<p>Often, you will want to send a message to obtain reply data.&nbsp; The
+most convenient function to use for text messages is the <a href="#DoXact">dmh_doXact(
+)</a> function.&nbsp; The <a href="#binXact">dmh_binXact()</a> function
+is similar and is used for binary messages.&nbsp; This function will take
+care of specifying and using a unique mailbox for your reply message, and
+it will take care of managing a timer in case a reply message is not forthcoming.&nbsp;
+Suppose you want to query a database table, and the DB variable is assigned
+the mailbox name of the <a href="../man1/dmh_SQLsrv.html">dmh_SQLsrv</a>
+process.&nbsp;&nbsp; The online documentation shows that the SQL standard
+"select" command sends multiple reply messages, but the "telect" command
+sends a single reply message with all of the requested data formatted as
+a Tcl list.&nbsp; The dmh_doXact( ) function is designed for a single reply
+message, so your code looks like:
+<p><tt>char *reply1;</tt>
+<br><tt>char *reply2;</tt>
+<br><tt>char msg[200];</tt>
+<br><tt>char device_id[32];</tt>
+<br><tt>sprintf(msg, "telect device_id from barcode_config where display='%s'",
+dmh_hostname(dmh));</tt>
+<br><tt>reply1 = dmh_doXact(DB, msg);</tt>
+<br><tt>if (!strcmp(reply1, "TIMEOUT")) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; // timeout or error</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; dmh_free(reply1);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; return "TIMEOUT";</tt>
+<br><tt>}</tt>
+<br><tt>// Parse the result- a Tcl List</tt>
+<br><tt>// element(6) = rows of data, then (0) = first row, then (0) =
+first item in row</tt>
+<br><tt>reply2&nbsp; = dmh_listElement(reply1, 6, 0, 0);</tt>
+<br><tt>strncpy(device_id, reply2, sizeof(device_id));</tt>
+<br><tt>dmh_free(reply1);</tt>
+<br><tt>dmh_free(reply2);</tt>
+<br><tt>// success</tt>
+<br><tt>return NULL;</tt>
+<br>&nbsp;
+<p><a NAME="advancedDMH"></a>
+<h4>
+Sending and Receiving - Advanced</h4>
+If your application needs to receive unsolicited messages from other processes,
+you use the <a href="#Whenever">dmh_whenever( )</a> function to setup asynchronous
+receiving of text messages, and the <a href="#binwhenever">dmh_binwhenever()</a>
+function for binary messages.&nbsp; When an unsolicited message is received,
+your specified
+<a href="#Whenmsg">Whenmsg event handler</a> or <a href="#BinmsgProc">binary
+message event handler</a> is called.&nbsp;&nbsp; By convention you should
+use mailbox names for receiving that end in _SQL if SQL messages are expected,
+_VFEI if VFEI messages are expected, and _RPC if Tcl messages are expected.&nbsp;&nbsp;
+There is no limit to the number of mailboxes that you use for receiving,
+but the design convention is that you use unique names based on the server
+function(s) provided.&nbsp; There should be only one receiving process
+per mailbox name in a DMH group.&nbsp; You may wish to create a unique
+mailbox name for receiving by basing the name on your hostname - see the
+DMH function <a href="#Hostname">dmh_hostname( )</a>.
+<p>The dmh_whenever( ) and the dmh_binwhenever() functions are used for
+ongoing receiving - your application will continue to receive the messages
+that are sent to your specified mailbox.&nbsp; The <a href="#Disarm">dmh_disarm(
+)</a> function can be used to stop asynchronous receiving.
+<p>The <a href="#Whenmsg">dmh_whenmsg( )</a> and the <a href="#binwhenmsg">dmh_binwhenmsg()</a>
+functions are similar to the whenever( ) functions except that they receive
+only a single message.&nbsp; If <a href="#WhenmsgAgain">dmh_whenmsgAgain(
+)</a> is executed from your receiving event handler, then the software
+is re-armed to receive the next message.&nbsp; So the combination of dmh_whenmsg(
+) with dmh_whenmsgAgain( ) called in the receiving event handler is equivalent
+to using the dmh_whenever( ) function.
+<p>Lets revisit the dmh_doXact( ) function.&nbsp; In some situations, you
+may want higher performance by sending messages and collecting the replies
+asynchronously, instead of waiting for each reply before sending the next
+message.&nbsp; You do this by setting up one or more reply mailboxes and
+arming them for receiving using the dmh_whenmsg( ) or dmh_whenever( ) functions.&nbsp;
+Instead of using dmh_doXact( ) use the dmh_send( ) command and specify
+the reply mailbox argument.&nbsp; Typically a high performance application
+will create a small number of unique mailbox names for replies, and re-use
+them.&nbsp; If you are creating unique mailboxes for each reply message,
+use the <a href="#CloseMailbox">dmh_closeMailbox( )</a> function when you
+are done with each one, to recover resource usage.
+<br><a NAME="events"></a>
+<h4>
+Event Handling Notes</h4>
+Your application should not "live" inside of your event handling code.&nbsp;
+There are some rules concerning what your application can do in a receiving
+callback. In general, your application does not receive new asynchronous
+messages while your receiving callback logic is executing. So the usual
+application design for the callback logic is to return fairly quickly without
+performing lengthy computation. If your callback logic executes dmh_doXact(),
+dmh_binXact(), or dmh_timedReceive() then receiving of asynchronous messages
+is resumed during the execution of your callback. As your callback continues
+to execute, in the general case, there will not be re-entrant execution
+of your callback for receiving another message to the same mailbox. In
+other words, the dmh_whenever() and dmh_whenmsgAgain() logic guard against
+re-entrant execution of your callback logic for receiving to the same mailbox
+as the currently executing callback. It is possible to bypass the re-entrancy
+safeguard by calling dmh_whenmsg() from your callback to re-arm the callback.
+This is not a recommended practice.
+<p>A summary of the above paragraph; if you cause asynchronous receiving
+to be resumed during callback execution by using dmh_doXact() or similar
+functions, you should only be using dmh_whenever() or dmh_whenmsgAgain()
+to re-register the executing callback for the next reception. Otherwise
+you will have re-entrant execution of your callback.
+<p>Be careful with the Trace event.&nbsp; If you turn on a lot of tracing
+and are exchanging long messages, your application will be manipulating
+huge amounts of string data.
+<p><a NAME="International"></a>
+<h4>
+International Character Sets</h4>
+Multibyte UTF-8 character sequences are used by Tcl and DMH to represent
+International characters.&nbsp; The API for the DMH software uses these
+character sequences since they are compatible with the usual single character
+ANSI strings used by most applications.&nbsp; UTF-8 strings can be manipulated
+with all the usual C language functions because they do not use the null
+character as data.&nbsp; Instead, the byte sequence 0xC0 0x80 is used to
+represent an imbedded NULL.
+<p>When declaring database tables to hold international text, base the
+VARCHAR( ) sizes on UTF-8 byte counts, not on the number of characters.&nbsp;
+In the most conservative case,&nbsp; you need to allow 3 bytes per displayed
+character.
+<p>Datahub table varchar fields are compatible with UTF-8 sequences representing
+ordinary International text.&nbsp; There are issues with storing UTF-8
+sequences of arbitrary binary data which can be avoided or worked around:
+<ul>
+<li>
+The binary 0x01 byte should not be imbedded in a data value if the field
+is one of the table's primary key field(s).</li>
+
+<li>
+The sequence 0xC0 0x80 should be used to represent the NULL character and
+not 0x00.&nbsp; This is the ordinary conversion done by Tcl.</li>
+
+<li>
+The single quote character, code 0x27, is used as the delimiter of SQL
+literal data.&nbsp; Therefore any occurences of this character in binary
+data need to be doubled before using the data in an SQL statement.</li>
+</ul>
+
+<p><br><a NAME="Signals"></a>
+<h4>
+Signal Handling</h4>
+The DMH software creates a sending thread and a receiving thread. These
+threads are masked from the asynchronous signals SIGUSR1, SIGUSR2, SIGINT,
+SIGALM, and SIGHUP. Your application can use or ignore these signals without
+worrying about integration with the DMH software. The DMH software does
+not change the signal handling status of any thread making a library call.
+When your software is executing in a DMHWhenmsgProc as a result of a message
+being received, it is the DMH receiving thread that is executing your callback
+function. If you change the signal handling status of this thread in your
+callback logic, you should restore its original state before returning.
+<br><a NAME="Termination"></a>
+<h4>
+Termination</h4>
+When your application is shutting down, call the <a href="#Destroy">dmh_destroy</a>
+function. This call will disconnect gracefully from the DMH server and
+free resources used by your connection.&nbsp; Practically speaking the
+DMH server routinely takes care of situations where clients leave ungracefully,
+but proper software manners are encouraged.
+<br><a NAME="Miscellaneous"></a>
+<br>&nbsp;
+<h4>
+Miscellaneous Notes</h4>
+An actual network connection is not attempted until dmh_init() is called.
+<p>The programming model is that you will not have more than one connection
+to a particular DMH server.&nbsp; It is typical to have only one DMH connection
+per application process.&nbsp; Communication across DMH groups can be accomplished
+by sending to mailbox@groupname.&nbsp; It is also possible to use multiple
+connection instances, each connected to a different DMH Group.
+<p>There should be only one reader per mailbox name in a given DMH group.
+<p>The&nbsp; DMH client software is able to use and resolve DMH groupname
+aliases as described in the online Tcl documentation.&nbsp; Groupname aliases
+are resolved at the DMH server and not at the client.
+<p>Mailbox Naming rules:
+<ul>
+<li>
+A mailbox name should be limited to 31 or fewer characters, but there is
+no firm limit.</li>
+
+<li>
+The name must start with an ANSI letter, digit, or the underscore</li>
+
+<li>
+Other characters in the name may include - or&nbsp; !.</li>
+
+<li>
+The period, colon, or @ symbol should only be used to specify optional
+groupname qualification of a mailbox name as in <i>boxname</i>[<b>@</b>[<i>host_or_ip_address</i><b>:</b>]<i>groupname</i>]&nbsp;
+Here we are using brackets, [ ], to indicate optional portions of the mailbox
+name. The brackets are not actually specified by the user.</li>
+</ul>
+
+<p><br>
+<hr WIDTH="100%"><a NAME="Reference"></a>
+<h2>
+DMHClient API Reference</h2>
+Most of the C function calls take an argument which is a pointer to a DMH
+Connection data structure. This argument is declared as a user defined
+type <b>DMHClient</b>. The user obtains an instance of this type by calling
+the dmh_new() function.
+<p><a NAME="Properties"></a>
+<table BORDER WIDTH="100%" >
+<caption>&nbsp;<b>DMHClient "Properties"</b></caption>
+
+<tr>
+<td><b>Property Access</b></td>
+
+<td><a NAME="ClientData"></a><b>Description</b></td>
+</tr>
+
+<tr>
+<td><a NAME="ClientID"></a>void *dmh_get<b>ClientData</b>(DMHClient)
+<br>void *dmh_setClientData(DMHClient, void *)</td>
+
+<td>You can optionally set and get a per DMH Connection user-defined value.&nbsp;
+This can be a useful mechanism to pass a pointer to an application data
+structure or a parent object which can then be used from any of the event
+callbacks.&nbsp; This user-defined value is distinct from the user-defined
+data that you are able to associate with dmh_whenmsg or dmh_whenever callbacks.</td>
+</tr>
+
+<tr>
+<td><a NAME="DefaultTimeout"></a>const char *dmh_get<b>ClientID</b>(DMHClient)</td>
+
+<td>The DMH server assigns a unique string to each client for identification
+purposes. This value is a readonly runtime value providing the server's
+ID string or an empty string if a connection has not been established.&nbsp;</td>
+</tr>
+
+<tr>
+<td>int dmh_get<b>DefaultTimeout</b>(DMHClient)<a NAME="Description"></a>
+<p>int dmh_setDefaultTimeout(DMHClient, int)</td>
+
+<td>The default timeout interval for send and reply transactions, or timed
+receive invocations.&nbsp;&nbsp; In seconds - the default value is 30.&nbsp;
+Settable range: 1 - 86399.</td>
+</tr>
+
+<tr>
+<td>const char *dmh_get<b>Description</b>(DMHClient)
+<p>void dmh_setDescription(DMHClient, char *)<a NAME="mhgroup"></a></td>
+
+<td>One of the features of the Tcl/Tk DMH Status Window is to provide an
+action for identifying connected clients. The default description provided
+for a C DMH client is similar to "&lt;hostname>: C DMH client". You are
+able to provide your own description string for your application.</td>
+</tr>
+
+<tr>
+<td>const char *dmh_get<b>mhgroup</b>(DMHClient)<a NAME="State"></a></td>
+
+<td>The mhgroup property is a readonly runtime value indicating the <i>hostname<b>:</b>port&nbsp;</i>
+of the DMH server when connected, else NULL.&nbsp; <i>Hostname</i> is the
+server's idea of his hostname which may be different from the hostname
+that was specified at the client.</td>
+</tr>
+
+<tr>
+<td>int dmh_get<b>State</b>(DMHClient)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The state property is a read-only value available at runtime.&nbsp;
+The value can be read to determine if a healthy communication connection
+exists, etc.&nbsp;&nbsp;&nbsp; Applications will ordinarily use event functions
+and not poll the state property value.&nbsp; The transient and error states
+do not last long, so testing for the values 0 or 7 is the most common scenario.&nbsp;
+<dl>
+<dl>
+<pre>&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; disconnected</pre>
+
+<pre>&nbsp; 4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hostname is being resolved</pre>
+
+<pre>&nbsp; 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connection setup in progress&nbsp;</pre>
+
+<pre>&nbsp; 7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; healthy connection exists</pre>
+
+<pre>&nbsp; 8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connection close in progress</pre>
+
+<pre>&nbsp; 9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a communication error has occurred&nbsp;&nbsp;</pre>
+
+<pre><a NAME="Tracebits"></a>519&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DMH protocol setup in progress (519 = &amp;H100 Or 7)</pre>
+</dl>
+</dl>
+</td>
+</tr>
+
+<tr>
+<td>int dmh_get<b>Tracebits</b>(DMHClient)
+<p>int dmh_setTracebits(DMHClient, int)</td>
+
+<td>The Tracebits property controls output of diagnostic data to the Trace
+event.&nbsp; This value is used as a bitfield with the bit values controlling
+the following categories of output:
+<p>01 data reads
+<br>02 data writes
+<br>04 message receiving
+<br>08 message sending
+<br>16 logic tracing</td>
+</tr>
+</table>
+
+<p><a NAME="ControlEvents"></a>
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>DMHClient Callback Events</b></caption>
+
+<tr>
+<td><a NAME="Connected"></a><b>Event Callback&nbsp; and Set Method&nbsp;</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>All callback functions - NOTES
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>You write your own callback function consistent with the typedef of
+the callback.
+<p><tt>void MyConnectedCallback(DMHClient dmh) { ... }</tt>
+<p>Then you register it:
+<p><tt>dmh_setConnectedProc(dmh, MyConnectedCallback);</tt>
+<p>When the event happens, your callback function is called.&nbsp; A pointer
+to the DMHClient is provided as an argument.
+<p><a NAME="BinmsgProc"></a>When registering the callback, the previous
+value is returned.&nbsp; This lets you chain, or swap and restore callbacks.&nbsp;
+These are not recommended techniques.</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHBinmsgProc</b>) (DMHClient,&nbsp;
+<br>&nbsp;&nbsp; const char *DestinationMailbox,
+<br>&nbsp;&nbsp; const char *ReplyMailbox,&nbsp;
+<br>&nbsp;&nbsp; const unsigned char *Data,&nbsp;
+<br>&nbsp;&nbsp; int datalen,&nbsp;
+<br>&nbsp;&nbsp; void *ClientData);</td>
+
+<td>This is the callback signature for receiving binary messages.&nbsp;
+A callback that you write is executed by the receiving thread when a&nbsp;
+message has arrived.&nbsp; You can register different callback functions
+for each destination mailbox using the <a href="#binwhenmsg">dmh_binwhenmsg</a>
+or <a href="#binwhenever">dmh_binwhenever</a> functions, described in the
+next table.&nbsp;
+<p>The DestinationMailbox parameter is a mailbox name that your application
+has specified when initiating receiving.&nbsp; If the sender of the message
+indicated a reply mailbox, it is passed as the second argument, ReplyMailbox.&nbsp;
+If no reply mailbox has been specified, the ReplyMailbox argument is an
+empty string.&nbsp; The Data argument indicates a buffer holding the data
+of the sent message.&nbsp; The datalen argument indicates the number of
+bytes in the buffer.&nbsp; It is possible to send and receive messages
+that are 0 length.&nbsp; The DMH client logic protects you from receiving
+another message for the DestinationMailbox, and re-entering your handler
+logic until you have returned from the current callback execution.&nbsp;
+<p>When you call the dmh_binwhenmsg() function or dmh_binwhenever( ) function
+to setup receiving,&nbsp; you can optionally specify the ClientData argument
+to be saved and passed&nbsp; to your callback at the time a message arrives.&nbsp;&nbsp;<a NAME="Connected"></a>A
+typical use would be to&nbsp; pass a pointer to a C++ object, so your receive
+callback can use the pointer&nbsp; to call a class function.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHConnectedProc</b>) (DMHClient)
+<p>DMHConnectedProc * <b>dmh_setConnectedProc</b>(DMHClient, DMHConnectedProc
+*);<a NAME="Disconnected"></a></td>
+
+<td>The Connected event happens after successfully connecting to the DMH
+server in the wake of the dmh_init function invocation.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHDisconnectedProc</b>) (DMHClient)
+<p><a NAME="ErrorEvent"></a>DMHDisconnectedProc * <b>dmh_setDisconnectedProc</b>(DMHClient,
+DMHDisconnectedProc *)</td>
+
+<td>The Disconnected event happens when the DMH connection has been closed
+from any circumstance such as remote closure, communication failure, error,
+or invocation of the dmh_disconnect function.&nbsp; This event is similar
+to the Tcl lostserver procedure invocation.&nbsp; The event may happen
+more than once if multiple errors are being processed.</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHErrorProc</b>) (DMHClient, int errnum, const char *text)
+<br>&nbsp;
+<br>&nbsp;
+<p>DMHErrorProc * <b>dmh_setErrorProc</b>(DMHClient, DMHErrorProc *)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The Error event happens when the dmh_init function fails, or there
+has been communication failure.&nbsp; In most cases when the Error event
+happens, the control state will transition to the disconnected state, and
+the Disconnected event will occur shortly.
+<br>&nbsp;
+<dl>
+<dd>
+</dd>
+</dl>
+
+<p><br>Broken connection errors include:
+<dl>
+<dd>
+<tt>10051&nbsp; the network is unreachable</tt></dd>
+
+<dd>
+<tt>10060&nbsp; Connection has timed out</tt></dd>
+
+<dd>
+<tt>11053&nbsp; Connection is aborted due to timeout or other failure</tt></dd>
+
+<dd>
+<tt>10054&nbsp; Connection is reset by remote system</tt></dd>
+
+<dd>
+<tt>10058&nbsp; Connection has been shutdown</tt></dd>
+
+<dd>
+<tt>50001&nbsp; DMH Protocol error - missing data.&nbsp; You should never
+see this error.</tt></dd>
+
+<dd>
+<tt>50002&nbsp; DMH Protocol error - improper packet.&nbsp; You should
+never see this error.</tt></dd>
+</dl>
+</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHShutdownProc</b>) (DMHClient, int *StayAlive)
+<p>DMHShutdownProc * <b>dmh_setShutdownProc</b>(DMHClient, DMHShutdownProc
+*)<a NAME="Trace"></a></td>
+
+<td><a NAME="Shutdown"></a>A remote request has been received to terminate
+the process.&nbsp; If you do not set the StayAlive flag true, the software
+will cause the application to exit.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHTraceProc</b>) (DMHClient, const char *text)
+<p>DMHTraceProc * <b>dmh_setTraceProc</b>(DMHClient, DMHTraceProc *)<a NAME="WhenmsgProc"></a></td>
+
+<td>This event provides diagnostic and debug information per the Tracebit
+property setting.&nbsp; Your application needs to avoid creating new DMH
+activity in the Trace event callback, that in turn causes Trace events.&nbsp;
+A cycle of positive feedback is possible which will cause a software fission
+reaction.</td>
+</tr>
+
+<tr>
+<td>void (<b>DMHWhenmsgProc</b>) (DMHClient, const char *DestinationMailbox,&nbsp;
+const char *ReplyMailbox, const char *Data, void *ClientData)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The Whenmsg callback is executed when a&nbsp; message has arrived.&nbsp;
+You can register different callback functions for each destination mailbox
+using the <a href="#Whenmsg">dmh_whenmsg</a> or <a href="#Whenever">dmh_whenever</a>
+functions, described in the next table.&nbsp;
+<p>The DestinationMailbox parameter is a mailbox name that your application
+has specified when initiating receiving.&nbsp; If the sender of the message
+indicated a reply mailbox, it is passed as the second argument, ReplyMailbox.&nbsp;
+If no reply mailbox has been specified, the ReplyMailbox argument is an
+empty string.&nbsp; The Data argument is the text of the sent message.&nbsp;
+The DMH client&nbsp;&nbsp; logic protects you from receiving another message
+for the DestinationMailbox, and re-entering your handler logic until you
+have returned from the current callback execution.&nbsp;
+<p>When you call the dmh_whenmsg() function or dmh_whenever( ) function
+to setup receiving,&nbsp; you can optionally specify the ClientData argument
+to be saved and passed&nbsp; to your callback at the time a message arrives.&nbsp;
+A typical use would be to&nbsp; pass a pointer to a C++ object, so your
+receive callback can use the pointer&nbsp; to call a class function.&nbsp;</td>
+</tr>
+</table>
+
+<p><a NAME="Methods"></a>
+<table BORDER WIDTH="100%" >
+<caption><b>DMHClient Functions</b></caption>
+
+<tr>
+<td><b>FUNCTION</b></td>
+
+<td><b>DESCRIPTION</b></td>
+</tr>
+
+<tr>
+<td>General Comments
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Many of the function calls return NULL for the usual successful invocation,
+or an error message that could be logged or displayed to the user.&nbsp;
+The most common error message is "No DMH server connection".&nbsp; This
+message occurs when using a function that requires a connection and dmh_init(
+) has not been called successfully, or the DMH connection has been lost.&nbsp;
+The functions do not throw exceptions, and you do not need to use try and
+catch.&nbsp;
+<p>If you use an improper mailbox name such as one with whitespace in it,
+the function call will return a string such as, "mailbox name must contain
+only ANSI letters, digits, -, _, ., !, :, or @".&nbsp;&nbsp; Most of the
+DMH&nbsp; function calls are then processed asynchronously.&nbsp; In other
+words, your function call returns, and the message communication you initiated
+happens as events are processed.&nbsp; An error that occurs during event
+processing results in the Error event occurring.
+<p>In order to insure threadsafe API calls, the following methods return
+string values that are dynamically allocated and must be freed by calling
+dmh_free( ) when your logic is done with the data. The memory used by your
+application will continue to grow unless you free these results.
+<ul>
+<li>
+dmh_doXact()</li>
+
+<li>
+dmh_listElement()</li>
+
+<li>
+dmh_listJoin()</li>
+
+<li>
+dmh_listSplit()</li>
+
+<li>
+dmh_serverStatus()</li>
+
+<li>
+dmh_timedReceive()</li>
+</ul>
+For other functions,&nbsp;<a NAME="Abort"></a>"const char *" return value
+declarations are common because they show that you should not tamper with
+the returned values - copy to save, copy to modify, etc.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void <b>dmh_abort</b>(DMHClient)<a NAME="bin2utf"></a></td>
+
+<td>Any in-progress send-and-reply or modal wait transactions such as the
+dmh_init( ) function or dmh_doXact( ) calls are aborted with return values
+indicating TIMEOUT.&nbsp; Invoking the dmh_abort function does not affect
+asynchronous receiving that is setup using the dmh_whenmsg( ) or dmh_whenever(
+) functions.&nbsp; Has no effect if not connected.</td>
+</tr>
+
+<tr>
+<td>int <b>dmh_bin2utf</b>(const unsigned char *bindata, int datalen,&nbsp;
+<br>&nbsp;char *buffer, int buffsize)<a NAME="utf2bin"></a>
+<p>int <b>dmh_utf2bin</b>(const char *utf8, unsigned char *buffer, int
+buffsize)</td>
+
+<td>These calls are simplified conversion functions for converting between
+binary codes 0x00 through 0xFF and the UTF-8 strings used by the DMH and
+Tcl.&nbsp;&nbsp; The sequence 0xC0 0x80 is used to represent a binary null,
+so the UTF-8 string representation is compatible with runtime library functions
+that work with null terminated strings.&nbsp; These calls are used internally
+to support the binary messaging features, and are also available for your
+use.
+<p>The call <b>dmh_bin2utf </b>converts a binary sequence into a null terminated
+UTF-8 string.&nbsp; The return value is the string length (strlen()) plus
+one for the null terminator byte - in other words the storage needed for
+the UTF-8 string.&nbsp; Byte values from 0x01 through 0x7F only need one
+byte for storage, and other bytes require two.&nbsp; An output buffer of
+size 2*datalen + 1 is able to store any binary sequence.
+<p>The call <b>dmh_utf2bin </b>converts a null terminated UTF-8 string
+into a sequence of bytes.&nbsp; The conversion is aborted if the input
+string has invalid UTF-8 sequences, or has sequences that would map outside
+of the 0x00 through 0xFF range.&nbsp; The return value is the number of
+bytes successfully converted.&nbsp; In general, the output buffer size
+needs to be as big as the string length (strlen()) of the UTF-8 string.&nbsp;&nbsp;<a NAME="binsend"></a>The
+function is able to convert a UTF-8 string in place if the string buffer
+argument is repeated as the second argument.&nbsp; (You will typically
+need to cast the argument type, eg., (unsigned char *).</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_binsend</b>(DMHClient, const char *DestinationMailbox,&nbsp;
+<br>&nbsp; const unsigned char *Message, int msglen, const char *ReplyMailbox)</td>
+
+<td>The <b>dmh_binsend</b> function is used to send binary messages.&nbsp;
+It is similar to the <a href="#Send">dmh_send</a> function described below
+which is intended for UTF-8 text messages.
+<p>Sends a binary message to a mailbox, optionally with a reply mailbox
+indicated.&nbsp;&nbsp; By convention, when a reply mailbox is indicated
+for a command message sent to a Datahub mailbox or equipment interface
+mailbox, the command is processed, and a reply message is sent to the reply
+mailbox.&nbsp;
+<p>Specifying the reply mailbox as a NULL pointer, an empty string, or
+as the literal text "NULL" is equivalent to not specifying a reply mailbox.
+<p><a NAME="binwhenever"></a>Returns NULL on success, or an error message.&nbsp;
+You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_binwhenever</b>(DMHClient,const char *ReceiveMailbox,
+DMHBinmsgProc *, void *ClientData)<a NAME="binwhenmsg"></a></td>
+
+<td>Registers to receive all messages directed to the specified mailbox.&nbsp;
+The messages are passed to the user written callback as binary data.&nbsp;
+When the DMHBinmsgProc callback returns, the software re-arms for receiving
+the next message directed to the specified mailbox.&nbsp; The <a href="#Disarm">dmh_disarm(
+)</a> function can be used to stop receiving.&nbsp;
+<p>You can optionally specify the ClientData argument to be saved and passed&nbsp;
+to your callback at the time a message arrives.&nbsp; A typical use would
+be to&nbsp; pass a pointer to a C++ object, so your receive callback can
+use the pointer&nbsp; to call a class function.&nbsp;
+<p>You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_binwhenmsg</b>(DMHClient,const char *ReceiveMailbox,
+DMHBinmsgProc *, void *ClientData)<a NAME="binXact"></a></td>
+
+<td>Registers for receiving the next available message directed to the
+specified mailbox as binary data. Calling <a href="#WhenmsgAgain">dmh_whenmsgAgain(
+)</a> in the BinmsgProc( ) event handling code re-arms the receive registration
+for the next message.
+<p>You can specify the ClientData argument to be saved and passed&nbsp;
+to your callback at the time a message arrives.&nbsp; A typical use would
+be to&nbsp; pass a pointer to a C++ object, so your receive callback can
+use the pointer&nbsp; to call a class function.&nbsp;
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>unsigned char *<b>dmh_binXact</b>(DMHClient, const char *DestinationMailbox,
+const unsigned char *Message,&nbsp;
+<br>&nbsp;int msglen, int TimeoutSeconds, const char *ReplyMailbox, int
+*replylen)</td>
+
+<td>Performs a complete send and reply binary transaction with timeout
+management.&nbsp; Creates and manages a unique reply mailbox for the send
+and reply transaction if the ReplyBox argument is passed as NULL.&nbsp;
+If the TimeoutSeconds argument is specified as 0, the <a href="#DefaultTimeout">DefaultTimeout</a>
+value is used.&nbsp; The usual reply is a pointer to the data of the reply
+message, with a non-negative number of bytes passed using the integer pointer,
+<b>replylen</b>.&nbsp;&nbsp; In case of TIMEOUT or other failure, the pointer
+value will be NULL and the negative <b>replylen</b> value of <b>-1</b>
+is passed.&nbsp; You can have multiple instances of dmh_binXact(), dmh_doXact(
+) or dmh_timedReceive( ) active at a time but not more than one instance
+for a specified reply mailbox.&nbsp; Memory used for the reply result is
+dynamically allocated and passed to your application. Your logic must call
+the <b>dmh_free()</b> function with the result when you are done with it,
+or memory will continue to be consumed.&nbsp;&nbsp;
+<p>If you specify a ReplyMailbox, you need to insure that the name you
+specify is only used by your application.&nbsp; It is usual to create a
+unique reply mailbox name, perhaps based on the hostname and process ID,
+assign it to a variable, and use it repeatedly.
+<p><a NAME="CloseMailbox"></a>If you are not connected when using this
+call, the replylen value of -1 is returned immediately.&nbsp; Trace event
+information can be used to distinguish failure modes.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_closeMailbox</b>(DMHClient, const char *boxname)<a NAME="Count"></a></td>
+
+<td>Stop using a mailbox - Disarm receiving if listening, Flush if not
+empty,&nbsp; and remove from existence if it exists.&nbsp; The Tcl version
+of this call, differs because it will not flush existing messages.
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_count</b>(DMHClient, const char *boxname, long *ctsent,
+long *ctread, long *ctpending)
+<br><a NAME="Destroy"></a></td>
+
+<td>Returns three numbers, the total count of messages that have been sent
+to the mailbox, the total count of messages that have been consumed from
+the mailbox, and last, the current count of pending messages.&nbsp; A pending
+message is one that exists in the queue associated with the mailbox, and
+has not been consumed by reading or flushing.
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>void <b>dmh_destroy</b>(DMHClient)<a NAME="Disarm"></a></td>
+
+<td>This call disconnects gracefully from the server if connected, and
+then deallocates the memory, threads, and resources used by the connection.</td>
+</tr>
+
+<tr>
+<td>void <b>dmh_disarm</b>(DMHClient, const char *boxname)<a NAME="Disconnect"></a></td>
+
+<td>Un-register the listener from a specified&nbsp; mailbox.&nbsp; This
+call may be used to cancel an earlier dmh_whenever( ) or dmh_whenmsg( )
+call.&nbsp; If called with a NULL boxname argument, all dmh_whenever( )
+and dmh_whenmsg( ) receiving registrations are canceled.&nbsp; The dmh_abort(
+) function will cancel in-progress dmh_doXact( ) calls.&nbsp; Has no effect
+if not connected.</td>
+</tr>
+
+<tr>
+<td>void <b>dmh_disconnect</b>(DMHClient)<a NAME="DoXact"></a></td>
+
+<td>The counterpart of dmh_init( ); disconnects from the DMH server.&nbsp;
+The dmh_send_flush( ) function gets called to complete any in-progress
+sends.&nbsp; The dmh_abort( ) function gets called to end any in-progress
+transactions.&nbsp; The dmh_disarm( ) function gets called to cancel all
+receiving.&nbsp; A thread that was used for listening is caused to exit.
+A sending thread will be kept alive and possibly re-used. Has no effect
+if not connected.</td>
+</tr>
+
+<tr>
+<td>char *<b>dmh_doXact</b>(DMHClient, const char *DestinationMailbox,
+const char *Message, int TimeoutSeconds, const char *ReplyMailbox)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Performs a complete send and reply text message transaction with timeout
+management.&nbsp; Creates and manages a unique reply mailbox for the send
+and reply transaction if the replybox argument is passed as NULL.&nbsp;
+If the timeout is specified as 0, the <a href="#DefaultTimeout">DefaultTimeout</a>
+value is used.&nbsp; The usual reply is the text of the reply message.
+The String literal <b>TIMEOUT</b> is returned in case of failure.&nbsp;
+You can have multiple instances of dmh_doXact( ) or dmh_timedReceive( )
+active at a time but not more than one instance for a specified reply mailbox.&nbsp;
+Memory used for the reply result is dynamically allocated and passed to
+your application. Your logic must call the <b>dmh_free()</b> function with
+the result when you are done with it, or memory will continue to be consumed.
+<p>If you specify a ReplyMailbox, you need to insure that the name you
+specify is only used by your application.&nbsp; It is usual to create a
+unique reply mailbox name, perhaps based on the hostname, assign it to
+a variable, and use it repeatedly.
+<p><a NAME="Flush"></a>If you are not connected when using this call, the
+TIMEOUT string is returned immediately.&nbsp; Trace event information can
+be used to show the cause.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_flush</b>(DMHClient, const char *boxname)
+<p>&nbsp;</td>
+
+<td>Empties a mailbox of any pending messages.&nbsp; A pending message
+is one that has been sent to the mailbox but has not been consumed.&nbsp;
+In other words, a pending message is waiting in a queue associated with
+the&nbsp; mailbox name.&nbsp; Messages are consumed by reading or flushing.
+<p><a NAME="Free"></a>Returns NULL on success, or an error message.&nbsp;
+You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>void <b>dmh_free</b>(void *cptr)<a NAME="GroupnamePort"></a></td>
+
+<td>This call frees memory that was passed to your application as the result
+of executing dmh_listElement( ), dmh_listJoin( ), dmh_listSplit( ), dmh_doXact(
+), dmh_serverStatus(), or dmh_timedReceive( ). You can safely call dmh_free(
+) with a NULL result or any other result that was passed to you from these
+calls. You must call dmh_free() and not your own C library free() because
+for performance reasons certain strings such as "TIMEOUT" and "" are static
+and should not be freed. The dmh_free() call is able to discern which strings
+are dynamic and which are static.</td>
+</tr>
+
+<tr>
+<td>int <b>dmh_groupnamePort</b>(const char *Groupname)
+<br><a NAME="Hostname"></a></td>
+
+<td>Used to determine the TCP/IP port number that is used by the DMH server
+to listen for client connections.&nbsp; The function is equivalent to the
+mh_name_to_socket Tcl procedure.&nbsp; Most applications will not have
+a use for this function since the server socket port is managed by the
+DMH software.&nbsp;</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_hostname</b>(DMHClient)
+<br><a NAME="Init"></a></td>
+
+<td>Returns the TCP/IP hostname of the computer that the client software
+is executing on.&nbsp; The name is guaranteed to be stripped of domain
+information, and imbedded white spaces which are not valid in hostnames,
+are seen as delimiters of the first token.</td>
+</tr>
+
+<tr>
+<td>
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp; const char *<b>dmh_init</b>(DMHClient, const char *DMHGroupname,
+const char *DMHServerHostname)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Performs the initial connection to the DMH message server. The connection
+will be setup or an error result will be obtained before returning.
+<p>dmh_init errors include
+<dl>
+<dd>
+<tt>10051&nbsp; the network is unreachable</tt></dd>
+
+<dd>
+<tt>10060&nbsp; Connection has timed out. This error indicates that the
+remote host may not be online.</tt></dd>
+
+<dd>
+<tt>10061&nbsp; Connection attempt is refused.&nbsp;</tt></dd>
+
+<dd>
+<tt>10061&nbsp; Connection is forcefully rejected.</tt></dd>
+
+<dd>
+<tt>The remote host is online and reachable, but there is not a DMH server
+at the specified group or port.&nbsp;</tt></dd>
+
+<dd>
+<tt>11001&nbsp; Hostname not found (DNS authoritative).&nbsp; This error
+may indicate an improperly spelled hostname, or a hostname that is not
+known to your name server.</tt></dd>
+
+<dd>
+<tt>11002&nbsp; Hostname not found (non-authoritative name resolution).&nbsp;
+This error may indicate that your name server is down.</tt></dd>
+
+<dd>
+<tt>50003&nbsp; DMH Server refuses our client connection</tt></dd>
+
+<dd>
+<tt>This error indicates that customer modified software running in the
+DMH server has rejected the connection.&nbsp; It is likely that you are
+in violation of your site's security policy.</tt></dd>
+
+<dd>
+<tt>50004&nbsp; DMH Protocol error - improper setup reply.</tt></dd>
+
+<dl><tt>You should never see this error.</tt></dl>
+</dl>
+If the connection succeeds, the return value is NULL, otherwise an error
+message is returned&nbsp; indicating why the initialization failed.&nbsp;
+<p>When the initialization is successfully completed, the Connected event
+is fired.&nbsp; If dmh_init fails, depending on how the dmh_init call fails,
+the Error event may fire.&nbsp;
+<p>If the connection to the DMH server is ever lost, the Disconnected event
+is fired.<a NAME="ListElement"></a>
+<p>Returns NULL on success, or an error message.&nbsp;</td>
+</tr>
+
+<tr>
+<td>char *<b>dmh_listElement</b>(const char *TclList, int index1, int index2,
+int index3);<a NAME="ListJoin"></a></td>
+
+<td>This function is similar to the lindex function of Tcl.&nbsp; It will
+parse text formatted as a Tcl list and return the specified element.&nbsp;
+Arguments index2 and index3 may be used to indicate that parsing of the
+TclList should continue up to two additional levels as a nested list structure.
+Or, arguments index2 and index3 may be set to -1 to indicate that parsing
+of the TclList as a nested list structure is not desired. If a specified
+index is out of bounds, an empty string is returned.&nbsp; If an invalid
+list is parsed, NULL is returned.&nbsp;&nbsp; Memory is allocated from
+the heap for the result, and it must be freed by calling dmh_free() when
+the caller is done with it.</td>
+</tr>
+
+<tr>
+<td>char *<b>dmh_listJoin</b>(DMHClient, int argc, const char *argv[]);<a NAME="ListSplit"></a></td>
+
+<td>Joins together strings as Tcl list elements forming a result string
+that is a Tcl list.&nbsp; Braces are added as needed to delimit empty elements,
+or to delimit special Tcl character sequences involving backslashes , square
+brackets, etc.&nbsp; Memory is allocated from the heap for the result,
+and it must be freed by calling dmh_free() when the caller is done with
+it.</td>
+</tr>
+
+<tr>
+<td>int <b>dmh_listSplit</b>(const char *TclList, int *argc, char **argv[])<a NAME="Product"></a></td>
+
+<td>dmh_listSplit( ) parses a string formatted as a Tcl list into an array
+of string elements.&nbsp; The function understands the Tcl usage of quotes,
+braces and backslash sequences.&nbsp; Not all strings are valid Tcl lists.&nbsp;
+The return value is 0 on success.&nbsp; Failure occurs when there are unmatched
+braces, unmatched quotes, or non-whitespace following braces or quotes.&nbsp;
+Memory is allocated from the heap for the resulting argv[] stack and the
+elements that the stack points to. The argv result must be passed to dmh_free()
+to reclaim the allocated memory when the caller is done with it. The TclList
+passed in is treated as const - it is read, but not changed.<a NAME="New"></a></td>
+</tr>
+
+<tr>
+<td>DMHClient <b>dmh_new</b>(void)<a NAME="#Product"></a></td>
+
+<td>This call allocates and initializes a DMH connection data structure.
+The return value is passed as an argument to most of the other API calls.
+Typically use of the DMH software begins with this call being made.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_product</b>(DMHClient)<a NAME="Put"></a></td>
+
+<td>The idea here is that if this interface is implemented for another
+product, a different string should be returned in case the using software
+needs to know the difference. The Hume DMH software returns a two element
+list with "DMH" as the first element, and a Copyright message as the second
+element.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_put</b>(DMHClient, const char *DestinationMailbox,
+const char *Message)<a NAME="Putr"></a></td>
+
+<td>The dmh_put( ) function is equivalent to <a href="#Send">dmh_send(
+)</a> when specifying NULL as the ReplyMailbox.&nbsp;
+<br>Returns NULL on success, or an error message.&nbsp;</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_putr</b>(DMHClient, const char *DestinationMailbox,
+const char *ReplyMailbox, const char *Message)<a NAME="ReceiveList"></a></td>
+
+<td>The dmh_putr( ) function is equivalent to <a href="#Send">dmh_send(
+)</a> with specifying a ReplyMailbox.
+<br>Returns NULL on success, or an error message.&nbsp;</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_receiveList</b>(DMHClient)<a NAME="Send"></a></td>
+
+<td>Returns a list of the mailboxes you are listening for messages on.&nbsp;
+Does not show mailbox names that have in-progress Whenmsg callbacks.&nbsp;
+This command may be useful for debugging, and it is not used in a typical
+application.&nbsp; The result is an empty string when you are not connected.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_send</b>(DMHClient, const char *DestinationMailbox,
+const char *Message, const char *ReplyMailbox);
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Send a message to a mailbox, optionally with a reply mailbox indicated.&nbsp;&nbsp;
+By convention, when a reply mailbox is indicated for a command message
+sent to a Datahub mailbox or equipment interface mailbox, the command is
+processed, and a reply message is sent to the reply mailbox.&nbsp;
+<p>Specifying the reply mailbox as a NULL pointer, an empty string, or
+as the literal text "NULL" is equivalent to not specifying a reply mailbox.
+<p>Sending to the mailbox name "TRACE" sends the message to the DMH Server
+Trace Facility.
+<p><a NAME="SendFlush"></a>The dmh_send function corresponds to the Tcl
+mbx put and mbx putr commands.&nbsp;
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>void <b>dmh_send_flush</b>(DMHClient)</td>
+
+<td>When you send messages, the calls return immediately and the messages
+are queued for sending. Since TCP/IP is relatively fast, the messages are
+transferred into the network layer fairly quickly. If you want to block
+until all of the pending send data is written to <a NAME="ServerStatus"></a>the
+network layer, call dmh_send_flush.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_serverStatus</b>(DMHClient)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Returns a Tcl list containing the information presented in the Tcl
+DMH status window.&nbsp; The information can be parsed by the application
+to determine status information on every mailbox that is currently in use.&nbsp;
+This command may be useful for debugging, and is not used by ordinary applications.
+<p>The first element of the list is a list of 5 elements:
+<br>{ <i>hostname</i><b>:</b><i>port messages_received messages_sent messages_queued
+tcl_version </i>}
+<p>Subsequent elements in the list are lists of four or five elements:
+<br>{ <i>mailboxname count_in count_out count_pending </i>[<i>reader_handle</i>]
+}
+<p><a NAME="TimedReceive"></a>Additional elements may exist in the list
+if there are DMH clients that are not currently waiting to receive messages.&nbsp;
+These elements are formatted as:
+<br>{{{no whenmsg pending}} - - - <i>reader_clientID</i>}
+<p>You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_timedReceive</b>(DMHClient, const char *ReceiveMailbox,
+int TimeoutSeconds);
+<br><a NAME="Version"></a></td>
+
+<td>Waits for a message to be received in the specified mailbox.&nbsp;
+If the call succeeds,&nbsp; the return value is the message data.&nbsp;
+If the call fails, the return value is the literal string "TIMEOUT".&nbsp;&nbsp;
+If you are not connected, the call fails immediately with the return value
+"TIMEOUT".&nbsp; Trace event information can be used to show the TIMEOUT
+cause.&nbsp; If the <i>TimeoutSeconds</i> argument is passed as 0, the
+<a href="#DefaultTimeout">DefaultTimeout</a>
+value is used. Memory used for the reply result is dynamically allocate
+and should be freed by calling dmh_free() when you are finished with it.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_version</b>(DMHClient)<a NAME="Whenever"></a></td>
+
+<td>Returns a two element list consisting of the DMH protocol version,
+and the library component configuration management Id string. Current software
+returns the "1.1" to&nbsp; as the first element to indicate compatibility
+with DMH protocol version 1.1.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_whenever</b>(DMHClient, const char *ReceiveMailbox,
+DMHWhenmsgProc *, void *ClientData)
+<br><a NAME="Whenmsg"></a></td>
+
+<td>Registers to receive all messages directed to the specified mailbox.&nbsp;
+When the DMHWhenmsgProc callback returns, the software re-arms for receiving
+the next message directed to the specified mailbox.&nbsp; The dmh_disarm(
+) function can be used to stop receiving.&nbsp;
+<p>You can optionally specify the ClientData argument to be saved and passed&nbsp;
+to your callback at the time a message arrives.&nbsp; A typical use would
+be to&nbsp; pass a pointer to a C++ object, so your receive callback can
+use the pointer&nbsp; to call a class function.&nbsp;
+<p>You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_whenmsg</b>(DMHClient, const char *ReceiveMailbox,
+DMHWhenmsgProc *, void *ClientData);
+<br><a NAME="WhenmsgAgain"></a></td>
+
+<td>Register for receiving the next available message directed to the specified
+mailbox.&nbsp; Calling dmh_whenmsgAgain( ) in the DMHWhenmsgProc( ) event
+handling code re-arms the receive registration for the next message.
+<p>You can specify the ClientData argument to be saved and passed&nbsp;
+to your callback at the time a message arrives.&nbsp; A typical use would
+be to&nbsp; pass a pointer to a C++ object, so your receive callback can
+use the pointer&nbsp; to call a class function.&nbsp;
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>const char *<b>dmh_whenmsgAgain</b>(DMHClient)</td>
+
+<td>The dmh_whenmsg( ) function functions as a one-shot.&nbsp; In other
+words, receiving is stopped after receiving one message.&nbsp; Calling
+the dmh_whenmsgAgain() function from the receive handler re-registers to
+receive the next message.
+<p>Returns NULL on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<br>&nbsp;
+<p>
+<hr WIDTH="100%"><a NAME="LicenseTerms"></a>
+<h2>
+License Terms</h2>
+Subject to Change Without Notice
+<p>The Hume POSIX DMH client software is licensed for development and runtime
+use at no additional charge for computers that are licensed for development use the
+Hume Integration Datahub SDK.&nbsp; We ask that developers install the
+Tcl executables and actively use the Tcl executables for testing and development,
+instead of developing against production servers.&nbsp; Also, we ask that
+developers install the Tcl online documentation and use it to supplement
+the material presented in this document.
+<p>Hume Integration is also pleased to offer separate runtime licenses
+for using the DMH POSIX Client software on systems that are not licensed
+as development systems.  Runtime usage of the DMH client 
+software is licensed separately from the Datahub SDK runtime license.  
+<p>
+<hr WIDTH="100%">
+<h2>
+<a NAME="DocVersion"></a>Document Version</h2>
+Date of last revision: $Date: 2004/12/14 21:47:55 $
+</body>
+</html>

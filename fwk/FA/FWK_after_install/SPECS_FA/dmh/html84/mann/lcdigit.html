@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>lcdigit Dmhwidget</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ lcdigit - A Dmhwidget for resizeable 7-segment digits<P>
+<H2>SYNOPSIS</H2>
+  <B>dmhwidgets::lcdigit<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Widget &lt;- dmhwidgets::Lcdigit <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+<B>background cursor foreground height</B>	
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+Name:	<B>aspect</B>&nbsp;
+Class:	<B>Aspect</B>&nbsp;
+Command-Line Switch: <B>-aspect</B>&nbsp;
+Default value:	<B>2.0</B>
+<DD>Used as a floating point value to specify the ratio of vertical pixels to
+horizontal pixels used for the rectangular area allotted for the digit and its
+usual spacing.
+<P>
+Name:	<B>colon</B>&nbsp;
+Class:	<B>Colon</B>&nbsp;
+Command-Line Switch: <B>-colon</B>&nbsp;
+Default value:	<B>0</B>
+<DD>Used as a boolean to specify whether a colon should be drawn
+on the right of the digit as is useful for a clock.
+<P>
+Name:	<B>point</B>&nbsp;
+Class:	<B>Point</B>&nbsp;
+Command-Line Switch: <B>-point</B>&nbsp;
+Default value:	<B>0</B>
+<DD>Used as a boolean to specify whether a decimal point should be
+drawn on the right of the digit.  
+<P>
+Name:	<B>tilt</B>&nbsp;
+Class:	<B>Tilt</B>&nbsp;
+Command-Line Switch: <B>-tilt</B>&nbsp;
+Default value:	<B>0</B>
+<DD>Used as a non-negative integer to specify the percentage by which
+the digit image slants to the upper-right.
+<P>
+Name:	<B>value</B>&nbsp;
+Class:	<B>Value</B>&nbsp;
+Command-Line Switch: <B>-value</B>&nbsp;
+Default value:	<B>8</B>
+<DD>The value to be displayed from 0..9, or one of the characters +, -, 
+&lt;space&gt;, or E.  The value e is displayed as E.
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>lcdigit</B> command creates a widget that depicts a 
+7 segment digit,
+and a new Tcl command whose name is <I>pathname</I>.  The command
+is then used to invoke various methods of the widget.  The command has
+the general form:<P>
+
+<P>
+<I>pathName option ?arg arg ... arg?</I>
+<P>
+<P>
+The lcdigit will resize itself to fill the available height.  It will
+adjust its width to maintain the specified aspect ratio.  Drawing the
+colon or the decimal point increases the width of the widget so that the
+usual spacing on both sides is preserved, with the digit being the same
+height and aspect ratio.
+<P>
+
+<H2>WIDGET-SPECIFIC METHODS</H2>
+None. 
+
+<H2>EXAMPLE</H2>
+<PRE>
+
+package require Dmhwidgets
+
+frame .lcdigits -background grey22
+pack .lcdigits -expand 1 -fill both -padx 4m -pady 4m
+dmhwidgets::lcdigit .lcdigits.d1 -point 1
+dmhwidgets::lcdigit .lcdigits.d2
+dmhwidgets::lcdigit .lcdigits.d3
+pack .lcdigits.d1 .lcdigits.d2 .lcdigits.d3 -side left -expand 0 -fill y 
+
+# NOTE: If you want to aggregate digits to display numbers, you probably
+#       want to use the <a href="lcdisplay.html">lcdisplay</a> widget.
+
+proc lcdigits_show d {
+   set d1 [expr int($d)]
+   set d2 [expr int(10 * ($d - int($d)))]
+   set d3 [expr int(10 * (10*$d - int(10*$d)))]
+   .lcdigits.d1 configure -value $d1
+   .lcdigits.d2 configure -value $d2
+   .lcdigits.d3 configure -value $d3
+   }
+
+lcdigits_show 3.27
+</PRE>
+
+<H2>AUTHOR</H2>
+Hume Integration Software, www.hume.com
+
+<H2>SEE ALSO  </H2>
+<a href="digit.html">digit</a>&nbsp;
+<a href="lcdisplay.html">lcdisplay</a>
+
+<H2>KEYWORDS  </H2>
+digit, LCD, LED, 7-segment, widget 
+</BODY>
+</HTML>

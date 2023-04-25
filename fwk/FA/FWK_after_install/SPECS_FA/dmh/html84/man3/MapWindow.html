@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_MapWindow_Tk_"></A>
+<TITLE>Tk_MapWindow Tk Library Procedures</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_MapWindow, Tk_UnmapWindow - map or unmap a window <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+Tk_Window
+<B>Tk_MapWindow</B>(<I>tkwin</I>)
+<P>
+<B>Tk_UnmapWindow</B>(<I>tkwin</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tk_Window <I>tkwin</I></B> (in)
+<DD>Token for window.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+These procedures may be used to map and unmap windows
+managed by Tk.  <B>Tk_MapWindow</B> maps the window given
+by <I>tkwin</I>, and also creates an X window corresponding
+to <I>tkwin</I> if it doesn't already exist.  See the
+<B>Tk_CreateWindow</B> manual entry for information on
+deferred window creation.
+<B>Tk_UnmapWindow</B> unmaps <I>tkwin</I>'s window
+from the screen.
+<P>
+If <I>tkwin</I> is a child window (i.e. <B>Tk_CreateWindow</B> was
+used to create a child window), then event handlers interested in map 
+and unmap events are invoked immediately.  If <I>tkwin</I> isn't an 
+internal window, then the event handlers will be invoked later, after 
+X has seen the request and returned an event for it.
+<P>
+These procedures should be used in place of the X procedures
+<B>XMapWindow</B> and <B>XUnmapWindow</B>, since they update
+Tk's local data structure for <I>tkwin</I>.  Applications
+using Tk should not invoke <B>XMapWindow</B> and <B>XUnmapWindow</B>
+directly.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+map, unmap, window
+
+</BODY>
+</HTML>

@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_LinkVar_Tcl_7_5"></A>
+<TITLE>Tcl_LinkVar Tcl Library Procedures 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_LinkVar, Tcl_UnlinkVar, Tcl_UpdateLinkedVar - link Tcl variable to C variable <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+int
+<B>Tcl_LinkVar</B>(<I>interp, varName, addr, type</I>)
+<P>
+<B>Tcl_UnlinkVar</B>(<I>interp, varName</I>)
+<P>
+<B>Tcl_UpdateLinkedVar</B>(<I>interp, varName</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter that contains <I>varName</I>.
+Also used by <B>Tcl_LinkVar</B> to return error messages.
+<P><DT><B>CONST char <I>*varName</I></B> (in)
+<DD>Name of global variable.  
+<P><DT><B>char <I>*addr</I></B> (in)
+<DD>Address of C variable that is to be linked to <I>varName</I>.
+<P><DT><B>int <I>type</I></B> (in)
+<DD>Type of C variable.  Must be one of TCL_LINK_INT, TCL_LINK_DOUBLE,
+TCL_LINK_WIDE_INT,
+TCL_LINK_BOOLEAN, or TCL_LINK_STRING, optionally OR'ed with
+TCL_LINK_READ_ONLY to make Tcl variable read-only.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tcl_LinkVar</B> uses variable traces to keep the Tcl variable
+named by <I>varName</I> in sync with the C variable at the address
+given by <I>addr</I>.
+Whenever the Tcl variable is read the value of the C variable will
+be returned, and whenever the Tcl variable is written the C
+variable will be updated to have the same value.
+<B>Tcl_LinkVar</B> normally returns TCL_OK;  if an error occurs
+while setting up the link (e.g. because <I>varName</I> is the
+name of array) then TCL_ERROR is returned and the interpreter's result
+contains an error message.
+<P>
+The <I>type</I> argument specifies the type of the C variable,
+and must have one of the following values, optionally OR'ed with
+TCL_LINK_READ_ONLY:
+
+<DT><B>TCL_LINK_INT</B>
+<DD>The C variable is of type <B>int</B>. Any value written into the Tcl variable must have a proper integer form acceptable to <B>Tcl_GetIntFromObj</B>;  attempts to write non-integer values into <I>varName</I> will be rejected with Tcl errors. 
+<DT><B>TCL_LINK_DOUBLE</B>
+<DD>The C variable is of type <B>double</B>. Any value written into the Tcl variable must have a proper real form acceptable to <B>Tcl_GetDoubleFromObj</B>;  attempts to write non-real values into <I>varName</I> will be rejected with Tcl errors. 
+<DT><B>TCL_LINK_WIDE_INT</B>
+<DD>The C variable is of type <B>Tcl_WideInt</B> (which is an integer type at least 64-bits wide on all platforms that can support it.) Any value written into the Tcl variable must have a proper integer form acceptable to <B>Tcl_GetWideIntFromObj</B>;  attempts to write non-integer values into <I>varName</I> will be rejected with Tcl errors. 
+<DT><B>TCL_LINK_BOOLEAN</B>
+<DD>The C variable is of type <B>int</B>. If its value is zero then it will read from Tcl as ``0''; otherwise it will read from Tcl as ``1''. Whenever <I>varName</I> is modified, the C variable will be set to a 0 or 1 value. Any value written into the Tcl variable must have a proper boolean form acceptable to <B>Tcl_GetBooleanFromObj</B>;  attempts to write non-boolean values into <I>varName</I> will be rejected with Tcl errors. 
+<DT><B>TCL_LINK_STRING</B>
+<DD>The C variable is of type <B>char *</B>. If its value is not NULL then it must be a pointer to a string allocated with <B>Tcl_Alloc</B> or <B>ckalloc</B>. Whenever the Tcl variable is modified the current C string will be freed and new memory will be allocated to hold a copy of the variable's new value. If the C variable contains a NULL pointer then the Tcl variable will read as ``NULL''. <P>
+If the TCL_LINK_READ_ONLY flag is present in <I>type</I> then the variable will be read-only from Tcl, so that its value can only be changed by modifying the C variable. Attempts to write the variable from Tcl will be rejected with errors. <P>
+<B>Tcl_UnlinkVar</B> removes the link previously set up for the variable given by <I>varName</I>.  If there does not exist a link for <I>varName</I> then the procedure has no effect. <P>
+<B>Tcl_UpdateLinkedVar</B> may be invoked after the C variable has changed to force the Tcl variable to be updated immediately. In many cases this procedure is not needed, since any attempt to read the Tcl variable will return the latest value of the C variable. However, if a trace has been set on the Tcl variable (such as a Tk widget that wishes to display the value of the variable), the trace will not trigger when the C variable has changed. <B>Tcl_UpdateLinkedVar</B> ensures that any traces on the Tcl variable are invoked. <P>
+<P>
+<H2>KEYWORDS</H2>
+ boolean, integer, link, read-only, real, string, traces, variable 
+</BODY>
+</HTML>

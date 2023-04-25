@@ -1,0 +1,1407 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Ed Hume">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <meta name="Description" content="User Guide and Reference Information for the .NET DMH Client Component">
+   <title>.NET DMH Client Component</title>
+</head>
+<body>
+
+<h1>
+A .NET Component for DMH Communication</h1>
+
+<p><br>Hume Integration has created a .NET component for integrating Microsoft
+Windows .NET Framework applications into a distributed system using the
+Distributed Message Hub (DMH) message system.&nbsp;&nbsp; The component
+provides high-level methods for sending and receiving binary or text messages,
+with either send-and-reply synchronous-style interactions, or higher performance
+asynchronous-style interactions.&nbsp; Separate threads are used to implement
+buffered sending, and well as asynchronous receiving, so there is not a
+need for the application to support an event loop, or a need to integrate
+the library code into an event loop.&nbsp; The .NET component features
+a fully CLS (Common Language Specification) compliant API and can be used
+from any of the Microsoft .NET programming languages, including C#, C++,
+Visual Basic, and Java.
+<p>Message exchanges are typically directed to application servers such
+as the Hume Integration Datahub, or the dmh_SQLsrv persistent database
+interface.&nbsp; The DMH message system is remarkably easy to use with
+these DMH Tcl processes because the messages are typically SQL, Tcl, or
+XML text that is directly interpreted by the receiver.&nbsp;&nbsp; To extend
+this ease of use to the .NET client, functions are provided to parse Tcl
+list text strings,&nbsp; or to create Tcl list text strings from string
+elements.&nbsp; The library can also be used to exchange binary messages
+which can be useful for equipment controller and device integration.
+<br>&nbsp;
+<h3>
+<a NAME="Choosing"></a>Choosing&nbsp; the Right DMH Client Software</h3>
+Hume Integration also has DMH message system client software available
+for other programming platforms.&nbsp; Here are some remarks to help with
+choosing the best implementation for your requirements.
+<p>The .NET component is the software of choice for integrating new Windows
+applications being developed using the .NET Framework with other software
+processes.&nbsp; If you are considering the .NET Framework for new automation
+applications, you should be aware that the .NET software base trades performance
+for runtime stability and safety.&nbsp; It is not a real-time platform
+with deterministic performance, particularly in view of the automatic garbage
+collection.&nbsp; On the other hand, the IDE is among the best available,
+and the span of runtime library functionality is truly impressive.&nbsp;
+Its a good fit for non-realtime applications such as User Interfaces.
+<p>The POSIX C library is similar to the .NET component in that it is designed
+for multi-threaded applications.&nbsp; The big advantage of the POSIX C
+library is that the same high performance API is offered on Windows and
+Unix/POSIX platforms.&nbsp; So if you value portability, and/or the best
+performance, or need to integrate workstations into your system, the POSIX
+library is indicated.&nbsp; The POSIX C library has the disadvantage that
+memory management is manual and somewhat tedious - the user needs to call
+the function dmh_free() to recover memory that is passed into the application.
+<p>The Java Package has great portability, and also supports multi-threaded
+applications.&nbsp; The Java package can provide the integration glue needed
+to connect web-based GUI's to an automation system.&nbsp; Java is also
+a good choice for deploying portable server logic with automatic memory
+management and better runtime safety.&nbsp; Be careful with counting on
+Java for more sophisticated GUI's.&nbsp; Our experience has been that Java
+GUI classes have been quirky with focus, activation, and repainting events.
+<p>The Visual C++ class library is for Windows only, and is designed for
+single threaded use from the main event-dispatching thread of a Visual
+C++ application.&nbsp; It integrates well with the IntelliSense capabilities
+of the Microsoft Visual Studio IDE.&nbsp; Because of its single threaded
+design, the library is able to perform memory management without explicit
+coding by the user.&nbsp; The Visual C++ library is the best choice for
+quickly integrating an existing Visual C++ application into a distributed
+DMH system.
+<p>The Visual Basic Active-X control is the software of choice for existing
+VB applications, and other platforms such as Delphi and LabView that are
+able to utilize Active-X controls.&nbsp; The Active-X control features
+transparent conversion of UTF-8 and Unicode International capable character
+set encodings.&nbsp; It also fully integrates with the IntelliSense method
+and parameter prompting of the IDE tools.
+<p>Don't forget Tcl/Tk - the ability to integrate with DMH messaging is
+built into the Tcl command set of the dmh_wish shell, so this can be your
+easiest and fastest deployment choice.&nbsp; Tcl has excellent portability,
+and the GUI features (Tk) are unique in being of excellent quality and
+portable.&nbsp; The Hume Datahub toolset includes popular third party extensions
+for object oriented programming with classes and inheritance, and also
+extensions for composite widgets such as tabbed notebooks.
+<p><a NAME="features"></a>
+<h2>
+Feature Summary</h2>
+
+<ul>
+<li>
+High performance asynchronous message sending and receiving</li>
+
+<li>
+Convenient synchronous send-and-reply server or peer interaction provided
+as well</li>
+
+<li>
+Transparent conversion of Unicode &lt;-> UTF-8 International capable character
+encodings</li>
+
+<li>
+Both text and binary messages are supported</li>
+
+<li>
+Comprehensive support of DMH message system features such as mailbox manipulation</li>
+
+<li>
+Tcl List manipulation functions provided for convenient parsing of Datahub
+SQL replies or similar Tcl list results</li>
+
+<li>
+Disconnected events and Error events provided for application recovery
+and resume logic</li>
+
+<li>
+Usable in multiple instances for high performance access to multiple DMH
+servers</li>
+
+<li>
+Fully integrated into the .NET design environment with IntelliSense coding
+of event handlers, visible method desciptions, and parameter prompting</li>
+
+<li>
+Fully integrated into the .NET runtime environment with high-performance
+use of threading, event dispatching, controllable trace output, and error
+handling</li>
+
+<li>
+100% newly written Managed Code for safe execution by the Common Language
+Runtime with automatic provision for memory management, runtime safety,
+and version control.</li>
+</ul>
+
+<hr WIDTH="100%"><a NAME="userguide"></a>
+<h2>
+<b>User Guide</b></h2>
+
+<p><br>The .NET component is provided as the following files:
+<ul>
+<li>
+<b>HumeDMH.dll</b>&nbsp;&nbsp;&nbsp; - the component file for development
+and runtime use.&nbsp; With .NET, there are no header files.&nbsp; The
+development tools are able to determine API information from the DLL.</li>
+
+<li>
+<b>DemoDC.cs</b>&nbsp;&nbsp;&nbsp; - C# source code for an example application
+and test utility.</li>
+
+<li>
+<b>DmhClientDemo.exe</b>&nbsp;&nbsp;&nbsp; - the compiled example application.</li>
+
+<li>
+<b>DmhClientDemo.csproj</b>, <b>AssemblyInfo.cs</b>, <b>App.ico</b>&nbsp;&nbsp;&nbsp;
+- project files needed to recompile the example application.</li>
+</ul>
+The files are distributed in a .zip archive named&nbsp; <b>DMHdotnet.zip</b>.&nbsp;
+If you received the DMH software on CDROM, this archive is in the subdirectory
+<b>LAN_IMAGE</b>.
+<p>In order to run the example application, you need to have either the
+.NET development software installed, or the .NET runtime installed.&nbsp;
+The .NET runtime can be downloaded from&nbsp; <a href="http://www.microsoft.com/downloads">Microsoft</a>
+as the file, dotnetfx.exe.&nbsp; Note that the .NET runtime is not presently
+distributed with or built into the Windows operating systems.
+<p>The distribution is designed and tested for Windows XP Professional,
+and similar up-to-date Windows Professional versions such as Windows 2000
+Pro. The component is designed to successfully interoperate with recent
+versions of the Tcl/Tk DMH software running on any platform.
+<p>The Hume developed .NET component is a "component" as defined by the
+Microsoft .NET Framework.&nbsp; As such, it implements the System.ComponentModel.IComponent
+interface.&nbsp; Hume Integration is also using the word "component" to
+describe high level customizable applications such as their Data Collection
+Component.
+<p><a NAME="Installation"></a>
+<h3>
+Installation</h3>
+Installation consists of extracting files in the <b>DMHdotnet.zip</b> archive
+to a directory or directories of your choice.&nbsp;<a NAME="Development"></a>
+<h3>
+Development</h3>
+To start using the Hume .NET component with an existing project, you first
+add a reference to the <b>HumeDMH.dll</b>.&nbsp; A C# user chooses the
+<b>Add
+Reference...</b> menu item from the Project menu.&nbsp; From the
+<b>Add
+Reference</b> dialog, the <b>Browse...</b> button on the .NET tab notebook
+page is used to indicate the path to the <b>HumeDMH.dll</b>.
+<p>The Hume .NET software uses the namespace <b>Hume.DMH</b>.&nbsp; Coding
+is easier if you add the statement <b>using Hume.DMH;</b> to the using
+statements of your application source code.&nbsp; By doing this, the namespace
+name, <b>Hume.DMH</b>, can be omitted from name references.&nbsp; A Visual
+Basic developer uses the <b>Imports</b> statement for the same purpose.
+<p>Your primary focus as a developer is using the class <b>DmhClient</b>.&nbsp;
+This class implements the public methods to send and receive messages,
+and work with the DMH message system.&nbsp; There are other classes in
+the Hume.DMH namespace but they are implemented for internal use by the
+<b>DmhClient</b>
+class.
+<p>Your design will typically use one instance of a <b>DmhClient</b> component
+per process to have a single client connection to a single DMH server.&nbsp;
+A single client connection is used for sending and receiving with multiple
+mailboxes simultaneously from multiple threads.&nbsp; More than one instance
+of&nbsp; the component per process is only needed if you wish to communicate
+directly with multiple DMH servers.&nbsp; We recommend that you not use
+multiple connection instances within a single process to communicate with
+a single DMH server.
+<p>As a developer, per the licensing terms, you are required to have the
+Tcl/Tk DMH software installed on your development system.&nbsp;&nbsp; One
+reason for this requirement is to insure that you have the <a href="../index.html" target="_blank">online
+documentation</a> for the DMH system.&nbsp; A second major reason is so
+that you can run your own DMH server process to test and debug against
+without affecting a production system.
+<p>If you are not familiar with the DMH message system, you may want to
+read the mbx document which is usually installed at <a href="../mann/mbx.html">/usr/local/htm84/mann/mbx.html</a>.&nbsp;
+Your application acts a DMH message system client, and attaches to a running
+DMH server.&nbsp; Once you are connected to the DMH system, you can exchange
+messages with other attached processes.
+<p>To get started, you only need to know the hostname where the DMH server
+is running, and the DMH Groupname that has been assigned to the server.&nbsp;&nbsp;
+If you execute a Datahub process on your system from the command line,
+for example:
+<pre>&nbsp;&nbsp;&nbsp;&nbsp; $ /usr/local/bin/datahub84 eof &amp;</pre>
+you will start a DMH server running on your host, with the default DMH
+groupname of "mbx".
+<p>The usual application design, and the one that provides the best performance,&nbsp;
+is to connect to the DMH server during initialization, and to use this
+connection during the life of the application.&nbsp; You declare a DmhClient
+instance and construct it in the usual way for your chosen programming
+language.&nbsp; To simplify the discussion, our example code will only
+be in C#, but the other .NET languages are similar.
+<p><tt>&nbsp;&nbsp;&nbsp; // declare and constuct our DMH connection instance</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; DmhClient dmh = new DmhClient();</tt>
+<p>The <a href="#Init">Init( )</a> method is subsequently used to connect
+to the server.&nbsp; The <b>Init()</b> method is overloaded - there are
+two versions.&nbsp; With one version, the DMH server's hostname and groupname
+are provided as arguments to the method.&nbsp; With the other version,
+<b>Init()</b>
+is called without any arguments and the server hostname and groupname are
+configured as the properities, RemoteHost and RemoteGroup.&nbsp; If the
+application disconnects from the server, the <b>Init( )</b> method can
+be used again to restore the connection.
+<p>The API is organized around events, method calls, and properties.&nbsp;
+We made a choice to feature events as the preferred means of having the
+DmhClient instance communicate asynchronous occurences such as the arrival
+of messages.&nbsp; There is superior IntelliSense code generation and prompting
+for developing event handlers than there is for coding method calls using
+delegates.&nbsp; Be sure to use the <b><tt>+=</tt></b> operator to add
+event handler callbacks to the DmhClient instance, and take advantage of
+the IDE's ability to code callback methods when you press the Tab key.
+<p>An application will likely want to deploy event handlers for all of
+the different event types that the DmhClient class raises - see the reference
+section.&nbsp; For example,
+<p><tt>&nbsp;&nbsp;&nbsp; // handle tracing and diagnostic information</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; dmh += new TraceEventHandler(dmh_Trace);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; // handle incoming asynchronous DMH messages</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; dmh += new WhenmsgEventHander(dmh_Whenmsg);</tt>
+<br>&nbsp;
+<p><a NAME="Errors"></a>
+<h4>
+Error Handling</h4>
+A long running program such as an automation application needs to handle
+intermittent errors with network outages or server shutdowns.
+<p>Here is a summary of the kinds of errors that many of the method invocations
+that return a string value report.&nbsp; In the usual success situation,
+a <b>null</b> value is returned.&nbsp; When you make a method call that
+requires a DMH server connection, and you do not have one, the method call
+will return the string "No DMH server connection".&nbsp; If you use an
+improper mailbox name such as one with whitespace in it, the call will
+return a string such as, "mailbox name must contain only ANSI letters,
+digits, -, _, ., !, :, or @".&nbsp;&nbsp; These are the two main errors
+when initiating a method call.&nbsp;&nbsp; Most of the DMH&nbsp; method
+calls are then processed asynchronously.&nbsp; In other words, your method
+call returns, and the message communication you initiated happens in background.&nbsp;
+An error that occurs during background processing results in an Error event
+occurring.&nbsp; You do not need to write an Error event handler,&nbsp;
+but you probably should to communicate to the users of your program if
+an error occurs.&nbsp; When the Error event occurs, in most cases, the
+Disconnected event will also occur.&nbsp; You can place logic in your Disconnected
+event handler to initiate recovery and resume logic, exit the program,
+etc.
+<p><a NAME="basicDMH"></a>
+<h4>
+Sending and Receiving - Basics</h4>
+The programming model of the DMH message system is that you send a message
+to a destination mailbox.&nbsp; When sending the message, you can optionally
+specify the name of a second mailbox for the recipient to send a reply
+message to.&nbsp; Usually you send a message to an application logic server
+such as a Datahub.&nbsp; The message is usually SQL,&nbsp; Tcl, or XML
+command text that the recipient executes.&nbsp; If the sender has designated
+a reply mailbox, the result of executing the command is sent to the reply
+mailbox.
+<p>Lets discuss sending without asking for replies using the <a href="#Send">Send(
+)</a>&nbsp; method.&nbsp; This method is used to send text messages, and
+the <a href="#binsend">BinarySend()</a> function is used in a similar fashion
+to send binary messages.&nbsp; For example,&nbsp; suppose you are integrating
+a barcode reader.&nbsp; When data is read from the barcode reader device,
+your code is supposed to update a record in a Datahub table.&nbsp; You
+will send messages without asking for reply messages - if there is a system
+shutdown or communication failure, your application will know from the
+Disconnected event.&nbsp; This is more efficient than asking for a reply
+message at every barcode read.
+<p><tt>// update latest read record in table barcode_reader at the Datahub</tt>
+<br><tt>string HUB="DATAHUB";</tt>
+<br><tt>string message =</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; String.Format("update barcode_reader set data_in='{0}'
+where device_id='{1}'",</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newdata,
+myID);</tt>
+<br><tt>dmh.Send(HUB, message);</tt>
+<p>When you send a message without waiting for a reply, it is referred
+to as an asynchronous send.
+<p>Often, you will want to send a message to obtain reply data.&nbsp; The
+most convenient function to use for text messages is the <a href="#DoXact">DoXact(
+)</a> method.&nbsp; The <a href="#binXact">BinaryXact()</a> function is
+similar and is used for binary messages.&nbsp; This function will take
+care of specifying and using a unique mailbox for your reply message, and
+it will take care of managing a timer in case a reply message is not forthcoming.&nbsp;
+Suppose you want to query a database table, and the DB variable is assigned
+the mailbox name of the <a href="../man1/dmh_SQLsrv.html">dmh_SQLsrv</a>
+process.&nbsp;&nbsp; The online documentation shows that the SQL standard
+"select" command sends multiple reply messages, but the "telect" command
+sends a single reply message with all of the requested data formatted as
+a Tcl list.&nbsp; The DoXact( ) function is designed for a single reply
+message, so your code looks like:
+<p><tt>string reply;</tt>
+<br><tt>string msg;</tt>
+<br><tt>string device_id;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; msg = String.Format("telect device_id from barcode_config
+where display='{0}'", dmh.hostname());</tt>
+<br><tt>reply = dmh.DoXact(DB, msg);</tt>
+<br><tt>if (reply == "TIMEOUT")) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; // timeout or error</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; return -1;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>// Parse the result- a Tcl List</tt>
+<br><tt>// element(6) = rows of data, then (0) = first row, then (0) =
+first item in row</tt>
+<br><tt>device_id&nbsp; = dmh.ListElement(reply, 6, 0, 0);</tt>
+<br><tt>// success</tt>
+<br><tt>return 0;</tt>
+<br>&nbsp;
+<p><a NAME="advancedDMH"></a>
+<h4>
+Sending and Receiving - Advanced</h4>
+If your application needs to receive unsolicited messages from other processes,
+you use the <a href="#Whenever">Whenever( )</a> method to setup asynchronous
+receiving of text messages, and the <a href="#binwhenever">BinaryWhenever()</a>
+function for binary messages.&nbsp; When an unsolicited message is received,
+your specified
+<a href="#WhenmsgProc">WhenmsgEventHandler</a> or <a href="#BinmsgProc">BinmsgEventHandler</a>
+is called.&nbsp;&nbsp; The Whenever() methods register to receive all subsequent
+messages to the specified mailbox.&nbsp; When your EventHandler logic returns,
+you are re-registered for the next message.&nbsp; The <a href="#Disarm">Disarm(
+)</a> function can be used to stop asynchronous receiving. If you only
+want to receive the next message to a mailbox, use the <a href="#Whenmsg">Whennext</a>()
+or <a href="#binwhenmsg">BinaryWhenmsg</a>() methods.&nbsp; If <a href="#WhenmsgAgain">WhenmsgAgain(
+)</a> is executed from your receiving event handler, then the software
+is re-armed to receive the next message.&nbsp; So the combination of Whennext(
+) with WhenmsgAgain( ) called in the receiving event handler is equivalent
+to using the Whenever( ) function.
+<p>Asynchronous message receiving is setup in two parts - connecting your
+event handling callback to the <a href="#WhenmsgProc">Whenmsg</a> event,
+and using the Whennext() or Whenever() method calls to specify which mailbox
+names you are using to receive messages.&nbsp; Most applications will setup
+their receive message handlers once, and not vary it.&nbsp; When a message
+arrives, you can use the <b>WhenmsgEventArgs</b> structure data to determine
+the data of the message and which mailbox name it was sent to.&nbsp; The
+Whenmsg event sender object is the DmhClient instance.&nbsp; You can optionally
+choose to pass a reference to an application object into the receiving
+event handler by using the overloaded version of Whenever() that accepts
+a clientData argument.
+<p><tt>&nbsp;&nbsp;&nbsp; // handle incoming asynchronous DMH messages</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; dmh += new WhenmsgEventHander(dmh_Whenmsg);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; dmh.Whenever("MYMAILBOX");</tt>
+<p><tt>...</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; private static void dmh_Whenmsg(object sender,
+WhenmsgEventArgs e)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Console.Writeline("Received:&nbsp;
+To={0}&nbsp; ReplyTo={1}&nbsp; Text={2}},</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+e.destinationMailbox, e.replyMailbox, e.message);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<p>By convention you should use mailbox names for receiving that end in
+_SQL if SQL messages are expected, _XML if XML messages are expected, and
+_RPC if Tcl messages are expected.&nbsp;&nbsp; There is no limit to the
+number of mailboxes that you use for receiving, but the design convention
+is that you use unique names based on the server function(s) provided.&nbsp;
+There should be only one receiving process per mailbox name in a DMH group.&nbsp;
+You may wish to create a unique mailbox name for receiving by basing the
+name on your hostname - see the method <a href="#Hostname">hostname( )</a>.
+<p>Lets revisit the DoXact( ) function.&nbsp; In some situations, you may
+want higher performance by sending messages and collecting the replies
+asynchronously, instead of waiting for each reply before sending the next
+message.&nbsp; You do this by setting up one or more reply mailboxes and
+arming them for receiving using the Whennext( ) or Whenever( ) methods.&nbsp;
+Instead of using DoXact( ) use the Send( ) method and specify the reply
+mailbox argument.&nbsp; Typically a high performance application will create
+a small number of unique mailbox names for replies, and re-use them.&nbsp;
+If you are creating unique mailboxes for each reply message, use the <a href="#CloseMailbox">CloseMailbox(
+)</a> function when you are done with each one, to recover resource usage.
+<br><a NAME="events"></a>
+<h4>
+Event Handling Notes</h4>
+Your application should not "live" inside of your event handling code.&nbsp;
+There are some rules concerning what your application can do in a receiving
+callback. In general, your application does not receive new asynchronous
+messages while your receiving callback logic is executing. So the usual
+application design for the callback logic is to return fairly quickly without
+performing lengthy computation. If your callback logic executes DoXact(),
+BinaryXact(), TimedReceive(), or TimedBinaryReceive() then receiving of
+asynchronous messages is resumed during the execution of your callback.
+As your callback continues to execute, in the general case, there will
+not be re-entrant execution of your callback for receiving another message
+to the same mailbox. In other words, the Whenever() and WhenmsgAgain()
+logic guard against re-entrant execution of your callback logic for receiving
+to the same mailbox as the currently executing callback. It is possible
+to bypass the re-entrancy safeguard by calling Whenmsg() from your callback
+to re-arm the callback. This is not a recommended practice.
+<p>A summary of the above paragraph; if you cause asynchronous receiving
+to be resumed during callback execution by using DoXact() or similar functions,
+you should only be using Whenever() or WhenmsgAgain() to re-register the
+executing callback for the next reception. Otherwise you can have re-entrant
+execution of your callback.
+<p>Be careful with the Trace event.&nbsp; If you turn on a lot of tracing
+and are exchanging long messages, your application will be manipulating
+huge amounts of string data.
+<p><a NAME="International"></a>
+<h4>
+International Character Sets</h4>
+Multibyte UTF-8 character sequences are used by Tcl and the DMH to represent
+International characters.&nbsp; The .NET DmhClient API for the DMH software
+uses the native string type of .NET and transparently converts between
+the Unicode and UTF-8 character encodings.
+<p>When declaring database tables to hold international text, base the
+VARCHAR( ) sizes on UTF-8 byte counts, not on the number of characters.&nbsp;
+In the most conservative case,&nbsp; you need to allow 3 bytes per displayed
+character.
+<p>Datahub table varchar fields are compatible with UTF-8 sequences representing
+ordinary International text.&nbsp; There are issues with storing UTF-8
+sequences of arbitrary binary data which can be avoided or worked around:
+<ul>
+<li>
+The binary 0x01 byte should not be imbedded in a data value if the field
+is one of the table's primary key field(s).</li>
+
+<li>
+The sequence 0xC0 0x80 should be used to represent the NULL character and
+not 0x00.&nbsp; This is the ordinary conversion done by Tcl.</li>
+
+<li>
+The single quote character, code 0x27, is used as the delimiter of SQL
+literal data.&nbsp; Therefore any occurences of this character in binary
+data need to be doubled before using the data in an SQL statement.</li>
+</ul>
+
+<p><br><a NAME="Termination"></a>
+<h4>
+Termination</h4>
+When your application is shutting down, call the <a href="#Disconnect">Disconnect</a>
+function. This call will disconnect gracefully from the DMH server and
+free many of the resources used by your connection.&nbsp; Practically speaking
+the DMH server routinely takes care of situations where clients leave ungracefully,
+but proper software manners are encouraged.
+<br><a NAME="Miscellaneous"></a>
+<br>&nbsp;
+<h4>
+Miscellaneous Notes</h4>
+An actual network connection is not attempted until Init() is called.
+<p>The programming model is that you will not have more than one connection
+to a particular DMH server.&nbsp; It is typical to have only one DMH connection
+per application process.&nbsp; Communication across DMH groups can be accomplished
+by sending to mailbox@groupname.&nbsp; It is also possible to use multiple
+connection instances, each connected to a different DMH Group.
+<p>There should be only one reader per mailbox name in a given DMH group.
+<p>The&nbsp; DMH client software is able to use and resolve DMH groupname
+aliases as described in the online Tcl documentation.&nbsp; Groupname aliases
+are resolved at the DMH server and not at the client.
+<p>Mailbox Naming rules:
+<ul>
+<li>
+A mailbox name should be limited to 31 or fewer characters, but there is
+no firm limit.</li>
+
+<li>
+The name must start with an ANSI letter, digit, or the underscore</li>
+
+<li>
+Other characters in the name may include - or&nbsp; !.</li>
+
+<li>
+The period, colon, or @ symbol should only be used to specify optional
+groupname qualification of a mailbox name as in <i>boxname</i>[<b>@</b>[<i>host_or_ip_address</i><b>:</b>]<i>groupname</i>]&nbsp;
+Here we are using brackets, [ ], to indicate optional portions of the mailbox
+name. The brackets are not actually specified by the user.</li>
+</ul>
+
+<p><br>
+<hr WIDTH="100%"><a NAME="Reference"></a>
+<h2>
+.NET DmhClient API Reference</h2>
+
+<p><br><a NAME="Properties"></a>
+<table BORDER WIDTH="100%" >
+<caption>&nbsp;<b>DmhClient Properties</b></caption>
+
+<tr>
+<td><b>Property Access</b></td>
+
+<td><a NAME="ClientID"></a><b>Description</b></td>
+</tr>
+
+<tr>
+<td><a NAME="ClientData"></a>string <b>ClientID</b></td>
+
+<td>The DMH server assigns a unique string to each client for identification
+purposes. This value is a readonly runtime value providing the server's
+ID string or an empty string if a connection does not exist.&nbsp;</td>
+</tr>
+
+<tr>
+<td><a NAME="DefaultTimeout"></a>object <b>ClientObject</b></td>
+
+<td>You can optionally set and get a per DMH Connection user-defined value.&nbsp;
+This can be a useful mechanism to pass a reference to an application data
+structure or a parent object which can then be used from any of the event
+callbacks.&nbsp; This user-defined value is distinct from the user-defined
+data that you are able to associate with Whenmsg or Binmsg event callbacks.</td>
+</tr>
+
+<tr>
+<td>int <b>DefaultTimeout</b><a NAME="Description"></a></td>
+
+<td>The default timeout interval for send and reply transactions, or timed
+receive invocations.&nbsp;&nbsp; In seconds - the default value is 30.&nbsp;
+Settable range: 1 - 86399.</td>
+</tr>
+
+<tr>
+<td>string <b>Description</b>
+<br><a NAME="mhgroup"></a></td>
+
+<td>One of the features of the Tcl/Tk DMH Status Window is to provide an
+action for identifying connected clients. The default description provided
+for a .NET client is similar to "&lt;hostname>: .NET DmhClient Application".
+You are able to provide your own description string for your application.</td>
+</tr>
+
+<tr>
+<td>string<b> DmhGroup</b><a NAME="RemoteGroup"></a></td>
+
+<td>The DmhGroup property is a readonly runtime value indicating the <i>hostname<b>:</b>port&nbsp;</i>
+of the DMH server when connected, else an empty string.&nbsp; <i>Hostname</i>
+is the server's idea of his hostname which may be different from the hostname
+that was specified at the client.</td>
+</tr>
+
+<tr>
+<td>string <b>RemoteGroup</b><a NAME="RemoteHost"></a></td>
+
+<td>You can specify the DMH server groupname as a property value, and call
+the overloaded version of Init() that takes no arguments to use the property
+values.&nbsp; The default RemoteGroup value is "mbx".</td>
+</tr>
+
+<tr>
+<td><a NAME="State"></a>string <b>RemoteHost</b></td>
+
+<td>You can specify the DMH server hostname or IP address string as a property
+value, and call the overloaded version of Init() that takes no arguments
+to use the property values.&nbsp; The default RemoteHost value is an empty
+string.&nbsp; A null value or an empty string implies your own computer
+system..</td>
+</tr>
+
+<tr>
+<td>int <b>State</b>
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The State property is a read-only value available at runtime.&nbsp;
+The value can be read to determine if a healthy communication connection
+exists, etc.&nbsp;&nbsp;&nbsp; Applications will ordinarily use event functions
+and not poll the State property value.&nbsp; The transient and error states
+do not last long, so testing for the values 0 or 7 is the most common scenario.&nbsp;
+<dl>
+<dl>
+<pre>&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; disconnected</pre>
+
+<pre>&nbsp; 4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hostname is being resolved</pre>
+
+<pre>&nbsp; 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connection setup in progress&nbsp;</pre>
+
+<pre>&nbsp; 7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; healthy connection exists</pre>
+
+<pre>&nbsp; 8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; connection close in progress</pre>
+
+<pre>&nbsp; 9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a communication error has occurred&nbsp;&nbsp;</pre>
+
+<pre><a NAME="Tracebits"></a>519&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DMH protocol setup in progress (519 = 0x100 | 7)</pre>
+</dl>
+</dl>
+</td>
+</tr>
+
+<tr>
+<td>enum <b>Tracebits</b></td>
+
+<td>The Tracebits property controls output of diagnostic data to the Trace
+event.&nbsp; This value is used as a bitfield with the bit values controlling
+the following categories of output:
+<p>DmhClient.Tracebit.TRACE_READS&nbsp; - data reads (1)
+<br>DmhClient.Tracebit.TRACE_WRITES - data writes (2)
+<br>DmhClient.Tracebit.TRACE_RECV -&nbsp; message receiving (4)
+<br>DmhClient.Tracebit.TRACE_SEND-&nbsp; message sending (8)
+<br>DmhClient.Tracebit.TRACE_LOGIC - logic tracing (16)
+<br>DmhClient.Tracebit.TRACE_ALL - a fast way to specify all of the above
+(255)</td>
+</tr>
+</table>
+
+<p><a NAME="ControlEvents"></a>
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>DMHClient Events</b></caption>
+
+<tr>
+<td><b>Event Handler and Argument Data&nbsp;</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>All event handlers - NOTES
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The IntelliSense code generation of the .NET IDE turns arounds the
+usual sequence of writing an event handling method and then registering
+it.&nbsp; Instead, try registering an event handler using the += operator.&nbsp;
+Press the Tab key when prompted to create event handling methods with the
+correct arguments.
+<p><tt>DmhClient dmh = new DmhClient();</tt>
+<br><tt>dmh.Connected += new ConnectedEventHandler(dmh_Connected);</tt>
+<br><tt>...</tt>
+<br><tt>void dmh_Connected(object Sender, EventArgs e)&nbsp;</tt>
+<br><tt>{</tt>
+<br><tt>DmhClient dmh = (DmhClient)sender;</tt>
+<br><tt>...</tt>
+<br><tt>}</tt>
+<p>The .NET framework hides the difference between executing a static method
+or an object method as an event handler.&nbsp; You are able to use either
+kind of method.
+<p>When the event happens, your handler method is called.&nbsp; You can
+cast the event sender object to (DmhClient) to have a reference to the
+component instance.
+<p><a NAME="BinmsgProc"></a></td>
+</tr>
+
+<tr>
+<td>
+<br>void <b>Binmsg</b>EventHandler (object sender, BinmsgEventArgs e);
+<p>class BinmsgEventArgs : EventArgs {
+<br>public string destinationMailbox;
+<br>public string replyMailbox;
+<br>public byte [] data;
+<br>public object clientData;
+<br>}
+<br>&nbsp;</td>
+
+<td>This is the callback signature for receiving binary messages asynchronously
+from the <b>Binmsg</b> event.&nbsp;&nbsp; A callback that you write is
+executed by the receiving thread when a binary message has arrived.&nbsp;
+You typically have a single BinmsgEventHandler callback and use the destinationMailbox.
+data,&nbsp; and/or clientData passed in the BinmsgEventArgs structure to
+vary your handling logic.
+<p>The destinationMailbox parameter is a mailbox name that your application
+has specified when initiating receiving.&nbsp; If the sender of the message
+indicated a reply mailbox, it is passed as the replyMailbox item.&nbsp;
+If no reply mailbox has been specified, the replyMailbox argument is an
+empty string.&nbsp; The data argument indicates a byte array holding the
+data of the sent message.&nbsp; The length of the byte array is the number
+of bytes of message data.&nbsp; It is possible to send and receive messages
+that are 0 length.&nbsp; The DMH client logic protects you from receiving
+another message for the destinationMailbox, and re-entering your handler
+logic until you have returned from the current callback execution.&nbsp;
+<p>When you call the BinaryWhenmsg() function or the BinaryWhenever( )
+methods to setup receiving,&nbsp; you can optionally specify the clientData
+argument to be saved and passed&nbsp; to your handler at the time a message
+arrives. A typical use would be to pass a reference to a class object,
+so your receive callback can use the reference to call a class function.&nbsp;&nbsp;
+If you do not specify a clientData argument, the passed value is null.<a NAME="Connected"></a></td>
+</tr>
+
+<tr>
+<td>void <b>Connected</b>EventHandler(object sender, EventArgs e)
+<br><a NAME="Disconnected"></a></td>
+
+<td>The <b>Connected</b> event happens after successfully connecting to
+the DMH server in the wake of the Init() method invocation.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void <b>Disconnected</b>EventHandler(object sender, EventArgs e)
+<p><a NAME="ErrorEvent"></a></td>
+
+<td>The <b>Disconnected</b> event happens when the DMH connection has been
+closed from any circumstance such as remote closure, communication failure,
+error, or invocation of the Disconnect() method.&nbsp; This event is similar
+to the Tcl lostserver procedure invocation.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void <b>Error</b>EventHandler(object sender, EventArgs e)
+<p>class ErrorEventArgs : EventArgs {
+<br>public int errnum;
+<br>public string text;
+<br>}
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The <b>Error</b> event happens when the Init() method fails, or there
+has been communication failure.&nbsp; In most cases when the Error event
+happens, the control state will transition to the disconnected state, and
+the Disconnected event will occur shortly.
+<p>Broken connection errors include:
+<dl>
+<dd>
+<tt>10051&nbsp; the network is unreachable</tt></dd>
+
+<dd>
+<tt>10060&nbsp; Connection has timed out</tt></dd>
+
+<dd>
+<tt>11053&nbsp; Connection is aborted due to timeout or other failure</tt></dd>
+
+<dd>
+<tt>10054&nbsp; Connection is reset by remote system</tt></dd>
+
+<dd>
+<tt>10058&nbsp; Connection has been shutdown</tt></dd>
+
+<dd>
+<tt>50001&nbsp; DMH Protocol error - missing data.&nbsp; You should never
+see this error.</tt></dd>
+
+<dd>
+<tt>50002&nbsp; DMH Protocol error - improper packet.&nbsp; You should
+never see this error.</tt></dd>
+</dl>
+</td>
+</tr>
+
+<tr>
+<td>void <b>Shutdown</b>EventHandler(object sender, EventArgs e)<a NAME="Trace"></a></td>
+
+<td><a NAME="Shutdown"></a>The <b>Shutdown</b> event happens when a remote
+request has been received to terminate the process.&nbsp; If you do not
+setup your own handler for this event, the software will cause the application
+to exit.&nbsp;</td>
+</tr>
+
+<tr>
+<td>void <b>Trace</b>EventHandler(object sender, TraceEventArgs e)
+<p>class TraceEventArgs : EventArgs {
+<br>public string text;
+<br>}
+<p><a NAME="WhenmsgProc"></a></td>
+
+<td>The <b>Trace</b> event provides diagnostic and debug information per
+the Tracebits property setting.&nbsp; Your application needs to avoid creating
+new DMH activity in the Trace event callback, that in turn causes Trace
+events.&nbsp; A cycle of positive feedback is possible which will cause
+a software fission reaction.</td>
+</tr>
+
+<tr>
+<td>void <b>Whenmsg</b>EventHandler(object sender, WhenmsgEventArgs e)
+<p>class WhenmsgEventArgs : EventArgs {
+<br>public string destinationMailbox;
+<br>public string replyMailbox;
+<br>public string message;
+<br>public object clientData;
+<br>}
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The <b>Whenmsg</b> event is signalled when a message has arrived that
+was sent to a mailbox specified in the Whennext() or Whenever() method
+calls.
+<p>The destinationMailbox parameter is a mailbox name that your application
+has specified when initiating receiving.&nbsp; If the sender of the message
+indicated a reply mailbox, it is passed as the replyMailbox item.&nbsp;
+If no reply mailbox has been specified, the replyMailbox argument is an
+empty string.&nbsp; The message argument is the text of the sent message.&nbsp;
+The DMH client&nbsp; logic protects you from receiving another message
+for the destinationMailbox, and re-entering your handler logic until you
+have returned from the current event handler execution.&nbsp;
+<p>When you call the Whennext() function or Whenever( ) function to setup
+receiving,&nbsp; you can optionally specify a clientData argument to be
+saved and passed&nbsp; to your callback at the time a message arrives.&nbsp;
+A typical use would be to&nbsp; pass a reference to an object, so your
+receive callback can use the object&nbsp; to call a class function.&nbsp;</td>
+</tr>
+</table>
+
+<p><a NAME="Methods"></a>
+<table BORDER WIDTH="100%" >
+<caption><b>DmhClient Methods</b></caption>
+
+<tr>
+<td><b>FUNCTION</b></td>
+
+<td><b>DESCRIPTION</b></td>
+</tr>
+
+<tr>
+<td>General Comments
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Many of the method calls return a string value which is used in the
+following way to indicate success or error.&nbsp; The method calls return
+null for the usual successful invocation, or an error message that could
+be logged or displayed to the user.&nbsp; The most common error message
+is "No DMH server connection".&nbsp; This message occurs when using a function
+that requires a connection and Init( ) has not been called successfully,
+or the DMH connection has been lost.&nbsp; In general, the functions do
+not throw exceptions, and you do not need to use try and catch.&nbsp; The
+ListSplit() and ListElement() methods are different in that they will throw
+a FormatException if the input string cannot be parsed as a valid list.
+<p>If you use an improper mailbox name such as one with whitespace in it,
+the method call will return a string such as, "mailbox name must contain
+only ANSI letters, digits, -, _, ., !, :, or @".&nbsp;&nbsp; Most of the
+DMH&nbsp; method calls are then processed asynchronously.&nbsp; In other
+words, your method call returns, and the message communication you initiated
+happens during background processing.&nbsp; An error that occurs during
+background processing results in the Error event occurring.<a NAME="Abort"></a></td>
+</tr>
+
+<tr>
+<td>void <b>Abort</b>(DMHClient)</td>
+
+<td>Any in-progress send-and-reply or modal wait transactions such as the
+DoXact( ) or BinaryXact() calls are aborted with return values indicating
+TIMEOUT.&nbsp; Invoking the Abort method does not affect asynchronous receiving
+that is setup using the Whennext( ) or Whenever( ) methods or their binary
+counterparts.&nbsp; Has no effect if not connected.<a NAME="binsend"></a></td>
+</tr>
+
+<tr>
+<td><b>&nbsp;</b>string <b>BinarySend</b>(string destinationMailbox,&nbsp;
+<br>&nbsp; byte [] binaryMessage)
+<p>string <b>BinarySend</b>(string destinationMailbox,&nbsp;
+<br>&nbsp; byte [] binaryMessage, string replyMailbox)
+<p>string <b>BinarySend</b>(string destinationMailbox,&nbsp;
+<br>&nbsp; byte [] binaryMessage, int msglen)
+<p>string <b>BinarySend</b>(string destinationMailbox,&nbsp;
+<br>&nbsp; byte [] binaryMessage, int msglen, string replyMailbox)
+<p>string <b>BinarySend</b>(string destinationMailbox,&nbsp;
+<br>&nbsp; byte [] binaryMessage, int msglen, int offset)
+<p>string <b>BinarySend</b>(string destinationMailbox,&nbsp;
+<br>&nbsp; byte [] binaryMessage, int msglen, int offset, string replyMailbox)</td>
+
+<td>The <b>BinarySend</b> method is used to send binary messages.&nbsp;
+It is similar to the <a href="#Send">Send</a> method described below which
+is intended for text messages.&nbsp; There are 6 overloaded varieties depending
+on your desire to specify optional parameters.&nbsp; The optional parameter
+<b>offset</b>
+lets you specify a starting element in the byte [] array that is different
+than the initial byte at offset 0.&nbsp; The optional parameter <b>msglen
+</b>lets
+you indicate the number of bytes in the message in the case where it is
+less than the length of the byte [] array.&nbsp; The <b>replyMailbox</b>
+parameter is optionally specified to indicate a reply mailbox which is
+passed along with the message data to the receiver.&nbsp; By convention,
+when a reply mailbox is indicated for a command message sent to a Datahub
+mailbox or equipment interface mailbox, the command is processed, and a
+reply message is sent to the reply mailbox.&nbsp;
+<p>Specifying the replyMailbox as null, an empty string, or as the literal
+text "NULL" is equivalent to not specifying a reply mailbox.
+<p><a NAME="binwhenever"></a>Returns NULL on success, or an error message.&nbsp;
+You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>string <b>BinaryWhenever</b>(string receiveMailbox)
+<p>string <b>BinaryWhenever</b>(string receiveMailbox, object clientData)<a NAME="binwhenmsg"></a></td>
+
+<td>Registers to receive all messages directed to the specified mailbox.&nbsp;
+The messages are passed to the user written <b>Binmsg</b> event handler
+as binary data.&nbsp; When the callback returns, the software re-arms for
+receiving the next message directed to the specified mailbox.&nbsp; The
+<a href="#Disarm">Disarm(
+)</a> method can be used to stop receiving.&nbsp;
+<p>You can optionally specify the clientData argument to be saved and passed&nbsp;
+to your event handler at the time a message arrives.&nbsp; A typical use
+would be to&nbsp; pass a reference to an object into your receive handler.
+<p>Returns null on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>string <b>BinaryWhenmsg</b>(string receiveMailbox)
+<p>string <b>BinaryWhenmsg</b>(string receiveMailbox, object clientData)<a NAME="binXact"></a></td>
+
+<td>Registers for receiving the next available message directed to the
+specified mailbox as binary data. Calling <a href="#WhenmsgAgain">WhenmsgAgain(
+)</a> in your <b>Binmsg</b> event handling code re-arms the receive registration
+for the next message.
+<p>You can optionally specify the clientData argument to be saved and passed&nbsp;
+to your event handler at the time a message arrives.&nbsp; A typical use
+would be to&nbsp; pass a reference to an object into your receive handler.
+<p>Returns null on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>byte []<b> BinaryXact</b>(string destinationMailbox, byte [] binaryMessage)
+<p>byte []<b> BinaryXact</b>(string destinationMailbox, byte [] binaryMessage,
+int msglen, int offset)
+<p>byte []<b> BinaryXact</b>(string destinationMailbox, byte [] binaryMessage,
+int timeoutSeconds)
+<p>byte []<b> BinaryXact</b>(string destinationMailbox, byte [] binaryMessage,
+string replyMailbox)
+<p>byte []<b> BinaryXact</b>(string destinationMailbox, byte [] binaryMessage,
+int timeoutSeconds, string replyMailbox)
+<p>byte []<b> BinaryXact</b>(string destinationMailbox, byte [] binaryMessage,&nbsp;
+int msglen, int offset, int timeoutSeconds)
+<p>byte []<b> BinaryXact</b>(string destinationMailbox, byte [] binaryMessage,&nbsp;
+int msglen, int offset, int timeoutSeconds, string replyMailbox)</td>
+
+<td>Performs a complete send and reply binary transaction with timeout
+management.&nbsp; Optionally creates and manages a unique reply mailbox
+for the send and reply transaction if the replyBox argument is not specified.&nbsp;
+If the optional timeoutSeconds argument is not specified, the <a href="#DefaultTimeout">DefaultTimeout</a>
+property value is used.&nbsp; There are overloaded varieties to let you
+specify when the binary message does not start at the beginning offset
+of 0, or when it's length is less than the length of the binaryMessage
+array.
+<p>The usual reply is a byte array containing the reply message.&nbsp;
+The allocated size of the byte array is the length of the message and it
+can be 0.&nbsp;&nbsp; In the case of TIMEOUT or other failure, the return
+value will be null.&nbsp; You can have multiple instances of BinaryXact(),
+DoXact( ),&nbsp; TimedReceive( ), or TimedBinaryReceive() active at a time
+but not more than one instance for a specified reply mailbox.&nbsp;
+<p>If you specify a replyMailbox, you need to insure that the name you
+specify is only used by your application.&nbsp; It is usual to create a
+unique reply mailbox name, perhaps based on the hostname and process ID,
+assign it to a variable, and use it repeatedly.
+<p><a NAME="CloseMailbox"></a>If you are not connected when using this
+call, the null value is returned immediately.&nbsp; Trace event information
+can be used to distinguish failure modes.</td>
+</tr>
+
+<tr>
+<td>string <b>CloseMailbox</b>(string mailbox)<a NAME="Count"></a></td>
+
+<td>Stops using a mailbox - disarms asynchronous receiving, aborts modal
+receiving, flushes the mailbox, and removes it from existence.&nbsp; The
+Tcl version of this call, differs because it will not flush existing messages.
+<p>Returns null on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>int [] <b>Counts</b>(string mailbox)<a NAME="Disarm"></a></td>
+
+<td>Returns an array of three numbers, the total count of messages that
+have been sent to the mailbox, the total count of messages that have been
+consumed from the mailbox, and last, the current count of pending messages.&nbsp;
+A pending message is one that exists in the queue associated with the mailbox,
+and has not been consumed by reading or flushing.
+<p>You must be connected to use this call.&nbsp; If you are not connected,
+or an error occurs, the return value is null instead of the array.</td>
+</tr>
+
+<tr>
+<td>void <b>Disarm</b>()
+<br>void <b>Disarm</b>(string mailbox)<a NAME="Disconnect"></a></td>
+
+<td>The Disarm() method is used to end asynchronous receiving that was
+initiated with the Whenever(), Whennext(), BinaryWhenever(), or BinaryWhenmsg()
+methods.
+<br>If called without a boxname argument, all asynchronous receiving registrations
+are canceled.&nbsp; The Abort( ) function is similar and is used to cancel
+in-progress DoXact( ) and BinaryXact() calls.&nbsp; The call has no effect
+if not connected.</td>
+</tr>
+
+<tr>
+<td>void <b>Disconnect</b>()<a NAME="DoXact"></a></td>
+
+<td>The counterpart of Init( ); this method is used to disconnect from
+the DMH server.&nbsp; The SendFlush( ) function gets called to complete
+any in-progress sends.&nbsp; The Abort( ) function gets called to end any
+in-progress transactions.&nbsp; The Disarm( ) function gets called to cancel
+all asynchronous receiving.&nbsp; Has no effect if not connected.</td>
+</tr>
+
+<tr>
+<td>string <b>DoXact</b>(string destinationMailbox, string message)
+<p>string <b>DoXact</b>(string destinationMailbox, string message, int
+timeoutSeconds)
+<p>string <b>DoXact</b>(string destinationMailbox, string message, string
+replyMailbox)
+<p>string <b>DoXact</b>(string destinationMailbox, string message, int
+timeoutSeconds, string replyMailbox)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Performs a complete send and reply text message transaction with timeout
+management.&nbsp; Creates and manages a unique reply mailbox for the send
+and reply transaction if the replyMailbox argument is not specified.&nbsp;
+If the timeoutSeconds is not specified, or specified as 0, the <a href="#DefaultTimeout">DefaultTimeout</a>
+property value is used.&nbsp;
+<p>The usual reply is the text of the reply message. The string literal
+<b>TIMEOUT</b>
+is returned in case of failure.&nbsp; You can have multiple instances of
+DoXact( ) or TimedReceive( ) or their binary counterparts active at a time
+but not more than one instance for a specified reply mailbox.&nbsp;
+<p>If you specify a replyMailbox, you need to insure that the name you
+specify is only used by your application.&nbsp; It is usual to create a
+unique reply mailbox name, perhaps based on the hostname, assign it to
+a variable, and use it repeatedly.
+<p><a NAME="Flush"></a>If you are not connected when using this call, the
+TIMEOUT string is returned immediately.&nbsp; Trace event information can
+be used to show the cause.</td>
+</tr>
+
+<tr>
+<td>string <b>Flush</b>(string mailbox)
+<p>&nbsp;</td>
+
+<td>Empties a mailbox of any pending messages.&nbsp; A pending message
+is one that has been sent to the mailbox but has not been consumed.&nbsp;
+In other words, a pending message is waiting in a queue associated with
+the&nbsp; mailbox name.&nbsp; Messages are consumed by reading or flushing.
+<p><a NAME="GroupnamePort"></a>Returns null on success, or an error message.&nbsp;
+You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>int <b>GroupnamePort</b>(string groupname)
+<br><a NAME="Hostname"></a></td>
+
+<td>Used to determine the TCP/IP port number that is used by the DMH server
+to listen for client connections.&nbsp; The function is similar to the
+mh_name_to_socket Tcl procedure.&nbsp; Most applications will not have
+a use for this function since the server socket port is managed by the
+DMH software.&nbsp;</td>
+</tr>
+
+<tr>
+<td>string <b>hostname</b>()
+<br><a NAME="Init"></a></td>
+
+<td>Returns the TCP/IP hostname of the computer that the client software
+is executing on.&nbsp;</td>
+</tr>
+
+<tr>
+<td>
+<br>&nbsp;
+<p>string <b>Init</b>()
+<p>string <b>Init</b>(string groupname, string serverHostname)
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Performs the initial connection to the DMH message server. The connection
+will be setup or an error result will be obtained before returning.
+<p>If called with no arguments, the property values RemoteGroup and RemoteHost
+are used.&nbsp; The server hostname can be specified as a TCP/IP hostname,
+or as an IP address string.
+<p>Init errors include
+<dl>
+<dd>
+<tt>10051&nbsp; the network is unreachable</tt></dd>
+
+<dd>
+<tt>10060&nbsp; Connection has timed out. This error indicates that the
+remote host may not be online.</tt></dd>
+
+<dd>
+<tt>10061&nbsp; Connection attempt is refused.&nbsp;</tt></dd>
+
+<dd>
+<tt>10061&nbsp; Connection is forcefully rejected.</tt></dd>
+
+<dd>
+<tt>The remote host is online and reachable, but there is not a DMH server
+at the specified group or port.&nbsp;</tt></dd>
+
+<dd>
+<tt>11001&nbsp; Hostname not found (DNS authoritative).&nbsp; This error
+may indicate an improperly spelled hostname, or a hostname that is not
+known to your name server.</tt></dd>
+
+<dd>
+<tt>11002&nbsp; Hostname not found (non-authoritative name resolution).&nbsp;
+This error may indicate that your name server is down.</tt></dd>
+
+<dd>
+<tt>50003&nbsp; DMH Server refuses our client connection</tt></dd>
+
+<dd>
+<tt>This error indicates that customer modified software running in the
+DMH server has rejected the connection.&nbsp; It is likely that you are
+in violation of your site's security policy.</tt></dd>
+
+<dd>
+<tt>50004&nbsp; DMH Protocol error - improper setup reply.</tt></dd>
+
+<dl><tt>You should never see this error.</tt></dl>
+</dl>
+If the connection succeeds, the return value is null, otherwise an error
+message is returned&nbsp; indicating why the initialization failed.&nbsp;
+<p>When the initialization is successfully completed, the Connected event
+occurs.&nbsp; If Init fails, depending on how the Init call fails, the
+Error event may occur.&nbsp;
+<p>If the connection to the DMH server is ever lost, the Disconnected event
+occurs.<a NAME="ListAppend"></a></td>
+</tr>
+
+<tr>
+<td>StringBuilder <b>ListAppend</b>(string list, string element);
+<p>StringBuilder <b>ListAppend</b>(StringBuilder list, string element1);
+<p>StringBuilder <b>ListAppend</b>(StringBuilder list, string element1,
+string element2);
+<p>StringBuilder <b>ListAppend</b>(StringBuilder list, string element1,
+string element2, element3);
+<p>StringBuilder <b>ListAppend</b>(StringBuilder list, string element1,
+string element2, element3, element4);
+<br>&nbsp;</td>
+
+<td>These methods are used to add one to four list elements to text that
+is formatted as a Tcl list.&nbsp; It is a good programming practice to
+use ListAppend or ListJoin to build a Tcl list, in order to make sure that
+imbedded white space or other special characters are properly delimited
+with curly braces or escaped with backslashes.&nbsp; A null value may be
+passed as any of the string argument values, in order to represent an empty
+list or empty element.&nbsp; However, a null value should not be passed
+as a System.Text.StringBuilder argument.&nbsp; The System.Text.StringBuilder
+class is designed to support more efficient string modification than using
+instances of the string class.&nbsp; The input StringBuilder objects are
+modified by reference and returned as the return value of the methods.&nbsp;
+You can construct a StringBuilder instance that does not contain any characters
+to represent an empty list.&nbsp;&nbsp; The overloaded method calls make
+it convenient to add up to four list elements in one call.&nbsp; If you
+need to add more elements, call the methods repeatedly.<a NAME="ListElement"></a></td>
+</tr>
+
+<tr>
+<td>string <b>ListElement</b>(string list, int index1);
+<p>string <b>ListElement</b>(string list, int index1, int index2);
+<p>string <b>ListElement</b>(string list, int index1, int index2, int index3);<a NAME="ListJoin"></a></td>
+
+<td>This function is similar to the lindex function of Tcl.&nbsp; It will
+parse text formatted as a Tcl list and return the specified element.&nbsp;
+Arguments index2 and index3 may be used to indicate that parsing of the
+TclList should continue up to two additional levels as a nested list structure.
+If a specified index is out of bounds, an empty string is returned.&nbsp;
+Not all strings are valid Tcl lists.&nbsp; If an invalid list is parsed,
+the method call throws the FormatException.</td>
+</tr>
+
+<tr>
+<td>string <b>ListJoin</b>(string [] argv);<a NAME="ListSplit"></a></td>
+
+<td>Joins together strings as Tcl list elements forming a result string
+that is a Tcl list.&nbsp; Braces are added as needed to delimit empty elements,
+or to delimit special Tcl character sequences involving backslashes , square
+brackets, etc.&nbsp;</td>
+</tr>
+
+<tr>
+<td>string [] <b>ListSplit</b>(string list)<a NAME="Product"></a></td>
+
+<td>ListSplit( ) parses a string formatted as a Tcl list into an array
+of string elements.&nbsp; The function understands the Tcl usage of quotes,
+braces and backslash sequences.&nbsp; Not all strings are valid Tcl lists.&nbsp;
+If an invalid list is parsed, the method call throws the FormatException.&nbsp;
+Failure occurs when there are unmatched braces, unmatched quotes, or non-whitespace
+following braces or quotes.<a NAME="New"></a></td>
+</tr>
+
+<tr>
+<td>string <b>Product</b>()<a NAME="ReceiveList"></a></td>
+
+<td>The idea here is that if this API is implemented for another product,
+a different string should be returned in case the using software needs
+to know the difference. The Hume DMH software returns a two element list
+with "DMH" as the first element, and a Copyright message as the second
+element.</td>
+</tr>
+
+<tr>
+<td>string [] <b>ReceiveList</b>()<a NAME="Send"></a></td>
+
+<td>Returns a string array of the mailboxes you are listening for messages
+on.&nbsp; Does not show mailbox names that have in-progress event callbacks.&nbsp;
+This command is useful for debugging, and it is not used in a typical application.&nbsp;
+The result is an empty array when you are not connected.</td>
+</tr>
+
+<tr>
+<td>string <b>Send</b>(string destinationMailbox, string message);
+<p>string <b>Send</b>(string destinationMailbox, string message, string
+replyMailbox);
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Send a message to a mailbox, optionally with a reply mailbox indicated.&nbsp;&nbsp;
+By convention, when a reply mailbox is indicated for a command message
+sent to a Datahub mailbox or equipment interface mailbox, the command is
+processed, and a reply message is sent to the reply mailbox.&nbsp;
+<p>Specifying the reply mailbox as null, an empty string, or as the literal
+text "NULL" is equivalent to not specifying a reply mailbox.
+<p>Sending to the mailbox name "TRACE" sends the message to the DMH Server
+Trace Facility.
+<p>The dmh_send function corresponds to the Tcl mbx put and mbx putr commands.&nbsp;
+<p>See the <a href="#binsend">BinarySend()</a> method to send binary data.
+<p><a NAME="SendFlush"></a>Returns null on success, or an error message.&nbsp;
+You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>void <b>SendFlush</b>()</td>
+
+<td>When you send messages, the calls return immediately and the messages
+are queued for sending. Since TCP/IP is relatively fast, the messages are
+transferred into the network layer fairly quickly. If you want to block
+until all of the pending send data is written to&nbsp;<a NAME="ServerStatus"></a>the
+network layer, call this method.</td>
+</tr>
+
+<tr>
+<td>string <b>ServerStatus</b>()
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>Returns a string value formatted as a Tcl list containing the information
+presented in the Tcl DMH status window.&nbsp; The information can be parsed
+by the application to determine status information on every mailbox that
+is currently in use.&nbsp; This command is useful for debugging, and is
+not used for ordinary application logic.
+<p>The first element of the list is a list of 5 elements:
+<br>{ <i>hostname</i><b>:</b><i>port messages_received messages_sent messages_queued
+tcl_version </i>}
+<p>Subsequent elements in the list are lists of four or five elements:
+<br>{ <i>mailboxname count_in count_out count_pending </i>[<i>reader_handle</i>]
+}
+<p><a NAME="TimedReceive"></a>Additional elements may exist in the list
+if there are DMH clients that are not currently waiting to receive messages.&nbsp;
+These elements are formatted as:
+<br>{{{no whenmsg pending}} - - - <i>reader_clientID</i>}
+<p>You must be connected to use this call.</td>
+</tr>
+
+<tr>
+<td>string <b>TimedReceive</b>(string receiveMailbox, int timeoutSeconds)<a NAME="TimedBinaryReceive"></a>;</td>
+
+<td>Waits for a message to be received in the specified mailbox.&nbsp;
+If the call succeeds,&nbsp; the return value is the message data.&nbsp;
+If the call fails, the return value is the literal string "TIMEOUT".&nbsp;&nbsp;
+If you are not connected, the call fails immediately with the return value
+"TIMEOUT".&nbsp; Trace event information can be used to show the TIMEOUT
+cause.&nbsp; If the <i>TimeoutSeconds</i> argument is passed as 0, the
+<a href="#DefaultTimeout">DefaultTimeout</a>
+value is used.&nbsp;</td>
+</tr>
+
+<tr>
+<td>byte [] <b>TimedBinaryReceive</b>(string receiveMailbox, int timeoutSeconds);<a NAME="Version"></a></td>
+
+<td>Waits for a binary message to be received in the specified mailbox.&nbsp;
+If the call succeeds,&nbsp; the return value is the message data.&nbsp;
+If the call fails, the return value is null.&nbsp;&nbsp; If you are not
+connected, the call fails immediately with the return value of null.&nbsp;
+Trace event information can be used to show the failure cause.&nbsp; If
+the <i>TimeoutSeconds</i> argument is passed as 0, the <a href="#DefaultTimeout">DefaultTimeout</a>
+value is used.&nbsp;</td>
+</tr>
+
+<tr>
+<td>string <b>Version</b>()<a NAME="Whenever"></a></td>
+
+<td>Returns a string value formatted as a two element Tcl list consisting
+of the DMH protocol version, and the library component configuration management
+Id string. Current software returns the "1.1" to&nbsp; as the first element
+to indicate compatibility with DMH protocol version 1.1.</td>
+</tr>
+
+<tr>
+<td>string <b>Whenever</b>(string receiveMailbox)
+<p>string <b>Whenever</b>(string receiveMailbox, object clientData)
+<br><a NAME="Whenmsg"></a></td>
+
+<td>Registers to receive all messages directed to the specified mailbox.&nbsp;
+When a message is received, a <b>Whenmsg</b> event occurs.&nbsp; When the
+event handling callback returns, the software re-arms for receiving the
+next message directed to the specified mailbox.&nbsp; The Disarm( ) function
+can be used to stop receiving.&nbsp;
+<p>You can optionally specify the clientData argument to be saved and passed&nbsp;
+to your event handler at the time a message arrives.&nbsp; A typical use
+would be to&nbsp; pass a reference to an object.&nbsp;
+<p>Returns null on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>string <b>Whennext</b>(string receiveMailbox);
+<p>string <b>Whennext</b>(string receiveMailbox, object clientData);
+<br><a NAME="WhenmsgAgain"></a></td>
+
+<td>Register for receiving the next available message directed to the specified
+mailbox.&nbsp; When a message is received, a <b>Whenmsg</b> event occurs.&nbsp;
+Calling WhenmsgAgain( ) in the event handling code re-arms the receive
+registration for the next message.
+<p>You can optionally specify the clientData argument to be saved and passed&nbsp;
+to your callback at the time a message arrives.&nbsp; A typical use would
+be to pass a reference to an object.&nbsp;
+<p>Note - this method would have been named Whenmsg() to preserve the correspondence
+with other DMH software, except that the Whenmsg name is being used as
+the event type name.&nbsp;
+<p>Returns null on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+
+<tr>
+<td>string <b>WhenmsgAgain</b>()</td>
+
+<td>The Whennext( ) function functions as a one-shot.&nbsp; In other words,
+receiving is stopped after receiving one message.&nbsp; Calling the WhenmsgAgain()
+function from the receive handler re-registers to receive the next message.
+<p>Returns null on success, or an error message.&nbsp; You must be connected
+to use this call.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%"><a NAME="LicenseTerms"></a>
+<h2>
+License Terms</h2>
+Subject to Change Without Notice
+<p>The Hume .NET client software is licensed for development and runtime
+use at no additional charge for computers that are licensed for development
+use of the Hume Integration Datahub SDK.&nbsp; We ask that developers install
+the Tcl executables and actively use the Tcl executables for testing and
+development, instead of developing against production servers.&nbsp; Also,
+we ask that developers install the Tcl online documentation and use it
+to supplement the material presented in this document.
+<p>Hume Integration is also pleased to offer separate runtime licenses
+for using the .NET Client software on systems that are not licensed as
+development systems.&nbsp; In other words, runtime usage of the .NET Client
+software is licensed separately from the Datahub SDK runtime license.
+<p>
+<hr WIDTH="100%">
+<h2>
+<a NAME="DocVersion"></a>Document Version</h2>
+Date of last revision: $Date: 2004/09/06 20:08:44 $
+</body>
+</html>

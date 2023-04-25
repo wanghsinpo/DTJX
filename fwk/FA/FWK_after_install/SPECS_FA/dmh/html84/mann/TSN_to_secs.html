@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="TSN_to_secs_tcl_"></A>
+<TITLE>TSN_to_secs Tcl Built-In Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ TSN_to_secs - Translate from Tcl SECS Notation  <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh::TSN_to_secs</B> <I>TSN</I> <P>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command translates a TSN (Tcl SECS Notation) representation of a SECS-II message  into a list of integer codes that represent its binary byte sequence. The <B>TSN_to_secs</B> command can be used to verify the proper syntax of a TSN (Tcl SECS Notation) representation.  The command will return an  error condition and a diagnostic message for invalid SECS-II input. The integer codes are output in hexadecimal 0x notation.   <P>
+This command is used internally by the <B><a href="../mann/secsport.html">hsms</a></B> and <B><a href="../mann/secsport.html">secsport</a></B> commands. <P>
+Examples: <PRE>% TSN_to_secs L
+0x01 0x00
+<P>
+% TSN_to_secs {L {A "Lam 20"}}
+0x01 0x01 0x41 0x06 0x4c 0x61 0x6d 0x20 0x32 0x30 <P>
+% TSN_to_secs {I2 33 "" 44}
+SECS-II cannot have a blank item in an array; item 2 of 3 <P>
+</PRE>
+<P>
+SECS is an acronym for Semiconductor Equipment Communication Standard. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <P>
+<a href="../mann/Tcl.html">Tcl</a> <a href="../mann/TSN.html">TSN</a> <a href="../mann/secsport.html">hsms</a> <a href="../mann/secs_to_TSN.html">secs_to_TSN</a> <a href="../mann/secsport.html">secsport</a>  <P>
+<P>
+<H2>AUTHOR</H2>
+ Ed Hume, Hume Integration Software, Austin, TX <P>
+<H2>KEYWORDS</H2>
+ SECS TSN SEMI HSMS 
+</BODY>
+</HTML>

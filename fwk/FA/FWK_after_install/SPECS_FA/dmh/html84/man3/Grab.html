@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_Grab_Tk_"></A>
+<TITLE>Tk_Grab Tk Library Procedures</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_Grab, Tk_Ungrab - manipulate grab state in an application <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+int
+<B>Tk_Grab</B>(<I>interp, tkwin, grabGlobal</I>)
+<P>
+void
+<B>Tk_Ungrab</B>(<I>tkwin</I>)
+<P>
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter to use for error reporting
+<P><DT><B>Tk_Window <I>tkwin</I></B> (in)
+<DD>Window on whose behalf the pointer is to be grabbed or released
+<P><DT><B>int <I>grabGlobal</I></B> (in)
+<DD>Boolean indicating whether the grab is global or application local
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+These functions are used to set or release a global or
+application local grab.  When a grab is set on a particular window
+in a Tk application, mouse and keyboard events can only be received by
+that window and its descendants.  Mouse and keyboard events for
+windows outside the tree rooted at <I>tkwin</I> will be redirected to
+<I>tkwin</I>.  If the grab is global, then all mouse and keyboard
+events for windows outside the tree rooted at <I>tkwin</I> (even those
+intended for windows in other applications) will be redirected to
+<I>tkwin</I>.  If the grab is application local, only mouse and
+keyboard events intended for a windows within the same application
+(but outside the tree rooted at <I>tkwin</I>) will be redirected.
+<P>
+<P>
+<B>Tk_Grab</B> sets a grab on a particular window.  <I>Tkwin</I>
+specifies the window on whose behalf the pointer is to be grabbed.
+<I>GrabGlobal</I> indicates whether the grab should be global or
+application local; if it is non-zero, it means the grab should be
+global.  Normally, <B>Tk_Grab</B> returns TCL_OK; if an error occurs
+and the grab cannot be set, TCL_ERROR is returned and an error message
+is left if <I>interp</I>'s result.  Once this call completes
+successfully, no window outside the tree rooted at <I>tkwin</I> will
+receive pointer- or keyboard-related events until the next call to
+Tk_Ungrab.  If a previous grab was in effect within the application,
+then it is replaced with a new one.
+<P>
+<P>
+<B>Tcl_Ungrab</B> releases a grab on the mouse pointer and keyboard, if
+there is one set on the window given by <I>tkwin</I>.  Once a grab is
+released, pointer and keyboard events will start being delivered to
+other windows again.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+grab, window
+
+</BODY>
+</HTML>

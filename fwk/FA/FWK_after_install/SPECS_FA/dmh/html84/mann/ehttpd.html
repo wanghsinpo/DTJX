@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>ehttpd Humelib [incr Tcl] class</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ ehttpd - An [incr Tcl] class for an HTTP server.
+<P>
+<H2>SYNOPSIS</H2>
+<B>package require Humelib</B><BR>
+<b>ehttpd <i>server_object</i> [-<i>option_name</i> <i>option_value</i>]*</b>
+<br><b><i>server_object</i>&nbsp; Disable</b>
+<br><b><i>server_object</i>&nbsp; Init</b>
+<br><b><i>server_object</i>&nbsp; ReturnData <i>socket content_type content</i> [<i>code</i> [<i>close</i>]]</b>
+<br><b><i>server_object</i>&nbsp; UrlHandlerClear <i>cmd</i></b>
+<br><b><i>server_object</i>&nbsp; UrlHandlerSet <i>document cmd</i></b>
+<br><b><i>server_object</i>&nbsp; UrlHandlerUnSet <i>document</i> [<i>cmd</i>]</b>
+<HR>
+<H2>INHERITANCE</H2>
+ None
+<H2>OPTIONS (PUBLIC VARIABLES)</H2>
+<P>
+Command-Line Switch: <B>-bufsize</B> 
+Default value:	<B>32768</B>
+<DD>You can optionally override the amount of buffer memory allocated for each
+client socket connection.
+<P>
+Command-Line Switch: <B>-httpd_addr</B> 
+Default value:	<B>{}</B>
+<DD>You can optionally specify which network interface should be served either
+as a TCP/IP hostname or as an IP address.  Use this
+option to specify the desired interface when you have more than one TCP/IP
+network address, or you want to restrict the serving to your own system by
+specifying <b>localhost</b>.
+The default behavior is operating system dependent but usually makes the server
+visible on the first TCP/IP network interface and on the localhost interface.
+For some operating systems, the served port is reachable on all network interfaces.
+<P>
+Command-Line Switch: <B>-httpd_default</B> 
+Default value:	<B>index.html</B>
+<DD>The default value for a document to be served if the client URL specifies
+a directory.
+<P>
+Command-Line Switch: <B>-httpd_port</B> 
+Default value:	<B>80</B>
+<DD>The value of the socket port to be served.  The value 80 is the default
+for the HTTP protocol.  A particular port can be used
+by only one server at a time.  In other words, unique port values need to be
+assigned to every TCP/IP socket server on a computer system.  There is no
+problem having multiple instances of servers running as long as they serve unique ports.
+Application software is usually assigned port values greater than
+1024 to avoid conflicts with system software.  It is recommended that values greater
+than 5000 be used after examining the /etc/services file or reviewing the output 
+of the <b>netstat</b> command for possible conflicts.
+<P>
+Command-Line Switch: <B>-httpd_root</B> 
+Default value:	<B>/usr/local/html84</B>
+<DD>The root file system directory for the webserver.  
+<P>
+Command-Line Switch: <B>-Servername</B> 
+Default value:	<B>Hume eDiagnostics/EDA web server</B>
+<DD>The servername value is one of the items appearing in the
+HTTP header data.
+<P>
+Command-Line Switch: <B>-maxtime</B> 
+Default value:	<B>600000</B>
+<DD>The value is a time interval specified in milliseconds.
+If a client connection is not used for this period, the connection is
+closed.
+<P>
+Command-Line Switch: <B>-TRACE</B> 
+Default value:	<B>0</B>
+<DD>This integer value is used as a bitfield to control the evaluation of the
+<B>-tracecmd</B> option value.  The table below shows the bit values as hexadecimal 
+integers, and the corresponding information provided if the bit is set.<dl>
+<DT>0x0001
+<DD>status messages
+<DT>0x0100
+<DD>Received HTTP header data
+<DT>0x0800
+<DD>Received HTTP query data
+<DT>0x1000
+<DD>Sent HTTP header data
+<DT>0x8000
+<DD>Sent HTTP content data
+</dl>
+<P>
+Command-Line Switch: <B>-tracecmd</B> 
+Default value:	<B>{}</B>
+<DD>The software has the capability to execute user-defined code
+in order to trace the data being exchanged or to receive status information.  
+See the <B>-TRACE</B> option above for a description of the bitfield values 
+that control the <I>tracecmd</I> evaluation.  
+The <I>tracecmd</I> is concatenated with three arguments during evaluation, 
+(1) the name of the array holding state information for the particular client connection
+(2) the pertinent TRACE bit value, and 
+(3) the data that was read or written or a status message.  
+For served files, the file content is not passed during <i>tracecmd</i> evaluation.
+Instead, a summary message giving the number of bytes passed is passed if
+bit value <b>1</b> is set.
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>ehttpd</B> command creates 
+a new [incr&nbsp;Tcl] object whose name is <I>server_object</I>.  As with all [incr&nbsp;Tcl]
+objects, the above options can be modified at any time using the <b>configure</b> 
+method, and the object can be destroyed using <b>::itcl::delete object <i>server_object</i></b>.
+When first created, the object does not attempt to go online.  The <B>Init</B> method is
+used to go online and begin functioning or resume functioning as an HTTP server.  
+The <B>Disable</b> method can be used to shutdown the server interface.  
+The <B>UrlHandlerSet</B> method is used to register code that is executed to provide the
+server's response for a particular URL.  Your handler code can call the 
+<b>ReturnData</b> method in order to send data of your specified mime type as the 
+content of the requested URL.  This mechanism is used by the Hume SEMI Interface A
+software to implement XML/SOAP messaging.
+<P>
+
+<H2>CLASS METHODS</H2>
+
+<DT><B><I>server_object</I> Disable</b>
+<DD>Disables communication by closing all client socket connections 
+and closing the server socket.  Reclaims the memory being used to
+manage client connections.
+<P>
+<DT><B><I>server_object</I> Init</b>
+<DD>Initates or resumes communication by opening the server socket
+and accepting clients.  The successful return value is the served port.
+If the call is not successful, for example if another process is already
+using the port, a Tcl error results.
+<P>
+<DT><B><I>server_object</I> ReturnData <i>socket content_type content</i> [<i>code</i> [<i>close</i>]]</b>
+<DD>When the UrlHandler* methods are used, this method is called by handler code
+to specify the reply data sent to the client in response to his request.  The <i>socket</i>
+value is known by the handler as the (sock) state array element.  The <i>content_type</i>
+argument is any mime content type such as "text/xml; charset=utf-8" or "text/plain".
+The <i>content</i> argument can be an empty string if there is no content, otherwise
+it is the reply data sent to the client.  The <b>ReturnData</b> method works fine for text.  
+If binary information needs to be sent, the techniques used by the ehttpd software to serve
+binary image files can be imitated.  The optional <i>code</i> argument is the HTTP
+return code which defaults to the usual 200 success value.  The optional <i>close</i>
+argument can be set to 1 to indicate that the client connection is to be closed after the
+reply is sent.  For example, this argument might be set if the client's request was not proper.
+<P>
+<DT><b><i>server_object</i>&nbsp; UrlHandlerClear <i>cmd</i></b>
+<DD>This method is used to remove any registered handlers having the specified callback code.
+<P>
+<DT><b><i>server_object</i>&nbsp; UrlHandlerSet <i>document cmd</i></b>
+<DD>This method is used to register an external command which is executed to reply
+to a particular &quot;document&quot; request.  The <i>document</i> value does not
+need to exist as a real file, it just has to be a valid document name.  Mapping of
+%nn character codes and directory references such as /./ or // is handled the same as for real
+documents. In other words, a handler registered for the document <b>EDA.xml</b> is also
+used for client requests for equivalent forms such as <b>/EDA.xml</b> or <b>/./EDA.xml</b>.
+The handler code is evaluated after two arguments are appended, (1) the document name, and
+(2) the name of the array containing state information for the client connection.  The array
+name is fully namespace qualified; its starts with "::" and can be used without a global
+or namespace declaration.  Within the array, the element (sock) specifies the client socket connection,
+and the element (postdata) specifies the client query data.  See the example in the next
+section of using the UrlHanderSet method with an [incr Tcl] object.
+<P>
+<DT><b><i>server_object</i>&nbsp; UrlHandlerUnSet <i>document</i> [<i>cmd</i>]</b>
+<DD>This method is used to remove a handler that has been registered for a particular document.
+<P>
+
+<H2>EXAMPLE</H2>
+<PRE>
+package require Itcl
+package require Humelib
+::itcl::class edx {
+  variable the_server
+  public method httpd_respond {url cache} {
+    # $cache is ::ehttp::data$sock
+    upvar $cache data
+    puts "eda::httpd_respond: $cache"
+    if { [info exists data(postdata)] } {
+        puts "POST data=$data(postdata)"
+        }
+    # parse, process data
+    # reply 
+    set type "text/plain"
+    set content "&lt;HTML>&lt;HEAD>&lt;/HEAD>&lt;BODY>hello world&lt;/BODY>&lt;/HTML>"
+    $the_server ReturnData $data(sock) $type $content
+    }
+  constructor {} {
+     set the_server ::e0
+     ehttpd $the_server -httpd_port 8024
+     $the_server UrlHandlerSet hello.html [list $this httpd_respond]
+     $the_server Init
+     }
+   destructor {
+       ::itcl::delete object $the_server
+       }
+   }
+edx #auto
+
+</PRE>
+
+<H2>AUTHOR</H2>
+Hume Integration Software, www.hume.com
+
+<H2>KEYWORDS  </H2>
+HTTP, HTTPD, web server, HTML
+</BODY>
+</HTML>

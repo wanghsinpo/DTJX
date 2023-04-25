@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="console_Tk_8_4"></A>
+<TITLE>console Tk Built-In Commands 8.4</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ console - Control the console on systems without a real console <P>
+<H2>SYNOPSIS</H2>
+ <B>console title </B>?<I>string</I>? <P>
+<B>console hide</B> <P>
+<B>console show</B> <P>
+<B>console eval <I>script</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The console window is a replacement for a real console to allow input and output on the standard I/O channels on platforms that do not have a real console.  It is implemented as a separate interpreter with the Tk toolkit loaded, and control over this interpreter is given through the <B>console</B> command.  The behaviour of the console window is defined mainly through the contents of the <I>console.tcl</I> file in the Tk library (or the <I>Console</I> resource on Macintosh systems.) <P>
+
+<DT><B>console eval <I>script</B></I>
+<DD>Evaluate the <I>script</I> argument as a Tcl script in the console interpreter.  The normal interpreter is accessed through the <B>consoleinterp</B> command in the console interpreter. 
+<DT><B>console hide</B>
+<DD>Hide the console window from view.  Precisely equivalent to withdrawing the <B>.</B> window in the console interpreter. 
+<DT><B>console show</B>
+<DD>Display the console window.  Precisely equivalent to deiconifying the <B>.</B> window in the console interpreter. 
+<DT><B>console title </B>?<I>string</I>?
+<DD>Query or modify the title of the console window.  If <I>string</I> is not specified, queries the title of the console window, and sets the title of the console window to <I>string</I> otherwise.  Precisely equivalent to using the <B>wm title</B> command in the console interpreter. <P>
+<P>
+<H2>ACCESS TO THE MAIN INTERPRETER</H2>
+ <P>
+The <B>consoleinterp</B> command in the console interpreter allows scripts to be evaluated in the main interpreter.  It supports two subcommands: <B>eval</B> and <B>record</B>. <P>
+
+<DT><B>consoleinterp eval <I>script</B></I>
+<DD>Evaluates <I>script</I> as a Tcl script at the global level in the main interpreter. 
+<DT><B>consoleinterp record <I>script</B></I>
+<DD>Records and evaluates <I>script</I> as a Tcl script at the global level in the main interpreter as if <I>script</I> had been typed in at the console. <P>
+<P>
+<H2>ADDITIONAL TRAP CALLS</H2>
+ <P>
+There are several additional commands in the console interpreter that are called in response to activity in the main interpreter. <I>These are documented here for completeness only; they form part of the internal implementation of the console and are likely to change or be modified without warning.</I> <P>
+Output to the console from the main interpreter via the stdout and stderr channels is handled by invoking the <B>tk::ConsoleOutput</B> command in the console interpreter with two arguments.  The first argument is the name of the channel being written to, and the second argument is the string being written to the channel (after encoding and end-of-line translation processing has been performed.) <P>
+When the <B>.</B> window of the main interpreter is destroyed, the <B>tk::ConsoleExit</B> command in the console interpreter is called (assuming the console interpreter has not already been deleted itself, that is.) <P>
+<P>
+<H2>DEFAULT BINDINGS</H2>
+ <P>
+The default script creates a console window (implemented using a text widget) that has the following behaviour: 
+<DT>[1]
+<DD>Pressing the tab key inserts a TAB character (as defined by the Tcl \t escape.) 
+<DT>[2]
+<DD>Pressing the return key causes the current line (if complete by the rules of <B>info complete</B>) to be passed to the main interpreter for evaluation. 
+<DT>[3]
+<DD>Pressing the delete key deletes the selected text (if any text is selected) or the character to the right of the cursor (if not at the end of the line.) 
+<DT>[4]
+<DD>Pressing the backspace key deletes the selected text (if any text is selected) or the character to the left of the cursor (of not at the start of the line.) 
+<DT>[5]
+<DD>Pressing either Control+A or the home key causes the cursor to go to the start of the line (but after the prompt, if a prompt is present on the line.) 
+<DT>[6]
+<DD>Pressing either Control+E or the end key causes the cursor to go to the end of the line. 
+<DT>[7]
+<DD>Pressing either Control+P or the up key causes the previous entry in the command history to be selected. 
+<DT>[8]
+<DD>Pressing either Control+N or the down key causes the next entry in the command history to be selected. 
+<DT>[9]
+<DD>Pressing either Control+B or the left key causes the cursor to move one character backward as long as the cursor is not at the prompt. 
+<DT>[10]
+<DD>Pressing either Control+F or the right key causes the cursor to move one character forward. 
+<DT>[11]
+<DD>Pressing F9 rebuilds the console window by destroying all its children and reloading the Tcl script that defined the console's behaviour. <P>
+Most other behaviour is the same as a conventional text widget except for the way that the <I>&lt;&lt;Cut&gt;&gt;</I> event is handled identically to the <I>&lt;&lt;Copy&gt;&gt;</I> event. <P>
+<P>
+<H2>KEYWORDS</H2>
+ console, interpreter, window, interactive, output channels <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/destroy.html">destroy</a>, <a href="../mann/fconfigure.html">fconfigure</a>, <a href="../mann/history.html">history</a>, <a href="../mann/interp.html">interp</a>, <a href="../mann/puts.html">puts</a>, <a href="../mann/text.html">text</a>, <a href="../mann/wm.html">wm</a> 
+</BODY>
+</HTML>

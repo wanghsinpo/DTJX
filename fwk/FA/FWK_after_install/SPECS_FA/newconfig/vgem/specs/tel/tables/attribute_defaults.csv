@@ -1,0 +1,55 @@
+attribute_defaults,,,,,,,,,
+objType,attributeName,defaultValue,attributeMethod,datatype,order,description,dataLength,hostAccess,public
+Carrier,Capacity,25,,U1,2,Maximum number of sustrates in carrier.,,0,1
+Carrier,CarrierAccessingStatus,1,,U1,5,The current accessing state of the carrier by the equipment.,,0,1
+Carrier,CarrierIDStatus,1,,U1,4,Current state of the carrier ID verificaiton.,,0,1
+Carrier,ContentMap,,,L,6,List of lot and substrate identifiers corresponding to slot 1-n.,,0,1
+Carrier,LocationID,,,A,7,Identifier of current location.,,0,1
+Carrier,ObjID,,,A,1,Object identifier (carrier ID).,,0,1
+Carrier,PortID,,,A,11,,,0,1
+Carrier,SlotMap,,,L,8,List of slot status as provided by the host until a succesfulslot map read-then as read by the equipment.,,0,1
+Carrier,SlotMapStatus,1,,U1,9,Current state of the slot map verificaiton.,,0,1
+Carrier,SubstrateCount,0,,U1,3,The number of substrates currently in the carrier.,,0,1
+Carrier,Usage,,,A,10,"The type of material contained in the carrier (I.e., TEST; DUMMY; PRODUCT; FILLER; etc).",,0,1
+Carrier,ObjType,Carrier,,A,0,Object type=CARRIER.,,0,1
+ControlJob,ObjType,ControlJob,,A,0,Object type=ControlJob,,0,1
+ControlJob,ObjID,,,A,1,Object identifier,,0,1
+ControlJob,CurrentPRJob,,,L,2,Holds the identifiers for any currently running process jobs,,0,1
+ControlJob,DataCollectionPlan,,,A,3,Identifier for a data collection plan to be used during execution of the control job,,1,1
+ControlJob,CarrierInputSpec,,,L,4,A list of carrierID for material that will be used by the ControlJob. An empty list is allowed,,1,1
+ControlJob,MtrlOutSpec,,,L,5,Maps material from source to destination after processing,,1,1
+ControlJob,MtrlOutByStatus,,,L,6,List structure which maps locations or Carriers where processed material will be placed based on material status,,1,1
+ControlJob,PauseEvent,,,L,7,Identifier of a list of events on which the Control Job shall PAUSE,,1,1
+ControlJob,ProcessingCtrlSpec,,,L,8,A list of structures that defines the process jobs and rules for running each that will be run within this ControlJob,,1,1
+ControlJob,ProcessOrderMgmt,,,U1,9,Define the method for the order in which process jobs are initiated,,1,1
+ControlJob,StartMethod,FALSE,,TF,10,A logical flag that determines if the ControlJob can start automatically,,0,1
+ControlJob,State,0,,U1,11,The current enumeration state of the ControlJob ,,0,1
+ControlJob,StateName,QUEUED,,A,12,The current state name of the ControlJob,,0,0
+ControlJob,Action,,,A,13,Holds the action to be performed (REMOVEJOBS or SAVEJOBS) in the event of an ABORT or STOP,,0,0
+ControlJob,PRJobStatusList,,,L,14,State of process jobs defined in the ControlJob,,0,1
+PROCESSJOB,ObjID,,,A,1,Object identifier,,0,1
+PROCESSJOB,ObjType,PROCESSJOB,,A,2,Object type=PROCESSJOB,,0,1
+PROCESSJOB,PauseEvent,,,L,3,List of event identifiers that cause the equipment to automatically transition to the PAUSING/PAUSED states when one of the listed events is triggered.,,0,1
+PROCESSJOB,PRJobState,1,,U1,4,The current process job state enumeration,,0,1
+PROCESSJOB,PRJobStateName,QUEUED/POOLED,,A,5,The current process job state name,,0,0
+PROCESSJOB,PRMtlNameList,,,L,6,job state model in Figure 3.,,0,1
+PROCESSJOB,PRMtlType,13,,B,7,MF13 = quantities in carriers,,0,1
+PROCESSJOB,PRProcessStart,FALSE,,TF,8,TRUE=Automatic Start FALSE=Manual Start,,0,1
+PROCESSJOB,PRRecipeMethod,1,,U1,9,1=Recipe only 2=Recipe with VariableTuning,,0,1
+PROCESSJOB,RecID,,,A,10,Identifier of the recipe applied.,,0,1
+PROCESSJOB,RecVariableList,,,L,11,List of variables supporting a recipe method.,,0,1
+PROCESSJOB,ResumeToState,,,A,12,E40 state where process job was placed in paused.,,0,0
+Qobject,ObjID,,,A,1,Object ID of the queue,,0,1
+Qobject,ObjType,Qobject,,A,2,Qobject,,0,1
+Qobject,Qlist,,,L,3,The list of actual objects,,0,1
+Qobject,Qtype,,,A,4,Type of objects being stored in this queue,,0,1
+TS-Clock,ObjType,TS-Clock,,A,0,Object type=TS-Clock.,,0,1
+TS-Clock,ObjID,TS-Clock,,A,1,Object identifier.,,0,1
+TS-Clock,DateTime,,,A,2,Current date/time.,,0,1
+TS-Clock,UseTimeSync,,,TF,3,Enable/Disable network time synchronization.,,1,1
+TS-Clock,Offset,,,F4,4,Total offset to the time synchronization reference clock.,,0,1
+TS-Clock,TimeServers,,,L,5,Time servers IP addresses.,,1,1
+TS-Clock,TimeSyncInterval,,,U4,6,Synchronization interval.,,0,1
+TS-Clock,LastSyncTime,,,A,7,This is the time when the equipment clock was last synchronized.,,0,1
+TS-Clock,LastSyncTimeServer,,,A,8,IP address of time server used to synchronize last.,,0,1
+TS-Clock,Status,,,U4,9,The NTP system status word.,,0,1

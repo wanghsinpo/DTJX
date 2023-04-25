@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_GetRootCoords_Tk_"></A>
+<TITLE>Tk_GetRootCoords Tk Library Procedures</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_GetRootCoords - Compute root-window coordinates of window <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+<B>Tk_GetRootCoords</B>(<I>tkwin, xPtr, yPtr</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tk_Window <I>tkwin</I></B> (in)
+<DD>Token for window.
+<P><DT><B>int <I>*xPtr</I></B> (out)
+<DD>Pointer to location in which to store root-window x-coordinate
+corresponding to left edge of <I>tkwin</I>'s border.
+<P><DT><B>int <I>*yPtr</I></B> (out)
+<DD>Pointer to location in which to store root-window y-coordinate
+corresponding to top edge of <I>tkwin</I>'s border.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+This procedure scans through the structural information maintained
+by Tk to compute the root-window coordinates corresponding to
+the upper-left corner of <I>tkwin</I>'s border.  If <I>tkwin</I> has
+no border, then <B>Tk_GetRootCoords</B> returns the root-window
+coordinates corresponding to location (0,0) in <I>tkwin</I>.
+<B>Tk_GetRootCoords</B> is relatively efficient, since it doesn't have to
+communicate with the X server.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+coordinates, root window
+
+</BODY>
+</HTML>

@@ -1,0 +1,5 @@
+#NO	PRODUCT	LEVEL	TCO	Limit File	DIE Label	DIE Type	MOD Label	USER1	USER2	USER3	USER4	USER5	USER6	USER7	USER8	USER9	USER10	USER11	USER12	USER13	USER14	USER15	USER16	USER17	USER18	USER19	USER20	USER21	USER22	USER23	USER24
+0001	clock1	1			A																										
+0002	clock1	2			A,B																										
+0003	clock1	3			A,B,C																										
+0004	clock1	4			A,B,C,D																										

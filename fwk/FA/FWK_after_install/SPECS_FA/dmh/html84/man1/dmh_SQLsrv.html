@@ -1,0 +1,1264 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.5 [en] (WinNT; I) [Netscape]">
+   <meta name="Author" content="Ed Hume">
+   <title>SQL Database Server for the DMH</title>
+</head>
+<body>
+
+<hr>
+<h2>
+<a NAME="dmh_SQLsrv_"></a>NAME</h2>
+dmh_SQLsrv - Persistent SQL Database Server for the DMH
+<p>dmh84_SQLsrv - Version specific name of dmh_SQLsrv
+<p>dmh84_sql_tcl - POSIX executable with Oracle code used by the dmh_SQLsrv
+<p>
+<hr WIDTH="100%">
+<h2>
+SYNOPSIS</h2>
+<b>dmh_SQLsrv </b>is a Tcl application script that connects to persistent
+databases such as provided by Oracle and Microsoft on the Windows NT and
+POSIX (Unix) platforms.&nbsp; The dmh_SQLsrv application provides a Graphical
+User Interface to display and manipulate SQL (Structured Query Language)
+table data.&nbsp; Also, the dmh_SQLsrv application provides for receiving
+SQL command messages when using the <a href="../mann/mbx.html">DMH</a>
+message system, which makes it easy to integrate persistent relational
+databases into a distributed application.
+<p>The dmh_SQLsrv is designed to provide compatibilty with older CIM applications
+that existed before Hume Integration developed the Tcl <a href="datahub.html#SQL_commands">SQL</a>
+command for managing in-memory SQL tables in any Tcl process.&nbsp;&nbsp;
+When the dmh_SQLsrv application is used, the Tcl SQL command is replaced
+with a compatible one that executes SQL statements against the persistent
+database.&nbsp; In other words, in the dmh_SQLsrv application process,
+you cannot use in-memory SQL tables.&nbsp; If you wish to access persistent
+database tables and in-memory tables in the same process, do not use the
+dmh_SQLsrv application; just code directly to the
+<a href="../mann/odbc.html">odbc</a>
+command interface.
+<p>The dmh_SQLsrv application has been designed for robust message-based
+distributed applications where the queuing features of the underlying message
+system handle peaks in data production that would cause an RPC interface
+to have performance bottlenecks, or fail.
+<br>
+<hr WIDTH="100%">
+<h2>
+COMPATIBILITY NOTES</h2>
+The dmh_SQLsrv application provides compatibility with earlier SEMATECH
+Generic Server based applications without using any of the SEMATECH software.&nbsp;
+There are some changes from the SEMATECH versions:
+<ol>
+<li>
+The order of the connect command arguments has become "connect <i>database
+user password</i>" in order to be consistent with the odbc command.&nbsp;
+The database name can be passed as an empty string for the cases where
+it is implicit from the environment or <i>user</i> argument.</li>
+
+<li>
+The SEMATECH version provided console interaction until the EOF command
+was issued.&nbsp; This version does not provide equivalent console interaction.&nbsp;
+A developer can have similar interaction using a Tk provided window for
+SQL commands.&nbsp; When running in background, the <a href="dmh_inspect.html">inspect</a> application
+can be used to inspect the command mailbox of the process.</li>
+
+<li>
+The dmh_SQLsrv creates and uses an odbc command connection with the name
+of "sq1" (that is a one not the letter el).&nbsp; The "sq1" odbc connection
+can be used by the developer as a vendor independent way to query schema
+information.</li>
+</ol>
+
+<hr WIDTH="100%">
+<br><a NAME="concepts"></a>
+<h2>
+CONCEPTS</h2>
+The <b>dmh_SQLsrv</b> application leverages the Hume provided&nbsp; <a href="../mann/odbc.html">odbc</a>&nbsp;
+Tcl command to manage a database connection.&nbsp; When running on Windows
+NT, the odbc command uses the Windows Open Database Connectivity (ODBC)
+programming interface and it can be used with any commercial database supporting
+ODBC without recompiling or change.&nbsp;&nbsp; The POSIX version is currently
+available only for Oracle because it must be compiled using vendor specific
+coding to provide the equivalent&nbsp; functionality.
+<p>When used as part of a DMH-connected distributed application, the server
+reads command messages from a message system mailbox.&nbsp; The format
+of the command and reply messages are closely compatible with those used
+by the
+<a href="datahub.html">Hume Datahub</a>. In part, the message
+formats provide compatibility with older applications that were designed
+for a non-Tcl environment.&nbsp; The command messages are ASCII text; usually
+structured query language (SQL) statements. The dmh_SQLsrv, acting as a
+persistent database server, sends reply messages from the database to the
+reply mailbox associated with the command message. These reply messages
+are also ASCII text, and their format is presented in this document. All
+of the usual data manipulation language commands of SQL are fully supported
+- queries (select), insert, update, delete, etc. Also, full support is
+provided for other SQL statements such as commit, rollback, grant, create,
+drop, alter, etc. The dmh_SQLsrv accepts and processes certain statements
+that are not standard SQL, which allow the clients to access the Tcl commands
+and features of the dmh_SQLsrv.&nbsp;&nbsp; For example, a client uses
+the connect subcommand to connect to a specific database.
+<p>The dmh_SQLsrv application creates its own version of the Tcl <a href="#SQL">SQL</a>
+command, and uses a single odbc connection command named "sq1".&nbsp; Like
+the Datahub, the dmh_SQLsrv has a small set of data items that are assigned
+values using the SQL <a href="#SET">set</a> command or queried using the
+SQL <a href="#QUERY">query</a> command. These data parameters are used
+to configure specific aspects of the server's behavior and are described
+under the SQL set command.
+<p>The GROUP parameter specifies the DMH message group name that the server
+will use when initializing DMH message communication. The value defaults
+to "mbx". The SERVER parameter specifies the mailbox name that the server
+will use to receive SQL message commands from the DMH messaging system.
+The value of the SERVER parameter defaults to "ENGDB". The SQL EOF command
+is used to initialize message system communication. Once message communication
+has been initialized, the values of the SERVER and GROUP parameters cannot
+be changed. It is typical to specify these parameters, and to initialize
+DMH message communication on the server's command line.&nbsp;&nbsp; It
+is also typical to establish the connection to the persistent database
+on the command line.&nbsp; A typical startup might&nbsp; look like:
+<p>dmh_SQLsrv&nbsp; "set group=apc" "connect cim5 scott tiger"&nbsp; eof
+&amp;
+<p>The example startup attempts to join the DMH message group "apc".&nbsp;
+A datahub or other DMH server application would need to be started beforehand
+for the connection to succeed.
+<p>The dmh_SQLsrv is designed to connect to one database at a time. Multiple
+instances of the server can be executed to simultaneously connect to multiple
+databases.
+<p>The server can be dynamically disconnected
+from a database and connected to another one, or reconnected to a previous
+one. These actions are supported by the commands <a href="#connect">connect
+</a>and
+<a href="#disconnect">disconnect</a>.
+<p>The <a href="#EXIT">exit</a> command or the act of killing the server
+implicitly causes the disconnect action to occur.
+<p><a NAME="commit_disc"></a>The server fully supports <b>commit</b> and
+<b>rollback</b>.
+The application can send the server a set of SQL statements expressing
+a logical transaction in one or more physical transactions. Upon success
+of the entire set of physical transactions, the application can send the
+<b>commit</b>
+command to make the changes permanent. The <b>rollback</b> command reverts
+the database to the condition it was at the last commit.
+<p>If commits are not issued from the application, and the server process
+terminates abnormally, data changes will be lost. However, the server does
+support an automatic commit feature. When the parameter <b>auto_commit</b>
+is set to non-zero (true), a <b>commit</b> is executed following each SQL
+statement that is not a <b>rollback</b>, or a <b>commit</b> statement.
+By default the <b>auto_commit</b> parameter is set to 1 (true) and each
+statement is committed as executed.
+<p>The server process establishes a single database session for all of
+its clients. It is the application's responsibility to coordinate use of
+the server by multiple clients which could confound multiple logical transactions
+by interleaving messages. It is possible to execute multiple instances
+of the server connected to the same database in order to provide separate
+database sessions and avoid any possible physical interleaving of logical
+transactions.&nbsp;&nbsp; Physical interleaving can also be avoided by
+sending more than one SQL statement in a Tcl message using the eval command,
+or executing a Tcl procedure in the dmh_SQLsrv which executes
+<br>multiple SQL statements.
+<p>To begin work with a database, use the <a href="#connect">connect</a>
+command.&nbsp;&nbsp; Usually this is done on the command line.&nbsp; On
+Windows, you can use the Tcl <a href="../mann/odbc.html">odbc sources</a>
+command to display available databases. You need to configure available
+databases using the ODBC administrator supplied by your database vendor.
+<p>The <a href="#dump">dump</a> command can be used to see if the server
+is presently connected to a database.
+<p>The default format of reply messages for the <a href="#SELECT">select</a>
+command is nearly identical to that provided by the <a href="datahub.html">Hume
+Datahub</a>.&nbsp; For a message system client, each row of data is sent
+in its own message, with values labeled with their column names. Text values
+are delimited with single quotes. All data types are converted to either
+real numbers or text; thus date types become text.
+<p>Unlike the Hume Datahub, table names are not indicated in a select
+reply. A select statement can join multiple tables and views so that in
+many cases a table name is not readily expressible.
+<p>There is an alternative output format for select messages that is designed
+for convenient parsing in the Tcl programming environment. See the <a href="../mann/odbc.html#select_reply">Select
+Reply Format</a> described with the odbc command.
+<p>The formats of <b>insert</b>, <b>update</b>, and <b>delete</b> statements
+are compatible with SQL subscription output of the Hume Datahub. Thus,
+it is possible to populate a persistent database by subscription to one
+or more realtime databases. The application should either use the <a href="#AUTO_COMMIT">auto_commit</a>
+feature, or have other provision for commits when subscription feeds are
+used.
+<p>Here are example commands sent to a datahub which will cause data to
+be added to a persistent database whenever it is added to the in-memory
+database:
+<p>"open sub engdb1 to process_run sendto=ENGBD&nbsp; insert *"
+<p>"open sub engdb2 to process_run_material sendto=ENGDB&nbsp; insert run_id,
+lot_id, cassette_id, slot_id"
+<p>Client applications can take advantage of the Tcl interpreter by using
+the <a href="#EVAL">eval</a> message command. This command can execute
+any Tcl/Tk code including defining or invoking procedures. Tcl procedures
+can be written and available on the file system where they will be dynamically
+loaded when used because of Tcl's <a href="../mann/library.html">auto_load
+library feature</a>. Or, Tcl procedures can be explicitly loaded using
+the <a href="#SOURCE">source</a> message command.
+<p>Inside of Tcl code, it is possible to access the database using the
+the <a href="#SQL">SQL</a> or the <a href="#execute">execute</a> Tcl commands.
+<p>For the most part there are no fixed limits to the number of data fields
+or size of data that can be transferred. The server dynamically allocates
+and resizes buffers used to transfer data from the database. For the DMH
+message system, there is no fixed limit on the size of a message and it
+is possible to send large amounts of data in a single message. However,
+no single field in a table row should exceed 64000 bytes.
+<p>The <a href="#EXIT">exit</a> command can be used to terminate the server.&nbsp;&nbsp;
+The dmh_SQLsrv application defines a procedure <a href="../mann/mh_app_lost.html">mh_app_lostserver</a>
+which causes it to exit if the message system connection is lost.
+<p>
+<hr><a NAME="running"></a>
+<h2>
+Running the Server</h2>
+The dmh_SQLsrv is a Tcl application script running in dmh_wish.exe or in
+the compiled executeable dmh84_sql_tcl.&nbsp; The usual <a href="dmh_wish.html">dmh_wish</a>
+shell command line arguments such as&nbsp; "-display" can be used in either
+case.
+<p><a NAME="dmh_sql_tcl"></a>The dm84_sql_tcl executable was originally
+created to handle web server CGI scripts written in Tcl.&nbsp; The dmh84_sql_tcl
+executable is just like dmh_wish except
+it has an interface to Oracle using the Tcl command name "sql".&nbsp; This
+command is a functional subset of the odbc command.&nbsp; You are encouraged
+to code to the odbc interface instead of the "sql" command.&nbsp; The odbc
+command becomes available&nbsp; after executing "package require ora_odbc".
+<P>
+Using the combination of command line options <B>-file</B>, <B>-notk</B>,
+and <B>-console</B> makes it possible to use file and console input without
+X-windows in a CGI web server script.  The <B>-console</B> option was 
+compiled-in behavior of the dmh_sql_tcl executable prior to Tcl 8.2.  Now
+this capability is available as a command line option for both dmh_sql84_tcl,
+and dmh_wish.
+
+<p><br>On POSIX systems, If you are not running in background with the
+-notk option, you need to define X-Windows DISPLAY in the environment or
+use -d explicitly on the command line. Eg.,
+<p>$ dmh_SQLsrv -d kestrel:0.0 "set group=test_mbx" eof &amp;
+<p>On Windows NT the X-Windows option -display is not applicable. If you
+are using the MS-DOS command shell, pathnames used by NT should be separated
+using backslashes. For pathnames that are processed by Tcl, you can use
+Unix style slashes.
+<pre>&nbsp;&nbsp; rem startup Watcom
+&nbsp; C> \usr\local\bin\dmh_wish -f /usr/local/bin/dmh_SQLsrv \
+&nbsp;&nbsp; "set group=cim1" "set server=ENGDB" "connect SPC2 DBA SQL" \
+&nbsp;&nbsp; "set option Timestamp_format='YYYY-MM-DD HH:NN:SS'" \
+&nbsp;&nbsp; "eval lappend auto_path %SMART%/tcllib" EOF</pre>
+Here is another startup example for Oracle on a Unix system. This statement
+is copied from a startup script.
+<pre>#
+dmh_SQLsrv "set group=CIM1" \
+&nbsp;"set server=ENGDB" "set auto_commit=1"&nbsp; \
+&nbsp;"connect T:metallica:ASSY cimuser pass_cimuser" \
+&nbsp;"alter session set NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'"\
+&nbsp;"set NULL_NUMBER_MAP=0"\
+&nbsp;"set NULL_STRING_MAP='' " EOF >engdb.log 2>&amp;1 &amp;</pre>
+When the server sees the EOF command, it attempts to connect to the message
+system. In the startup script of a distributed application, you usually
+start the message system process, such as a datahub, first.
+<p>Once the server is started, all of the commands listed in the next section
+of this document are available. To view a list of all message commands
+understood by the server, use the help message command. To view a list
+of all parameters understood by the server and their current settings,
+use the query message command. All variable values that can be changed
+are set using the set command. To shut down the server, use the exit message
+command.
+<p>You create and change database tables using the create and alter message
+commands. The message command drop is used to delete tables when they are
+no longer useful. Data rows are added to tables using the insert command.
+The update command is used to modify stored data. The delete command is
+used to remove data from tables, and the select command is used to obtain
+selections of the stored data.
+<p>If you have not used the "-notk" command line option, you are presented
+with a simple windowing interface for viewing your database tables. You
+may wish to create your own custom interface using the dmh_SQLsrv script
+as a starting point.
+<hr WIDTH="100%">
+<br>
+<hr>
+<h2>
+<a NAME="tcl_proc_ref"></a>Tcl Procedure Reference</h2>
+This section describes Tcl procedures implemented specifically for the
+SQL
+server. These procedures are in addition to the usual procedures provided
+by the Tcl/Tk interpreter.
+<br>
+<hr><a NAME="SQL"></a>
+<h3>
+SQL - Execute an SQL Statement</h3>
+
+<dl>
+<dt>
+<b>Tcl Command Syntax</b></dt>
+
+<dd>
+<b>SQL</b> <i>sql_command</i></dd>
+
+<dt>
+<b>Description</b></dt>
+
+<dl>&nbsp;The SQL command processes the <i>sql_command</i> argument as
+described in the next section <a href="#command_ref">SQL Command Reference</a>.
+This command is the workhorse Tcl command that you can use in your custom
+Tcl procedures in order to access persistent database functionality.&nbsp;&nbsp;
+This SQL command replaces the ordinary SQL command which is used to manipulate
+in-memory Datahub tables, with a version that manipulates persistent database
+tables.</dl>
+</dl>
+
+<div WIDTH="132">
+<hr WIDTH="100%"></div>
+
+<p><br><a NAME="execute"></a>
+<h3>
+execute - Execute an SQL Statement</h3>
+
+<dl>
+<dt>
+<b>Tcl Command Syntax</b></dt>
+
+<dd>
+<b>execute</b> <i>sql_command</i></dd>
+
+<dt>
+<b>Description</b></dt>
+
+<dd>
+&nbsp;The execute command exists for compatibility with older software.
+New Tcl code should use the
+<a href="#SQL">SQL</a> command to access database functionality of the dmh_SQLsrv.</dd>
+
+<p>
+<p>The Tcl execute command is nearly synonymous with the Tcl <a href="#SQL">SQL</a>
+command. The command processes the <i>sql_command</i> argument as described
+in the next section. The return value is a Tcl list where each element
+of the list is a reply message that would be obtained if the argument were
+sent as a message command to the dmh_SQLsrv's command mailbox. In other
+words, since most of the SQL/message commands return a single reply message,
+most of the return values will be formatted similar to "{//c 0 COMMAND:
+success}".</dl>
+
+<hr>
+<hr WIDTH="100%"><a NAME="command_ref"></a>
+<h2>
+SQL/Message Command Reference</h2>
+
+<p><br>In this section, the commands that are given as arguments to the
+Tcl SQL command, or to the Tcl execute command are presented.&nbsp; These
+are also the commands that are processed when sent as messages to the command
+mailbox of the dmhSQLsrv, or specified on the dmh_SQLsrv command line.
+<p>The dmhSQLsrv retains reply format compatibility with the SCC Data Server
+program was developed by SEMATECH. In general, a reply is formatted as
+"//c rc COMMAND: text". In this format, a return code, rc, of 0 means that
+the command completed successfully. A non-zero code implies an error or
+warning condition. If you execute an SQL statement that is not supported,
+or execute some other unrecognized statement, the reply is:
+<p>//c 2 &lt;UNKNOWN>:&nbsp; Unrecognized command, enter "help" for command
+list.
+<p>For ordinary SQL statement types,&nbsp; the reply formats are:
+<blockquote>
+<pre WIDTH="132"><tt>//c 0 &lt;cmd>:&nbsp;
+//c 5 &lt;cmd>: not connected to database
+//c 13 &lt;cmd>: SQL error - &lt;sql error text></tt></pre>
+</blockquote>
+where &lt;cmd> is the statement type in the table below.&nbsp; The "//c
+0" pattern is received for the usual successful execution.&nbsp;&nbsp;
+A conditional update or conditional delete statement that is syntactically
+correct and executes properly returns "//c 0" even if no rows are updated
+or deleted as a result.
+<p>The dmh_SQLsrv accepts and processes any of the following command types.&nbsp;
+Entries in the table that are not linked to individual explanations are
+standard SQL statement types with ordinary reply formats as described above.&nbsp;
+Refer to your database vendor's documentation for detailed reference information
+on these commands.&nbsp; Also, you may find the basic SQL syntax described
+in the <a href="datahub.html">Datahub</a> document useful.&nbsp; Entries
+in the table that are hyperlinked, are not standard SQL, or have different
+reply formats.&nbsp; These commands are described in aphabetical order
+below.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER COLS=6 WIDTH="100%" >
+<tr>
+<td><a href="#comment">#</a></td>
+
+<td>ALTER</td>
+
+<td>COMMIT</td>
+
+<td><a href="#connect">CONNECT</a></td>
+
+<td>CREATE</td>
+
+<td>DELETE</td>
+</tr>
+
+<tr>
+<td><a href="#disconnect">DISCONNECT</a></td>
+
+<td>DROP</td>
+
+<td><a href="#dump">DUMP</a></td>
+
+<td><a href="#EOF">EOF</a></td>
+
+<td><a href="#EVAL">EVAL</a></td>
+
+<td><a href="#EXIT">EXIT</a></td>
+</tr>
+
+<tr>
+<td>GRANT</td>
+
+<td><a href="#HELP">HELP</a></td>
+
+<td><a href="#INCLUDE">INCLUDE</a></td>
+
+<td>INSERT</td>
+
+<td>LOCK</td>
+
+<td><a href="#PING">PING</a></td>
+</tr>
+
+<tr>
+<td><a href="#PROCESS">PROCESS</a></td>
+
+<td><a href="#QUERY">QUERY</a></td>
+
+<td><a href="#REM">REM</a></td>
+
+<td>REVOKE</td>
+
+<td>ROLLBACK</td>
+
+<td><a href="#SELECT">SELECT</a></td>
+</tr>
+
+<tr>
+<td><a href="#SET">SET</a></td>
+
+<td><a href="#SOURCE">SOURCE</a></td>
+
+<td><a href="#TELECT">TELECT</a></td>
+
+<td>UPDATE</td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+<p><a NAME="comment"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>#&nbsp;</b></td>
+
+<td>comment</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td># <i>comment text</i></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>
+<pre># These statements build version 2 tables
+# Send change requests to flipper@ocean.umiami.edu</pre>
+</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This command lets you lets you add comments to files of SQL commands
+that will be processed using the SQL <a href="#INCLUDE">include</a> command.
+The <b>#</b> command and the <b>rem</b> command are equivalent.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>none</td>
+</tr>
+</table>
+
+<p><a NAME="connect"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>CONNECT</b></td>
+
+<td>connect to a database</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>CONNECT </b><i>database user password</i></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>
+<pre>connect cim5 scott tiger</pre>
+
+<pre>connect spc2 DBA SQL</pre>
+</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>You must connect to a database in order to issue SQL commands.&nbsp;
+See the <a href="../mann/odbc.html">odbc connect</a> command for more detail.
+<i>User</i> and <i>password</i> items are usually case sensitive.&nbsp;
+Note that the order of the arguments is changed from the certain earlier
+versions to be consistent with the odbc command.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>//c 0 CONNECT: connected to <i>database</i>
+<br>//c 13 CONNECT: connect failure - <i>error message</i></td>
+</tr>
+</table>
+
+<p><a NAME="disconnect"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>DISCONNECT</b></td>
+
+<td>disconnect from a database</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>DISCONNECT&nbsp;</b></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>
+<pre>disconnect</pre>
+</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>The Oracle POSIX version does not support disconnecting and reconnecting.&nbsp;
+End the process gracefully using commit and exit; and start a new dmh_SQLsrv
+process instead of re-connecting.&nbsp; See the <a href="../mann/odbc.html">odbc
+disconnect</a> command for more detail.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>//c 0 DISCONNECT:&nbsp;</td>
+</tr>
+</table>
+
+<p><a NAME="dump"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>DUMP</b></td>
+
+<td>Obtain status information</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>DUMP</b></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>
+<pre>dump</pre>
+</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>The dump command replies with 5 messages indicating the connected database
+name (or "None") and the last SQL statement executed and the statement's
+reply.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>server = <i>server</i>, by Hume Integration, Austin TX
+<br>connected database = { <i>name</i> | None }
+<br>last command was "<i>stmt</i>"
+<br>last reply was "<i>reply</i>"
+<br>//c 0 DUMP: complete</td>
+</tr>
+</table>
+
+<p><a NAME="EOF"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>EOF</b></td>
+
+<td>initialize message system communication</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>EOF</b></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>dmh_SQLsrv "set group=apc" eof &amp;</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>Executing this command causes the dmh_SQLsrv to initialize message
+system communication, and thereafter to process messages received in the
+<a href="#SERVER">server</a>
+mailbox as SQL commands.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>
+<pre>//c 0 EOF:&nbsp; Message system initialized, command mailbox is \
+&nbsp; "<i>SERVER@GROUP</i>"</pre>
+</td>
+</tr>
+</table>
+
+<p><a NAME="EVAL"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>EVAL</b></td>
+
+<td>evaluate Tcl code</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>EVAL</b> <i>tclcode</i></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>eval user_login jsmith rx7fan
+<p>eval exec xterm -display atlas:0.0 &amp;
+<p>eval SQL "update checking set balance=12 where acct='smith'" ; SQL "update
+savings set balance=24 where acct='smith'
+<p>eval proc hello {a} {puts $a} ; hello world</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This command provides a means for message system clients to access
+the Tcl functionality of the server. As the examples show, it can be used
+to execute Tcl procedures, or even to execute more than 1 SQL command in
+a single message.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>The reply message is exactly the result you would see if the same
+<i>tclcode</i>
+were executed at a Tcl/Tk prompt.</td>
+</tr>
+</table>
+
+<p><a NAME="EXIT"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>EXIT</b></td>
+
+<td>shutdown the process</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>EXIT</b></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>exit</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This command causes the process to exit.&nbsp; The reply message is
+sent and the Tcl exit command is called after the procedure returns.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>
+<pre>//c 0 EXIT:&nbsp;&nbsp;</pre>
+</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<p><a NAME="HELP"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>HELP</b></td>
+
+<td>display a list of available commands&nbsp;</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>HELP</b></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>help</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This command returns a list of&nbsp; the possible commands.&nbsp; There
+is not much detail on SQL statements since the SQL syntax can be complex
+and vendor-specific.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>
+<pre><i>command synopsis</i></pre>
+</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<p><a NAME="INCLUDE"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>INCLUDE</b></td>
+
+<td>process a file of SQL commands</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>INCLUDE</b> <i>pathname</i></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>include c:/users/tonka/xtc.sql
+<p>include ../lib/report1.sql
+<p>SQL "include ../lib/report1.sql"</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This reads and processes a file of SQL commands. The logic reads each
+text line in the file as a new SQL command.&nbsp; In contrast to the Datahub,
+the dmh_SQLsrv implementation is simple and does not work properly if the
+commands span multiple lines, such as character data with embedded newline
+characters.&nbsp;&nbsp; It is recommended that you do not use the dmh_SQLsrv
+include command unless you are sure that it is compatible with your requirements.
+<p>Relative pathnames are with respect to the current working directory
+of the process. The current working directory of the process can be changed
+using the Tcl <a href="../mann/cd.html">cd</a> command, or by setting the
+<a href="#CWD">CWD</a>
+parameter.
+<p>Even on Windows NT platforms, the pathname is specified using Unix style
+slashes.
+<p>The INCLUDE command may be nested inside of included files to arbitrary
+depths.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>
+<pre><i>all non-blank replies for the included commands</i>&nbsp;&nbsp;
+followed by:
+//c 0 INCLUDE: <i>count</i> included results
+
+//c 1 INCLUDE:&nbsp; Unable to open file "<i>pathname</i>"</pre>
+</td>
+</tr>
+</table>
+
+<p><a NAME="PING"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>PING</b></td>
+
+<td>verify online responsiveness</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>PING</b></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>ping</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This command exists for compatibility with the older versions.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>
+<pre>//c 0 PING:&nbsp; <i>SERVER</i> <i>date</i> <i>time</i> (<i>POSIX_seconds</i>) <i>Id
+
+</i>//c 0 PING:&nbsp; ENGDB 1999-10-07 16:57:38 (939333458) ENGDB</pre>
+</td>
+</tr>
+</table>
+
+<p><a NAME="PROCESS"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>PROCESS</b></td>
+
+<td>process the data of a select query using specified Tcl code</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>process </b><i>select_clause</i><b> with </b><i>tcl_code</i></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>process * from my_table where a>0 with puts
+<p>process [join $cols ,] from big_table with [list my_proc $cols]</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This command is used to process the data of a select query using specified
+Tcl code.&nbsp; The Tcl code is executed for each row of data, as the data
+is fetched.&nbsp; Only one row of data is in memory at a time so&nbsp;
+it is feasible to work with large tables.&nbsp; If the Tcl code returns
+an&nbsp; error, return, or break result code (see the <a href="../mann/return.html">return</a>
+command)&nbsp; the command returns without processing more data rows. For
+example, you&nbsp; can process only the first row of an ordered query by
+returning the&nbsp; break result code.
+<p>The &lt;select_clause> is any SQL select statement supported by the
+database vendor with the leading select keyword removed.&nbsp; You can
+use order by and other standard SQL select options to control the result.&nbsp;
+<p>The current implementation of the process statement will not work properly&nbsp;
+if the with keyword can be found in the select_clause.&nbsp; You can execute
+any of the usual SQL statements in your tclcode,&nbsp; but you cannot execute
+another process statement.&nbsp; You can however use another instance of
+the program to achieve the same result.
+<p>The data values of a row are formatted as a list and appended as a single
+argument to the tclcode for evaluation.&nbsp; If the evaluation returns
+the usual ok code, the next data row is fetched, and the process is repeated.&nbsp;
+If there has not been an error, the reply will show the number of rows
+that&nbsp; have been processed in a format similar to the Tcl Reply Format.
+<p>The process statement is not a standard SQL statement type; it has been
+developed by Hume Integration to leverage the benefits of the Tcl language
+environment without requiring the end user to deal with the complexity
+of SQL cursors.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>
+<pre>//c 5 PROCESS: not connected to database
+//c 13 PROCESS: SQL error - <i>description
+</i>//c 0 PROCESS: process {} {} {} N_rows {} {}</pre>
+</td>
+</tr>
+</table>
+
+<p><a NAME="QUERY"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>QUERY</b></td>
+
+<td>display the value of configuration parameters</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>QUERY</b> [<i>parameter</i>]&nbsp;</td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>query group</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>The dmh_SQLsrv has a handful of configurable data parameters. Each
+is described under the <a href="#SET">SET</a> command. This command lets
+you obtain the current value(s). With no argument, all of the values are
+returned, otherwise the value of <i>parameter</i> is returned. For compatibility
+with SEMATECH style servers, the <i>parameter</i> = <i>value</i> reply
+is spaced differently depending on whether you requested a specific <i>parameter</i>
+or not.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>
+<pre>one or more:
+<i>parameter</i> = <i>value
+</i>followed by
+//c 0 QUERY:&nbsp; Complete.
+
+//c 1 QUERY:&nbsp; Variable "<i>name</i>" not found.
+//c 2 QUERY:&nbsp; QUERY [variable]</pre>
+</td>
+</tr>
+</table>
+
+<p><a NAME="REM"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>REM</b></td>
+
+<td>comment</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td>REM <i>comment text</i></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>
+<pre>rem uncomment the following statements for option B&nbsp;</pre>
+</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This command lets you lets you add comments to files of SQL commands
+that will be processed using the SQL <a href="#INCLUDE">include</a> command.
+The <b>#</b> command and the <b>rem</b> command are equivalent.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>none</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<p><a NAME="SELECT"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>SELECT</b></td>
+
+<td>query table data</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td>see vendor documentation (also <a href="datahub.html#SELECT">Datahub
+select</a>)</td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>select help_text from help_config where lot_id='any lot' and step='etch'
+<p>select * from capt_log where sdate&lt;='1996-01-01'
+<pre>SELECT: capt_log event='Klingons near chimney' sdate='1992-12-25'
+SELECT: capt_log event='read Dr. Spock''s book' sdate='1994-04-21'
+//c 0 SELECT: 2 rows selected</pre>
+SQL "select * from spc_datatype"</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td><b>select</b> is used routinely to lookup stored table data.&nbsp;</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>If <b>select</b> is executed in Tcl code from the <a href="#SQL">SQL</a>
+command, you obtain the <a href="../mann/odbc.html#select_reply">Tcl Reply
+Format</a> which is described with the odbc command. The format described
+below is obtained when the <b>select</b> statement is sent to a dmh_SQLsrv
+as a message command, or executed in Tcl code from the <a href="#execute">execute</a>
+command.
+<pre><i>One or more messages for each row, formatted as
+</i>SELECT: [<i>column</i>=<i>value</i>]+
+<i>where value is enclosed in single quotes for character data,
+and then a final message,
+</i>//c 0 SELECT:&nbsp; <i>N</i> row[s] selected
+
+//c 13 SELECT:&nbsp; SQL error - <i>description</i></pre>
+</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<p><a NAME="SET"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>SET</b></td>
+
+<td>configure a dmh_SQLsrv parameter</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>SET</b> <i>parameter</i>=<i>value</i></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>set server=DB</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>The dmh_SQLsrv has a small set of configurable parameters that can
+be assigned values using this command.&nbsp;
+<br>&nbsp;
+<dl>
+<dt>
+<a NAME="AUTO_COMMIT"></a>AUTO_COMMIT</dt>
+</dl>
+
+<dl>
+<dd>
+When this parameter is non-zero, the server executes a commit action after
+each data manipulation statement.&nbsp; The application should set this
+flag to 1 (true) if there is no other provision for commit and rollback
+logic.&nbsp; The default value is 1 (true).&nbsp; See the <a href="#commit_disc">discussion</a>.</dd>
+</dl>
+
+<dl>
+<dt>
+<a NAME="CWD"></a>CWD</dt>
+
+<dd>
+current working directory. New code should use the Tcl <a href="../mann/cd.html">cd</a>
+command.</dd>
+
+<dt>
+<a NAME="GROUP"></a>GROUP</dt>
+
+<dd>
+DMH message group. Once the message system interface has been initialized
+using <a href="#EOF">eof</a> this parameter cannot be changed. See the
+<a href="../mann/mbx.html">mbx</a>
+document for a discussion of message groups. The value of this parameter
+defaults to mbx.</dd>
+
+<dt>
+<a NAME="NULL_NUMBER_MAP"></a>NULL_NUMBER_MAP</dt>
+
+<dd>
+This parameter is used to set the value returned in selection results for
+number values that are null. The default is "0". You are able to specify
+any text for the value, up to 40 bytes in length.&nbsp; The value need
+not be numeric.&nbsp; For example, it could be set to the word NULL.&nbsp;</dd>
+
+<dt>
+<a NAME="NULL_STRING_MAP"></a>NULL_STRING_MAP</dt>
+
+<dd>
+This parameter is used to set the value returned in selection results for
+character or date values that are null. The default is ""; an empty string.
+You are able to specify any text for the value, up to 40 bytes in length.</dd>
+
+<dt>
+<a NAME="SERVER"></a>SERVER</dt>
+
+<dd>
+the command mailbox. Once the message system interface has been initialized
+using <a href="#EOF">eof</a>, the server reads messages from this mailbox
+and processes them as SQL commands. The value of this parameter defaults
+to ENGDB.</dd>
+
+<dt>
+<a NAME="STRING_RHS_WHITE"></a>STRIP_RHS_WHITE</dt>
+
+<dd>
+This parameter is available for the Oracle database software on POSIX
+platforms.&nbsp; It is used as a boolean flag to indicate whether stripping
+of trailing space characters in char and varchar data selection results
+should be performed.&nbsp;  As of 11/20/2002, the default setting is 0,
+which means that trailing spaces are not removed.&nbsp; This parameter needs
+to be set after a database connection is established because its value
+is saved as a property of the connection.
+</dd>
+</dl>
+</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>
+<pre>//c 0 SET:&nbsp; Variable "<i>parameter</i>" set to "<i>value</i>".
+
+//c 1 SET:&nbsp; Variable "<i>parameter</i>" not found.
+//c 3 SET:&nbsp; Unable to set variable "<i>parameter</i>", <i>error message</i></pre>
+</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<p><a NAME="SOURCE"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>SOURCE</b></td>
+
+<td>source a file of Tcl code</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><b>SOURCE</b> <i>pathname</i></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>source c:/users/doe/zapp.tcl
+<p>source ../library/util.tcl</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This command is used to explicitly load Tcl code such as procedure
+definitions into the Datahub. The functionality is equivalent to the Tcl
+command <a href="../mann/source.html">source</a>.
+<p>You use this command repeatedly during development to reload a file
+of source code that you are editing. However, for production, many applications
+will take advantage of the interpreter's <a href="../mann/library.html">auto_path</a>
+mechanism that loads unknown Tcl code only if it is actually executed.
+To use this mechanism, the developer uses the <a href="../mann/library.html">auto_mkindex</a>
+command to build a tclIndex file, and adds the directories where the source
+code files are found to the <a href="../mann/library.html">auto_path</a>
+list.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>The reply is an empty string or a single error message.</td>
+</tr>
+</table>
+
+<p><a NAME="TELECT"></a>
+<table BORDER CELLPADDING=4 >
+<tr>
+<td><b>TELECT</b></td>
+
+<td>an alias for the select command</td>
+</tr>
+
+<tr>
+<td><b>Syntax</b></td>
+
+<td><i>see <a href="#SELECT">select</a></i></td>
+</tr>
+
+<tr>
+<td><b>Examples</b></td>
+
+<td>telect * from menu_data</td>
+</tr>
+
+<tr>
+<td><b>Description</b></td>
+
+<td>This command exists to provide the <a href="../mann/odbc.html#select_reply">Tcl
+Reply Forma</a><a href="#TclReplyFormat">t</a> for message system clients.
+In the name of compatibility, the reply to select statements received through
+the command mailbox is the older, one message per row style. Tcl applications
+can use "telect" instead of "select" to obtain the new format which is
+designed for ease of parsing in Tcl code.</td>
+</tr>
+
+<tr>
+<td><b>Replies</b></td>
+
+<td>
+<pre><a href="../mann/odbc.html#select_reply">The Tcl Reply Format</a></pre>
+</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="version"></a>
+<h2>
+Document Version</h2>
+Date of last revision: $Date: 2004/03/02 17:04:40 $
+<p>This document covers the Hume Integration Software developed dmh_SQLsrv
+that is available for the Tcl 8.4/Tk 8.4 environment on the Windows NT
+and UNIX/POSIX platforms.
+<hr>
+<p>Leave this document and go to the <a href="../index.html" target="_top">Tcl/Tk
+Resource Index</a>
+</body>
+</html>

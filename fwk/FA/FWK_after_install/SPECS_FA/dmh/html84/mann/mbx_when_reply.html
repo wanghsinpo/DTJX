@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>mbx_when_reply Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ mbx_when_reply - Asynchronous Send and Reply Message Interaction <P>
+<H2>SYNOPSIS</H2>
+ <B>package require Humelib</B><BR>
+ <B>humelib::mbx_when_reply <I>boxname message reply_code</I> {<I>timeout_code</I> {}} 
+ {<I>timeout</I> 20000}</B>
+<HR>
+<P>
+<H2>DESCRIPTION</H2>
+<P>
+This procedure is used to send a DMH message to a mailbox, and to register
+code to execute when the reply message is received, or a timeout has occurred.&nbsp;
+The procedure has the benefit of letting you conveniently code send-and-reply
+interactions using asynchronous mechanisms that do not force your application into
+modal, nested event loops that may cause unresponsiveness or interfere 
+with handling events in the order received.
+<P>
+The procedure manages creating a unique reply mailbox for the reply message,
+and closes the mailbox after use.&nbsp;  The timeout interval for receiving a reply
+message may be specified in milliseconds; the default value is 20000 (20 seconds).&nbsp;
+When a reply is received within the timeout interval, it is appended to the 
+<I>reply_code</I> as a list element, and the result is executed at the topmost (global)
+level of the interpreter.&nbsp;  You may optionally specify <I>timeout_code</I> to
+be executed if the reply message is not received within the specified interval.&nbsp;
+The default timeout behavior is to append the literal value <B>TIMEOUT</B> to the
+<I>reply_code</I> as a list element and execute the result, as if the 
+<B>TIMEOUT</B> value was the data of a received message.&nbsp; If you do specify
+a value for the <I>timeout_code</I> argument, your value is executed without the
+literal value <B>TIMEOUT</B> being appended to it. 
+<P>
+The command is part of the <B>Humelib</B> package and it exists
+in the <B>humelib</b> namespace.
+<H2>EXAMPLE</H2>
+<PRE>
+package require Humelib
+
+proc refresh_lb_callback {listbox reply_message} {
+   #puts "received reply: $reply_msg"
+   if { [winfo exists $listbox] } {
+      # update listbox to show reply data
+      #...
+      }
+   }
+
+# ...
+# refresh listbox contents asynchronously
+humelib::mbx_when_reply DATAHUB "eval dc_items_view" [list refresh_lb_callback $listbox]
+# ...
+</PRE>
+
+
+<H2>AUTHOR</H2>
+ Hume Integration Software, www.hume.com  <P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/mbx.html">mbx</A>&nbsp;&nbsp;&nbsp;
+ <a href="../mann/mbx_cmds.html">mbx_do_xact</A><P>
+<H2>KEYWORDS</H2>
+ mbx, DMH, IPC, interprocess communication, messaging
+</BODY>
+</HTML>

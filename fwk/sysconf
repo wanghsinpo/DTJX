@@ -1,0 +1,230 @@
+/* SPECS System Configuration File */
+/* <@(#)Rev:3.10A> */
+/* SPECS Security */
+
+/*LICENSEKEY=mb9a-n1ms-bon8-Wmf0-2tnr*/
+/*LICENSEKEY=jj58-Wpja-jkW4-jjn8-Wvk8
+/*LICENSEKEY=nW11-0Tnv-Wg00-cnpa-hCds
+/*LICENSEKEY=gc01-cTg1-cnc7-cgg1-Tgd5*/
+/*LICENSEKEY=dp44-gWd5-pjg3-fd3u-krg2*/
+/*LICENSEKEY=We19-o0Wt-ego0-kWT3-hCka
+/*LICENSEKEY=fk12-kjf9-kgk0-dfo9-2Wg4
+/*LICENSEKEY=nmWt-c4n1-mTc2-onpr-TT1s
+/*LICENSEKEY=nmWt-c4n1-mTc2-onpr-TT1s*/
+/*LICENSEKEY=mh0u-o5mt-hno7-pmW6-081r*/
+LICENSEKEY=Wc8a-c1W1-cnc7-WWg1-r0ma
+VMT_LICENSE=
+
+/* SPECS Environment */
+
+HOSTNAME=wat01
+REMOTEDSPHOST1=
+IPCPORT=14062
+MAXCONECT=55
+WARMTIME=60
+PROJECT=v
+BINDIR=/opt/SPECS/sys/bin
+RCPDIR=/opt/SPECS/usr/spool/recipe
+DULIMIT=90
+MAXLSIZE=1
+CHKINTVL=3600
+USE_TPLLOGFILE=TRUE
+AUTOSTART=OFF
+AUTOSTART_USR=
+AUTOSTART_GRP=
+ADMIN_USR=root
+ADMIN_GRP=sys
+
+/* SPECS Tool Parameters */
+
+SPECSTERM=xterm
+RMBREV=12_0
+RMBOPTS=-w16M -geometry =90x35
+RMBTASKOPTS=-w16M
+RMBLIBS= -sICCAP2.so -sICCAP2CSUB.so -S/opt/SPECS_FA/dmh/lib -S/opt/SPECS/usr/lib -slibm.so -slibtcl8.4.so -slibtk8.4.so -sfacomcore.so -sFACOMCSUB.so
+GUI_DEBUGGER=TRUE
+
+/* SPECS Operation Panel */
+
+SMODE=engineer
+OP_SW=900
+OP_SH=700
+OP_LANG=C
+OP_STEP=FALSE
+OP_AUTOUPDATE=TRUE
+
+/* SPECS FPD Mode */
+
+FPDMODE=FALSE
+
+/* SPECS Data Save Parameters */
+
+DATASAVEMODE=ADT
+
+/* SPECS to PME Parameters */
+/PROBER
+
+PME_DATAFLUSHLEVEL=Wafer
+PME_EXECCATEGORY=SPECS_TEST_PLAN
+
+/* SPECS ADT Data File Parameters */
+
+ADTFORMAT=2
+ADTLOGGING=TRUE
+YEARFORMAT=4
+/* SPECS Lot Test Data File */
+
+MAXREAL=+1.0E+99
+MINREAL=-1.0E+99
+VARFORMAT=%1$.0s%2$s_%3$s_%4$s_%5$s_%6$s
+ALTFORMAT=%1$.0s%2$.0s%3$.0s%4$.0s%5$.0s%6$.0s%7$s
+
+/* SPECS Test Plan Parameters */
+
+WORKSPACE=8000
+LIB_WORKSPACE=1000
+ALGTYPE=BASIC
+RANGECHECK=TRUE
+ERRIGNORE=FALSE
+VERIFYTEST=FALSE
+VERIFYLIMIT=FALSE
+CLEARONRETEST=FALSE
+CLEARONREJECT=FALSE
+USE_SESSIONID=FALSE
+CHANGE_ALL_KIND_OF_LIB=FALSE
+DUPLICATE_CHECK_LEVEL=1
+CHK_ALG_DUP=FALSE
+LOG_ALG_DUP=FALSE
+PARALLELTEST=FALSE
+EXECTESTER=OFFLINE
+
+/* SPECS Limit Parameters */
+
+RAWBINRULE=SMALL
+USRBINRULE=RAWBIN
+MAXLIMITS=10
+MAXUSRBINS=6
+MAXUSRFLAGS=4
+USRFLAG_MULTIVALUE=FALSE
+JUDGEZERORATIO=+0.0E+00
+JUDGEROUNDOUTVAR=FALSE
+
+/* SPECS Framework */
+
+FRAMEWORK=HPSTD_TELP8
+EXECFRAMEWORK=HPSTD_TELP8
+
+/* SPECS Algorithm Libraries */
+
+MULTIPLE_MEASLIB=TRUE
+
+MEASLIB=measure/NX
+TESTERLIB=tester/A4070
+PROBERLIB=prober/TELP8_HPSTD
+UTILLIB=utility/UTILITY
+CSYSLIB=/opt/sicl/lib/libsicl.so /opt/SPECS/sys/lib/_UTILITY.so /opt/SPECS/sys/lib/_PROBER.so
+CUSRLIB= /opt/SPECS/sys/lib/ICCAP2.so /usr/lib/libm.so /opt/SPECS_FA/dmh/lib/libtcl8.4.so /opt/SPECS_FA/dmh/lib/libtk8.4.so /opt/SPECS/usr/lib/facomcore.so
+CTSTLIB=/opt/SPECS/sys/lib/_TISUTIL4070.so /opt/hp4070/lib/libhp4070.so /opt/hp4070/lib/libe4411b.so /opt/hp4070/lib/libf_rom.so
+
+/* SPECS Device Library */
+
+DEVLIB=
+
+/* SPECS Recipe Management Parameters */
+
+RCPLIB_WAF=/opt/SPECS/demo
+RCPLIB_PRB=/opt/SPECS/demo
+RCPLIB_DIE=/opt/SPECS/demo
+RCPLIB_MOD=/opt/SPECS/demo
+RCPLIB_TST=/opt/SPECS/demo
+RCPLIB_LMS=/opt/SPECS/demo
+RCPLIB_TCO=/opt/SPECS/demo
+RCP_ADD_MLIB=FALSE
+RCP_ADD_MLIB_POSITION=TCO
+RCP_DST=/var/opt/SPECS/recipe
+RCP_TPL=$(RCP)_$(SI)
+RCP_LIM=$(RCP)_$(SI)
+
+/* SPECS BCR */
+
+RS_PORT=2
+
+/* SPECS Algorithm Profiler Parameters */
+TPL_PROFILER=FALSE
+TPL_PROFILER_LOG=/var/opt/SPECS/log/prof
+
+/* ISS Driver Parameters */
+ISS_DIR=/etc/opt/SPECS/iss
+
+/* Error handler */
+ERR_HANDLER=FALSE
+ERR_HANDLER_SCRIPT=/opt/SPECS/demo/samplemail.sh
+
+
+/* SPECS Software Module Launch Information Table                            */
+/*    1st : Software Module Launch Information Key Word                      */
+/*          SFM : Software Module Launched by ExecMgr                        */
+/*          SFC : Software Module Launched by Others                         */
+/*          ATS : Operator Mode Auto Start Software Module Launch Info.      */
+/*          ASS : System Module Launched by ExecMgr at System Start.         */
+/*          SES : Session Specific Module Launch Information                 */
+/*    2nd : Executable File Name;                                            */
+/*    3rd : Group ID                                                         */
+/*               sys ; SPECS System Module Group                             */ 
+/*               tee ; TEE Related Module Group                              */
+/*               dae ; DAE Related Module Group                              */
+/*               tde ; TDE Related Module Group                              */
+/*               ses ; Session  Module Group                                 */
+/*               ss1 ; Session-1  Module Group                               */
+/*               ss2 ; Session-2  Module Group                               */
+/*               ss3 ; Session-3  Module Group                               */
+/*               ss4 ; Session-4  Module Group                               */
+/*               usr ; User Additional Module Group not belong to a Session  */
+/*                     (Independent from a Session)                          */
+/*                                                                           */
+/*    4th : Max Num of Program Process                                       */ 
+/*    5th : Executable File Directory Name                                   */
+/*    6th : Options                                                          */
+/*          Option Variable Definitions supported by system.                 */
+/*           $(PPID)      ; parent process ID                                */
+/*           $(IPCPORT)   ; TCP/IP port number                               */
+/*           $(BINDIR)    ; binary files directory                           */
+/*           $(MAXCONECT) ; execmgr max num of connections                   */
+/*           $(WARMTIME)  ; warmup time                                      */
+/*           $(PROJECT)   ; project character                                */
+/*           $(GROUPID)   ; group id                                         */
+/*           $(WORKSID)   ; work space id                                    */
+/*           $(SMODE)     ; screen mode   operator/engineer                  */
+/*           $(OP_SW)     ; operation panel screen width in pixel(500)       */
+/*           $(OP_SH)     ; operation panel screen height in pixel(500)      */
+/*           $(HOSTNAME)  ; host name                                        */
+/*           $(SYSJOBTPL) ; system job script                                */
+/*           $(TRSID)     ; editor specific transaction id                   */
+/*           $(RCPDIR)    ; directory for quick report recipe file           */
+/*           $(DULIMIT)   ; disc usage report limit(unit=%) for warning      */
+/*                          0 < DULIMIT < 100                                */ 
+/*           $(MAXLSIZE)  ; sys log file size limit(Mbytes) for warning      */
+/*                          0 < MAXLSIZE <= 10                               */
+/*           $(CHKINTVL)  ; disc & syslog size checking interval(sec)        */
+/*                          0 < CHKINTVL <3600                               */
+/*           $(RS_PORT)   ; Serial(RS-232) port ID.[1 or 2]                  */
+/*                                                                           */
+/*                                                                           */
+
+/* System Software Module Launch Information */
+ASS:mdisp:tee:1:$(HOSTNAME):$(BINDIR):-c$(IPCPORT) -h$(HOSTNAME) -u$(DULIMIT) -i$(CHKINTVL) -s$(MAXLSIZE)
+ASS:qrepdmon:dae:1:$(HOSTNAME):$(BINDIR):-c$(IPCPORT) -h$(HOSTNAME) -d$(RCPDIR)
+
+/* Auto Start Mode(Operator Mode) Software Module Launch Information */
+ATS:tpledit:ses:4:$(HOSTNAME):$(BINDIR):-c$(IPCPORT) -f$(EXECFRAMEWORK) -a$(MEASLIB) -j$(PROJECT) -u$(AUTOSTART_USR) -G$(AUTOSTART_GRP) -e
+
+/* Software Module Launch Information */
+SFM:tplint:ses:4:$(HOSTNAME):$(BINDIR):-c$(IPCPORT) -t$(ALGTYPE) -s$(TRSID) -g$(ARG1) -w$(ARG2) -j$(PROJECT) -x$(ARG3) -U$(ARG4) -G$(ARG5) -P$(PARMODE)
+SFM:opanel:ses:4:$(HOSTNAME):$(BINDIR):-c$(IPCPORT) -j$(PROJECT) -g$(ARG1) -w$(ARG2) -M$(SMODE) -W$(OP_SW) -H$(OP_SH) -V$(OP_STEP) -h$(HOSTNAME) -x$(ARG3) -U$(ARG4) -G$(ARG5)
+SFM:algpanel:ses:4:$(HOSTNAME):$(BINDIR):-c$(IPCPORT) -j$(PROJECT) -g$(ARG1) -w$(ARG2) -x$(ARG3) -U$(ARG4) -G$(ARG5)
+
+/* Session Specific Module Launch Information */
+/* SES:BCR:ss1:1:$(HOSTNAME):$(BINDIR):-c$(IPCPORT) -h$(HOSTNAME) -g$(ARG1) -i$(RS_PORT) -d/dev/bcr01 */
+
+/* Secondary Session Launch Information */
+CES:tpledit:ses:4:$(HOSTNAME):$(BINDIR):-u$(AUTOSTART_USR) -G$(AUTOSTART_GRP) -e

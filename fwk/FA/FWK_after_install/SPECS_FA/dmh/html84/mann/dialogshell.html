@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="iwidgets__dialogshell_iwid_"></A>
+<TITLE>iwidgets::dialogshellSection iwid</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ iwidgets::dialogshell - Create and manipulate a dialog shell widget <P>
+<H2>SYNOPSIS</H2>
+ <B>iwidgets::dialogshell<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Toplevel &lt;- iwidgets::Shell &lt;- iwidgets::Dialogshell <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+
+<B>background</B>	<B>cursor</B>	<B>foreground</B>
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>INHERITED OPTIONS</H2>
+ <P>
+
+<B>height</B>	<B>master</B>	<B>modality</B>	<B>width</B>
+ <P>
+See the <a href="../mann/shell.html">shell</a> manual entry for details on the above inherited options. <P>
+
+<B>title</B> 
+ <P>
+See the <a href="../mann/toplevel.html">toplevel</a> manual entry for details on the above inherited options. <P>
+<P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+
+Name:	<B>buttonBoxPadX</B>
+Class:	<B>Pad</B>
+Command-Line Switch:	<B>-buttonboxpadx</B>
+ 
+<DD> Specifies a non-negative padding distance to leave between the button group and the outer edge of the button box in the x direction.  The value may be  given in any of the forms accpetable to <B>Tk_GetPixels</B>.  The default  is 5 pixels. <P>
+
+Name:	<B>buttonBoxPadY</B>
+Class:	<B>Pad</B>
+Command-Line Switch:	<B>-buttonboxpady</B>
+ 
+<DD> Specifies a non-negative padding distance to leave between the button group and the outer edge of the button box in the y direction.  The value may be  given in any of the forms accpetable to <B>Tk_GetPixels</B>.  The default  is 5 pixels. <P>
+
+Name:	<B>buttonBoxPos</B>
+Class:	<B>Position</B>
+Command-Line Switch:	<B>-buttonboxpos</B>
+ 
+<DD> Attaches buttons to the given side of the dialog: <B>n</B>, <B>s</B>,  <B>e</B> or <B>w</B>.  The default is s. <P>
+
+Name:	<B>padX</B>
+Class:	<B>Pad</B>
+Command-Line Switch:	<B>-padx</B>
+ 
+<DD> Specifies a padding distance for the childsite in the X-direction in any of the forms acceptable to <B>Tk_GetPixels</B>.  The default is 10. <P>
+
+Name:	<B>padY</B>
+Class:	<B>Pad</B>
+Command-Line Switch:	<B>-pady</B>
+ 
+<DD> Specifies a padding distance for the childsite in the Y-direction in any of the forms acceptable to <B>Tk_GetPixels</B>.  The default is 10. <P>
+
+Name:	<B>separator</B>
+Class:	<B>Separator</B>
+Command-Line Switch:	<B>-separator</B>
+ 
+<DD> Specifies whether a line is drawn to separate the  buttons from the dialog box contents in any of the forms acceptable to <B>Tcl_GetBoolean</B>.  The default is true. <P>
+
+Name:	<B>thickness</B>
+Class:	<B>Thickness</B>
+Command-Line Switch:	<B>-thickness</B>
+ 
+<DD> Specifies the thickness of the separator in any of the forms acceptable to <B>Tk_GetPixels</B>.  The default is 3 pixels. <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>iwidgets::dialogshell</B> command creates a dialog shell which is a top  level widget composed of a button box, separator, and child site area. The class also has methods to control button construction. <P>
+<P>
+<H2>METHODS</H2>
+ <P>
+The <B>iwidgets::dialogshell</B> command create a new Tcl command whose name is <I>pathName</I>.  This command may be used to invoke various operations on the widget.  It has the following general form: <PRE>
+<I>pathName option </I>?<I>arg arg ...</I>?
+</PRE>
+<I>Option</I> and the <I>arg</I>s determine the exact behavior of the command.  The following commands are possible for dialogshell widgets: <P>
+<H2>INHERITED METHODS</H2>
+ <P>
+
+<B>activate</B>	<B>center</B>	<B>deactivate</B>
+ <P>
+See the <a href="../mann/shell.html">shell</a> manual entry for details on the above inherited methods. <P>
+<H2>ASSOCIATED METHODS</H2>
+ <P>
+
+<B>add</B>	<B>buttonconfigure</B>	<B>default</B>	<B>delete</B>
+<B>hide</B>	<B>index</B>	<B>insert</B>	<B>invoke</B>
+<B>show</B>
+ <P>
+See the <a href="../mann/buttonbox.html">buttonbox</a> manual entry for details on the associated methods. <P>
+<H2>WIDGET-SPECIFIC METHODS</H2>
+ 
+<DT><I>pathName <B>cget</B></I> <I>option</I>
+<DD>Returns the current value of the configuration option given by <I>option</I>. <I>Option</I> may have any of the values accepted by the <B>iwidgets::dialogshell</B> command. 
+<DT><I>pathName <B>childsite</B></I>
+<DD>Returns the pathname of the child site widget. 
+<DT><I>pathName</I> <B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?
+<DD>Query or modify the configuration options of the widget. If no <I>option</I> is specified, returns a list describing all of the available options for <I>pathName</I> (see <B>Tk_ConfigureInfo</B> for information on the format of this list).  If <I>option</I> is specified with no <I>value</I>, then the command returns a list describing the one named option (this list will be identical to the corresponding sublist of the value returned if no <I>option</I> is specified).  If one or more <I>option-value</I> pairs are specified, then the command modifies the given widget option(s) to have the given value(s);  in this case the command returns an empty string. <I>Option</I> may have any of the values accepted by the <B>iwidgets::dialogshell</B> command. <P>
+<P>
+<H2>COMPONENTS</H2>
+ <P>
+
+Name:	<B>dschildsite</B>
+Class:	<B>frame</B>
+ 
+<DD> The dschildsite component is the user child site for the dialog shell.  See  the <a href="../mann/frame.html">frame</a> widget manual entry for details on the dschildsite component item. <P>
+
+Name:	<B>separator</B>
+Class:	<B>frame</B>
+ 
+<DD> The separator component devides the area between the user child site and the button box.  See the <a href="../mann/frame.html">frame</a> widget manual entry for details on the  separator component item. <P>
+
+Name:	<B>bbox</B>
+Class:	<B>ButtonBox</B>
+ 
+<DD> The bbox component is the button box containing the buttons for the dialog  shell.  See the <a href="../mann/buttonbox.html">buttonbox</a> widget manual entry for details on the  bbox component item.  <P>
+<P>
+<H2>EXAMPLE</H2>
+ <PRE>
+ package require Iwidgets 4.0
+ iwidgets::dialogshell .ds -modality none
+<P>
+ .ds add OK -text "OK" 
+ .ds add Cancel -text "Cancel"
+ .ds default OK
+<P>
+ .ds activate
+</PRE>
+<P>
+<H2>AUTHOR</H2>
+ Mark L. Ulferts <P>
+<H2>KEYWORDS</H2>
+ dialogshell, dialog, shell, widget 
+</BODY>
+</HTML>

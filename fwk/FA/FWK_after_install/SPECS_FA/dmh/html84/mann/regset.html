@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="regset_cmds_"></A>
+<TITLE>regset Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ regset - Manage the Windows NT Environment registry <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh::regset</B>  <I>?switches?  varname  ?value?</I> <P>
+<B>dmh::regset -enum</B>  ?{ <B>-machine_env</B> | <B>-user_env</B> }? <P>
+<B>dmh::regset -announce</B> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command is used to work with environment variables in the Windows NT registry.  These environment variables are persistent;  having been set, they are set for subsequent processes and  future computing sessions.  Similar behavior is obtained on Posix platforms by editing the profile scripts that are invoked for every user, or for the individual user. <P>
+The optional <I>?value?</I> term is indicated to create or to update the value of the variable whose name is <I>varname</I>.  If there is no <I>value</I> term, the current value of the variable is returned.  If the value of a non-existent variable is queried, an error is returned. You can query a variable inside of <a href="../mann/catch.html">catch</a> to test for the existence of a variable; or use the <B>-enum</B> switch discussed below. <P>
+The default behavior when setting a variable is to attempt to set it for the machine.  If the current user does not have permission to alter the machine settings the variable is set for the current user. The user must belong to the Administrator security group to be able to alter the machine settings. The machine settings are in the registry under  HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session  Manager\Environment. The user settings are in the registry under HKEY_CURRENT_USER\Environment. The registry location can be explicitly targeted by specifying the optional switch <B>-machine_env</B> or the optional switch <B>-user_env</B>. <P>
+When a variable is set, if the <I>value</I> text contains embedded NT style substitutions like %COMPUTERNAME% or %SystemRoot%, the  variable is given the data type REG_EXPAND_SZ.  This data type indicates  that Windows NT should substitute for the embedded variable at the time the value of the variable is referenced.  If the <I>value</I> text does not contain any NT style substitutions (names delimited with %'s), then it is given the data type REG_SZ.  For example: <PRE>regset DISPLAY %COMPUTERNAME%:0.0
+</PRE>
+creates the environmental variable DISPLAY which has the correct value even if the computer is renamed. <P>
+Actually, only a simple, naive check is made for the presence of %<I>token</I>% embedded substitutions.  If the text has two or more %'s in it separated by 1 or more characters, it is assumed to be REG_EXPAND_SZ. You need to override the default data type if you wish to have a REG_SZ string that has more than one % character in it,  or wish to have a REG_EXPAND_SZ string with less than two % characters in it. Use the switches <B>-REG_SZ</B> or <B>-REG_EXPAND_SZ</B> to explicitly specify the assigned data type. <P>
+The switch <B>-enum</B> is used to enumerate existing environment variables.  A list of Tcl statements is returned that could be used to create or recreate the existing values. You may use the <B>-enum</B> switch with the switches <B>-machine_env</B> or <B>-user_env</B> to limit the enumerated list to just the desired environment; the default is to obtain both. When the <B>-enum</B> switch is given, the user does not specify the <I>varname</I> or <I>value</I> arguments.  <P>
+The switch <B>-delete</B> is used to remove a variable.  Unless  the <B>-machine_env</B> or <B>-user_env</B> switches are used to limit the scope, the variable is deleted from both the machine and the user environment if the user has the privileges to do so.   The command returns a count of the entries deleted.  The returned count may may be zero; it is not  an error to delete a non-existent variable. However, an error is returned if <B>-machine_env</B> or  <B>-user_env</B> is explicitly specified, and the user does not  have security credentials to carry out the deletion. <P>
+By default, as you make changes to the registry, other programs do not know that changes have occured.  The flag <B>-announce</B> is used to broadcast a message that the environment has changed.  When this flag is used, the Program Manager and possibly other applications, update their knowledge of the environment settings.  Subsequent processes started by the Program Manager are consequently given the new environment settings. If you are making several changes to the registry, it is much more efficient to use the -announce flag only on the last change,  or to use <B>regset -announce</B> as the final command.   <P>
+Technically,  the announce option causes the WM_WININICHANGE message to be  sent to all toplevel windows with the LPARAM sendmessage() parameter being a pointer to the string "Environment".  <P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/tclvars.html">tclvars</a> (variable env) <P>
+<H2>AUTHOR</H2>
+ Ed Hume, Hume Integration Software This is licensed software, (C)Copyright 1995, all rights reserved. <P>
+<H2>KEYWORDS</H2>
+ NT registry, environment 
+</BODY>
+</HTML>

@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="source_Tcl_"></A>
+<TITLE>source Tcl Built-In Commands</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ source - Evaluate a file or resource as a Tcl script <P>
+<H2>SYNOPSIS</H2>
+ <B>source <I>fileName</B></I> <P>
+<B>source</B> <B>-rsrc <I>resourceName </B></I>?<I>fileName</I>? <P>
+<B>source</B> <B>-rsrcid <I>resourceId </B></I>?<I>fileName</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command takes the contents of the specified file or resource and passes it to the Tcl interpreter as a text script.  The return value from <B>source</B> is the return value of the last command executed in the script.  If an error occurs in evaluating the contents of the script then the <B>source</B> command will return that error. If a <B>return</B> command is invoked from within the script then the remainder of the file will be skipped and the <B>source</B> command will return normally with the result from the <B>return</B> command. <P>
+The end-of-file character for files is '\32' (^Z) for all platforms. The source command will read files up to this character.  This restriction does not exist for the <B>read</B> or <B>gets</B> commands, allowing for files containing code and data segments (scripted documents). If you require a ``^Z'' in code for string comparison, you can use ``\032'' or ``\u001a'', which will be safely substituted by the Tcl interpreter into ``^Z''. <P>
+The <I>-rsrc</I> and <I>-rsrcid</I> forms of this command are only available on Macintosh computers.  These versions of the command allow you to source a script from a <B>TEXT</B> resource.  You may specify what <B>TEXT</B> resource to source by either name or id.  By default Tcl searches all open resource files, which include the current application and any loaded C extensions.  Alternatively, you may specify the <I>fileName</I> where the <B>TEXT</B> resource can be found. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/file.html">file</a>, <a href="../mann/cd.html">cd</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ file, script 
+</BODY>
+</HTML>

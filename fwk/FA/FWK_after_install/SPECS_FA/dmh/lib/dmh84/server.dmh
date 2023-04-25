@@ -1,0 +1,870 @@
+# $Header: /usr/cvsroot/tcllib84/server.dmh,v 1.4 2004/06/23 19:48:12 hume Exp $
+#
+# (C) Copyright Hume Integration Software 1994, 1995
+# All Rights Reserved
+# Licensed Materials - Property of Hume Integration Software
+#
+# $Log: server.dmh,v $
+# Revision 1.4  2004/06/23 19:48:12  hume
+# Receive box ordering to favor replies.
+#
+# Revision 1.3  2002/12/19 14:08:36  hume
+# Added DMH server "mbx cleanup $box" for future cleanup of temporary mailbox
+# in the wake of a "DoXact" timeout.
+#
+# Revision 1.2  2002/10/29 22:22:14  hume
+# Implemented ::dmh::lset for DMH server's as a smart wrapper to have
+# interoperability with pre-84 DMH clients.
+#
+# Revision 1.1.1.1  2002/10/06 17:21:35  hume
+# From previous version with changes for new ::dmh namespace and lset -> vset
+#
+# Revision 1.6  2002/04/02 14:12:31  hume
+# Added clientID mbx command.
+#
+# Revision 1.5  2001/11/15 17:14:17  hume
+# Updated company name.
+#
+# Revision 1.4  2001/05/25 22:41:12  hume
+# Backup restoration.
+#
+# Revision 1.4  2001/02/13 13:35:27  hume
+# Updated gateway reference if info nameofexecutable does not work.
+#
+# Revision 1.3  2000/12/07 01:19:36  hume
+# Modified logic of 7/8/1999 update dealing with a host that has multiple
+# hostname/IP addresses.  If you do not specify a host for the
+# server, no host is specified to the socket open.  This will make the server
+# visible to the default hostname interface, and the "localhost" interface.
+# Depending on your OS, the server may also serve on all of the other hostname
+# interfaces.  If you do specify a specific interface by hostname or
+# IP address, then you will serve only on the specified interface, and
+# depending on your OS, you may not even be visible to the clients on your
+# machine trying to connect to "localhost".
+#
+# Revision 1.2  2000/08/18 20:35:42  hume
+# mh_server_status mistakenly included hsms and ipcomm connections
+# different DMH server version of dp_CleanupRPC was eliminated.
+#
+# Revision 1.1.1.1  2000/03/01 21:20:55  hume
+# pkgindex only change.
+#
+# Revision 1.2  1999/10/05 17:58:23  hume
+# Retry count in mbx init.
+#
+# Revision 1.1.1.1  1999/10/05 00:58:06  hume
+# Initial Tcl eight.two version.
+#
+# Revision 1.2  1999/07/08 13:14:53  hume
+# Server side DMH can specify which network interface.
+#
+# Revision 1.1.1.1  1999/07/02 18:48:37  hume
+# Starting point for Tcl 8.1.
+#
+# Revision 1.5  1998/10/28 20:07:45  hume
+# Fix for client-server synchronization bug.
+#
+# Revision 1.4  1998/08/25 20:55:22  hume
+# Updated dmh42 reference to dmh80.
+#
+# Revision 1.3  1997/11/12 21:19:02  hume
+# Changed remaining two bgerror calls to call error or return -code error.
+#
+# Revision 1.2  1997/10/14 23:06:40  hume
+# Updated error handling.  User is expected to install own bgerror or tkerror
+# procedure.
+#
+# Revision 1.1.1.1  1997/10/03 02:31:41  hume
+# From tcllib42 with edits.
+#
+# Revision 1.8  1997/04/18 19:21:13  hume
+# Changed status version to test tcl_version in case of running in background.
+#
+# Revision 1.7  1997/03/26 12:58:07  hume
+# Added "mbx server <group>" for server initialization.
+#
+# Revision 1.6  1997/03/14 02:39:27  hume
+# Improved status features.
+#
+# Revision 1.5  1997/03/11 22:52:50  hume
+# Moved gateway to $dmh_library.
+#
+# Revision 1.4  1997/03/11 18:48:37  hume
+# Moved DMH client Tcl logic into C code.
+#
+# Revision 1.3  1997/03/05 14:58:59  hume
+# Changed "mbx count" usage, mbx end for server.
+#
+# Revision 1.2  1997/03/04 22:01:06  hume
+# Has changes for C code queues.
+#
+# Revision 1.1.1.1  1997/02/11 14:26:54  hume
+# For Tk 4.2
+#
+namespace eval dmh {
+#
+#
+# message hub server logic for dmh_wish - Distributed Message Hub Wish
+#
+#   mh_msgs($boxname) - messages queues ordered oldest to newest
+#                       maintained in C code, read-only from Tcl code
+#
+#   mh_last_read($boxname) $fileID $msg  - staging array for messages that have
+#       been forwarded to clients.  When successful sending is confirmed the
+#       message is deleted.  The message can be put back on the queue if the
+#       transfer to the client fails.  Shows last message read by a client.
+
+
+proc mh_lostclient {connID {superseded 0}} {
+    # we learned about a client going down when sending to him failed
+    # if superseded is true, we learned about loss when a new instance
+    # came along so be extra careful in cleanup - you might hurt the new guy.
+    # most of the time we have already deleted his receive boxes
+    # waiting for him to request the next message
+    # but we have not unset his client records.
+    # here we do a scrub of client records but the queue and 
+    # the last_read are left alone.  Its an application responsibility
+    # to close the boxes if they are done with them.
+    variable mh_waitclient 
+    variable mh_waitboxes 
+    variable mh_count
+
+    # if the application has a defined lostclient handler, call it
+    # the application can look at mh_waitboxes($connID) 
+    # and can shutdown data subscriptions
+    if { [info commands mh_app_lostclient] == "mh_app_lostclient" } {
+        catch { mh_app_lostclient $connID $superseded }
+        }
+
+    # now do any remaining cleanup
+    catch {unset mh_count($connID)}
+    if { [info exists mh_waitclient] } { 
+        foreach box [array names mh_waitclient] {
+            if { $mh_waitclient($box) == $connID } { 
+                unset mh_waitclient($box) 
+                }
+            }
+        }
+    catch { unset mh_waitboxes($connID) }
+    # had the lost client superseded other clients on boxes he waited on?
+    # if so, and the superseded client(s) exist, their receives should be restored
+    # to restore pending receives that were superceded by the lost client
+    # we need to iterate all the mh_waitboxes
+    if { [info exists mh_waitboxes] } {
+        foreach conn [array names mh_waitboxes] {
+            foreach box $mh_waitboxes($conn) {
+                if { ![info exists mh_waitclient($box)] || ($mh_waitclient($box) == "") } {
+                    set mh_waitclient($box) $conn
+                    }
+                }
+            }
+        }
+    }
+
+########### BUSINESS RULE DEFAULT ##################
+variable mh_close_on_supersede
+if { ![info exists mh_close_on_supersede] } {
+    set mh_close_on_supersede 0
+    }
+
+# The C code notices a superseded client(s) during the first stage of a receive refresh
+# when the client's former waitlist is being erased, and the mh_waitclient(<box>)
+# identfies a different client.  
+# If a client only reads from one box or doesn't read,
+# the existence of a superseded instance will go undetected.
+proc mh_superseded_client old_connID {
+   #
+   #  A new client instance is receiving from a box or boxes
+   #     where we used to have a different client
+   #
+   ####  BUSINESS RULE INSTANTIATION ####
+   variable mh_close_on_supersede
+   #
+   # Do we just do a "weak" test of the connection?
+   if { !$mh_close_on_supersede } {
+       mh_ping_client $old_connID 1
+       }\
+   else {
+       # Or do we assume the superseded connection is from a prior client instance
+       # that no longer exists, so we close the connection and recover the
+       # file descriptor
+       catch { close $old_connID }
+       }
+   }
+
+proc mh_ping_client {old_connID {superseded 0}} {
+   if { $old_connID == "__me__" } {return 0}
+   # test if the old connection is dead 
+   set rc [catch { dp_RDO $old_connID info commands mbx }]
+   if { $rc } {
+       # old connection is gone
+       mh_lostclient $old_connID $superseded
+       }
+    return $rc
+    }
+   
+
+proc mh_clientunreceive boxlist {
+    # take boxes off an active waitlist for the requesting client
+    variable dp_rpcFile
+    variable mh_waitboxes 
+    variable mh_waitclient 
+    if { ![info exists dp_rpcFile] || $dp_rpcFile == "" } { 
+        set connID __me__
+        }\
+    else {
+        set connID $dp_rpcFile
+        }
+    if { ![info exists mh_waitboxes($connID)] } return
+    foreach box $boxlist {
+        set box [mh_filtergroup $box]
+        set i [lsearch -exact $mh_waitboxes($connID) $box]
+        if { $i >= 0 } {
+            set mh_waitboxes($connID) [lreplace $mh_waitboxes($connID) $i $i]
+            unset mh_waitclient($box)
+            }
+        }
+    }
+
+proc mh_anyclientunreceive box {
+    # take box off any active waitlist
+    variable mh_waitboxes 
+    variable mh_waitclient 
+    set box [mh_filtergroup $box]
+    if { ![info exists mh_waitclient($box)] } return
+    set connID $mh_waitclient($box)
+    if { $connID == "" } { unset mh_waitclient($box) ; return }
+    set i [lsearch -exact $mh_waitboxes($connID) $box]
+    if { $i >= 0 } {
+        set mh_waitboxes($connID) [lreplace $mh_waitboxes($connID) $i $i]
+        unset mh_waitclient($box)
+        }
+    }
+
+
+
+proc mh_server_init {{igroup ""} args} {
+   foreach v {mh_serverbox mh_group mh_tracebox dp_port_debug mhc_when_msg_again} { variable $v }
+   set mhc_when_msg_again 0
+   # what is our server box if we are running in the generic server
+   if { [info command execute] == "execute" } {
+       set reply [join [split [execute "query server"] " \{\}"]]
+       set mh_serverbox [substr $reply "SERVER = " " "]
+       set reply [join [split [execute "query trace"] " \{\}"]]
+       set mh_tracebox [substr $reply "TRACE = " " "]
+       }\
+   else { 
+      set mh_tracebox "TRACE"
+      }
+
+   if { $igroup == "" } { set igroup mbx }
+   set group $igroup
+ 
+    # see if the groupname is aliased
+    if { [info exists mh_alias($group)] } {
+        set group $mh_alias($group) }
+
+   # check for optional host name
+   if { [string first : $group] > 0 } {
+       vset [split $group :] "host port"
+       # in the case of a host with multiple IPs we assume that the
+       # user has correctly specified one of the valid hostnames or IPs
+       #if { $host != [dp_hostname] } {
+           #error "Server cannot initialize for host $host when running\
+ on host $mh_host."
+       #    }
+       }\
+   else {
+       # no explicit host specified, use default host behavior of socket call
+       set port $group
+       set host {}
+       }
+
+   # if port is not a number, make it a number
+   set portstring $port
+   set fullmatch ""
+   regexp \[0-9\]+ $port fullmatch
+   if { $port == "" || $fullmatch != $port } {
+        set port [mh_name_to_socket $port]
+        }
+
+   if { $args == "" } { set tries 1 }\
+   else { set tries [expr $args] }
+   for { set i 1 } { 1 } {incr i} {
+       set rc [catch {dp_MakeRPCServer $port $host} dp_port_debug]
+       set conn $dp_port_debug
+       set dp_port_debug [list $dp_port_debug $i of $tries]
+       if { $rc == 0 } break
+       catch {puts stderr $dp_port_debug}
+       if { $i == $tries } break
+       if { $i >= 2 } { wait 20000 }\
+       else { wait 2000 }
+       }
+    if { $rc } {
+        global errorInfo
+        return -code error "Retried $i times - $errorInfo"
+        }
+
+   # "label" the server socket 
+   dp_atclose $conn appendUnique [list mh_server_atclose $conn]
+
+   # if the host defaulted, the system hostname should be useable by clients.
+   if { $host == {}} { set host [dp_hostname] }
+   set mh_group $host:$port
+   variable mh_alias
+   # the default group is this group
+   set mh_alias() $mh_group
+
+   foreach alias [list $igroup $port $mh_group $host:$portstring] {
+        # map any existing user aliases to $mh_group
+        # this maps the user's names to socket numbers
+        foreach sub [array names mh_alias] {
+            if { $sub == "" } continue
+            if { $mh_alias($sub) == $alias } {
+                set mh_alias($sub) $mh_group
+                }
+            }
+        # make sure this alias is installed
+        set mh_alias($alias) $mh_group
+        }
+
+   # initialize sent and receive counts (globals mh_msgs_in, mh_msgs_out)
+   # these are Tcl vars linked to C code for performance
+   mh_server_init_counts
+
+   return $mh_group
+   }
+
+# For compatibility with pre-DMH84 clients, the DMH server
+# implements the legacy lset in the ::dmh namespace
+# Could use an alias:
+#    interp alias {} ::dmh::lset {} ::dmh::vset
+# But instead, we use a smart wrapper-
+#   if the client calls lset with 2 arguments, he gets the old behavior
+#   else he gets the new ::lset.
+#   There is a possible desire to use the new ::lset with two arguments
+#   but this is not likely - the new lset is almost always used with 
+#   3 or more arguments.  Note that ::lset with two arguments only works
+#   for updating a list value; it cannot be used to create a new list.
+proc lset {values names args} {
+    if { [llength $args] == 0 } {
+        return [uplevel [list ::dmh::vset $values $names]]
+        }
+    return [uplevel ::lset [list $values] [list $names] $args]
+    }
+
+# called if server socket is dp_close'd
+# fileevent cleanup is automatic
+proc mh_server_atclose conn {
+    # future - atexit cleanup
+    }
+
+
+proc mh_tracemsg {data} {
+    global tk_library
+    set text "[localtime 9] $data"
+    if { ![info exists tk_library] } { catch {puts "trace: $text"} }\
+    else { mh_tracewin_append $text }
+    }
+
+proc mh_tracewin_append msg {
+    # Tk code to display trace message in window
+    set win .tracewin
+    if { ![winfo exists $win] } {
+        toplevel $win
+        variable mh_group
+        wm title $win "Message Hub $mh_group - Trace Window"
+        wm iconname $win "$mh_group Trace"
+        wm minsize $win 30 1
+        frame $win.f 
+        scrollbar $win.f.scroll -relief sunken -command "$win.f.list yview"
+        listbox $win.f.list -yscroll "$win.f.scroll set" -relief sunken \
+           -setgrid 1 -font fixed -xscroll "$win.f.scrollx set"
+        $win.f.list configure -width 60 -height 5
+        scrollbar $win.f.scrollx -relief sunken -command "$win.f.list xview" \
+           -orient horizontal
+        pack $win.f.scroll -side right -fill y
+        pack $win.f.scrollx -side bottom -fill x
+        pack $win.f.list -side left -expand yes -fill both
+        pack $win.f -side top -expand yes -fill both
+        }
+    set lb $win.f.list
+    set ct [$lb size]
+    if { $ct > 800 } { $lb delete 0 25 }
+    $lb insert end $msg
+    }
+
+
+proc mbx {verb args} {
+    # SERVER version of mailbox messaging calls
+    # application code can be deployed in the server and use the mbx calls
+    if { $verb == "put" } {
+        vset $args "destbox message"
+        if { [llength $destbox] } { 
+            mh_msg_send_by_client $destbox $message 
+            return
+            }
+        error "syntax: put <dest> <msg>"
+        }
+    if { $verb == "putr" } {
+        vset $args "dest replybox msg"
+        if { [llength $dest] } { 
+            mh_msg_send_by_client $dest $msg $replybox 
+            return
+            }
+        error "syntax: putr <dest> <reply> <msg>"
+        }
+    if { $verb == "whenmsg" } {
+        variable mhc_whenmsg
+        variable mhc_when_msg_again
+        if { ![string compare $args "again"] } {
+             incr mhc_when_msg_again
+             return
+             }
+        if { ![string compare $args "dump"] } {
+             set result ""
+             if [info exists mhc_whenmsg] {
+                 foreach box [array names mhc_whenmsg] {
+                     lappend result [list $box $mhc_whenmsg($box)]
+                     }
+                 }
+             return $result
+             }
+        # whenmsg <box> <code>
+        vset $args "box code"
+        if { [llength $box] && $code != "" } {
+            set box [mh_filtergroup $box]
+            set mhc_whenmsg($box) $code
+            mhs_refresh_recv
+            return
+            }
+        error "syntax: mbx whenmsg <box> <code>"
+        }
+    if { $verb == "flush" } {
+        if { ![llength $args] } { error "missing <box>" }
+        mh_box_flush $args
+        return
+        }
+    if { $verb == "disarm" } {
+        set box $args 
+        if { ![llength $box] } { error "missing <box>" }
+        set box [mh_filtergroup $box]
+        variable mhc_whenmsg
+        catch {unset mhc_whenmsg($box)}
+        mh_clientunreceive $box
+        return 
+        }
+    if { $verb == "get" } {
+        if { ![llength $args] } { error "missing <box>" }
+        return [mh_clientget $args]
+        }
+    if { $verb == "end" } {
+        # server stops listening for new clients
+        # we do not close existing client connections
+        # we do not mess up existing aliases, messages etc
+        variable dp_atclose_callbacks
+        foreach conn [array names dp_atclose_callbacks] {
+            set text $dp_atclose_callbacks($conn)
+            if { [string first "mh_server_atclose" $text] >= 0 } {
+                catch { dp_close $conn }
+                break	;# there can only be 1 server conn
+                }
+            }
+        return
+        }
+    if { $verb == "server" || $verb == "init" } {
+        # mbx init [<host>:]<port>
+        # mbx server [<host>:]<port>
+        return [eval [concat mh_server_init $args]]
+        }
+    if { $verb == "open" } {
+        # 0 means success
+        set box $args
+        if { ![llength $box] } { error "missing <box>" }
+        set box [mh_filtergroup $box]
+        mh_msgqueue_new $box
+        return 0   ;# already exists
+        }
+    if { $verb == "is_ok" } {
+        # return 1 if we are initialized and messaging is ok
+        # else 0
+        # mh_group is set during initialization
+        variable mh_group
+        return [info exists mh_group]
+        }
+    if { $verb == "clientID" } { return "__me__" }
+    if { $verb == "cleanup" } { ;# cleanup temporary mailbox in future if late reply
+        set box $args 
+        if { ![llength $box] } { error "missing <box>" }
+        return [after 1200000 "namespace eval ::dmh {mh_box_flush $box ; mbx close $box}"]
+        }
+    if { $verb == "close" } { 
+        set box $args 
+        if { ![llength $box] } { error "missing <box>" }
+        set box [mh_filtergroup $box]
+        variable mhc_whenmsg 
+        variable mh_msgs
+        variable mh_last_read
+        variable mhc_replybox
+        catch {unset mhc_whenmsg($box)}
+        mh_anyclientunreceive $box
+        catch { 
+            # if its empty, we delete it
+            # so if you always want deletion, flush first
+            if { [lindex [mh_count $box] 2] == 0 } {
+                unset mh_msgs($box) 
+                # total cleanup:
+                unset mh_last_read($box)
+                catch {unset mhc_replybox($box)}
+                }
+            }
+       return 
+       }
+    if { $verb == "count" } { 
+        return [mh_count [mh_filtergroup $args]]
+        }
+    if { $verb == "replybox" } { 
+        set box $args 
+        if { ![llength $box] } { error "missing <box>" }
+        set box [mh_filtergroup $box]
+        variable mhc_replybox
+        set mhc_replybox($box) {}
+        return
+        }
+    if { $verb == "autolink" } {
+       set flag $args
+       if { $flag == "0" } { error "autolink cannot be turned off" }
+       return 1
+       }
+    if { $verb == "product" } { return "DMH" }
+    if { $verb == "help" } {
+        return {mbx command usage:
+mbx clientID        # obtain the DMH server's ID for the client connection
+mbx close <box>     # stop using a mailbox, its deleted if empty
+mbx count <box>     # returns {ctIn ctOut ctQueued}
+mbx disarm <box>    # disarm a whenmsg handler
+mbx end             # cleanup resources
+mbx flush <box>     # [open and] empty mailbox
+mbx get <box>       # read {{msg} {replyto}}
+mbx help            # return this text
+mbx init <group> [<retries>]    # DMH client initialization
+                    # <group> := [<hostname>:]<port_or_name>
+mbx product         # returns "DMH"
+mbx put <destbox> <message>  # send a message
+mbx putr <destbox> <replybox> <message>  # send a message with directed reply
+mbx replybox <replybox>      # indicate reply receiving priority
+dmh server <group> [<retries>]  # DMH server initialization
+mbx whenmsg <box> <code>     # setup oneshot handler for message receive
+mbx whenmsg again            # reuse current whenmsg <code> for the next message
+mbx whenmsg dump             # show pending whenmsg <code> 
+}
+       }
+
+    }
+
+# define "dmh" as an alias for the proc "mbx"
+interp alias {} ::dmh::dmh {} ::dmh::mbx
+if { [info commands ::dmh] == "::dmh" } {
+    interp alias {} ::dmh {} ::dmh::mbx 
+    }
+
+proc mhs_refresh_recv {} {
+    # SERVER version of registering boxes to watch for input
+    # the order is important - priority first, replyboxes first
+    variable mhc_whenmsg 
+    variable mhc_replybox
+    set alist [set blist {}]
+    foreach box [array names mhc_whenmsg] { 
+        if { [info exists mhc_replybox($box)] } { lappend alist $box } \
+        else { lappend blist $box }
+        }
+    set boxlist [concat $alist $blist]
+    if { [llength $boxlist] } {
+         mh_clientreceive $boxlist __me__
+         }
+    }
+
+
+#
+# start the outbound gateway, indicate an external
+# box@group to establish an outbound link
+#
+proc mhs_gateway_new {box_at_group {group_alias ""}} {
+    global env tcl_version 
+    variable dmh_library
+    variable mh_gateway
+    variable mh_group
+    set shell [info nameofexecutable]
+    if {$shell == ""} { set shell dmh84 }
+    # on a resource constrained host, the exec may fail
+    set rc [catch { exec $shell -f [file join $dmh_library dmh_gateway] -notk $mh_group $box_at_group $group_alias & } pid]
+    # when debugging, can have gateways be tkinspect-able
+    #set rc [catch { exec $shell -f [file join $dmh_library dmh_gateway] -name gw_$mh_group $mh_group $box_at_group $group_alias & } pid]
+    if { $rc } {
+        error "launch of dmh_gateway for Distributed Message Hub\
+ group $mh_group failed"
+        }\
+    else {
+        set mh_gateway $pid
+        }
+    }
+
+# gateway calls this after his launch to inform us how to send him 
+# commands
+proc mhs_gateway_callback {pid commandbox} {
+    global mh_gateway
+    set mh_gateway [list $pid $commandbox]
+    }
+
+# if you have not already installed a safe error routine,
+# here is one that does not get into a modal wait
+# You can still install your own by explicitly sourcing it.
+# You should use the "bgerror" name.  We use "tkerror" to
+# stay compatible with older applications that define tkerror.
+if { [info commands tkerror] != "tkerror" } {
+ proc ::tkerror {info} {
+    global tk_library
+    if [info exists tk_library] {::dmh::tkerror.tk $info} else {error $info}
+    }
+ }
+
+# if tkerror is called, it calls tkerror.tk
+# This message server uses a custom version that does not fall into a modal wait on
+# the dialog button.  We keep on passing messages....
+
+proc tkerror.tk err {
+    global errorInfo
+    set info $errorInfo
+    set w .tkerrorTrace
+    catch {destroy $w}
+    toplevel $w -class ErrorTrace
+    wm minsize $w 1 1
+    wm title $w "DMH Server Stack Trace for Tcl Error"
+    wm iconname $w "Stack Trace"
+    button $w.ok -text Dismiss -command "destroy $w"
+    text $w.text -relief raised -bd 2 -yscrollcommand "$w.scroll set" \
+            -setgrid true -width 60 -height 15
+    scrollbar $w.scroll -relief flat -command "$w.text yview"
+    pack $w.ok -side bottom -padx 3m -pady 3m -ipadx 2m -ipady 1m
+    pack $w.scroll -side right -fill y
+    pack $w.text -side left -expand yes -fill both
+    $w.text insert 0.0 "$info\n\nOccurred at [localtime 0]"
+    $w.text mark set insert 0.0
+    }
+
+#
+# check client records to see if any of them have been
+# superceded and we have not realized it.
+#
+# returns list of superceeded connections, hopefully empty
+# Also, initiates checking superceeded clients to see if they exist;
+# this will cleanse the records.
+#
+# right now this is only invoked on demand for user interaction
+#
+proc mh_clientcheck {} {
+    variable mh_waitboxes 
+    variable mh_waitclient
+    set result ""
+    foreach client [array names mh_waitboxes] {
+        set flag 0
+        foreach box $mh_waitboxes($client) {
+            if { $mh_waitclient($box) != $client } {
+                # a new client got the box
+                set flag 1
+                break
+                }
+            }
+        if { $flag } { lappend result $client ; break }
+        }
+    foreach client $result {
+        mh_ping_client $client
+        }
+    return $result
+    }
+
+
+#
+# provide the data of a status report
+# has to default to older format for older hub clients
+# {{mh_group  mh_msgs_in mh_msgs_out mh_msgs_Qd }
+#   { boxname count  waiter  supersede1 ss2 ... }
+#    each boxname...}
+#
+proc mh_server_status {{version 7.4}} {
+    global tcl_version
+    foreach v {mh_group mh_msgs_in mh_msgs_out mh_waitboxes mh_waitclient mh_msgs} { variable $v}
+    lappend result [list $mh_group $mh_msgs_in $mh_msgs_out \
+ [expr $mh_msgs_in-$mh_msgs_out] $tcl_version]
+    if { [info exists mh_msgs] } {
+        foreach box [array name mh_msgs] {
+            if { [info exists mh_waitclient($box)] } {
+                set waiter $mh_waitclient($box) }\
+            else { set waiter "" }
+            if { $version < 7.6 } {
+                set bs($box) [list $box [lindex [mh_count $box] 2] $waiter]
+                }\
+            else {
+                set bs($box) [concat $box [mh_count $box] $waiter]
+                }
+            }
+        }
+    # now we add clients that are waiting on boxes that do not yet exist as queues
+    # or are superceded by other clients
+    set ss_list ""
+    if { [info exists mh_waitboxes]} {
+        foreach client [array names mh_waitboxes] {
+            set waitlist $mh_waitboxes($client)
+            foreach box $waitlist {
+                if { ![info exists bs($box)] } {
+                    set winner $client
+                    if { [info exists mh_waitclient($box)] } {
+                        set winner $mh_waitclient($box)
+                        if { $winner != $client } {
+                            lappend ss_list [list $client $box]
+                            }
+                        }
+                    if { $version < 7.6 } {
+                        set bs($box) [list $box 0 $winner]
+                        }\
+                    else {
+                        set bs($box) [list $box 0 0 0 $winner]
+                        }
+                    }\
+                else {
+                    # this box record exists
+                    if { [info exists mh_waitclient($box)] && \
+                       $mh_waitclient($box) != $client } {
+                        # but other(s) are waiting on it 
+                        lappend ss_list [list $client $box]
+                        }
+                    }
+                }
+            if { ![llength $waitlist] } {
+                # right now this client is not waiting on anything
+                lappend ss_list [list $client ""]
+                }
+            }
+        }
+
+    # clients that have never read 
+    variable dp_atclose_callbacks
+    if { [info exists dp_atclose_callbacks] } {
+        foreach client [array names dp_atclose_callbacks]  {
+            if { [string first mh_lostclient $dp_atclose_callbacks($client)] < 0 } continue
+            if { ![info exists mh_waitboxes($client)] } {
+                lappend ss_list [list $client ""]
+                }
+            }
+       }
+            
+    if { [info exists bs] } { 
+        foreach box [lsort [array names bs]] {
+            lappend result $bs($box)
+            }
+        }
+    foreach rec [lsort $ss_list] {
+        vset $rec "client box"
+        if { ![llength $box] } { set box "{no whenmsg pending}" }\
+        else { set box "{superseded on $box}" }
+        if { $version < 7.6 } {
+            lappend result [list $box - $client]
+            }\
+        else {
+            lappend result [list $box - - - $client]
+            }
+        }
+    
+    return $result
+    }
+
+proc mh_sw_box_view_data box {
+   variable mh_msgs
+   set text "Mailbox $box is empty."
+   set ct [lindex [mh_count $box] 2]
+   if { $ct == 0 } { return $text }
+   set text ""
+   if { $ct > 200 } {
+       # latest 200
+       set text "*** Only latest 200 messages shown ***\n"
+       set data [lrange $mh_msgs($box) [expr $ct-200] end]
+       }\
+   else { set data $mh_msgs($box) }
+   append text [join $data \n]
+   return $text
+   }
+
+
+# request and display client identity asynchronously
+proc mh_sw_cli_id lb {
+    global argv0 argv env 
+    variable mh_group 
+    variable mh_statwin_stat
+    set client [mh_sw_get_client $lb]
+    if { $client == "__me__" } {
+       set mh_statwin_stat " (DMH server $mh_group) $argv0 $argv on display $env(DISPLAY)"
+       return
+       }
+    if { $client != "" && $client != "__me__" } {
+        set mh_statwin_stat ""
+        dp_RDO $client -callback mh_stat_args\
+ eval set __id__ \"\[dp_hostname\]:\$argv0\ \$argv\ \"
+        # ask for DISPLAY separately 
+        # if DISPLAY is not defined (Tcl-dp -notk), this quietly errs
+        dp_RDO $client -callback  mh_stat_args\
+ eval set __id__ \"\ on\ display\ \$env(DISPLAY)\"
+        }
+    }
+
+#
+# get the client identity synchronously
+# this is a liability because it may make the server
+# unresponsive if the client is busy
+# 
+proc mh_client_id client {
+    global argv0 argv env
+    variable mh_group 
+    if { $client == "__me__" } {
+       if { [info exists env(DISPLAY)] } {
+           return " (DMH server $mh_group) $argv0 $argv started on display $env(DISPLAY)"
+           }
+       return " (DMH server $mh_group) $argv0 $argv"
+       }
+   set cmd {if { [info exists env(DISPLAY)] } { 
+       return  "[dp_hostname]:$argv0 $argv on $env(DISPLAY)" }\
+ else { return "[dp_hostname]:$argv0 $argv" } }
+   # bad example - do not copy - use message queues in your app
+   catch {dp_RPC $client -events all -timeout 10000 eval $cmd } data
+   return $data
+   }
+
+proc mh_stat_args args {
+     variable mh_statwin_stat
+     append mh_statwin_stat \ $args }
+
+proc mh_sw_cli_close lb {
+    set client [mh_sw_get_client $lb]
+    if { $client != "" } {
+        if { $client != "__me__" } {
+            close $client
+            after 100 ::dmh::mh_statuswin
+            }
+        }
+    }
+
+
+proc mh_sw_cli_kill lb {
+    set client [mh_sw_get_client $lb]
+    if { $client != "" } {
+        if { $client != "__me__" } {
+            mh_client_kill $client
+            after 100 ::dmh::mh_statuswin
+            }
+        }
+    }
+
+proc mh_client_kill client {
+    dp_RDO $client after 1 exit
+    }
+
+} ;# namespace

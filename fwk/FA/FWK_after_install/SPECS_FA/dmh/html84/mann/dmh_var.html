@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="dmh_var_cmds_"></A>
+<TITLE>dmh_var Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ dmh_var - access dmh package variables <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh_var <I>name1</I> [<I>name2</I>]</B>  <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+In Tcl version 8.3 and earlier, dmh package variables are in the
+global namespace.&nbsp; With later versions of Tcl, the package variables
+exist in the namespace <b>dmh</b>.&nbsp; This procedure can be called
+to return the fully-qualified name of a DMH package variable which can
+be used to reference a variable without a global or namespace declaration.&nbsp; 
+The procedure is used to write applications that use the dmh package, and run without 
+change with different versions.&nbsp; The procedure
+is included as part of the Hume GEM applications, and Tcl packages
+that have been built after September, 2002.&nbsp;<p>
+The arguments to the procedure are, <i>name1</i>, a scalar variable name
+or an array name, and optionally, <i>name2</i>, an array subscript.
+<p>
+ For Example:
+<PRE>
+
+# used to be global mh_group 
+set varname [dmh_var mh_group]
+if { [info exists $varname] && [set $varname] != {}} { ... }
+
+# used to be $dmh(notk) where dmh was a global array
+set notk_value [set [dmh_var dmh notk]]
+</PRE>
+<P>
+Note: the <a href="mbx.html">::dmh::mbx</a> message system command executes <b>whenmsg</b> callback
+code in the <b>::dmh</b> namespace at the topmost level of the interpreter.&nbsp; 
+This means that variable references which are made outside of a procedure call, 
+can refer to <b>::dmh</b> namespace variables such as <b>$mbxmsg</b> without
+namespace qualification, and can refer to global variables such as <b>$tcl_version</b> 
+without declaring them global.
+<P>
+<H2>AUTHOR</H2>
+ Ed Hume, Hume Integration Software<P>
+<H2>SEE ALSO</H2>
+ <a href="dmh_import.html">dmh_import</a> <a href="global.html">global</a> <a href="namespace.html">namespace</a>
+<H2>KEYWORDS  </H2>
+ namespace DMH 
+</BODY>
+</HTML>

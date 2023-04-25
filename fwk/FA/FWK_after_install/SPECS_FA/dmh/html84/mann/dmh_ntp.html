@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="dmh_ntp"></A>
+<TITLE>NTP Protocol Tcl Commands</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Network Time Protocol (NTP) Tcl Commands <P>
+<H2>SYNOPSIS</H2>
+<P>
+ <B>dmh::dmh_ntp_install  <I>server  ?refresh_seconds? ?timeport?</I> </B> </P>
+<P>
+ <B>dmh::dmh_ntp_query  <I>server  ?timeport?</I> </B> </P>
+<P>
+ <B>dmh::dmh_ntp_status  </B> </P>
+
+<HR>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+These commands may be used to obtain accurate clock readings from 
+Network Time Protocol servers connected through TCP/IP.
+The <B>dmh_ntp_query</B> command returns a floating point value
+giving the offset in time measured in seconds of your system clock
+and the specified <I>server</I>.  The <I>server</I> argument is the 
+hostname or IP address of the NTP server.  Any version NTP server
+should be able to answer the version 1.0 Simple Network Time Protocol
+(SNTP) client request.  The optional <I>timeport</I> argument defaults
+to 123 which is correct in almost all situations.  If the query fails,
+an empty string is returned.  The propogation delay through the network
+is accounted for in a simple way, and no attempt is made to compensate 
+for variation in the propogation delay.
+<P>
+The <B>dmh_ntp_install</B> command is used to replace the usual 
+<A href="localtime.html">localtime</A> Tcl command with a version
+that is corrected using the time offset returned from the NTP
+server.  The optional <I>refresh_seconds</I> argument is used to
+specify a refresh interval, measured in seconds, at which the NTP
+server will be queried.  The value 0 is used to indicate that 
+periodic refreshment is not wanted.
+<P>
+The <B>dmh_ntp_status</B> command is used to determine if an
+NTP server has been successfully queried.  The command returns 
+a three element list containing 
+<OL>
+<li>the integral number of seconds offset
+<li>the integral number of microseconds offset
+<li>the <I>server</I> that supplied the time values
+</ol>
+for the last successful use of the <B>dmh_ntp_query</B> command.
+<P>
+<H2>SEE ALSO</H2>
+<P>
+<A href="http://www.ntp.org/" target=blank>www.ntp.org</A>
+&nbsp; &nbsp;
+<A href="localtime.html">localtime</A>
+&nbsp; &nbsp;
+<A href="clock.html">clock</A>
+<P>
+<H2>AUTHOR</H2>
+Hume Integration Software.  
+This is licensed and supported software,  (C)Copyright 1999 All Rights Reserved. <P>
+<H2>KEYWORDS</H2>
+<P>time date NTP SNTP</P>
+</BODY>
+</HTML>

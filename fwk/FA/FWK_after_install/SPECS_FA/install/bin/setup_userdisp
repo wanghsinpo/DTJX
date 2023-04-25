@@ -1,0 +1,81 @@
+#!/usr/bin/ksh
+trap "" 23
+
+ECHO=print
+CFGDIR=/opt/SPECS/sys/config
+FWKDIR=/opt/SPECS/usr/fwk
+USRBIN=/usr/bin
+
+setup_userdisp()
+{
+    $ECHO
+    $ECHO "#### LMP UserDispLines Setting ####"
+    $ECHO " Do you want to use LMP UserDispLines?"
+    $ECHO "Type y(enable) or n (disable), then press Return."
+    $ECHO
+    $ECHO "Default = 'n'. [quit='q'] : \c"
+    read ASSIGN
+    $ECHO
+    if [ "$ASSIGN" = "q" ]; then
+        exit
+    elif [ "$ASSIGN" = "y" ]; then
+        AssignVal="1"
+        $ECHO
+    elif [ "$ASSIGN" = "n" ]; then
+        AssignVal="0"
+        $ECHO
+    elif [ "$ASSIGN" = "" ]; then
+        ASSIGN="n"
+        AssignVal="0"
+    else
+        exit
+    fi
+   
+    if [ "$ASSIGN" = "y" ]; then
+        $ECHO
+        $ECHO "Enter number of lines to use. (1 - 8), then press Return."
+        $ECHO
+        $ECHO "Default = 1. [quit='q'] : \c"
+        read LINES
+        if [ "$LINES" = "q" ]; then
+            exit
+        elif [ "$LINES" = "" ]; then
+            LINES="1"
+        elif [ "$LINES" != "1" ] && [ "$LINES" != "2" ] &&  [ "$LINES" != "3" ] && [ "$LINES" != "4" ] \
+            && [ "$LINES" != "5" ] && [ "$LINES" != "6" ] &&  [ "$LINES" != "7" ] && [ "$LINES" != "8" ]; then
+            $ECHO "Error: Out of range."
+            exit
+        fi
+    else
+        LINES="0"
+    fi
+    TEMPMAK=/opt/SPECS_FA/dmh/vgem/defaults.ini
+    if [ -f $TEMPMAK ]; then
+        if $USRBIN/grep EquipDispMax $TEMPMAK >/dev/null;then
+            sed -e "s/^VGEM EquipDispMax .*/VGEM EquipDispMax $LINES/" $TEMPMAK > $TEMPMAK.tmp
+            mv $TEMPMAK.tmp $TEMPMAK
+            chmod 444 $TEMPMAK
+            chown root:sys $TEMPMAK
+            $ECHO "Customizing $TEMPMAK..."
+        fi
+    fi
+
+    TEMPMAK=/opt/SPECS_FA/dmh/vgem/specs/tables/LMP_configuration.csv
+    if [ -f $TEMPMAK ]; then
+        $USRBIN/cp $TEMPMAK $TEMPMAK.bak
+        if $USRBIN/grep "ShowEquipDisplay," $TEMPMAK >/dev/null;then
+            sed -e "s/^ShowEquipDisplay,.*/ShowEquipDisplay,$AssignVal/" $TEMPMAK > $TEMPMAK.tmp
+            mv $TEMPMAK.tmp $TEMPMAK
+            chmod 444 $TEMPMAK
+            chown root:sys $TEMPMAK
+            $ECHO "Customizing $TEMPMAK..."
+        fi
+    fi
+}
+
+if [ `id -un` != "root" ]; then
+    $ECHO "ERROR: You must log in as root."
+    exit
+else
+    setup_userdisp
+fi

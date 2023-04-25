@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_ExprLong_Tcl_7_0"></A>
+<TITLE>Tcl_ExprLong Tcl Library Procedures 7.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_ExprLong, Tcl_ExprDouble, Tcl_ExprBoolean, Tcl_ExprString - evaluate an expression <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+int
+<B>Tcl_ExprLong</B>(<I>interp, string, longPtr</I>)
+<P>
+int
+<B>Tcl_ExprDouble</B>(<I>interp, string, doublePtr</I>)
+<P>
+int
+<B>Tcl_ExprBoolean</B>(<I>interp, string, booleanPtr</I>)
+<P>
+int
+<B>Tcl_ExprString</B>(<I>interp, string</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter in whose context to evaluate <I>string</I> or <I>objPtr</I>.
+<P><DT><B>CONST char <I>*string</I></B> (in)
+<DD>Expression to be evaluated.  
+<P><DT><B>long <I>*longPtr</I></B> (out)
+<DD>Pointer to location in which to store the integer value of the
+expression.
+<P><DT><B>int <I>*doublePtr</I></B> (out)
+<DD>Pointer to location in which to store the floating-point value of the
+expression.
+<P><DT><B>int <I>*booleanPtr</I></B> (out)
+<DD>Pointer to location in which to store the 0/1 boolean value of the
+expression.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+These four procedures all evaluate the expression
+given by the <I>string</I> argument
+and return the result in one of four different forms.
+The expression can have any of the forms accepted by the <B>expr</B> command.
+Note that these procedures have been largely replaced by the
+object-based procedures <B>Tcl_ExprLongObj</B>, <B>Tcl_ExprDoubleObj</B>,
+<B>Tcl_ExprBooleanObj</B>, and <B>Tcl_ExprObj</B>.
+Those object-based procedures evaluate an expression held in a Tcl object
+instead of a string.
+The object argument can retain an internal representation
+that is more efficient to execute.
+<P>
+The <I>interp</I> argument refers to an interpreter used to
+evaluate the expression (e.g. for variables and nested Tcl
+commands) and to return error information.
+<P>
+For all of these procedures the return value is a standard
+Tcl result: <B>TCL_OK</B> means the expression was successfully
+evaluated, and <B>TCL_ERROR</B> means that an error occurred while
+evaluating the expression.
+If <B>TCL_ERROR</B> is returned then
+the interpreter's result will hold a message describing the error.
+If an error occurs while executing a Tcl command embedded in
+the expression then that error will be returned.
+<P>
+If the expression is successfully evaluated, then its value is
+returned in one of four forms, depending on which procedure
+is invoked.
+<B>Tcl_ExprLong</B> stores an integer value at <I>*longPtr</I>.
+If the expression's actual value is a floating-point number,
+then it is truncated to an integer.
+If the expression's actual value is a non-numeric string then
+an error is returned.
+<P>
+<B>Tcl_ExprDouble</B> stores a floating-point value at <I>*doublePtr</I>.
+If the expression's actual value is an integer, it is converted to
+floating-point.
+If the expression's actual value is a non-numeric string then
+an error is returned.
+<P>
+<B>Tcl_ExprBoolean</B> stores a 0/1 integer value at <I>*booleanPtr</I>.
+If the expression's actual value is an integer or floating-point
+number, then they store 0 at <I>*booleanPtr</I> if
+the value was zero and 1 otherwise.
+If the expression's actual value is a non-numeric string then
+it must be one of the values accepted by <B>Tcl_GetBoolean</B>
+such as ``yes'' or ``no'', or else an error occurs.
+<P>
+<B>Tcl_ExprString</B> returns the value of the expression as a
+string stored in the interpreter's result.
+If the expression's actual value is an integer
+then <B>Tcl_ExprString</B> converts it to a string using <B>sprintf</B>
+with a ``%d'' converter.
+If the expression's actual value is a floating-point
+number, then <B>Tcl_ExprString</B> calls <B>Tcl_PrintDouble</B>
+to convert it to a string.
+<P>
+<P>
+<H2>SEE ALSO</H2>
+
+Tcl_ExprLongObj, Tcl_ExprDoubleObj, Tcl_ExprBooleanObj, Tcl_ExprObj
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+boolean, double, evaluate, expression, integer, object, string
+
+</BODY>
+</HTML>

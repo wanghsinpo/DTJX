@@ -1,0 +1,465 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="secsport_tcl_"></A>
+<TITLE>hsms, secsport Tcl Commands</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ hsms, secsport - Tcl commands for SECS communication <P>
+<H2>SYNOPSIS</H2>
+<B><a href="#serial">dmh::secsport <I>portname  ?tty_device?  ?baudrate?</I></a></B> 
+<BR><B><a href="#serialip">dmh::secsport <I>portname terminalServerPort</I></a></B> 
+<BR><B><a href="#hsms">dmh::hsms <I>portname</I>  passive <I>socketNum</I></a></B>
+<BR><B><a href="#hsms">dmh::hsms <I>portname</I>  active  <I>socketNum  ?hostnameOrIP?</I></a></B>
+<BR><B><a href="#abort"><I>portname</I> abort S<I>s</I>F<I>f  ?callback?</I></a></B>
+<BR><B><a href="#close"><I>portname</I> close</B></a>
+<BR><B><a href="#lastheader"><I>portname</I> lastheader</B></a>
+<BR><B><a href="#online"><I>portname</I> online</B></a>
+<BR><B><a href="#put"><I>portname</I> put S<I>s</I>F<I>f?</I>R<I>? ?TSN? ?callback? ?</I>-whenreply <I>tcl_code</I>?</B></a>
+<BR><B><a href="#linktest"><I>portname</I> put linktest <I>?callback?</I> </B></a>
+<BR><B><a href="#putl"><I>portname</I> putl S<I>s</I>F<I>f?</I>R<I>? ?codes? ?callback? ?</I>-whenreply <I>tcl_code</I>?</B></a>
+<BR><B><a href="#reset"><I>portname</I> reset</B></a>
+<BR><B><a href="#tracewin"><I>portname</I> tracewin</B></a>
+<BR><B><a href="#whenever"><I>portname</I> whenever S<I>s</I>F<I>f  ?tcl_code?</I></B></a>
+<BR><B><a href="#whenmsg"><I>portname</I> whenmsg S<I>s</I>F<I>f  ?tcl_code?</I></B></a>
+<BR><B><a href="#again"><I>portname</I> whenmsg again</B></a>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This manpage describes the <B>secsport</B> and <B>hsms</B> commands which are used for Semiconductor Equipment Communication Standard (SECS) protocol communication from within a Tcl/Tk application. <P>
+The <B>secsport</B> command is used for SECS-I and SECS-II communication using RS-232 ports. There are three varieties of RS-232 ports supported by the <B>secsport</B> command.  First, there are the usual /dev/tty or COM ports supported directly by your operating system.  Second, the <B>secsport</B>  command supports RS-232 ports where the hardware or terminal server vendor has provided software drivers that make the ports appear to be supported by the operating system.  An example would be using a Xyplex terminal server and their csportd driver software.   Third, the <B>secsport</B> command can establish a TCP/IP connection and exchange the same SECS-I/SECS-II data streams that are usually exchanged with an RS-232 port.  This option is typically used to directly communicate with a terminal server over a local area network.  The terminal server relays the data  streams through its RS-232 port.   <P>
+The <B>hsms</B> command is used for SECS-II communication using HSMS-SS TCP/IP connections.  Both the 1993 draft standard and the 1995 SEMI standard are supported. <P>
+Multiple ports of any connection type can be used simultaneously  from a single Tcl program. Each port connection needs to be configured with its own serial  SECS-I port, or its own TCP/IP socket number. <P>
+A port connection is created using the <B>secsport</B> or the  <B>hsms</B> command; for example <PRE>set spname [<B>secsport</B> mach1 /dev/ttya 9600]
+puts "secsport $spname has been created"
+<P>
+</PRE>
+<P>
+The port connection is given a name when it is first created. The name, mach1, in this example, becomes both a Tcl command, and the name of a global data array. <P>
+When first created, the port connection does not respond to the port hardware or connection attempts.  You use the <B>online</B> command to begin communication.  Before using the <B>online</B> subcommand,  specify how received messages are to be handled.  Also, you may want to change some of the port  settings from their default values.  For example: <PRE>global mach1
+set mach1(DEVID)  3
+set mach1(EQUIP)  0
+set mach1(TRACE)  0x444c
+mach1 whenmsg S1F1 { mach1 put S1F2 L ; mach1 whenmsg again }
+mach1 tracewin
+# Now begin communications
+mach1 online
+<P>
+</PRE>
+<P>
+Most of the time during development, 
+you will want to have a window that displays communication 
+activity with the port. 
+The command <I>portname</I> <B>tracewin</B> as seen in the 
+above example, is used to create a trace window.  
+It has menu items that allow you to dynamically  
+adjust the level of detail being displayed.  
+Also, it has a menu item that brings up a Replay Window.  
+The Replay Window allows you to send or receive any message 
+that has been previously sent or received. 
+It also allows you to save and load Replay session files.  
+The re-receive feature is especially useful for you to debug 
+and develop your  interface software without needing to 
+communicate with the actual  equipment; the re-receive action 
+simulates reception of the selected messages.  
+The Tcl source code  for the <B>tracewin</B> subcommand 
+and for the Replay Window is provided.  
+You may wish to customize it or write your own version(s).  
+For example, you may wish to add menu items that cause custom 
+messages to be sent, or add menu items to display application status. 
+<P>
+The handling of received messages is specified  using the <B>whenmsg</B> 
+or <B>whenever</B> subcommands.  You register Tcl code to be executed 
+when messages of a specified stream and function are received.  
+The software environment is completely dynamic; messages, and 
+whenmsg handling code can be constructed, modified, and 
+deleted while the application executes. 
+<P>
+The <B>put</B> and <B>putl</B> subcommands are used  to send messages.  You specify callback code to detect failures such as the lack of a response.  You do not need to manage your own reply timers.  You can optionally specify Tcl code to handle a reply message when sending a message as an alternative to the <B>whenmsg</B> subcommand. <P>
+SECS Messages are specified using Tcl SECS Notation (TSN). TSN is similar to the representations of SECS-II messages found in the SEMI Standards, except that it incorporates the list formatting conventions of Tcl.  See the manpage <a href="../mann/TSN.html">TSN</a> for a description. <P>
+To parse received data items from TSN, you typically use the <a href="../mann/rset.html">rset</a>, <a href="../mann/vset.html">vset</a>, <a href="../mann/lindex.html">lindex</a>, or <a href="../mann/scan.html">scan</a> Tcl commands. Also, the <a href="../mann/lrange.html">lrange</a> and <a href="../mann/split.html">split</a> commands may be useful. <P>
+To construct TSN messages for sending, you typically use the <a href="../mann/list.html">list</a> and <a href="../mann/lappend.html">lappend</a> commands in combination with the usual substitution of variables inside of double quotes.  You also use the substitution of command evaluations by enclosing them in square brackets.  The <a href="../mann/append.html">append</a>, <a href="../mann/concat.html">concat</a>, <a href="../mann/format.html">format</a>,  <a href="../mann/join.html">join</a>, <a href="../mann/lrange.html">lrange</a>, <a href="../mann/lset.html">lset</a> and <a href="../mann/string.html">string</a> commands are also used. <P>
+You use the <B>close</B> subcommand to terminate a communication connection.   <PRE>mach1 close
+</PRE>
+When the application terminates normally, any existing port connections are automatically closed. <P>
+<H2>COMMAND SUMMARY</H2>
+ <P>
+
+<DT><a NAME="serial"><B>secsport <I>portname</B></I>  <I>?tty_dev?</I>  <I>?baud?</I>?</a>
+<DD>
+<DT><a NAME="serialip"><B>secsport <I>portname terminalServerPort</B></I></a>
+<DD>
+<DT><a NAME="hsms"><B>hsms <I>portname</B></I>  <B>passive <I>socketNum</B></I></a>
+<DD>
+<DT><a NAME="hsms"><B>hsms <I>portname</B></I>  <B>active  <I>socketNum  ?hostnameOrIP?</B></I></a>
+<DD>The <B>secsport</B> or the <B>hsms</B> command creates a port connection <B><I>portname</B></I>.  A new Tcl command and a new global data array are created with the name <B><I>portname</B></I>. There are four variations of creating a port as listed above. <DL>
+<P>
+The first variation, the <B>secsport</B> command,  creates a SECS-I serial port interface using a tty device on your Unix system, or a COM port on your Windows NT system. The optional <B><I>tty_dev</B></I> port specification defaults to COM1 on NT, /dev/tty0 on AIX, /dev/ser1 on QNX,  otherwise /dev/tty01.   The optional baudrate parameter, <I>baud</I>, defaults to 9600.   If you are using a terminal server tty device such as the  Xyplex csportd(l), the baudrate parameter has no effect. <P>
+Another means of creating a SECS-I interface, is to specify a <I>terminalServerPort</I>.  With this variation,  SECS-I/SECS-II data exchanges are made through a TCP/IP connection. This variation is usually used to directly attach to a terminal server where an RS-232 port is connected to a remote device. The <I>terminalServerPort</I> is of the form <I>hostnameOrIP_addr</I>:<I>socketNum</I>.  Optionally, the <I>terminalServerPort</I> ends with <B>,S</B> to indicate a server connection.  The latter is used in testing, but not to connect to real terminal servers.  The software assumes a binary passthrough IP socket connection to the terminal server.  Usually, you need to separately configure the terminal server so the port does not perform telnet control character mappings or other canonical processing.  For example: <DL>
+<PRE>secsport bonder6 xyplex6:2100
+</PRE>
+<P>
+If a terminal server connection is lost, the default configuration of the software tries to reconnect periodically.  Refer to the <B>active_reconnect</B> and <B>T5</B> configuration options below. </DL>
+<P>
+The <B>passive</B> variation of the <B>hsms</B> command is used to establish an HSMS Single-Session Mode passive service.  This is typically used by equipment at startup, to offer a listening socket for the host connection.  The <B><I>socketNum</B></I> argument, an integer, is the socket number.  Typical values are greater than 5000, and are chosen after reviewing /etc/services to avoid conflicts with existing TCP/IP applications.  For example, the values 6000 and 7500 should not be used since they are commonly used by X-Windows font servers. The operating system command, <B>netstat -a</B> is used to display  which sockets are in use on your system. <P>
+The <B>active</B> switch is used with the <B>hsms</B> command to create an HSMS active client.  The <B><I>hostnameOrIP</B></I> specifies the hostname or IP address of the HSMS passive server that the client should connect to.  It defaults to your own  workstation which is convenient for testing.  You may use the Unix <B>ping</B> command to determine if a hostname or IP address is valid and the server machine is participating in the TCP/IP network. The <B><I>socketNum</B></I> argument specifies the port number that the server is listening at. <P>
+The global array of the name <I>portname</I> is used to store configuration parameters for the port connection and  related data.  Do not try to use the same name in your application as a global scalar variable.  You may add your own data elements to the array, if you avoid naming conflicts with this software. Also, do not use the variable name <B>secsport</B>. This name is used dynamically to indicate which port has received the current message. </DL>
+
+<DT><a NAME="abort"><I>portname</I> <B>abort S<I>s</B></I><B>F</B><I>f</I>  ?<I>callback</I>?</a>
+<DD>This subcommand is used to send an abort reply (function 0)  to the indicated primary message <B>S<I>s</B></I><B>F</B><I>f</I> that was received.   For tty secsports, the command returns immediately and sends the abort message as event handling occurs.  For hsms ports, the abort message is sent before the abort subcommand returns.  For either type of connection, the optional <I>callback</I> argument is executed as a background event after the subcommand is completed.  See the discussion of callbacks under the <B>put</B> subcommand. 
+<DT><a NAME="close"><I>portname</I> <B>close</B></a>
+<DD>The <B>close</B> subcommand is used to discontinue communication. If an HSMS connection exists,  a <B>Separate.req</B> message is sent before the connection is ended. The <B>close</B> subcommand erases the global array associated  with the connection, and removes the <I>portname</I> as a command.   The command does not wait for any open message conversations, or queued messages to be sent. 
+<DT><a NAME="lastheader"><I>portname</I> <B>lastheader</B></a>
+<DD>This subcommand returns the ten byte header data of the last  received message.  The data is returned as a list of integers.   The command is used to send stream 9 messages with the  header of a message as data.  For example: <PRE> set MHEAD "B [$mach lastheader]"
+ $mach put S9F5 $MHEAD
+<P>
+</PRE>
+
+<DT><a NAME="online"><I>portname</I> <B>online</B></a>
+<DD>A newly constructed connection does not function until the <B>online</B> subcommand is issued.  You typically configure  parameters such as the device ID (DEVID), and set up the handling of asynchronous message reception before enabling communication. <DL>
+<P>
+For an HSMS active client, the <B>online</B> subcommand causes an attempt to establish a TCP/IP connection and subsequently a "selected" HSMS connection to the HSMS server. If the attempt to connect fails, or the "Select.req" fails, the online command will return an error. If you want to periodically retry connecting after delays of T5, call the Tcl procedure <B>hsms_wait_online</B> <I>portname</I>.  The procedure can also be called by an HSMS server.  In this case, it will wait indefinitely for a client to establish a selected connection before returning.  Once a successful connection is established,  if the connection is lost, the default behavior of an active HSMS client is to periodically attempt to reconnect.  See the description of the <B>active_reconnect</B> configuration option to change this. </DL>
+
+<DT><a NAME="put"><I>portname</I> <B>put S<I>s</B></I><B>F<I>f?</B></I><B>R<I>? ?TSN? ?callback? ?</B></I><B>-whenreply</B> <I>tcl_code</I><B>?</B></a>
+<DD>The <B>put</B> subcommand is used to send a SECS-II message. The stream <I>s</I> and function <I>f</I> must be specified. The <B>R</B> is optionally appended to the <B>S</B><I>s</I><B>F</B><I>f</I> term to indicate that you expect a reply message from the other party. <DL>
+<P>
+When you send even numbered functions, it is known that you are replying to a primary message, and the reply header is setup for you. The port software saves the latest reply header data  for unanswered primary messages.  The saved reply headers are indexed by their stream and function.  Therefore, your application should reply to a given message before receiving a new message of the same stream and function, or the reply data will be overwritten. <P>
+The data of the SECS-II message, <I>TSN</I>, is specified using Tcl SECS Notation (TSN).  See the manpage <a href="../mann/TSN.html">TSN</a>. <P>
+If you are expecting a reply, you may use the optional arguments <B>-whenreply</B> <I>tcl_code</I> to register Tcl code to be executed when the reply is received.  You can also use the <B>whenmsg</B> subcommand described below.  The <B>-whenreply</B> <I>tcl_code</I> will only be executed for the specific message that is received as a reply to your outbound message;  the secsport software will match the identification bytes in the message header.  This is different behavior than the <B>whenmsg</B> subcommand where the stream and function are matched, but not the identification bytes.  The <B>-whenreply</B> <I>tcl_code</I> approach can safely handle  the situation of simultaneously expecting more than one reply of a specific stream and  function and needing to handle the replies differently.  If you are handling all replies of a specific stream and function with the same code, you may find it easiest to use the <B>whenmsg</B> subcommand.  When the reply message is received, the <I>tcl_code</I> is executed as described below with the <B>whenmsg</B> subcommand.  If the message is not sent successfully, or the reply is not received successfully within the T3 interval, the <B>-whenreply</B> <I>tcl_code</I> is automatically cancelled. <P>
+A reply message that is sent with the function value set to 0, is known as an abort message.&nbsp;
+The <B>-whenreply</B> <I>tcl_code</I> is executed for abort replies since the received reply message
+does have matching identification bytes in the message header.&nbsp;  
+An abort reply is also seen by the optional send <I>callback</I> logic, described below.&nbsp; 
+When you are using both the send <I>callback</I> and the <I>-whenreply</I> options, you will usually
+handle all the failure cases from your <I>callback</I> code, and handle the successful replies in
+your <I>-whenreply tcl_code</I>.&nbsp; So you will typically test for and ignore an abort message
+that is received by your <I>-whenreply tcl_code</I>.&nbsp;
+If you have been using the <I>whenmsg</I> subcommand for receiving replies, 
+it is easy to forget about the possibility of receiving abort replies with your <I>-whenreply callback</I>
+since you typically register whenmsg tclcode for only the usual, successful reply function.
+<P>
+With SECS-I communication the <B>put</B> command returns immediately and the message is queued for sending in the background as events are processed.  Configuration options are discussed below.  If you have left the <B>MULT</B> option false, so that multiple open transactions are not allowed, the new message is not sent until earlier transactions have been completed either by replies having been received, or by timing out.  If the MULT option is set true, the message is sent irrespective of any open conversations. This may cause the remote entity to owe more than one reply; a  situation that some software cannot properly handle. <P>
+
+The optional <I>callback</I> argument to the <B>put</B> subcommand is used to setup Tcl code to be executed on any of the following conditions: (i) sending the message failed, (ii) the message was sent successfully, and, if the message was sent with a reply expected, (iii) notification that a reply has not been received within the time interval T3, or (iv) a Stream 9 error message or Function 0 message has been received in place
+of a successful reply.&nbsp; You do not need to set up reply timers, the software does it for you. In the case of a normal reply message not being received,  the <I>callback</I> gets evaluated twice; once at the successful completion of sending, and again when the T3 timer expires, or the other error replies are received. <P>
+For SECS-I, in accordance with the standard, the actual timeout  criteria of condition (iii) is that the initial block of the reply  has not been received in the interval T3, or that any subsequent block has not been received within interval T4 of the previous block. <P>
+The optional <I>callback</I> argument is executed as follows.   It is treated as a list, concatenated with four more arguments, and  then evaluated at a global level by the interpreter.   The evaluation method allows you to code multiple Tcl statements in your <I>callback</I>, or to set up additional arguments that preceed the appended ones for your custom procedures.  This feature is commonly used.  An example would be to pass the name of a global array that holds context information. <P>
+The four appended callback arguments are (1) the <I>portname</I>,  (2) the <B>S</B><I>s</I><B>F</B><I>f</I><B>?R?</B> argument, (3) <I>condition</I>, and (4) <I>description</I>.  The <I>condition</I> argument will be the literal text <B>send_failure</B>, <B>send_complete</B>, or <B>receive_failure</B>.  The <I>description</I> argument provides a text description or diagnostic message of the <I>condition</I>. <P>
+Here is an example of using a callback: <PRE>proc s1f1_callback {portname sfr reason desc} {
+  global debug $portname
+  if { $debug } { 
+     puts "put_callback: [list $portname $sfr $reason $desc]" 
+     }
+  if { $reason == "send_complete" } return
+  # here on failure
+  # disarm a potentially late reply:
+  $portname whenmsg S1F2 
+  # notify upperlevel software 
+  event_report $portname HEARTBEAT FAILURE
+  }
+<P>
+proc do_heartbeat {mach} {
+  $mach whenmsg S1F2 "event_report $mach HEARTBEAT OK"
+  $mach put S1F1R "" s1f1_callback
+  } <P>
+</PRE>
+<P>
+The T3 configuration option specifies the timeout interval  for reply messages. A reply may arrive late even though the <I>callback</I> is executed for the condition <B>receive_failure</B>.  If you used the <B>-whenreply</B> <I>tcl_code</I>, your <B>whenreply</B> logic is cancelled at the timeout and is not executed.  The secsport software will then see if you have a matching <B>whenmsg</B> established for this stream and function, and it will be executed.  If you wish to disarm the <B>whenmsg</B> logic,  you may do so in the <I>callback</I> as  demonstrated in the example above. <P>
+With HSMS communication, the message is sent before the  <B>put</B> subcommand returns.  Unlike with SECS-I, it is known synchronously whether the message was sent successfully. For compatibility with SECS-I,  the optional <I><B>callback</B></I> is used exactly as described above to return the send_failure, send_complete, and receive_failure results  asynchronously.  In addition, the return value of the HSMS  <B>put</B> subcommand is a two element list giving the <I>reason</I> and  <I>description</I> arguments that  are used with callbacks.  For example, typical replies are "send_complete success", and "send_failure {port is not connected}".   If you may ever use SECS-I instead of HSMS, code your driver using the callback feature for compatibility.   If you will always use HSMS, you can take advantage of the simpler synchronous result. <P>
+The global variable <I>portname</I>(<B> lastsmsg </B>) is set to the <I>TSN</I>  after the message is successfully sent.  Similarly, the latest received message is copied to <I>portname</I>(<B> lastrmsg </B>). This may be useful for debugging.  Also, you can use <a href="../mann/trace.html">trace</a> to capture every message sent or received on the port. <P>
+The software handles SECS-I line contention in the standard way; the host will defer to an equipment message, it will dispatch the receiving logic  for the equipment message, and then it will resume attempting to send the message. </DL>
+
+<DT><a NAME="putl"<I>portname</I> <B>putl S<I>s</B></I><B>F<I>f?</B></I><B>R<I>? ?codes? ?callback? ?</B></I><B>-whenreply</B> <I>tcl_code</I><B>?</B></a>
+<DD>The <B>putl</B> subcommand is the same as the <B>put</B> command except the data of the SECS-II message is specified as a list of integer codes.  The <a href="../mann/TSN_to_secs.html">TSN_to_secs</a> command is used to convert any TSN message to the integer list representation. This command is not commonly used by the application developer.   It can be used to send messages that are not proper SECS-II, or that are formatted with extra length bytes.   
+<DT><a NAME="linktest"><I>portname</I> <B>put linktest</B>  <I>?callback?</I></a>
+<DD>The <B>put linktest</B> subcommand is only used for an HSMS connection. Sending of a Linktest.req message is initiated.   This subcommand is exactly analogous to sending a data message with a reply expected except that the T6 timeout parameter defines the time interval allowed for a reply.   The optional <I>callback</I> code is executed with four appended arguments to preserve the similarity with data messages.  The <B>S<I>sFf[R]</B></I> argument will be the term <B>linktest</B>.  The <I>reason</I> argument will be any of the  above reasons, plus the term <B>reply_received</B>.  If the test is successful, the callback is executed twice; once with the reason <B>send_complete</B> and again with the reason <B>reply_received</B>. The <B>reply_received</B> callback is not used with data messages. The secsport software replies to the linktest.req message automatically once the <B>online</B> subcommand has been issued.   
+<DT><a NAME="reset"><I>portname</I> <B>reset</B></a>
+<DD>This subcommand cancels the expectation of any replies, and any associated timers.  A SECS-I port is set to the idle state and any messages in the send queue are discarded. The subcommand does not disarm the registered <B>whenmsg</B> code. 
+<DT><a NAME="tracewin"><I>portname</I> <B>tracewin</B></a>
+<DD>Creates a trace window for the hsms or secsport object.  The trace window has a menu with item selections to control the information displayed. The <B>tracewin</B> command is implemented as a Tcl procedure, which can be dynamically loaded by the interpreter after the <B>secsport</B> or <B>hsms</B> commands are first used. This is explained in the section below, entitled AUTOLOAD LIBRARY. The recommended order of setting up a port with a tracing window is (1) use the secsport or hsms command to create your connection object, (2) set the TRACE value in the connection object's array to display the trace information you desire, (3) use the whenmsg subcommand repeatedly to set up your handling of messages that you anticipate receiving, (4) invoke the tracewin subcommand, and (5) use the <B>online</B> subcommand to commence actual communication. An example of actual code is given near the beginning of this page. If the TRACE array element is set after the Trace window is created, the menu item checkboxes for controlling the display will not be accurate. 
+<DT><a NAME="whenever"><I>portname</I> <B>whenever S</B><I>s</I><B>F</B><I>f  ?tcl_code?</I></a>
+<DT><a NAME="whenmsg"><I>portname</I> <B>whenmsg S</B><I>s</I><B>F</B><I>f  ?tcl_code?</I></a>
+<DD>The <B>whenmsg</B> and <B>whenever</B> subcommands are used to setup, 
+modify, or disarm Tcl code that is executed when a message of a 
+specified stream and function are received. 
+If the optional <I>tcl_code</I> argument is not specified, 
+any existing code for the stream and function is cancelled.  
+When the <I>tclcode</I> argument is specified,  it is registered for the 
+indicated <B>S</B><I>s</I><B>F</B><I>f</I>, replacing any existing registration. 
+You do not specify an R in the stream and function argument,  
+<B>S</B><I>s</I><B>F</B><I>f</I> used with these subcommands. 
+<DL>
+<P>
+At the time the <I>tclcode</I> argument is evaluated, the global variable 
+<B>secsport</B> is set to the value <I>portname</I>, 
+the global variable <I>portname</I>(<B> lastrSFR </B>) is set to the 
+received  <B>S</B><I>s</I><B>F</B><I>f</I>, and the global variable 
+<I>portname</I>(<B> lastrmsg </B>) is set to the TSN representation 
+of the received SECS-II message.  The <I>portname</I>(<B> lastrSFR </B>) 
+array item ends with an R when the sender expects a reply. 
+<P>
+The recommended technique is to call a procedure with the data items 
+that you wish to use as arguments so that the Tcl interpreter 
+makes a copy of their values.  Otherwise, the reception of another 
+message may overwrite the current values.  Usually in your whenmsg code, 
+you represent the port connection with a variable.   
+It may be a little confusing if you are new to Tcl to write code 
+where the variable name is substituted immediately, but the 
+<I>portname</I>(<B> lastrSFR </B>) is substituted when the 
+<I>tclcode</I> is evaluated.  Use of the escape character \ is described 
+on manpage <a href="../mann/Tcl.html">Tcl</a>.  Here are two examples.  The whenmsg code is 
+evaluated at a global level so the global variables do not need to be 
+declared global. 
+<PRE># get the $mach substituted  now, but have the data
+# substituted when the message arrives:
+$mach whenmsg S12F7 \ 
+   "process_map \$${mach}(lastrmsg) ; $mach whenmsg again"
+<P>
+# echo a binary string
+$sp whenever S2F25 "$sp put S2F26 \[set ${sp}(lastrmsg)\]" <P>
+</PRE>
+<P>
+As you can see, the <I>tclcode</I> may be more than one programming statement 
+separated by semicolons or newlines.  
+There are other examples on the <a href="../mann/TSN.html">TSN</a> manpage. 
+<P>
+The <B>whenmsg</B> <I>tclcode</I> is discarded after it is used once 
+on the next message of the specified stream and function. 
+The <B>whenmsg again</B> subcommand is used to re-register the same  
+<I>tclcode</I> for use on the next message of the specified 
+stream and function.   The <B>whenever</B> <I>tclcode</I> is not
+discarded after use.  The same <I>tclcode</I> is applied to every
+received message of the specified stream and function until it is cancelled.
+In other words, the <B>whenever</B> subcommand combines the functionality
+of the <B>whenmsg</B> <I>tclcode</I> and <B>whenmsg again</B> subcommands 
+into one command.
+<P>
+This software also enables you to establish default <B>whenmsg</B> Tcl code for any stream and function that you have not specifically configured using the <B>whenmsg S</B><I>s</I><B>F</B><I>f</I> command. Just use <B>S0F1</B> as the <B>S</B><I>s</I><B>F</B><I>f</I> argument to specify default handling for any primary message (odd function) and use <B>S0F2</B> to specify the default <I>tcl_code</I> for any  reply message (even function).  Unlike the use of <B>whenmsg</B>  for specific streams and functions, the <B>S0F2</B> and <B>S0F1</B> specifications are not discarded after use, and you do not need to use <B>whenmsg again</B> to re-register them.   <PRE># catch all unexpected primaries:
+$mach whenmsg S0F1 \
+  "async_inbound \$${mach}(lastrSFR) \$${mach}(lastrmsg)"
+<P>
+proc async_inbound {SFR msg} {
+  switch -exact $SFR {
+    S1F1R { ... }
+    S5F1  { ... }
+      .... <P>
+</PRE>
+<P>
+The <B>whenmsg</B> <I>tcl_code</I> is saved in the global array <I>portname</I> using S<I>s</I>F<I>f</I> as the subscript. The <a href="../man1/dmh_inspect.html">inspect</a> application may be used to view this data. However, do not update or delete these elements directly - always use the <B>whenmsg</B> command interface. <P>
+There are predefined <B>whenmsg</B> handlers registered for some message types when the connection is created.  See the table  later in this document. </DL>
+
+<DT><a NAME="again"><I>portname</I> <B>whenmsg again</B></a>
+<DD>The <I>tcl_code</I> of the <B>whenmsg</B> subcommand is used to process the next message of the specified type and then is discarded. This subcommand re-registers the code so it is setup for the next message of the specific stream and function. <DL>
+<P>
+If you have an error in your <I>tcl_code</I> it interrupts the execution 
+at the point of error.  If you execute <B>whenmsg again</B> before the 
+error occurs, the processing of subsequent messages 
+will be insured.  However, if the <B>whenmsg again</B> statement 
+occurs after the error, the specific <I>tcl_code</I> is not re-registered. 
+Typically, when developing, you want your logic to stop on the first error 
+so you can diagnose and fix it.  However, in production, you want the 
+messages to be processed even if there is an error is some part of the code.  
+Therefore, you make an informed decision where to execute 
+the <B>whenmsg again</B> statement.  The <B>whenever</B> subcommand is
+equivalent to executing the <B>whenmsg again</B> statement at the
+beginning of your <I>tcl_code</I>.
+</DL>
+<P>
+<P>
+<H2>CONFIGURATION OPTIONS</H2>
+ <P>
+When you create a port connection object, <I>portname</I>, a global array is created with the name <I>portname</I>. Many of the elements of this array are actually configuration parameters, that you may inspect or modify.  We suggest using the inspect application during development for this purpose. <P>
+The software is designed to react and utilize your updated configuration values immediately.  For example, if you change the <B>BAUD</B> parameter, the RS-232 hardware is reconfigured on the fly, even if you are in the middle of passing a message. <P>
+The remainder of this section is a description of the available configuraton options in alphabetical order. <P>
+
+<DT><B>active_reconnect</B>, type: boolean, default: 1
+<DD>For an HSMS active client, or a SECS-I TCP/IP client of a  terminal server, this option specifies whether the client should periodically attempt to reconnect to the server if a connection is established and then lost.  The retry interval is specified by T5.  The value of T5 should probably be set to a larger value than the default if you have dozens of connections on  your workstation. Also, a connection attempt may make your process unresponsive for several minutes if the network, external node, or server is  unresponsive.  You may wish to make T5 larger if you have more than  one HSMS connection or TCP/IP client connection in your process. 
+<P>
+<DT><B>BAUD</B>, type: integer, default: 9600
+<DD>This parameter sets the baud rate for the RS-232 serial communication port.  The values 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, and 57600 are supported by this software.  Your tty device driver and hardware combination will limit the actual obtainable values.  Typically the BAUD parameter has no effect on Terminal Servers which are configured directly at the Terminal Server unit.  Baud rate changes may be made at any time, and may disrupt any active message exchange. 
+<P>
+<DT><B>DEVID</B>, type: unsigned integer,  default: 0
+<DD>Device Identification.  You need to set this parameter to the same value that the other party is using. Standard behavior for equipment is to reply to messages with S9F1 if the Host specified DEVID does not match. 
+<P>
+<DT><B>DUPBLKDET</B>, type: boolean, default:   1 
+<DD>Duplicate block detection.  If true, duplicate  SECS-I blocks will be detected and ignored. 
+<P>
+<DT><B>EQUIP</B>, type: boolean, default:  0
+<DD>Equipment or Host mode.  The <B>EQUIP</B> flag is set true for standard equipment behavior such as SECS-I send contention, and the use of Stream 9 messages. The <B>recv_S9F9</B>, <B>recv_S9FX</B>, <B>send_S9F1</B>, and <B>send_S9F9</B> parameters are reconfigured automatically when the <B>EQUIP</B> is updated. You may change them individually after setting <B>EQUIP</B>. 
+<P>
+<DT><B>hsms_reentrant</B>, type: boolean, default: 1
+<DD>Controls re-entrant execution of callback logic for HSMS connections only.  Ordinarily, whenmsg
+callback logic or send callback logic is designed to return without causing the dispatching of events.
+When this is the case, there is no possibility of nested callback execution, and this configuration
+option is irrelevant.  
+There can be dispatching of events within a callback, when using the commands <b>update</b>, <b>vwait</b>, <b>wait</b>, <b>mbx_do_xact</b>,
+or when using <b>secs_xact</b> with other connections, or if SQL table data is changed and there are
+executed subscriptions which cause event dispatching by using these commands.  Sending of DMH messages
+or SECS messages using <B>put</B> commands does not cause dispatching of events.
+If your application is receiving multiple HSMS messages, and causing the dispatching of events from
+within a callback, and if the <B>hsms_reentrant</B> option is 1, the execution of additional callback
+logic can occur before the initial callback returns.  Usually nested execution 
+is not a problem and it has been the default historic behavior to have it enabled.
+It can surface as a problem when the same stream and function are received in rapid succession because
+of the subtle aspects of the whenmsg logic.  While a whenmsg or whenever callback is executing, 
+the whenmsg callback is not registered.  After the whenmsg or whenever callback completes execution
+and returns, the whenmsg or whenever callback are re-registered if <B>whenmsg again</B> was called, or
+if the <b>whenever</b> command was used. 
+If re-entrant callback execution of the same stream and function do occur, and the <B>whenever</B> or
+<B>whenmsg again</B> commands are in use, the additional messages arrive without the usual 
+<B>whenmsg</B> callback code being registered.  Under these circumstances a typical application
+will send the abort reply with the meaning that the primary message is not being handled by the
+application.  The problem is fixed by recognizing that it is caused by nested execution, and either
+(1) modifying the use of <B>whenever</B>, <B>whenmsg again</B> or (2) eliminating the dispatching of
+events during the callback, perhaps by using asynchronous style communication, or (3) setting the
+<b>hsms_reentrant</B> option to 0.  With regards to fix (1),  It is possible to keep a callback 
+registered for nested reception by explicitly using the <B>whenmsg S<i>s</i>F<i>f tcl_code</i></B> 
+command in the callback.  This form of the whenmsg command would be used instead of using
+<B>whenever</b> or <B>whenmsg again</B>.  The developer would also need to make sure that the callback
+logic was designed for re-entrant execution.  If you choose to set
+hsms_reentrant to be 0, you need to be wary of circumstances where your application will not
+receive from and not respond to a given interface because it is executing from callback logic.
+<P>
+Your application logic can determine how many callbacks are
+simultaneously active by reading the array element <B>callback_depth</B>.  The value of this
+element is 0 when no callbacks are executing.  
+<P>
+In summary, if you are developing an application that dispatches events within whenmsg callbacks,
+you may wish to consider setting the <b>hsms_reentrant</b> option to 0 to avoid possible issues with
+nested callback execution. &nbsp;Typically, this issue is only relevant to more complex applications
+that use synchronous style communication with multiple SECS or DMH entities.
+<P>
+<DT><B>MULT</B>, type: boolean, default: 0
+<DD>Multiple Open Transactions.  If <B>MULT</B> is set to 1, put messages will be transmitted even if the port is waiting for a reply.  There is some software that is not able to handle owing more than one reply.  A typical problem is that the SYSTEM identification bytes from the latest primary message are used by the faulty software  to send any reply.  In this situation, the correct SYSTEM identification bytes for an earlier primary are never received,  and the T3 timer is not cancelled.  When the timeout occurs, there is confusion since the since the trace log shows that  the reply for the stream and function was received.   Used for SECS-I only. 
+<P>
+<DT><B>PROTOCOL</B>, type: string, default: "1995"
+<DD>The usual HSMS protocol is SEMI standard E37.   Setting this string to "1993" changes the HSMS protocol to the HSMS-93 protocol as  described next.  This value must be set before the <B>online</B> subcommand is issued. <DL>
+<P>
+Setting the <B>PROTOCOL</B> array element to the value "1993"  provides the behavior specified in the document "High-Speed SECS Message Services (HSMS) Working Draft Proposal For Single-Connection Reference Implementation" dated February 15, 1993 with the following exception.  The exception was found necessary to insure operational compatibility with GW Associates implementations. According to the draft, HSMS Control Messages should be sent with the R-bit set as for SECS-II messages.  However, GW Associates drivers that we have tested do not accept a ConnectionTestAcknowledge message (stype = 6) from an Equipment entity  with the R-bit set.  Therefore, control messages are always sent  with the R-bit clear. </DL>
+
+<DT><B>recv_S9F9</B>, type: boolean, default:  <B>!</B><I>EQUIP</I>
+<DD>S9F9 reply pre-emption.  Standard behavior is for a host not to send a reply after receiving S9F9.  Unless you override the default, host logic will erase the reply header in the wake of a  S9F9 so that a reply cannot be sent. 
+<P>
+<DT><B>recv_S9FX</B>, type: boolean <B>!</B><I>EQUIP</I>
+<DD>S9FX reply substitution.  Unless you override the default, the host logic will call your optional put callback with a receive_failure condition if the equipment sends a S9F1, S9F3, S9F7 or S9F11 in lieu of the standard reply. 
+<P>
+<DT><B>RTY</B>, type: unsigned, default:  3
+<DD>SECS-I retry count.  This count establish the maximum number of send retry attempts for block transmission. 
+<P>
+<DT><B>send_S9F1</B>, type: boolean <I>EQUIP</I>
+<DD>Device ID Match Flag.  Unless you override the default, equipment logic will send a S9F1 error message when it receives a message that has a DEVID different from its own. 
+<P>
+<DT><B>send_S9F9</B>, type: boolean  <I>EQUIP</I>
+<DD>S9F9 transaction abort.  The default behavior for equipment is to send a S9F9 message if a reply from the host is not received within the equipment's timeout interval. 
+<P><DT><B>T1</B> type: milliseconds, default: 500
+<DD>SECS-I Receive intercharacter timeout. 
+<P><DT><B>T2</B> type: milliseconds, default: 10000
+<DD>SECS-I Protocol timeout for block transfer. 
+<P><DT><B>T3</B>, type: milliseconds, default:  45000    
+<DD>Reply timeout.   
+<P><DT><B>T4</B>, type: milliseconds, default:  45000
+<DD>SECS-I Inter-block timeout. 
+<P><DT><B>T5</B>, type: milliseconds, default: 10000    
+<DD>HSMS Connect Separation timeout.  Specifies the delay  between connection attempts. This timing parameter is also used for connection retry attempts for a SECS-I TCP/IP client connection.  For the later, the default value is 15000. 
+<P><DT><B>T6</B>, type: milliseconds, default: 5000    
+<DD>HSMS Control Transaction Timeout. 
+<P><DT><B>T7</B>, type: milliseconds, default: 10000    
+<DD>HSMS Not Selected Timeout. If a TCP/IP connection does not transition  to an HSMS Selected connection within this interval, the TCP/IP connection  is broken off. 
+<P><DT><B>T8</B>, type: milliseconds, default: 5000    
+<DD>HSMS Network Intercharacter Timeout.  Not used in this implementation. 
+<P><DT><B>TRACE</B>, type: unsigned (bits), default 0
+<DD>Turns on diagnostic output.   The display window  created using the <B>tracewin</B> subcommand provides an  interactive menu to set the TRACE option and a viewing window for the  diagnostic output.  However, it is possible to utilize the diagnostic output directly using the <a href="../mann/trace.html">trace</a> command.  We have used this feature on a dial-up connection, when running dmh_wish with the -notk option and not using X-Windows. Diagnostic output is written to three global variables <I>portname</I>(<B>trace</B>),  <I>portname</I>(<B>strace</B>), and <I>portname</I>(<B>rtrace</B>), which correspond to general port output, send-related output, and receiving-related output respectively. The <B>TRACE</B> parameter is used as a bitfield.  By setting  specific bits, the corresponding output is turned on. <P>
+<PRE><P>
+General Tracing: Output to <I>portname</I>(<B>trace</B>) <P>
+Bit        Output Description <P>
+0x0001     Read and write calls
+0x0002     algorithm state changes <P>
+<P>
+Receive Tracing: Output to <I>portname</I>(<B>rtrace</B>) <P>
+Bit        Description for Received Messages <P>
+0x0100     Header binary dump 
+0x0200     Header interpretation 
+0x0400     Stream and Function description
+0x0800     Message data binary dump 
+0x0004     The Message as TSN <P>
+<P>
+Send Tracing: Output to <I>portname</I>(<B>strace</B>) <P>
+Bit        Description for Sent Messages <P>
+0x1000     Header binary dump
+0x2000     Header interpretation
+0x4000     Stream and Function description
+0x8000     Message data binary dump
+0x0008     The Message as TSN <P>
+Replay Tracing: Used for input to Replay Window <P>
+Bit        Description <P>
+0x0040     Reception data traced to <I>portname</I>(<B>last_recv</B>)
+0x0080     Send data traced to <I>portname</I>(<B>last_send</B>) <P>
+</PRE>
+<P>Even without TRACE being set, the <B>secsport</B> and <B>hsms</B>
+software keep the <B>state</B> array element updated to the current
+low-level communication state.  One application technique is to 
+use the <A HREF="trace.html">trace variable</A> command to monitor
+this array element.  The value of this element becomes <B>OFFLINE</B> 
+or <B>LISTENING</B> if the communication connection is lost, or
+if a SECS-II message cannot be sent.  
+<P>
+<DT><B>TSNSIZE</B>, type: boolean, default: 1
+<DD>When this flag is true, the TSN representation of received SECS messages are provided with array sizes indicated.  If this flag is false, array sizes are not explicitly provided; software can determine the sizes by examining the actual data using commands such as <a href="../mann/llength.html">llength</a>. 
+<P>
+<P>
+<H2>PREDEFINED WHENMSG HANDLERS</H2>
+ There is no difference between how these handlers are written and the handlers that you write.  All of the usual system behavior such as the configuration of tracing works as expected. 
+<DT><B>S2F25</B>
+<DD>The received binary message is echoed to the sender. 
+<DT><B>S2F17</B>
+<DD>The system date and time are sent to the requestor. Format: ASCII  yymmddhhmmss <P>
+<P>
+<H2>STANDARDS COMPLIANCE</H2>
+ <P>
+The secsport software is written to conform to: <P>
+SEMI E4 - SEMI Equipment Communication Standard 1 - Message Transport (SECS-I) <P>
+SEMI E5 - SEMI Equipment Communication Standard 2 - Message Content (SECS-II) <P>
+SEMI E37 HIGH-SPEED SECS MESSAGE SERVICES (HSMS) GENERIC SERVICES <P>
+SEMI E37.1 HIGH-SPEED SECS MESSAGE SERVICES SINGLE-SESSION MODE (HSMS-SS) <P>
+<P>
+The following statements are made with respect to standard documentation requirements: <P>
+Protocol parameters are set as array elements as discussed above. <P>
+Timeout parameters are specified with a resolution of 1 millisecond. Performance characteristics limit the actual resolution obtained. All normal parameter ranges are supported; the software will attempt to use any values specified. <P>
+There is no fixed maximum size of a message that can be received imposed by this software.  However, our test suites do not exercise SECS-I messages in excess of 50K or HSMS messages larger than 10 megabytes. <P>
+If a single process is acting as both the Active and Passive sides of an HSMS connection, and a message is sent that is large relative to the size of the TCP/IP buffers, there is some risk that the process will deadlock.  This is not usually a concern, and there should be no problem  with connections to other processes. <P>
+A passive HSMS server accepts multiple TCP connections, but only allows an HSMS-SS selected connection to the first active client. Subsequent clients are given the "Communication Already Active" response code to their select requests.  This behavior is exactly the preferred option of SEMI E37 <I>Rejection of Additional Connection Requests by a Passive Mode Entity</I>. <P>
+You should document the maximum expected size of messages sent by your application, in order to comply with standard documention requirements. <P>
+There is no fixed limit to the number of concurrent open transactions. However, as noted above, the reply header information is indexed by stream and function.  If more than one transaction of the same stream and function are open on a single port, the application is not able to reply to the earlier transaction.  The application is able to overcome this limit by explicitly saving and restoring the header information through the addition of custom Tcl code. <P>
+HSMS reject.req behavior is fully supported. <P>
+<P>
+<H2>AUTOLOAD  LIBRARY</H2>
+ The <B>secsport</B> and <B>hsms</B> commands rely on loading some Tcl support code when they run.  
+Also, the <B>tracewin</B> subcommand, the <B>hsms_wait_online</B> command, and some others, 
+are written as Tcl procedures.   The Tcl code procedures are loaded by the interpreter at 
+runtime when the procedures are first used.  The SECS software uses the Tcl auto-loading 
+library facility described in the man page <a href="../mann/library.html">library</a>. 
+The library of Tcl code is usually installed in the directory  /usr/local/lib/dmh84 along 
+with other procedures used by HIS provided software.  When the library is 
+installed in another directory, the environment variable <B>DMH_LIBRARY</B> should 
+be set so the HIS software will add the non-default directory to the auto_path list at startup.   
+Also, if the environmental variable <B>SECS_LIBRARY</B> is defined, the path 
+that it specifies is appended to the interpreter's  <B>auto_path</B> variable 
+when the <B>secsport</B>, <B>hsms</B>, or <B>comm</B> commands are first used.   
+The first versions of the runtime software that are found by searching the auto_path 
+list in sequence are the ones that are used.  If you  customize the runtime library, 
+either source your procedures explicitly, or change the auto_path variable 
+so that your versions are found first. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <P>
+<a href="../mann/TSN.html">TSN</a> <a href="../mann/TSN_to_secs.html">TSN_to_secs</a>  <a href="../mann/secs_to_TSN.html">secs_to_TSN</a> <P>
+<P>
+<H2>AUTHOR</H2>
+ The versions of these commands imbedded in <B>dmh_wish</B> have been developed and licensed for the Tcl/Tk  application environment by Hume Integration Software of Austin Texas (hume&#064;hume&#046;com). They are not part of the public Tcl/Tk distribution, and should not be redistributed. <P>
+<H2>KEYWORDS</H2>
+ SECS serial communication HSMS SEMI 
+</BODY>
+</HTML>

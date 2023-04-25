@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_UpVar_Tcl_7_4"></A>
+<TITLE>Tcl_UpVar Tcl Library Procedures 7.4</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_UpVar, Tcl_UpVar2 - link one variable to another <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+int
+<B>Tcl_UpVar(<I>interp, frameName, sourceName, destName, flags)</B></I>
+<P>
+int
+<B>Tcl_UpVar2(<I>interp, frameName, name1, name2, destName, flags)</B></I>
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Interpreter containing variables;  also used for error reporting.
+<P><DT><B>CONST char <I>*frameName</I></B> (in)
+<DD>Identifies the stack frame containing source variable.
+May have any of the forms accepted by
+the <B>upvar</B> command, such as <B>#0</B> or <B>1</B>.
+<P><DT><B>CONST char <I>*sourceName</I></B> (in)
+<DD>Name of source variable, in the frame given by <I>frameName</I>.
+May refer to a scalar variable or to an array variable with a
+parenthesized index.
+<P><DT><B>CONST char <I>*destName</I></B> (in)
+<DD>Name of destination variable, which is to be linked to source
+variable so that references to <I>destName</I>
+refer to the other variable.  Must not currently exist except as
+an upvar-ed variable.
+<P><DT><B>int <I>flags</I></B> (in)
+<DD>Either TCL_GLOBAL_ONLY or 0;  if non-zero, then <I>destName</I> is
+a global variable;  otherwise it is a local to the current procedure
+(or global if no procedure is active).
+<P><DT><B>CONST char <I>*name1</I></B> (in)
+<DD>First part of source variable's name (scalar name, or name of array
+without array index).
+<P><DT><B>CONST char <I>*name2</I></B> (in)
+<DD>If source variable is an element of an array, gives the index of the element.
+For scalar source variables, is NULL.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tcl_UpVar</B> and <B>Tcl_UpVar2</B> provide the same functionality
+as the <B>upvar</B> command:  they make a link from a source variable
+to a destination variable, so that references to the destination are
+passed transparently through to the source.
+The name of the source variable may be specified either as a single
+string such as <B>xyx</B> or <B>a(24)</B> (by calling <B>Tcl_UpVar</B>)
+or in two parts where the array name has been separated from the
+element name (by calling <B>Tcl_UpVar2</B>).
+The destination variable name is specified in a single string;  it
+may not be an array element.
+<P>
+Both procedures return either TCL_OK or TCL_ERROR, and they
+leave an error message in the interpreter's result if an error occurs.
+<P>
+As with the <B>upvar</B> command, the source variable need not exist;
+if it does exist, unsetting it later does not destroy the link.  The
+destination variable may exist at the time of the call, but if so
+it must exist as a linked variable.
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+linked variable, upvar, variable
+
+</BODY>
+</HTML>

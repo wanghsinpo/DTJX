@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="rename_Tcl_"></A>
+<TITLE>rename Tcl Built-In Commands</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ rename - Rename or delete a command <P>
+<H2>SYNOPSIS</H2>
+ <B>rename <I>oldName newName</B></I> <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+Rename the command that used to be called <I>oldName</I> so that it is now called <I>newName</I>. If <I>newName</I> is an empty string then <I>oldName</I> is deleted. <I>oldName</I> and <I>newName</I> may include namespace qualifiers (names of containing namespaces). If a command is renamed into a different namespace, future invocations of it will execute in the new namespace. The <B>rename</B> command returns an empty string as result. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/namespace.html">namespace</a>, <a href="../mann/proc.html">proc</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ command, delete, namespace, rename 
+</BODY>
+</HTML>

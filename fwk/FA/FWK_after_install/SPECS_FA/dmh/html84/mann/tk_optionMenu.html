@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="tk_optionMenu_Tk_4_0"></A>
+<TITLE>tk_optionMenu Tk Built-In Commands 4.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ tk_optionMenu - Create an option menubutton and its menu <P>
+<H2>SYNOPSIS</H2>
+ <B>tk_optionMenu <I>w varName value </B></I>?<I>value value ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This procedure creates an option menubutton whose name is <I>w</I>, plus an associated menu. Together they allow the user to select one of the values given by the <I>value</I> arguments. The current value will be stored in the global variable whose name is given by <I>varName</I> and it will also be displayed as the label in the option menubutton. The user can click on the menubutton to display a menu containing all of the <I>value</I>s and thereby select a new value. Once a new value is selected, it will be stored in the variable and appear in the option menubutton. The current value can also be changed by setting the variable. <P>
+The return value from <B>tk_optionMenu</B> is the name of the menu associated with <I>w</I>, so that the caller can change its configuration options or manipulate it in other ways. <P>
+<P>
+<H2>KEYWORDS</H2>
+ option menu 
+</BODY>
+</HTML>

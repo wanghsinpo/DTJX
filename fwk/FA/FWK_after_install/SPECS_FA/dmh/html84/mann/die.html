@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>die Dmhwidget</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ die - A Dmhwidget for depicting dice <P>
+<H2>SYNOPSIS</H2>
+  <B>dmhwidgets::die<I> pathName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ itk::Widget &lt;- dmhwidgets::Die <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+<B>activebackground activeforeground background font foreground</B>	
+ <P>
+See the <a href="../mann/options.html">options</a> manual entry for details on the standard options. <P>
+<H2>WIDGET-SPECIFIC OPTIONS</H2>
+ <P>
+Name:	<B>flash</B>&nbsp;
+Class:	<B>Flash</B>&nbsp;
+Command-Line Switch: <B>-flash</B>&nbsp;
+Default value:	<B>1</B>
+ 
+<DD>The value is used as a boolean to determine if the die should flash
+when the show method is called to display a value.
+
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>die</B> command creates a widget that represents the face of
+a die, and a new Tcl command whose name is <I>pathname</I>.  The command
+is then used to invoke various methods of the widget.  The command has
+the general form:<P>
+
+<P>
+<I>pathName option ?arg arg ... arg?</I>
+<P>
+<P>
+The <B>die</B> is implemented as a button.  The default button
+action is to invoke the <B>roll</B> method.<P>  The button action can be
+changed by configuring the -command option of the <B>bdie</B> component.
+(For example, <I>pathName</I> component bdie configure -command <I>newCommand</I>.)
+The die depiction is based on displayed characters for the button text.
+A larger or smaller die can be obtained by configuring a larger or smaller
+fixed pitch font for the widget.
+
+<P>
+
+<H2>WIDGET-SPECIFIC METHODS</H2>
+ 
+<DT><B><I>pathName</I> roll</B>
+<DD>Show a random die face from 1 to 6.  The return value is the chosen face value.
+
+<DT><B><I>pathName</I> show <I>N</I></B>
+<DD>Display the die face for the value <I>N</I>.  The value 0 displays a blank face.
+
+<DT><B><I>pathName</I> value </B>
+<DD>Return the numeric value corresponding to the displayed face.
+
+<H2>EXAMPLE</H2>
+ <PRE>
+package require Dmhwidgets
+
+frame .dice 
+pack .dice -side top -expand 1 -fill both
+
+dmhwidgets::die .dice.d1
+dmhwidgets::die .dice.d2
+pack .dice.d1 .dice.d2 -side left -expand 0  -padx 10 -pady 10
+
+button .diceb -text Roll -command dice_roll -width 8
+pack .diceb -side top -padx 12m -pady 4m
+
+proc dice_roll {} {
+    .diceb configure -state disabled
+    set sum 0
+    foreach d [list .dice.d1 .dice.d2] {
+        incr sum [$d roll]
+        }
+    .diceb configure -state normal
+    return $sum
+    }
+</PRE>
+
+<H2>AUTHOR</H2>
+Hume Integration Software, www.hume.com
+
+<H2>KEYWORDS  </H2>
+dice, simulation, widget 
+</BODY>
+</HTML>

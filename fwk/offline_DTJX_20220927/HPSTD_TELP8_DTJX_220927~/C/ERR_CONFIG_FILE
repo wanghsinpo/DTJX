@@ -1,0 +1,8 @@
+ERROR 70-10002
+
+Access permission of file or directories are supposed to be incorrect.
+The following permission is required.                                 
+
+     Test Plan Directory                 Read, Executable             
+     Limit File Directory                Read, Executable             
+     Data Storage Directory              Read, Write, Executable      

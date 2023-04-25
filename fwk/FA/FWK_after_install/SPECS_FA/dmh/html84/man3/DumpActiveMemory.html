@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_DumpActiveMemory_Tcl_8_1"></A>
+<TITLE>Tcl_DumpActiveMemory Tcl Library Procedures 8.1</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_DumpActiveMemory, Tcl_InitMemory, Tcl_ValidateAllMemory - Validated memory allocation interface. <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+int
+<B>Tcl_DumpActiveMemory</B>(<I>fileName</I>)
+<P>
+void
+<B>Tcl_InitMemory</B>(<I>interp</I>)
+<P>
+void
+<B>Tcl_ValidateAllMemory</B>(<I>fileName, line</I>)
+<P>
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Tcl interpreter in which to add commands.
+<P><DT><B>CONST char <I>*fileName</I></B> (in)
+<DD>For <B>Tcl_DumpActiveMemory</B>, name of the file to which memory
+information will be written.  For <B>Tcl_ValidateAllMemory</B>, name of
+the file from which the call is being made (normally <B>__FILE__</B>).
+<P><DT><B>int <I>line</I></B> (in)
+<DD>Line number at which the call to <B>Tcl_ValidateAllMemory</B> is made
+(normally <B>__LINE__</B>).
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+These functions provide access to Tcl memory debugging information.
+They are only functional when Tcl has been compiled with
+<B>TCL_MEM_DEBUG</B> defined at compile-time.  When <B>TCL_MEM_DEBUG</B>
+is not defined, these functions are all no-ops.
+<P>
+<B>Tcl_DumpActiveMemory</B> will output a list of all currently
+allocated memory to the specified file.  The information output for
+each allocated block of memory is:  starting and ending addresses
+(excluding guard zone), size, source file where <B>ckalloc</B> was
+called to allocate the block and line number in that file.  It is
+especially useful to call <B>Tcl_DumpActiveMemory</B> after the Tcl
+interpreter has been deleted.
+<P>
+<B>Tcl_InitMemory</B> adds the Tcl <B>memory</B> command to the
+interpreter given by <I>interp</I>.  <B>Tcl_InitMemory</B> is called
+by <B>Tcl_Main</B>.
+<P>
+<B>Tcl_ValidateAllMemory</B> forces a validation of the guard zones of
+all currently allocated blocks of memory.  Normally validation of a
+block occurs when its freed, unless full validation is enabled, in
+which case validation of all blocks occurs when <B>ckalloc</B> and
+<B>ckfree</B> are called.  This function forces the validation to occur
+at any point.
+<P>
+<P>
+<H2>SEE ALSO</H2>
+
+TCL_MEM_DEBUG, memory
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+memory, debug
+<P>
+<P>
+
+</BODY>
+</HTML>

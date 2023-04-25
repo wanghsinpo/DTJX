@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tk_OwnSelection_Tk_4_0"></A>
+<TITLE>Tk_OwnSelection Tk Library Procedures 4.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tk_OwnSelection - make a window the owner of the primary selection <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tk.h&gt;</B>
+<P>
+<B>Tk_OwnSelection</B>(<I>tkwin, selection, proc, clientData</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tk_Window <I>tkwin</I></B> (in)
+<DD>Window that is to become new selection owner.
+<P><DT><B>Atom <I>selection</I></B> (in)
+<DD>The name of the selection to be owned, such as XA_PRIMARY.
+<P><DT><B>Tk_LostSelProc <I>*proc</I></B> (in)
+<DD>Procedure to invoke when <I>tkwin</I> loses selection ownership later.
+<P><DT><B>ClientData <I>clientData</I></B> (in)
+<DD>Arbitrary one-word value to pass to <I>proc</I>.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tk_OwnSelection</B> arranges for <I>tkwin</I> to become the
+new owner of the selection specified by the atom
+<I>selection</I>.  After this call completes, future requests
+for the selection will be directed to handlers created for
+<I>tkwin</I> using <B>Tk_CreateSelHandler</B>.  When <I>tkwin</I>
+eventually loses the selection ownership, <I>proc</I> will be
+invoked so that the window can clean itself up (e.g. by
+unhighlighting the selection).  <I>Proc</I> should have arguments and
+result that match the type <B>Tk_LostSelProc</B>:
+<PRE>
+typedef void Tk_LostSelProc(ClientData <I>clientData</I>);
+</PRE>
+The <I>clientData</I> parameter to <I>proc</I> is a copy of the <I>clientData</I> argument given to <B>Tk_OwnSelection</B>, and is usually a pointer to a data structure containing application-specific information about <I>tkwin</I>. <P>
+<P>
+<H2>KEYWORDS</H2>
+ own, selection owner 
+</BODY>
+</HTML>

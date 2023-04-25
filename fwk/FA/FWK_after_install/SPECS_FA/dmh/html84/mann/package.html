@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="package_Tcl_7_5"></A>
+<TITLE>package Tcl Built-In Commands 7.5</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ package - Facilities for package loading and version control <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>package forget ?<I>package package ...</B></I>?
+<BR>
+<B>package ifneeded <I>package version</B></I> ?<I>script</I>?
+<BR>
+<B>package names</B>
+<BR>
+<B>package present </B>?<B>-exact</B>? <I>package </I>?<I>version</I>?
+<BR>
+<B>package provide <I>package </B></I>?<I>version</I>?
+<BR>
+<B>package require </B>?<B>-exact</B>? <I>package </I>?<I>version</I>?
+<BR>
+<B>package unknown </B>?<I>command</I>?
+<BR>
+<B>package vcompare <I>version1 version2</B></I>
+<BR>
+<B>package versions <I>package</B></I>
+<BR>
+<B>package vsatisfies <I>version1 version2</B></I>
+<BR>
+ <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command keeps a simple database of the packages available for use by the current interpreter and how to load them into the interpreter. It supports multiple versions of each package and arranges for the correct version of a package to be loaded based on what is needed by the application. This command also detects and reports version clashes. Typically, only the <B>package require</B> and <B>package provide</B> commands are invoked in normal Tcl scripts;  the other commands are used primarily by system scripts that maintain the package database. <P>
+The behavior of the <B>package</B> command is determined by its first argument. The following forms are permitted: 
+<DT><B>package forget ?<I>package package ...</B></I>?
+<DD>Removes all information about each specified package from this interpreter, including information provided by both <B>package ifneeded</B> and <B>package provide</B>. 
+<DT><B>package ifneeded <I>package version</B></I> ?<I>script</I>?
+<DD>This command typically appears only in system configuration scripts to set up the package database. It indicates that a particular version of a particular package is available if needed, and that the package can be added to the interpreter by executing <I>script</I>. The script is saved in a database for use by subsequent <B>package require</B> commands;  typically, <I>script</I> sets up auto-loading for the commands in the package (or calls <B>load</B> and/or <B>source</B> directly), then invokes <B>package provide</B> to indicate that the package is present. There may be information in the database for several different versions of a single package. If the database already contains information for <I>package</I> and <I>version</I>, the new <I>script</I> replaces the existing one. If the <I>script</I> argument is omitted, the current script for version <I>version</I> of package <I>package</I> is returned, or an empty string if no <B>package ifneeded</B> command has been invoked for this <I>package</I> and <I>version</I>. 
+<DT><B>package names</B>
+<DD>Returns a list of the names of all packages in the interpreter for which a version has been provided (via <B>package provide</B>) or for which a <B>package ifneeded</B> script is available. The order of elements in the list is arbitrary. 
+<DT><B>package present </B>?<B>-exact</B>? <I>package </I>?<I>version</I>?
+<DD>This command is equivalent to <B>package require</B> except that it does not try and load the package if it is not already loaded. 
+<DT><B>package provide <I>package </B></I>?<I>version</I>?
+<DD>This command is invoked to indicate that version <I>version</I> of package <I>package</I> is now present in the interpreter. It is typically invoked once as part of an <B>ifneeded</B> script, and again by the package itself when it is finally loaded. An error occurs if a different version of <I>package</I> has been provided by a previous <B>package provide</B> command. If the <I>version</I> argument is omitted, then the command returns the version number that is currently provided, or an empty string if no <B>package provide</B> command has been invoked for <I>package</I> in this interpreter. 
+<DT><B>package require </B>?<B>-exact</B>? <I>package </I>?<I>version</I>?
+<DD>This command is typically invoked by Tcl code that wishes to use a particular version of a particular package.  The arguments indicate which package is wanted, and the command ensures that a suitable version of the package is loaded into the interpreter. If the command succeeds, it returns the version number that is loaded;  otherwise it generates an error. If both the <B>-exact</B> switch and the <I>version</I> argument are specified then only the given version is acceptable.  If <B>-exact</B> is omitted but <I>version</I> is specified, then versions later than <I>version</I> are also acceptable as long as they have the same major version number as <I>version</I>. If both <B>-exact</B> and <I>version</I> are omitted then any version whatsoever is acceptable. If a version of <I>package</I> has already been provided (by invoking the <B>package provide</B> command), then its version number must satisfy the criteria given by <B>-exact</B> and <I>version</I> and the command returns immediately. Otherwise, the command searches the database of information provided by previous <B>package ifneeded</B> commands to see if an acceptable version of the package is available. If so, the script for the highest acceptable version number is evaluated in the global namespace; it must do whatever is necessary to load the package, including calling <B>package provide</B> for the package. If the <B>package ifneeded</B> database does not contain an acceptable version of the package and a <B>package unknown</B> command has been specified for the interpreter then that command is evaluated in the global namespace;  when it completes, Tcl checks again to see if the package is now provided or if there is a <B>package ifneeded</B> script for it. If all of these steps fail to provide an acceptable version of the package, then the command returns an error. 
+<DT><B>package unknown </B>?<I>command</I>?
+<DD>This command supplies a ``last resort'' command to invoke during <B>package require</B> if no suitable version of a package can be found in the <B>package ifneeded</B> database. If the <I>command</I> argument is supplied, it contains the first part of a command;  when the command is invoked during a <B>package require</B> command, Tcl appends two additional arguments giving the desired package name and version. For example, if <I>command</I> is <B>foo bar</B> and later the command <B>package require test 2.4</B> is invoked, then Tcl will execute the command <B>foo bar test 2.4</B> to load the package. If no version number is supplied to the <B>package require</B> command, then the version argument for the invoked command will be an empty string. If the <B>package unknown</B> command is invoked without a <I>command</I> argument, then the current <B>package unknown</B> script is returned, or an empty string if there is none. If <I>command</I> is specified as an empty string, then the current <B>package unknown</B> script is removed, if there is one. 
+<DT><B>package vcompare <I>version1 version2</B></I>
+<DD>Compares the two version numbers given by <I>version1</I> and <I>version2</I>. Returns -1 if <I>version1</I> is an earlier version than <I>version2</I>, 0 if they are equal, and 1 if <I>version1</I> is later than <B>version2</B>. 
+<DT><B>package versions <I>package</B></I>
+<DD>Returns a list of all the version numbers of <I>package</I> for which information has been provided by <B>package ifneeded</B> commands. 
+<DT><B>package vsatisfies <I>version1 version2</B></I>
+<DD>Returns 1 if scripts written for <I>version2</I> will work unchanged with <I>version1</I> (i.e. <I>version1</I> is equal to or greater than <I>version2</I> and they both have the same major version number), 0 otherwise. <P>
+<P>
+<H2>VERSION NUMBERS</H2>
+ <P>
+Version numbers consist of one or more decimal numbers separated by dots, such as 2 or 1.162 or 3.1.13.1. The first number is called the major version number. Larger numbers correspond to later versions of a package, with leftmost numbers having greater significance. For example, version 2.1 is later than 1.3 and version 3.4.6 is later than 3.3.5. Missing fields are equivalent to zeroes:  version 1.3 is the same as version 1.3.0 and 1.3.0.0, so it is earlier than 1.3.1 or 1.3.0.2. A later version number is assumed to be upwards compatible with an earlier version number as long as both versions have the same major version number. For example, Tcl scripts written for version 2.3 of a package should work unchanged under versions 2.3.2, 2.4, and 2.5.1. Changes in the major version number signify incompatible changes: if code is written to use version 2.1 of a package, it is not guaranteed to work unmodified with either version 1.7.3 or version 3.1. <P>
+<P>
+<H2>PACKAGE INDICES</H2>
+ <P>
+The recommended way to use packages in Tcl is to invoke <B>package require</B> and <B>package provide</B> commands in scripts, and use the procedure <B>pkg_mkIndex</B> to create package index files. Once you've done this, packages will be loaded automatically in response to <B>package require</B> commands. See the documentation for <B>pkg_mkIndex</B> for details. <P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/msgcat.html">msgcat</a>, <a href="../mann/packagens.html">packagens</a>, <a href="../mann/pkgMkIndex.html">pkgMkIndex</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ package, version 
+</BODY>
+</HTML>

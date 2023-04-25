@@ -1,0 +1,4025 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Ed Hume">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <meta name="Description" content="User Guide and Reference Information for the .NET SecsPort  SECS Equipment Component.">
+   <title>SecsPort   - A .NET SECS Equipment Component</title>
+</head>
+<body>
+
+<h1>
+SecsPort - A .NET Component for Deploying Equipment SECS Interfaces</h1>
+
+<p><br>Hume Integration has created a .NET component for rapidly deploying
+SEMI standard GEM compliant SECS equipment interfaces.&nbsp;&nbsp; The
+.NET component features a fully CLS (Common Language Specification) compliant
+API and can be used from any of the Microsoft .NET programming languages,
+including C#, C++, Visual Basic, and Java.&nbsp; Without any customization,
+the component implements almost all of the Fundamental GEM Requirements
+and the Additional GEM Capabilities.&nbsp; Method calls are provided for
+the developer to add his own Status Variables, Equipment Constants, Alarm
+Definitions, and Event Definitions to complement the existing items specified
+in the GEM standard.&nbsp; The developer registers callback and event handlers
+to receive asynchronous inputs such as Remote Command invocations, Terminal
+Display invocations, or the reception of any SECS message type of his choosing.&nbsp;
+Other callback mechanisms are used to provide Status Variable or Equipment
+Constant values needed for satisfying Host requests and for constructing
+dynamic Event Reports.
+<p><a NAME="features"></a>
+<h2>
+Feature Summary</h2>
+
+<ul>
+<li>
+A high-level, working SECS/GEM interface ready for adding equipment specific
+customization.</li>
+
+<li>
+Built-in handling of more than 85 standard SECS message types, all required
+GEM variables, and event types.</li>
+
+<li>
+Useable from Visual Basic (VB), C#, Extended C++, Java, or other languages
+sharing the .NET Common Language Runtime.</li>
+
+<li>
+Leverages the Hume SECS/GEM application software which has been in 7x24
+use by major equipment providers for several years.</li>
+
+<li>
+The robust and proven SECS interface server executes as a child process
+with minimal impact on your application execution.</li>
+
+<li>
+Both HSMS and SECS-I are supported.</li>
+
+<li>
+Transparent conversion of .NET Unicode string data to SECS data types including
+SECS Variant data, also known as Localized Character Strings.</li>
+
+<li>
+Supports remote debugging using the Hume Datahub SDK applications <a href="../man1/dmh_inspect.html">Inspect</a>
+and <a href="../man1/hubclient.html">hubclient</a>.</li>
+
+<li>
+Fully integrated into the .NET design environment with IntelliSense coding
+of event handlers, visible method descriptions, and parameter prompting</li>
+
+<li>
+Fully integrated into the .NET runtime environment with high-performance
+use of threading, event dispatching, controllable trace output, and error
+handling</li>
+
+<br>The SecsPort component is 100% newly written Managed Code for safe
+execution by the Common Language Runtime with automatic provision for memory
+management, runtime safety, and version control.</ul>
+
+<h3>
+<a NAME="Compliance"></a>GEM Compliance Statement</h3>
+The software is written to conform to SEMI Standard E30 - Generic Model
+for Communications and Control of SEMI Equipment (GEM).
+<p>The Equipment OEM developer will need to be mindful of the standard
+when using the Hume SecsPort Component in order to insure that compliance
+is fully met.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Fundamental GEM Requirement</b></td>
+
+<td><b>Implemented</b></td>
+
+<td><b>Gem Compliant</b></td>
+
+<td><b>Implementation Notes</b></td>
+</tr>
+
+<tr>
+<td>State Models</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>The Communication State model is implemented by the SecsPort and controlled
+by calling the <a href="#CommEnable">CommEnable</a> and <a href="#CommDisable">CommDisable</a>
+methods.&nbsp; The current Communication State value is readable as the
+property, <a href="#CommState">CommState</a>. Your application receives
+notification of CommState and similar state changes by handling the SecsPort
+<a href="#StateChange">StateChange</a>
+event.&nbsp; This event notifies you of important changes such as communication
+with the Host starting or ending.
+<p>Your logic and your Operator GUI affect the Control State by setting
+the <a href="#ControlIntent">ControlIntent </a>and <a href="#ControlMode">ControlMode</a>
+properties.&nbsp;
+<p>Comments on the Process State model follows in the next row.&nbsp; Other
+equipment models such as Spooling are described below in this table.</td>
+</tr>
+
+<tr>
+<td>Equipment Processing States</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>The example application fully implements a Process State model that
+you can copy and modify.&nbsp; Follow the example as far as posting standard
+GEM events for Process State changes and related events such as selecting
+a different Process Program.&nbsp; You also need to update Status Variables
+to keep track of the previous and current process states, just as the example
+application demonstrates.</td>
+</tr>
+
+<tr>
+<td>Host Initiated S1F13/F14 Scenario</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>This behavior is fully provided by the SecsPort component.</td>
+</tr>
+
+<tr>
+<td>Event Notification</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>Your logic needs to call the <a href="#EventPost">EventPost</a>() method
+at the occurrence of standard collection events.&nbsp; You may choose to
+define and report additional event types for the activities of your equipment.</td>
+</tr>
+
+<tr>
+<td>On-Line Identification</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>You are obligated to set the property values <a href="#MDLN">MDLN</a>
+and <a href="#SOFTREV">SOFTREV</a> to reflect the hardware and software
+configuration of the equipment.&nbsp; Any change in the equipment software
+should result in a new unique value of SOFTREV.</td>
+</tr>
+
+<tr>
+<td>Error Messages</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>The standard requires use of Stream 9 Error reporting.&nbsp; The SecsPort
+sends specific Stream 9 messages for communication faults, conversation
+timeouts, incorrect device ID, unhandled message stream or function types,
+and non-standard data.&nbsp; In the custom message handling logic that
+you write, use the method <a href="#SendS9">SendS9</a> to send error messages
+when the received message data is not in the expected format or has improper
+values.</td>
+</tr>
+
+<tr>
+<td>Documentation</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>Hume Integration has example documentation which meets requirements
+of the GEM and SECS standards.&nbsp; This documentation is provided to
+Equipment providers with permission to create derivative works.
+<p>&nbsp;The SECS Server has the ability to export HTML documents of the
+configured event, alarm, and variable table data.&nbsp; You may want to
+use this feature of the table window that is display by executing the <a href="#DebugTableWindow">DebugTableWindow</a>
+method.</td>
+</tr>
+
+<tr>
+<td>Control (Operator Initiated)</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>Use the GemGui application as a worked example.&nbsp; The startup control
+state is settable using the property <a href="#ControlStateStartup">ControlStateStartup</a>.&nbsp;
+The operator choice of ON-LINE or OFF-LINE control is settable as the property
+value <a href="#ControlIntent">ControlIntent</a>.&nbsp; The desired substate
+of ON-LINE control, LOCAL or REMOTE, is settable as the property <a href="#ControlMode">ControlMode</a>.&nbsp;
+The actual control state value reflects interaction with the Host and is
+readable as the property <a href="#ControlState">ControlState</a>.&nbsp;
+Your application receives notification of ControlState and similar state
+changes by handling the SecsPort <a href="#StateChange">StateChange</a>
+event.</td>
+</tr>
+
+<tr>
+<td><b>ADDITIONAL CAPABILITIES</b></td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td>Establish Communications</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>This behavior is fully provided by the SecsPort component.</td>
+</tr>
+
+<tr>
+<td>Dynamic Event Report Configuration&nbsp;</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>This behavior is fully provided by the SecsPort component.
+<p>With the capabilities that involve Status Variable values (SV) or Data
+Variable values (DVVAL), your job is to add equipment specific variables
+using the <a href="#VariableAdd">VariableAdd</a> method.&nbsp; You either
+provide their values through a callback using <a href="#VariableMethodSet">VariableMethodSet</a>
+or by calling <a href="#VariableSet">VariableSet</a> when their values
+are changed.&nbsp;</td>
+</tr>
+
+<tr>
+<td>Variable Data Collection</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>This behavior is fully provided by the SecsPort component.&nbsp;</td>
+</tr>
+
+<tr>
+<td>Trace Data Collection</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>This behavior is fully provided by the SecsPort component.&nbsp;</td>
+</tr>
+
+<tr>
+<td>Status Data Collection</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>This behavior is fully provided by the SecsPort component.&nbsp;</td>
+</tr>
+
+<tr>
+<td>Alarm Management</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>This behavior is fully provided by the SecsPort component.&nbsp; Your
+job is to add equipment specific alarm types using the <a href="#AlarmAdd">AlarmAdd</a>
+method.&nbsp; You use the method <a href="#AlarmSet">AlarmSet</a> to indicate
+when an alarm condition is set or cleared.&nbsp; You can optionally use
+the method <a href="#AlarmEnable">AlarmEnable </a>to enable or disable
+reporting of an alarm type as a Stream 5 message.&nbsp; Gem also requires
+event reports for the Alarm Set and Alarm Clear events.&nbsp; These event
+definitions are automatically created and managed for you by the SecsPort
+when you use the <b>AlarmAdd</b> method.</td>
+</tr>
+
+<tr>
+<td>Remote Control</td>
+
+<td>Yes&nbsp;</td>
+
+<td>Yes</td>
+
+<td>The SecsPort defines a callback, <a href="#RemoteCommandHandler">RemoteCommandHandler</a>
+which you set to receive Remote Commands (S2F21, S2F41, or S2F49) in your
+application code.&nbsp; You can use the <a href="#MessageTypeRemove">MessageTypeRemove</a>
+method to selectively not handle any of the Remote Command message types.
+You need to implement control logic that is mindful of the Process State
+model and the Control State model.&nbsp; For example, you need to disallow
+Remote Commands that affect processing when you are in the Online Local
+Control State.&nbsp;</td>
+</tr>
+
+<tr>
+<td>Equipment Constants</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>This behavior is fully provided by the SecsPort component.&nbsp; Your
+job is to add equipment specific constants using the <a href="#ParameterAdd">ParameterAdd</a>
+method.&nbsp; You call <a href="#ParameterSet">ParameterSet</a> if your
+GUI logic or controller logic changes the value so that the SECS Server
+can update the ECIDChangeName GEM variable, and issue the GEM "Operator
+Equipment Constant Change" event.&nbsp; If the host changes an Equipment
+Constant, you are notified via a <a href="#ParameterChange">ParameterChange</a>
+event.</td>
+</tr>
+
+<tr>
+<td>Process Program Management</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>The SecsPort component fully implements process program management
+features with upload and download capabilities.&nbsp; You can set the directory
+used for process programs as the property <a href="#RecipeDirectory">RecipeDirectory</a>.&nbsp;
+You can set whether process program data is transferred as binary or text
+using the <a href="#RecipesAreBinary">RecipesAreBinary</a> property.&nbsp;
+Your application is notified of process program change events by handling
+the SecsPort <a href="#StateChange">StateChange</a> event.&nbsp;&nbsp;
+You will receive notice when recipes are downloaded from the host, uploaded
+to the host, or deleted by the host.&nbsp; You can use these notifications
+to trigger validation of downloaded recipes, or you can defer validation
+until the time the process program is loaded for use.</td>
+</tr>
+
+<tr>
+<td>Material Movement</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>The GEM standard only requires that the equipment provide Data Collection
+events when material is sent from any port on the equipment, or received
+by any port, whether the transfers are automated or manual.
+<p>Automated Material Movement is implemented by calling the method <a href="#MessageTypeAdd">MessageTypeAdd</a>
+and registering a callback for each of the primary message types that the
+host sends.&nbsp; In your callback, you parse the received SECS message
+data using the <a href="#ListSplit">ListSplit</a> and <a href="#ListElement">ListElement</a>
+methods.&nbsp; You send reply messages using the <a href="#SendReply">SendReply</a>
+method.&nbsp; You initiate your own primary messages and optionally wait
+for the SECS replies using the <a href="#SendSecsMsg">SendSecsMsg</a> method.</td>
+</tr>
+
+<tr>
+<td>Equipment Terminal Services</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>The example application for the SecsPort demonstrates displaying data
+received from the host, sending acknowledgment events, and sending display
+data to the host.&nbsp; For your own implementation, use the delegate variable
+<a href="#TerminalDisplayHandler">TerminalDisplayHandler</a>
+to reference your own display method, use the method <a href="#TerminalDisplayAck">TerminalDisplayAck</a>
+to send acknowledgment events, and follow the example of the GemGui.BTerminalSend_Click
+method for sending input data to the host using <a href="#SendSecsMsg">SendSecsMsg</a>.</td>
+</tr>
+
+<tr>
+<td>Clock</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>The SecsPort component fully implements a host-settable Clock variable
+value with standard data format choices.&nbsp; The implementation does
+not affect the system clock, the host's setting is saved as an offset.</td>
+</tr>
+
+<tr>
+<td>Limits Monitoring</td>
+
+<td>No</td>
+
+<td>&nbsp;</td>
+
+<td>See the notes for Material Movement, above, to understand the general
+approach that is taken to implement this capability.&nbsp;</td>
+</tr>
+
+<tr>
+<td>Spooling</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>The SecsPort component fully implements Spooling.&nbsp; We recommend
+that the equipment supplier only allow spooling of Alarm messages, and
+Event report messages or similar messages where there is no control logic
+tied to the receiving of the reply messages.&nbsp; These are exactly the
+message types that most factory CIM workers want to collect with spooling.&nbsp;
+If restricting the spooled message types is not done, there are complex
+issues with implementation and timing that cannot be adequately tested
+and verified correct.&nbsp; The standard describes allowing the spooling
+of nearly any primary message type, out of consideration that any message
+may occur when the spool is being unloaded, and it should take its proper
+sequence at the end of the spool.&nbsp; In practice this is a rare circumstance
+because an HSMS implementation can unload thousands of messages in a few
+seconds.&nbsp; The downside of allowing messages that have control implications
+to be spooled is that they are queued for a variable and potentially lengthy
+delay before delivery.&nbsp; The equipment provider's job is to provide
+a robust control system, and we think that knowing immediately that a near
+real-time message conversation cannot be initiated is the right choice.&nbsp;
+<p>The Equipment provider can add to the message types allowed for spooling
+using the <a href="#SpoolingAllow">SpoolingAllow</a> method.&nbsp; The
+default behavior is to allow only Stream 5 (Alarms) and Stream 6 (Event
+reports) to be spooled.</td>
+</tr>
+
+<tr>
+<td>Control (Host-Initiated)</td>
+
+<td>Yes</td>
+
+<td>Yes</td>
+
+<td>The SecsPort component fully implements this behavior.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%"><a NAME="userguide"></a>
+<h2>
+<b>User Guide</b></h2>
+
+<p><br>The SecsPort .NET component is provided as the following files:
+<ul>
+<li>
+<b>SecsPort.dll </b>- the SECS/GEM component file for development and runtime
+use.&nbsp; With .NET, there are no header files.&nbsp; The development
+tools are able to determine API information from the DLL.</li>
+
+<li>
+<b>HumeDMH.dll</b>&nbsp;&nbsp;&nbsp; - a component file to use the Hume
+DMH message system.&nbsp; This component is used by the SecsPort component
+to control a SECS interface server process.</li>
+
+<li>
+<b>GemGui.cs, *.cs</b>&nbsp;&nbsp; - C# source code for an example GEM
+Equipment application.&nbsp; Most of the logic is in the file GemGui.cs&nbsp;
+There are other files for child windows including ConnectionDialog.cs which
+provides an example of configuring connection properties.</li>
+
+<li>
+<b>SecsPort.cs</b> - You are provided with the source code to the SecsPort
+Component.&nbsp; We think you will not need to modify it for normal usage.&nbsp;
+By having the source code, you can be more effective with understanding
+and debugging the interaction between the SecsPort component and your application.</li>
+
+<li>
+<b>GemEqApp.exe</b>&nbsp;&nbsp;&nbsp; - the compiled example application.</li>
+
+<li>
+<b>GemEqApp.sln, GemEqApp.csproj</b>, <b>AssemblyInfo.cs</b>, <b>App.ico</b>&nbsp;&nbsp;&nbsp;
+- project files needed to recompile the example application.</li>
+
+<li>
+<b>SecsServer.tcl</b>, <b>SecsEquip.tcl</b>, <b>DMH_forward.tcl</b>, <b>eq_custom_spool.tcl</b>,
+<b>tclIndex</b>,
+<b>make_tclIndex.bat
+</b>-
+Tcl language files used internally by the SecsPort component to integrate
+tightly with the SECS interface server process.&nbsp; The SECS Equipment
+developer does not need to modify these files.&nbsp; Standard GEM capabilities
+are provided in the .NET SecsPort API.</li>
+</ul>
+The files are distributed in a .zip archive named&nbsp; <b>DotNetEqApp.zip</b>.&nbsp;
+If you received the DMH software on CDROM, this archive is in the subdirectory
+<b>LAN_IMAGE</b>.
+<p>The distribution is designed and tested for Windows XP Professional,
+and similar up-to-date Windows Professional versions such as Windows 2000
+Pro.
+<p>The Hume developed SecsPort component is a "component" as defined by
+the Microsoft .NET Framework.&nbsp; As such, it implements the System.ComponentModel.IComponent
+interface.&nbsp; Hume Integration is also using the word "component" to
+describe high level customizable applications such as their Data Collection
+Component.
+<p><a NAME="Installation"></a>
+<h3>
+Installation</h3>
+Installation consists of extracting files in the <b>DotNetEqApp.zip </b>archive
+to a directory of your choice such as the "Visual Studio Projects" directory
+in your "My Documents" folder.&nbsp; If you have already installed the
+Hume Datahub SDK, you should not add the files in the DotNetEqApp.zip archive
+to any of the Datahub SDK GEM application directories.&nbsp; The SecsPort
+component is able to find and use the Datahub SDK GEM directories without
+usage of a common directory.
+<p>The SecsPort .NET component uses the SECS/GEM application files provided
+in the Hume Datahub SDK product.&nbsp; A developer needs to install the
+Hume Datahub SDK, and specify on the SETUP screen that the GEM/SECS applications
+should be installed.&nbsp; The SecsPort component is able to find the Datahub
+SDK files using the environment variable <b>DMH_BIN</b> which is set when
+the Datahub SDK is installed.
+<p>The situation is simpler for a runtime deployment of your equipment
+SECS interface.&nbsp; Instead of installing the Datahub SDK and copying
+the above list of Tcl language files, you can simply deploy a single file
+executeable, <b>SecsServer.exe</b>.&nbsp; This file is provided by Hume
+Integration for the usual case of using the as-provided SDK files.&nbsp;
+If you have customized the SDK files, you are able to create a custom version
+of <b>SecsServer.exe</b> using a build script.&nbsp;&nbsp; We encourage
+you to use the full SDK during development so that you have the toolset
+documentation, the debugging tools, and you are able to view the SDK GEM
+application source code.&nbsp; When you are ready for deployment, you can
+download the <b>SecsServer.zip</b> archive from the Hume customer support
+website to obtain the <b>SecServer.exe</b> program and its build script.
+<p>In order to run the example application, you need to have either the
+.NET development software installed, or the .NET runtime installed.&nbsp;
+The .NET runtime can be downloaded from&nbsp; <a href="http://www.microsoft.com/downloads">Microsoft</a>
+as the file, dotnetfx.exe.&nbsp; Note that the .NET runtime is not presently
+distributed with or built into the Windows operating systems.
+<br>&nbsp;
+<h4>
+Environment Variable&nbsp;<a NAME="DMH_DOTNET_TCLDIR"></a>DMH_DOTNET_TCLDIR</h4>
+When the SecsPort component is initialized, it needs to find the <b>SecsServer.tcl</b>
+file and the other associated support files in the same directory as the
+<b>SecsServer.tcl</b>
+file.&nbsp;&nbsp; The component looks for these files in the current working
+directory, and then it tries two directory levels up, which is the common
+development scenario when an executable is run from the subdirectory bin/Debug
+or bin/Release.&nbsp;&nbsp; This default logic may fail to find the files
+in the scenario when the Component is dragged and dropped on a design surface.&nbsp;
+If you get an exception with a message about not finding the <b>SecsServer.tcl</b>
+file, define and set the environment variable <b>DMH_DOTNET_TCLDIR</b>
+to the directory path containing the files.&nbsp; We suggest using slash
+directory separators.&nbsp; Environment variables are set by navigating
+from the Start menu - Start/Settings/Control Panel/System/Advanced/Environment
+Variables.&nbsp; An example value is:
+<pre>DMH_DOTNET_TCLDIR=C:/Documents and Settings/hume/My Documents/Visual Studio Projects/GemEqApp</pre>
+In a runtime deployment, the <b>SecsServer.exe</b> file is placed in the
+same directory instead of the <b>SecsServer.tcl</b> file and the associated
+support files.&nbsp; The same directory search order is used.
+<p><a NAME="Development"></a>
+<h3>
+Development</h3>
+To start using the Hume .NET component with an existing project, you first
+add a reference to the <b>SecsPort.dll</b>.&nbsp; A C# user chooses the
+<b>Add
+Reference...</b> menu item from the Project menu.&nbsp; From the
+<b>Add
+Reference</b> dialog, the <b>Browse...</b> button on the .NET tab notebook
+page is used to indicate the path to the <b>SecsPort.dll</b>.
+<p>The SecsPort software uses the namespace <b>Hume.SECS</b>.&nbsp; Coding
+is easier if you add the statement <b>using Hume.SECS;</b> to the using
+statements of your application source code.&nbsp; By doing this, the namespace
+name, <b>Hume.SECS</b>, can be omitted from name references.&nbsp; A Visual
+Basic developer uses the <b>Imports</b> statement for the same purpose.
+<p>The SecsPort software uses the HumeDMH.dll component internally to control
+the SECS interface server using the Hume DMH message system.&nbsp; You
+may want to explore using the DMH message for your own application requirements
+such as integrating your User Interface with Controller systems, intelligent
+devices, and instruments.&nbsp; The Hume SECS software is able to play
+the equipment role and the host role in multiple instances in the same
+SECS server process.&nbsp; You may want to consider using the Hume SECS
+software to control SECS sub equipment.&nbsp; In this situation, you would
+play the role of the host to the sub equipment, and the role of the equipment
+to the factory host.
+<p>Your primary focus as a developer is using the class <b>SecsPort</b>.&nbsp;
+This class implements public methods to send and receive SECS messages,
+and manage an equipment SECS interface.&nbsp; You will find the example
+application code in the GemGui.cs file to be very informative.
+<p>Here is the general flow of using and configuring the SecsPort:
+<br>&nbsp;
+<ol>
+<li>
+If you have a GUI application, construct and start using the SecsPort from
+the Load event for your main window.&nbsp; This way your window entities
+all exist when the SecsPort events and callbacks start executing your application
+code.&nbsp; You double-click on your main window to have the IDE generate
+an event handling method for the Load event.</li>
+
+<li>
+Construct a <a href="#SecsPort">SecsPort</a> instance.&nbsp;&nbsp; At runtime,
+constructing the instance causes the child SECS server process to be started.</li>
+
+<li>
+Setup your event handlers and delegate values for callbacks.&nbsp; In general
+the callbacks and events come into your application from different threads
+than the starting thread that created your window controls.&nbsp; Its not
+documented very clearly by .NET, but for some method invocations, the window
+controls are not designed to be used by different threads than the main
+event-dispatching thread of your application.&nbsp; The safest course is
+to copy the techniques in the example application in the ThreadSafeGuiUpdate
+method.&nbsp; You can test whether the current thread is not allowed to
+make a Control method call using the InvokeRequired property.&nbsp; When
+the InvokeRequired property value is true, you should use a delegate and
+the BeginInvoke method to effect a GUI update.&nbsp; This may seem overly
+complex, but it is in fact a simplification and improvement from the Win32
+techniques of defining custom WM_ messages and calling WinPostMessage().&nbsp;
+We have been able to update the .Text properties of TextBox widgets from
+other threads without seeing problems, but we cannot vouch that this is
+a safe and proper technique.</li>
+
+<li>
+Call <a href="#ConnectTypeSet">ConnectTypeSet</a> or one of the ConnectType&lt;Type>
+methods.&nbsp; Do this early in the initialization so that the SECS Server
+creates a data array and table records for the SECS interface.&nbsp;&nbsp;
+These items are needed for further configuration.&nbsp; It ok to change
+the connection type later in the initialization.&nbsp; When you call the
+<a href="#ConnectTypeSet">ConnectTypeSet</a>
+method, <a href="#StateChange">StateChange</a> events occur to provide
+your application with the initial values of the state data.&nbsp; That
+is why we recommend you have the callback and event handlers in place before
+setting the connection type.</li>
+
+<li>
+Now you can perform the bulk of your SECS interface configuration.&nbsp;
+Do the following, in any order:</li>
+
+<ul>
+<li>
+change other properties such as DEVID, timers, MODLN, SOFTREV, ...</li>
+
+<li>
+add equipment specific alarm types using <a href="#AlarmAdd">AlarmAdd</a></li>
+
+<li>
+add event types using <a href="#EventAdd">EventAdd</a></li>
+
+<li>
+add Equipment Constants (Parameters) using <a href="#ParameterAdd">ParameterAdd</a></li>
+
+<li>
+add Status and Data Value Variables using <a href="#VariableAdd">VariableAdd</a></li>
+
+<li>
+setup up callbacks to supply the value of selected Variables and Parameters
+using the <a href="#VariableMethodSet">VariableMethodSet </a>call.</li>
+
+<li>
+register callbacks for additional SECS message types using <a href="#MessageTypeAdd">MessageTypeAdd</a></li>
+</ul>
+
+<li>
+Programmatically you can set the desired Control State properties and then
+call <a href="#CommEnable">CommEnable</a> to enable host communications.&nbsp;
+You probably want to offer configuration dialogs and make the desired startup
+configuration persistent.</li>
+
+<li>
+Call <a href="#CommDisable">CommDisable</a> to disable host communications.&nbsp;
+It is called automatically in the SecsPort Dispose method.</li>
+</ol>
+
+<h4>
+<a NAME="TSN"></a>Tcl Secs Notation, TSN</h4>
+
+<p><br>SECS messages are passed into and out of the application as formatted
+strings.&nbsp; The format is similar to the notation in the SEMI documents
+except that the list formatting conventions of the Tcl programming language
+are followed.&nbsp; The SecsPort API provides methods to <a href="#ListSplit">split</a>,
+<a href="#ListJoin">join</a>,
+<a href="#ListAppend">append</a>,
+and <a href="#ListElement">extract</a> list elements.&nbsp; In general,
+curly braces, { }, are used to surround list elements which contain white
+space.&nbsp; By using the API calls to append list elements or join strings
+as list elements, you can be sure that your strings are properly formatted,
+and you do not need to manually balance opening and closing curly braces.&nbsp;
+Developers who have worked with both XML and TSN list notation have found
+that the TSN notation is more compact, closer to the SEMI documentation,
+and easier for a human to scan and validate when reviewing diagnostic output.
+<p>As general guidance, when you expect a string value, you will get a
+two element list, of the form "A:n {this is n chars of text}".&nbsp; If
+a string value does not have imbedded white space, it may be formatted
+without braces, such as "A:8 OneToken".&nbsp; When you use the <a href="#ListElement">ListElement</a>
+or <a href="#ListSplit">ListSplit</a> methods to parse the text, they take
+care of parsing and removing surrounding braces for you.&nbsp; If an empty
+string is sent, you will see a one element list, A:0.&nbsp; SECS has the
+notion of array data - 0 or more values of a given type.&nbsp; When you
+expect to receive a single numeric value, you receive a two element list,
+with the type code as the first element, such as "U4:1 290".&nbsp; You
+can also receive an empty array "U4:0" or an array with more than one value
+as in "U4:3 0 1 2".&nbsp; Binary data values are formatted using C-language
+hexadecimal integer notation, for example, "B:3 0x00 0x01 0x02".&nbsp;
+You can use the <a href="#BinToInt">BinToInt</a> method to convert these
+values to integer values.&nbsp; With received data, the type code has a
+length value appended to it after a colon.&nbsp; With data that you format
+for sending, the length information is optional, the data is parsed to
+determine the length.&nbsp; See the <a href="../mann/TSN.html">TSN.html</a>
+document for more details.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Semi Octal type code</b></td>
+
+<td><b>TSN type code</b></td>
+
+<td><b>Meaning &amp; Examples</b></td>
+</tr>
+
+<tr>
+<td>00</td>
+
+<td>L</td>
+
+<td>List,&nbsp; L, L:0,&nbsp;&nbsp; "L {A {atc 100}} {A 1.0.0}", "L:2 {L:2
+{U4 200} {U4 210}} {B 0}"</td>
+</tr>
+
+<tr>
+<td>10</td>
+
+<td>B</td>
+
+<td>binary - unsigned 8 bit data, "B 0", "B 1 2 3"</td>
+</tr>
+
+<tr>
+<td>11</td>
+
+<td>TF&nbsp;</td>
+
+<td>boolean data, TSN type codes BL or BOOLEAN are also accepted as input,
+"TF 1"</td>
+</tr>
+
+<tr>
+<td>20</td>
+
+<td>A</td>
+
+<td>Character string data.&nbsp; Traditionally this has meant printable
+ASCII characters but some implementations are sending any 8 bit characters
+including nulls using this type.
+<br>"A {hello world}", "A hello"</td>
+</tr>
+
+<tr>
+<td>21</td>
+
+<td>J</td>
+
+<td>Japan International Standard (JIS-8) encoded text.&nbsp; This format
+is not commonly used or supported because in the past the SEMI standards
+have failed to identify specific reference documents.</td>
+</tr>
+
+<tr>
+<td>22</td>
+
+<td>V1..VE</td>
+
+<td>Variant data, also known as Localized Character Strings.&nbsp; Your
+.NET unicode text is automatically converted into the chosen encoding.&nbsp;
+V1 is for Unicode 2.0, V2 is for UTF-8 encoding.&nbsp; See the <a href="../mann/TSN.html">TSN.html</a>
+document for more details. "V1 {sent as Unicode}"</td>
+</tr>
+
+<tr>
+<td>30</td>
+
+<td>I8</td>
+
+<td>8-byte signed integer, use hex notation for the value, "I8 0x123456789abcdf01"</td>
+</tr>
+
+<tr>
+<td>31</td>
+
+<td>I1</td>
+
+<td>1-byte signed integer, "I1 -3"</td>
+</tr>
+
+<tr>
+<td>32</td>
+
+<td>I2</td>
+
+<td>2-byte signed integer, "I2 99",&nbsp; "I2 15 -7 99"</td>
+</tr>
+
+<tr>
+<td>34</td>
+
+<td>I4</td>
+
+<td>4-byte integer signed, "I4 -5"</td>
+</tr>
+
+<tr>
+<td>40</td>
+
+<td>F8</td>
+
+<td>8-byte floating point, "F8 6.02e23", "F8 0.1"</td>
+</tr>
+
+<tr>
+<td>44</td>
+
+<td>F4</td>
+
+<td>4-byte floating point, "F4 1.0"</td>
+</tr>
+
+<tr>
+<td>50</td>
+
+<td>U8</td>
+
+<td>8-byte unsigned integer, use hex notation for the value, "U8 0x7fffffffffffffff"</td>
+</tr>
+
+<tr>
+<td>51</td>
+
+<td>U1</td>
+
+<td>1-byte unsigned integer, "U1 0"</td>
+</tr>
+
+<tr>
+<td>52</td>
+
+<td>U2</td>
+
+<td>2-byte unsigned integer, "U2 512"</td>
+</tr>
+
+<tr>
+<td>54</td>
+
+<td>U4</td>
+
+<td>4-byte unsigned integer, "U2 979"</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<h3>
+<a NAME="BuiltinSecs"></a>Built-in SECS Data, Message Handling, Events</h3>
+The SecsPort component has built-in logic to handle more than 85 of the
+standard SECS message types.&nbsp; You do not have to code or provide for
+complex GEM capabilities such as dynamic event reports, or the communication
+and state models.&nbsp; See the table at the end of this document for more
+detail on the <a href="#BuiltInMessages">built-in message types</a>.
+<p>Similarly, the variables required for GEM compliance are already defined,
+and are listed in a <a href="#BuiltInVariables">table</a> near the end
+of this document.&nbsp; In some cases, such as the PPExecName variable,
+your custom application logic has to provide current data values.&nbsp;
+The example application demonstrates using the <a href="#VariableSet">VariableSet</a>
+method or the <a href="#VariableMethodSet">VariableMethodSet</a> method
+as techniques to supply variable values.&nbsp; If a data item's value is
+changed infrequently, its more efficient to use VariableSet which provides
+the current value to the SECS server process.&nbsp; The VariableMethodSet
+method is the right choice for data items whose value changes more often,
+or are easier to manage as .NET application data items.
+<p>The SecsPort software uses type U4 numeric identifiers for the numeric
+IDs called out by GEM such as ALID, CEID, ECID, and SVID.&nbsp; These identifiers
+are passed as unsigned, 4 byte integers - SEMI Octal code 54.
+<p>&nbsp;There also some standard event report types specified by GEM and
+pre-defined for you as listed in the <a href="#BuiltInEvents">table</a>
+near the end of this document.&nbsp; Your application logic needs to call
+<a href="#EventPost">EventPost</a>
+as these events and your own defined events occur during processing.
+<br>&nbsp;
+<h3>
+<a NAME="CustomSecs"></a>Custom SECS Message Handling</h3>
+Use the method <a href="#MessageTypeAdd">MessageTypeAdd</a> to have SECS
+messages routed to your callback code for custom handling.&nbsp; Your callback
+executes in a different thread than your main Windows event dispatching
+thread so use thread safe techniques for accessing application data or
+GUI controls.&nbsp; The positive side of using a different thread is that
+your handling logic can be coded to use simple synchronous wait-for-reply
+SECS conversations without locking up your GUI.&nbsp; For example, your
+callback can use <a href="#SendReply">SendReply</a> to respond to the inbound
+message, and then initiate a synchronous conversation using <a href="#SendSecsMsg">SendSecsMsg</a>
+and specifying that the logic should wait for the reply message.&nbsp;
+While your handling code is progressing through the synchronous conversation,
+other software in your application can be making method calls to report
+events, or alarms.&nbsp; Because of the internal design of the SecsPort,
+these other method calls are not blocked or delayed because your handler
+is busy with a conversation.
+<p>Logic in your application can send SECS messages or initiate conversations
+using the SendSecsMsg method.&nbsp; For HSMS communication,&nbsp; if you
+are sending a message and not waiting for the reply, SendSecsMsg can be
+used from your GUI code without fear of making your GUI unresponsive.&nbsp;
+In some cases you need to wait for a SECS reply message.&nbsp; If you are
+using HSMS, under most circumstances, the host's reply or failure to reply
+will be resolved within a few seconds.&nbsp;&nbsp; The unusual circumstance
+is that you still have a TCP/IP connection to the host so your send is
+successful, but then the host does not reply, and you wait the full T3
+period.&nbsp; You can code your logic so that if the host does not respond
+to any message, you transition to offline control so subsequent message
+sends fail right away because they are not appropriate in an offline control
+state.&nbsp; So with this change, you risk making the GUI unresponsive
+for a single T3 period in some unusual circumstances.&nbsp; If this risk
+is not acceptable, you can create a new thread, and use the new thread
+to perform the SECS conversation where you need to wait for the reply message.
+<p>For SECS-I serial communication, timing is somewhat different.&nbsp;
+In this day and age an equipment provider should not deploy a SECS-I interface
+unless there are compelling reasons for doing so.&nbsp; Serial ports are
+no longer commonly provided on new laptop computers. With SECS-I there
+is no underlying TCP/IP connection that can signal the application when
+it is broken.&nbsp; So there is a higher risk of your sending thread being
+in an unresponsive wait to determine if a send is successful, and then
+in a longer wait to obtain the reply.&nbsp; So you probably want to use
+a separate thread than your GUI thread to send SECS messages or conduct
+send-and-reply conversations.
+<p><a NAME="Miscellaneous"></a>
+<h4>
+Miscellaneous Notes</h4>
+Your design will typically use one instance of a SecsPort component to
+provide a single SECS interface.&nbsp; You can use multiple instances of
+the class to provide more than one SECS interface.&nbsp; Each interface
+can have its own custom handling of message types.&nbsp; You may also use
+multiple instances of the Hume SecsHost component in the same application.&nbsp;
+A typical use of multiple host instances is to act as a host for sub equipment
+and provide a single control interface to the factory software.&nbsp;&nbsp;
+The Equipment OEM can also provide more than one SECS equipment interface
+to support multiple factory host applications if provision is made for
+coordinating control.&nbsp; The latter can be as simple as telling every
+interface exception one that the equipment is under local control.&nbsp;
+This provides the benefits of the newer EDA standards without the complexity
+of implementing additional protocols.
+<p>
+<hr WIDTH="100%"><a NAME="Reference"></a>
+<h2>
+SecsPort API Reference</h2>
+
+<p><br><a NAME="Properties"></a>
+<table BORDER WIDTH="100%" >
+<caption>&nbsp;<b>SecsPort Properties</b></caption>
+
+<tr>
+<td><b>Property Access</b></td>
+
+<td><a NAME="BAUD"></a><b>Description</b></td>
+</tr>
+
+<tr>
+<td>int <b>BAUD</b></td>
+
+<td>If you are using the SECS-I, RS-232 connection type, this property
+sets the baudrate of the serial port.&nbsp; The default value is 9600.<a NAME="dmh"></a></td>
+</tr>
+
+<tr>
+<td>static DmhClient <b>dmh</b></td>
+
+<td>SecsPort instances use a shared connection to the DMH message system
+in order to communicate with the SECS server process.&nbsp; The connection
+instance, dmh, is public in case you want to access it in your application.&nbsp;
+Since it is shared (static) the access is SecsPort.dmh.<a NAME="CommState"></a></td>
+</tr>
+
+<tr>
+<td>string <b>CommState</b><a NAME="ControlIntent"></a></td>
+
+<td>Read-only value of your GEM Communication State.&nbsp; Possible values
+are <b>DISABLED</b>, <b>ENABLED {NOT COMMUNICATING}</b>, and <b>COMMUNICATING</b>.&nbsp;&nbsp;
+The <a href="#StateChange">StateChange</a> event is used to obtain asynchronous
+notification of this property value change.</td>
+</tr>
+
+<tr>
+<td>string <b>ControlIntent</b></td>
+
+<td>Your intended GEM Control State behavior, whether your equipment is
+in the <b>OFF-LINE</b> or <b>ON-LINE</b> control state.&nbsp; The default
+setting is <b>OFF-LINE</b>.<a NAME="ControlMode"></a></td>
+</tr>
+
+<tr>
+<td>string<b> ControlMode</b></td>
+
+<td>When in ON-LINE control, your intended substate of <b>LOCAL</b> or
+<b>REMOTE</b>
+control.&nbsp; Defaults to <b>LOCAL</b>.<a NAME="ControlState"></a></td>
+</tr>
+
+<tr>
+<td>string <b>ControlState</b></td>
+
+<td>Read-only, your actual GEM Control State which reflects your <b>ControlMode</b>,
+<b>ControlIntent</b>
+and host dynamics.&nbsp; Possible values are <b>ON-LINE LOCAL</b>,
+<b>ON-LINE
+REMOTE</b>, <b>OFF-LINE Equipment</b>, <b>OFF-LINE Host</b>, and <b>OFF-LINE
+SeekOnline</b>.&nbsp; These string values are enumerated in the <b>ControlStateText
+</b>string
+array, in the same order as <b>ControlStateEnum</b> values.&nbsp; The <a href="#StateChange">StateChange</a>
+event is used to obtain asynchronous notification of this property value
+change.&nbsp;<a NAME="ControlStateStartup"></a></td>
+</tr>
+
+<tr>
+<td>enum ControlStateEnum <b>ControlStateStartup</b></td>
+
+<td>Your software is able to specify the initial state for the GEM Control
+State model.&nbsp; The choices are:&nbsp; <b>OfflineEquipment</b>, <b>OfflineAttemptOnline</b>,
+<b>OfflineHost</b>,
+<b>OnlineLocal</b>,
+or <b>OnlineRemote</b>.&nbsp; This setting defaults to <b>OfflineEquipment</b>,
+but is overruled to be consistent with your
+<b>ControlIntent</b> and <b>ControlMode</b>
+values.&nbsp; If your <b>ControlIntent</b> is <b>OFF-LINE</b>, and your
+startup is an Online state, the startup state is changed to <b>OfflineEquipment</b>.&nbsp;
+If your <b>ControlIntent</b> is <b>ON-LINE</b> and your startup state is
+<b>OfflineEquipment</b>,
+your startup state is changed to <b>OfflineAttemptOnline</b>.&nbsp; Similarly
+the setting of <b>ControlMode</b> can overrule an online startup state
+corresponding to the opposite <b>LOCAL</b> or <b>REMOTE</b> online substate
+choice.&nbsp; This logic is applied when <a href="#CommEnable">CommEnable</a>
+is called.<a NAME="DEVID"></a></td>
+</tr>
+
+<tr>
+<td>int <b>DEVID</b></td>
+
+<td>The SECS Device ID.&nbsp; An identifier imbedded in SECS header data
+usually left at the default of 0.&nbsp; You can change it anytime but you
+are better off setting it before enabling communication.&nbsp; Per the
+standard, the SecsPort rejects messages from the host that are not for
+the equipment's Device ID.&nbsp; Settable range is 0..32767.<a NAME="DMHGroupName"></a></td>
+</tr>
+
+<tr>
+<td>static SecsPort.DMHGroupName</td>
+
+<td>The DMH message system groupname used by the SECS server.&nbsp; The
+same groupname should be specified to the constructor of every SecsPort
+or SecsHost instance in the application in order to share the same SECS
+server process.<a NAME="HSMS"></a></td>
+</tr>
+
+<tr>
+<td>bool <b>HSMS</b></td>
+
+<td>Whether the Connection type is HSMS (LAN based).&nbsp; False implies
+SEC-I, serial RS-232 communication.&nbsp; Defaults to true.<a NAME="HSMS_Host"></a></td>
+</tr>
+
+<tr>
+<td>string <b>HSMS_Host</b></td>
+
+<td>For an active HSMS connection, specifies the TCP/IP hostname or IP
+address of the Host computer.<a NAME="HSMS_Passive"></a></td>
+</tr>
+
+<tr>
+<td>bool <b>HSMS_Passive</b></td>
+
+<td>For an HSMS connection, whether the SecsPort plays the passive, TCP/IP
+server role.&nbsp; The default value is true which is the usual role of
+equipment.&nbsp;<a NAME="HSMS_Port"></a></td>
+</tr>
+
+<tr>
+<td>int <b>HSMS_Port</b></td>
+
+<td>For an HSMS connection, the TCP/IP socket port number.&nbsp; Defaults
+to 5555.<a NAME="MDLN"></a></td>
+</tr>
+
+<tr>
+<td>string <b>MDLN</b></td>
+
+<td>The SECS Equipment Model Type - limited to no more than 6 characters
+by the E5 standard.<a NAME="Name"></a></td>
+</tr>
+
+<tr>
+<td>string <b>Name</b></td>
+
+<td>The SecsPort name passed to the constructor and used in the SECS server
+process as a Tcl command name, a global array name, and an identifier in
+SQL table records.<a NAME="RecipesAreBinary"></a></td>
+</tr>
+
+<tr>
+<td>bool <b>RecipesAreBinary</b></td>
+
+<td>A boolean flag to indicate whether Process Program files should be
+transferred as type <b>B</b> (binary) data, or type <b>A</b> (ASCII) data.&nbsp;
+The default is true, meaning binary transfer.&nbsp; If Process Program
+files are printable text, the type <b>A</b> transfer is easier for the
+factory personnel to work with.&nbsp; The software is able to transfer
+binary data as type <b>A</b> but not all host software can accommodate
+this.<a NAME="RecipeDirectory"></a></td>
+</tr>
+
+<tr>
+<td>string <b>RecipeDirectory</b></td>
+
+<td>A pathname to the file system directory where Process Program files
+are located.&nbsp; The default is "./recipes" - a subdirectory of the current
+working directory.<a NAME="ReportsAreSaved"></a></td>
+</tr>
+
+<tr>
+<td>bool <b>ReportsAreSaved</b></td>
+
+<td>This property controls whether the state of event reporting is saved
+at the program exit and restored during the next program run.&nbsp; Saving
+the state of dynamic reporting is standard GEM behavior so the default
+value is true.&nbsp; If the value is true, the saved event reporting configuration
+is restored the first time that <a href="#CommEnable">CommEnable</a> is
+called, unless it has been already restored by calling the method <a href="#ReportsRestore">ReportsRestore</a>.&nbsp;
+In other words, you can use the method ReportsRestore to load the saved
+reporting configuration before CommEnable is called.&nbsp;&nbsp; The report
+configuration data is saved as a file of SQL statements in the subdirectory
+<b>spooldata</b>.&nbsp;
+The filename used is "reportdata_" + Name + ".sql".&nbsp;<a NAME="SerialPort"></a></td>
+</tr>
+
+<tr>
+<td>string <b>SerialPort</b></td>
+
+<td>For a SECS-I connection, the serial port device such as "COM1".<a NAME="SOFTREV"></a></td>
+</tr>
+
+<tr>
+<td>string <b>SOFTREV</b></td>
+
+<td>The SECS Software revision - limited to no more than 6 characters.&nbsp;
+Default value is "1.0.0".&nbsp; You may wish to consider a pattern of <i>major</i>.<i>minor</i>.<i>patchlevel</i>.<a NAME="SpoolingAllow"></a></td>
+</tr>
+
+<tr>
+<td>string <b>SpoolingAllow</b></td>
+
+<td>This property is set to specify the streams which the host is allowed
+to specify for spooling in message type S2F43.&nbsp; It is formatted as
+a space separated list of "S&lt;s>" tokens where the &lt;s> value is stream
+number.&nbsp; The standard does not allow Stream 1 to be spooled.&nbsp;
+The default value is "S5 S6" which allows for spooling alarm messages and
+event reports.&nbsp; An empty string value disallows any spooling.&nbsp;
+The value only affects the handling of S2F43 messages from the host.&nbsp;
+Your software is able to change at any time which message types are being
+spooled using the method, <a href="#SpoolStreamFns">SpoolStreamFns</a>.<a NAME="State"></a></td>
+</tr>
+
+<tr>
+<td>string <b>State</b></td>
+
+<td>A read-only value of the low-level connection state.&nbsp; Possible
+values include OFFLINE, LISTENING, and COMMUNICATING.&nbsp; You will see
+the OFFLINE state if the connection to the host is broken, or in the case
+of SECS-I implicitly broken by a conversation timeout.&nbsp; The <a href="#StateChange">StateChange</a>
+event is used to obtain asynchronous notification of this property value
+change.<a NAME="RTY"></a></td>
+</tr>
+
+<tr>
+<td>int <b>RTY</b></td>
+
+<td>SECS-I maximum send retry, range 0..31, default 3<a NAME="T1"></a></td>
+</tr>
+
+<tr>
+<td>int <b>T1</b></td>
+
+<td>SECS-I Inter-Character Timeout in milliseconds, range 100..10000, default
+500<a NAME="T2"></a></td>
+</tr>
+
+<tr>
+<td>int <b>T2</b></td>
+
+<td>SECS-I Protocol Timeout in milliseconds, range 200..25000, default
+10000<a NAME="T3"></a></td>
+</tr>
+
+<tr>
+<td>int <b>T3</b></td>
+
+<td>SECS Reply Timeout in milliseconds, range 1000..120000, default 45000<a NAME="T4"></a></td>
+</tr>
+
+<tr>
+<td>int <b>T4</b></td>
+
+<td>SECS-I Inter-Block Timeout in milliseconds, range 1000..120000, default
+45000<a NAME="T5"></a></td>
+</tr>
+
+<tr>
+<td>int <b>T5</b></td>
+
+<td>HSMS Connect Separation Timeout - the delay between re-connection attempts
+in milliseconds, range 1000..240000, default 10000<a NAME="T6"></a></td>
+</tr>
+
+<tr>
+<td>int <b>T6</b></td>
+
+<td>HSMS Control Transaction Timeout in milliseconds, range 1000..240000,
+default 5000<a NAME="T7"></a></td>
+</tr>
+
+<tr>
+<td>int <b>T7</b></td>
+
+<td>HSMS Not Selected Timeout in milliseconds, range 1000..240000, default
+10000<a NAME="T8"></a></td>
+</tr>
+
+<tr>
+<td>int <b>T8</b></td>
+
+<td>HSMS Network Intercharacter Timeout, default value 5000.&nbsp; This
+value is not used.<a NAME="TRACE"></a></td>
+</tr>
+
+<tr>
+<td>int <b>TRACE</b></td>
+
+<td>Used as a bitfield to control diagnostic trace information for SECS
+port activity which is passed to the application in the SecsTrace event.&nbsp;
+By setting specific bits, the corresponding output is turned on.&nbsp;
+<p>General Tracing: (TraceType = trace)&nbsp;
+<br>Bit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Output Description&nbsp;
+<br>0x0001&nbsp;&nbsp;&nbsp;&nbsp; Read and write calls
+<br>0x0002&nbsp;&nbsp;&nbsp;&nbsp; state changes including connection attempts&nbsp;
+<p>Receive Tracing: (TraceType = rtrace)&nbsp;
+<br>Bit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description for Received
+Messages&nbsp;
+<br>0x0100&nbsp;&nbsp;&nbsp;&nbsp; Header binary dump&nbsp;
+<br>0x0200&nbsp;&nbsp;&nbsp;&nbsp; Header interpretation&nbsp;
+<br>0x0400&nbsp;&nbsp;&nbsp;&nbsp; Stream and Function description
+<br>0x0800&nbsp;&nbsp;&nbsp;&nbsp; Message data binary dump&nbsp;
+<br>0x0004&nbsp;&nbsp;&nbsp;&nbsp; The Message as TSN&nbsp;
+<p>Send Tracing: (TraceType = strace)&nbsp;
+<br>Bit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description for Sent
+Messages&nbsp;
+<br>0x1000&nbsp;&nbsp;&nbsp;&nbsp; Header binary dump
+<br>0x2000&nbsp;&nbsp;&nbsp;&nbsp; Header interpretation
+<br>0x4000&nbsp;&nbsp;&nbsp;&nbsp; Stream and Function description
+<br>0x8000&nbsp;&nbsp;&nbsp;&nbsp; Message data binary dump
+<br>0x0008&nbsp;&nbsp;&nbsp;&nbsp; The Message as TSN&nbsp;</td>
+</tr>
+</table>
+
+<p><a NAME="ControlEvents"></a>
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<caption><b>SecsPort Events</b></caption>
+
+<tr>
+<td><b>Event Handler and Argument Data&nbsp;</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>All event handlers - NOTES
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>We are documenting both events and most of the delegate callback functions
+in this section.&nbsp; Events are somewhat easier to develop with because
+of better handling by the .NET IDE tools.&nbsp; However, they cannot return
+values to the event initiator.&nbsp; In some cases we have elected to use
+delegate callbacks in order to receive and use application return values.
+<p>The IntelliSense code generation of the .NET IDE turns around the usual
+sequence of writing an event handling method and then registering it.&nbsp;
+Instead, try registering an event handler using the += operator.&nbsp;
+Press the Tab key when prompted to create event handling methods with the
+correct arguments.
+<p>The .NET framework hides the difference between executing a static method
+or an object method as an event handler.&nbsp; You are able to use either
+kind of method.
+<p>When the event happens, your handler method is called.&nbsp; You can
+cast the event sender object to (SecsPort) to have a reference to the component
+instance.<a NAME="ParameterChange"></a></td>
+</tr>
+
+<tr>
+<td>
+<br>void <b>ParameterChange</b>(object sender, ValueChangeEventArgs e)
+<p>class ValueChangeEventArgs : EventArgs {
+<br>string varname;
+<br>string newvalue;
+<br>}
+<br>&nbsp;</td>
+
+<td>This event notifies you of host initiated Equipment Constant Variable
+(ECV) changes.&nbsp; The new value is within the limits you have configured.<a NAME="RemoteCommandHandler"></a></td>
+</tr>
+
+<tr>
+<td>string <b>RemoteCommandHandler</b>(SecsPort sender, int function, string
+rcmd, string dataid, string objspec, string TSN_CmdArgs)</td>
+
+<td>As the example application demonstrates, this callback is used to invoke
+Remote Commands in your application.&nbsp; Set the <b>RemoteCommandHandler</b>
+delegate variable to a <b>SecsPort.EqRemoteCommandDelegate </b>instance
+constructed from your callback.&nbsp; You should provide a return value
+that is the TSN formatted reply data of the received S2F21, S2F41, or S2F49
+message.&nbsp; If you do not provide your own handler for Remote Commands,
+the SecsPort software replies to the host that the received command does
+not exist.</td>
+</tr>
+
+<tr>
+<td><b>SecsMessageReceiveDelegate</b></td>
+
+<td>See the <a href="#MessageTypeAdd">MessageTypeAdd</a> method described
+in the next section to see how to receive SECS messages in your application.<a NAME="SecsTrace"></a></td>
+</tr>
+
+<tr>
+<td>void <b>SecsTrace</b>(object sender, SecsTraceEventArgs e)
+<p>class <b>SecsTraceEventArgs</b> : EventArgs {
+<br>string traceType;
+<br>string text;
+<br>}</td>
+
+<td>This event provides you with the detailed information of SECS message
+traffic that is viewed in the SECS Trace window.&nbsp; The information
+is controlled by setting the TRACE property.<a NAME="ServerError"></a></td>
+</tr>
+
+<tr>
+<td>void <b>ServerError</b>(object sender, ServerErrorEventArgs e)
+<p>class <b>ServerErrorEventArgs</b> : EventArgs {
+<br>string message;
+<br>}</td>
+
+<td>The SecsPort class reports Tcl programming errors that are trapped
+in the SECS Server process as ServerError events.&nbsp; An example would
+be trying to send an improperly formatted SECS message.&nbsp; These error
+events will happen during development but should be rare once the code
+is debugged.<a NAME="SpoolingAlert"></a></td>
+</tr>
+
+<tr>
+<td>&nbsp;void <b>SpoolingAlert</b>(object sender, EqSpoolingAlertEventArgs
+s)
+<p>class <b>EqSpoolingAlertEventArgs</b> : EventArgs {
+<br>string <b>msgid</b>;
+<br>}</td>
+
+<td>The GEM standard describes Spooling events that are to be brought to
+the attention of the equipment operator.&nbsp; The msgid values include
+<b>SPOOLING_ACTIVATED</b>,
+<b>SPOOLING_FULL</b>,
+<b>SPOOLING_TERMINATED</b>,
+<b>SPOOLING_NOT_PERSISTENT</b>,
+and <b>SPOOLING_DATA_DISCARDED</b>.&nbsp; See example explanation messages
+in the application method GuiSpoolingAlert.&nbsp; The latter two values
+are not seen in normal circumstances.<a NAME="StateChange"></a></td>
+</tr>
+
+<tr>
+<td>void <b>StateChange</b>(object sender, ValueChangeEventArgs e)
+<p>class <b>ValueChangeEventArgs</b> : EventArgs {
+<br>string varname;
+<br>string newvalue;
+<br>}</td>
+
+<td>This event notifies your application of state value changes. Possible
+<i>varname</i>
+values include&nbsp;
+<ul>
+<li>
+<b>state</b> - the State property value changed</li>
+
+<li>
+<b>clock_offset</b> - this value is the number of seconds added to the
+system clock to provide CLOCK variable values for the host.&nbsp; If the
+value differs from 0, the host has used S2F31 to set the clock.&nbsp; Your
+logic can work with host specified time values by adjusting the system
+time using this offset value, or by reading the CLOCK variable using <b>VariableGet</b>().&nbsp;
+We recommend that you avoid this complexity by instructing your customers
+to use NTP time synchronization and that you disable S2F31 using <b>MessageTypeRemove</b>().</li>
+
+<li>
+<b>comm_state</b> - the CommState property value changed</li>
+
+<li>
+<b>control_state</b> - the ControlState property value changed</li>
+
+<li>
+<b>recipe_delete</b> - the name of a recipe that is being deleted by the
+host, or being replaced with a downloaded version.</li>
+
+<li>
+<b>recipe_download</b> - the name of a recipe that has just been received
+from the host.</li>
+
+<li>
+<b>recipe_upload</b> - the name of a recipe that has just been uploaded
+to the host.</li>
+
+<li>
+<b>spooling_state</b> - the SecsPort spooling state, ACTIVE or INACTIVE</li>
+
+<li>
+<b>SpoolCountActual</b> - the number of SECS messages currently spooled</li>
+
+<li>
+<b>SpoolCountTotal</b> - the total number of messages spooled and/or discarded</li>
+
+<li>
+<b>SpoolMax</b> - the configured maximum number of spooled messages</li>
+
+<li>
+<b>SpoolStreamFns</b> - the list of S&lt;s>, S&lt;s>F&lt;f> message types
+that configured for spooling</li>
+</ul>
+Your application gets notified of the initial values of these items when
+the SecsPort connection type is initialized.<a NAME="TerminalDisplayHandler"></a></td>
+</tr>
+
+<tr>
+<td>int <b>TerminalDisplayHandler</b>(SecsPort sender, int tid, string
+[] text)
+<br>}</td>
+
+<td>This callback is used to dispatch Host sent Terminal Data into your
+application.&nbsp; The string array text holds the communicated data -
+one string element for the case of S10F3, or multiple elements in the case
+of S10F5.&nbsp; Your application should reply with the integer values of
+the ACKC10 SECS reply item - 0 for success, 1 for not displayed, and 2
+for terminal not available.&nbsp; If you do not assign a callback value
+to the <b>TerminalDisplayHandler</b> delegate, the SecsPort replies with
+the value 1 to the host.</td>
+</tr>
+</table>
+
+<p><a NAME="Methods"></a>
+<table BORDER WIDTH="100%" >
+<caption><b>SecsPort Methods</b></caption>
+
+<tr>
+<td><b>METHOD</b></td>
+
+<td><b>DESCRIPTION</b></td>
+</tr>
+
+<tr>
+<td>General Comments
+<br>&nbsp;
+<br>&nbsp;
+<p>&nbsp;</td>
+
+<td>The List manipulation methods are actually implemented by the HumeDMH.dll
+component, and exposed for your convenience by the SecsPort component.<a NAME="AlarmAdd"></a></td>
+</tr>
+
+<tr>
+<td>void <b>AlarmAdd</b>(int ALID, string ALTX)</td>
+
+<td>Add an alarm type definition.&nbsp; Choose even numbers for the ALID
+between 1000 and 2998.&nbsp; Newly created alarms are enabled.&nbsp; Per
+GEM, two enabled events are created for each alarm, an alarm set event
+with CEID == ALID, and an alarm clear event with CEID == ALID+1.&nbsp;
+The ALTX argument is a description of the alarm and it has a length limit
+of 40 ASCII characters.&nbsp; The ALTX should not contain single quote
+characters.<a NAME="AlarmEnable"></a></td>
+</tr>
+
+<tr>
+<td>void <b>AlarmEnable</b>(int ALID, bool is_enabled)</td>
+
+<td>Enable or disable reporting of an Alarm type (S5F1).<a NAME="AlarmIsEnabled"></a></td>
+</tr>
+
+<tr>
+<td>bool <b>AlarmIsEnabled</b>(int ALID)</td>
+
+<td>Test if the reporting of an alarm type is enabled&nbsp;<a NAME="AlarmIsSet"></a></td>
+</tr>
+
+<tr>
+<td>bool <b>AlarmIsSet</b>(int ALID)</td>
+
+<td>Test if the alarmed state is currently set<a NAME="AlarmSet"></a></td>
+</tr>
+
+<tr>
+<td>void <b>AlarmSet</b>(int ALID, bool is_set)</td>
+
+<td>Set or Clear the alarmed state of an alarm.<a NAME="BinToInt"></a></td>
+</tr>
+
+<tr>
+<td>int <b>BinToInt</b>(string binValue)
+<p>&nbsp;</td>
+
+<td>Converts a SECS B (Binary&nbsp; - Semi "10") data value usually formatted
+as a hexadecimal string to an integer value.<a NAME="CommDisable"></a></td>
+</tr>
+
+<tr>
+<td>void <b>CommDisable</b>()</td>
+
+<td>Disable SECS communication.&nbsp; The SecsPort is initialized without
+communication enabled so using this method only makes sense after CommEnable
+has been called.<a NAME="CommEnable"></a></td>
+</tr>
+
+<tr>
+<td>void <b>CommEnable</b>()</td>
+
+<td>Enables SECS communication.&nbsp; The <a href="#CommState">CommState</a>
+property value will change and <a href="#StateChange">StateChange</a> events
+will be received.&nbsp; These changes are the asynchronous indications
+for success or failure to establish communication.&nbsp; When your equipment
+is configured for the Active HSMS role, field personnel will want to display
+the <a href="#Tracewin">trace window</a> with the 0x0002 <a href="#TRACE">TRACE</a>
+property bit set in order to see detailed information on the status of
+communication attempts.&nbsp;
+<br><a NAME="ConnectTypeHsmsActive"></a></td>
+</tr>
+
+<tr>
+<td>int <b>ConnectTypeHsmsActive</b>(string host_or_ip, int port)</td>
+
+<td>This method is an alternative to setting the underlying property values
+to specify an active HSMS connection type, and calling ConnectTypeSet().<a NAME="ConnectTypeHsmsPassive"></a></td>
+</tr>
+
+<tr>
+<td>int <b>ConnectTypeHsmsPassive</b>(int port)</td>
+
+<td>This method is an alternative to setting the underlying property values
+to specify a passive HSMS connection type, and calling ConnectTypeSet().<a NAME="ConnectTypeSerial"></a></td>
+</tr>
+
+<tr>
+<td>int <b>ConnectTypeSerial</b>(string comDevice, int baudrate)</td>
+
+<td>This method is an alternative to setting the underlying property values
+to specify a SECS-I connection type, and calling ConnectTypeSet().<a NAME="ConnectTypeSet"></a></td>
+</tr>
+
+<tr>
+<td>int <b>ConnectTypeSet</b>()</td>
+
+<td>This method is called to use the current property values and initialize
+a SECS interface for the indicated connection type.&nbsp; It is called
+by the ConnectType&lt;Type> methods.&nbsp; If you are setting connection
+property data directly, call this method after your property values are
+set.&nbsp; The method returns the value 0 to indicate success.<a NAME="DebugDMHStatus"></a></td>
+</tr>
+
+<tr>
+<td>void <b>DebugDMHStatus</b>(bool show)</td>
+
+<td>This method causes the DMH message system status window to either be
+shown or dismissed.<a NAME="DebugInspect"></a></td>
+</tr>
+
+<tr>
+<td>void <b>DebugInspect</b>()</td>
+
+<td>This method can be used to exec the Inspect introspection debugger.<a NAME="DebugTclConsole"></a></td>
+</tr>
+
+<tr>
+<td>void <b>DebugTclConsole</b>(bool show)</td>
+
+<td>This method causes a console window for the SECS Server to be shown
+or dismissed.<a NAME="DebugTableWindow"></a></td>
+</tr>
+
+<tr>
+<td>void <b>DebugTableWindow</b>(bool show)</td>
+
+<td>This method causes the Datahub table management GUI to be shown or
+dismissed.&nbsp;<a NAME="DebugTraceWindow"></a></td>
+</tr>
+
+<tr>
+<td>void <b>DebugTraceWindow</b>(bool show)</td>
+
+<td>This method is used to display a window which updates to show SECS
+message traffic and state information for the SecsPort.&nbsp;&nbsp; There
+are menu options to control the data displayed, and menu actions to save
+the displayed data to the file system.&nbsp; This method invokes the Tcl
+version of the Trace window which is created by the SECS Server process.&nbsp;
+See the <a href="#Tracewin">Tracewin</a> method in order to instantiate
+a native .NET window with similar function.&nbsp; Including the .NET window
+in the administration area of your equipment GUI may be desirable to help
+field personnel diagnose communication problems.&nbsp;<a NAME="EventAdd"></a></td>
+</tr>
+
+<tr>
+<td>void <b>EventAdd</b>(int CEID, bool is_reported, string description)</td>
+
+<td>This method is used to create an Event type.&nbsp; We suggest you use
+CEID values between 5000 and 9999.<a NAME="EventEnable"></a></td>
+</tr>
+
+<tr>
+<td>void <b>EventEnable</b>(int CEID, bool is_enabled)</td>
+
+<td>Event reports are enabled for an event type when first created.&nbsp;
+You can use this method to control whether an event report is enabled.<a NAME="EventIsEnabled"></a></td>
+</tr>
+
+<tr>
+<td>bool <b>EventIsEnabled</b>(int CEID)</td>
+
+<td>Test if reporting of an event type is currently enabled.<a NAME="EventPost"></a></td>
+</tr>
+
+<tr>
+<td>void <b>EventPost</b>(int CEID)</td>
+
+<td>You call this method to announce when an event has occurred.&nbsp;
+In general, make sure that the data items that the host might want in an
+event report are set to their proper values before EventPost is called.&nbsp;
+You should make this call without testing to see if reporting of the event
+is enabled and without other testing of the communication or control states.<a NAME="EventReportLinks"></a></td>
+</tr>
+
+<tr>
+<td>System.Collections.ArrayList <b>EventReportLinks</b>()</td>
+
+<td>This method call returns a list of integer pairs for the current associations
+of event types and event report definitions.&nbsp; Each int [2] pair has
+the CEID value at subscript 0, and then the RPTID value at subscript 1.&nbsp;
+These association links are setup by the host using S2F35.&nbsp; They can
+also be setup using the <a href="#ReportLink">ReportLink</a> method.&nbsp;
+This method supports helping you display or provide for editing of the
+event report configuration.<a NAME="EventUnlink"></a></td>
+</tr>
+
+<tr>
+<td>void <b>EventUnlink</b>(int CEID)</td>
+
+<td>This method can be used to unlink (disassociate) any reports that are
+associated with an event type.&nbsp; The call can be used if your tool
+supports manual editing of event reports.&nbsp;<a NAME="HexValue"></a></td>
+</tr>
+
+<tr>
+<td>int <b>HexValue</b>(char b)</td>
+
+<td>This method can be used to convert a single hexadecimal character to
+an integer value.&nbsp; The BinToInt method will convert a hexadecimal
+string.<a NAME="IsHexDigit"></a></td>
+</tr>
+
+<tr>
+<td>bool <b>IsHexDigit</b>(char b)</td>
+
+<td>This method can be used to determine if a single character can be parsed
+as a hexadecimal digit.<a NAME="ListAppend"></a></td>
+</tr>
+
+<tr>
+<td>StringBuilder <b>ListAppend</b>(string list, string element);
+<p>StringBuilder <b>ListAppend</b>(StringBuilder list, string element1);
+<p>StringBuilder <b>ListAppend</b>(StringBuilder list, string element1,
+string element2);
+<p>StringBuilder <b>ListAppend</b>(StringBuilder list, string element1,
+string element2, element3);
+<p>StringBuilder <b>ListAppend</b>(StringBuilder list, string element1,
+string element2, element3, element4);
+<br>&nbsp;</td>
+
+<td>These methods are used to add one to four list elements to text that
+is formatted as a Tcl list.&nbsp; It is a good programming practice to
+use ListAppend or ListJoin to build a Tcl list, in order to make sure that
+imbedded white space or other special characters are properly delimited
+with curly braces or escaped with backslashes.&nbsp; A null value may be
+passed as any of the string argument values, in order to represent an empty
+list or empty element.&nbsp; However, a null value should not be passed
+as a System.Text.StringBuilder argument.&nbsp; The System.Text.StringBuilder
+class is designed to support more efficient string modification than using
+instances of the string class.&nbsp; The input StringBuilder objects are
+modified by reference and returned as the return value of the methods.&nbsp;
+You can construct a StringBuilder instance that does not contain any characters
+to represent an empty list.&nbsp;&nbsp; The overloaded method calls make
+it convenient to add up to four list elements in one call.&nbsp; If you
+need to add more elements, call the methods repeatedly.<a NAME="ListElement"></a></td>
+</tr>
+
+<tr>
+<td>string <b>ListElement</b>(string list, int index1);
+<p>string <b>ListElement</b>(string list, int index1, int index2);
+<p>string <b>ListElement</b>(string list, int index1, int index2, int index3);<a NAME="ListJoin"></a></td>
+
+<td>This function is similar to the lindex function of Tcl.&nbsp; It will
+parse text formatted as a Tcl list and return the specified element.&nbsp;
+Indexing starts from 0.&nbsp; Arguments index2 and index3 may be used to
+indicate that parsing of the TclList should continue up to two additional
+levels as a nested list structure. If a specified index is out of bounds,
+an empty string is returned.&nbsp; Not all strings are valid Tcl lists.&nbsp;
+If an invalid list is parsed, the method call throws the FormatException.</td>
+</tr>
+
+<tr>
+<td>string <b>ListJoin</b>(string [] argv);<a NAME="ListSplit"></a></td>
+
+<td>Joins together strings as Tcl list elements forming a result string
+that is a Tcl list.&nbsp; Braces are added as needed to delimit empty elements,
+or to delimit special Tcl character sequences involving backslashes , square
+brackets, etc.&nbsp;</td>
+</tr>
+
+<tr>
+<td>string [] <b>ListSplit</b>(string list)</td>
+
+<td>ListSplit( ) parses a string formatted as a Tcl list into an array
+of string elements.&nbsp; The function understands the Tcl usage of quotes,
+braces and backslash sequences.&nbsp; Not all strings are valid Tcl lists.&nbsp;
+If an invalid list is parsed, the method call throws the FormatException.&nbsp;
+Failure occurs when there are unmatched braces, unmatched quotes, or non-whitespace
+following braces or quotes.<a NAME="MessageTypeAdd"></a></td>
+</tr>
+
+<tr>
+<td>void <b>MessageTypeAdd</b>(int stream, int function, SecsMessageReceiveDelegate
+callback)
+<p>delegate void <b>SecsMessageReceiveDelegate</b>(object sender, int stream,
+int function, bool send_reply, int transactionID, string TSN_data, string
+header)</td>
+
+<td>Call this method to have SECS messages processed by your custom handler
+methods when the SecsPort is in online control, and the message is received
+from the host.&nbsp; You can provide for new SECS message types, or you
+can replace the existing SecsPort handling of particular messages.&nbsp;
+Use the SendReply, SendS9, and SendAbort methods to send reply messages.&nbsp;<a NAME="MessageTypeRemove"></a></td>
+</tr>
+
+<tr>
+<td>void <b>MessageTypeRemove</b>(int stream, int function)</td>
+
+<td>This method is used to cancel SECS message handlers that you have setup
+using MessageTypeAdd or to cancel the handling of particular messages during
+the online control state by the built-in SecsPort logic.&nbsp; For example,
+you may wish to turn of Process Program management message types for a
+tool that does not use Process Programs.&nbsp; If you have called MessageTypeAdd
+for the specified message type, the Add is cancelled.&nbsp; If you have
+not called MessageTypeAdd, the SECS server is told not to handle the message.
+Unhandled messages are replied to with an abort reply.&nbsp; If the unhandled
+message does not ask for a reply, an S9F5 message is sent to indicate an
+unknown function.<a NAME="ParameterAdd"></a></td>
+</tr>
+
+<tr>
+<td>void <b>ParameterAdd</b>(int varID, string varname, string description,
+string value_TSN, string initialValue, string minValue, string maxValue,
+string defaultValue, string units)</td>
+
+<td>This method is used to add Equipment Constant Variable definitions
+(ECVs).&nbsp; As with Variables, use varID values that are between 1000
+to 1999 or between 9000 to 9999.&nbsp; Use a unique value for each parameter
+or variable.&nbsp; The value_TSN argument is the Tcl SECS notation type
+code for the ECV value such as A for ASCII string, or F4 for floating point.&nbsp;
+Call <b>ParameterSet</b> when the ECV value is changed by your GUI or controller
+logic so that the SECS Server can manage the appropriate GEM event.&nbsp;<a NAME="ParameterGet"></a></td>
+</tr>
+
+<tr>
+<td>string <b>ParameterGet</b>(int varID)</td>
+
+<td>This method is used to get the current value of an ECV.&nbsp; It uses
+the same access logic that host requests use so it can test your custom
+value logic.&nbsp; The return value is null if there is an error.<a NAME="ParameterGetInfo"></a></td>
+</tr>
+
+<tr>
+<td>VariableInfo <b>ParameterGetInfo</b>(int varID)</td>
+
+<td>This method returns the configuration data of an ECV.&nbsp; The return
+value is a <a href="#VariableInfo">VariableInfo</a> data structure - see
+<a href="#VariableGetInfo">VariableGetInfo</a>.<a NAME="ParameterSet"></a></td>
+</tr>
+
+<tr>
+<td>int <b>ParameterSet</b>(int varID, string newvalue)</td>
+
+<td>This method is used to update the value of an ECV whose current value
+is represented in the ei_variable table.<a NAME="ProcessProgramDownload"></a></td>
+</tr>
+
+<tr>
+<td>RcResult <b>ProcessProgramDownload</b>(string ppid)
+<p>struct RcResult {
+<br>&nbsp;&nbsp; int rc;&nbsp; // return code
+<br>&nbsp;&nbsp; string result;
+<br>&nbsp;&nbsp; }</td>
+
+<td>Used by the equipment to initiate the download of a process program
+from the host using S7F5.&nbsp; The ppid argument value is both the process
+program identifier and the file name that is used by the equipment for
+the process program file.&nbsp; There is no standard SECS command for the
+equipment to know what process programs are available from the host for
+downloading.&nbsp; If the return code value is 0 which indicates success,
+the result string is the full pathname to the process program file.&nbsp;
+Negative return code values indicate error.&nbsp; Possible errors include
+those described with <b>SendSecsMsg</b>().&nbsp; In addition the following
+error codes are also possible:&nbsp; -10 file system error, -11 improper
+data received, -12 request denied by the host.
+<p>In the case of error, the result string is a diagnostic message.<a NAME="ProcessProgramUpload"></a></td>
+</tr>
+
+<tr>
+<td>RcResult <b>ProcessProgramUpload</b>(string ppid)
+<p>struct RcResult {
+<br>&nbsp;&nbsp; int rc;&nbsp; // return code
+<br>&nbsp;&nbsp; string result;
+<br>&nbsp;&nbsp; }</td>
+
+<td>Used by the equipment to initiate transferring a process program to
+the host using S7F3.&nbsp; The ppid argument value is identically the file
+name of the process program and the identifier for the process program.&nbsp;
+The return code value is 0 for complete success.&nbsp; Negative return
+code values indicate an error.&nbsp; Possible error values include those
+possible with <b>ProcessProgramDownload</b>().&nbsp; In addition, the return
+code value of -13 is used to indicate "upload disabled during spooling".&nbsp;
+A positive return code value is the SECS standard ACKC7 code value sent
+by the host.&nbsp; Diagnostic text is provided in the result string for
+all return code values.&nbsp;
+<p><b>Important:&nbsp; Do not assume that the host saves process program
+files with the same file names or in the same format that the equipment
+does.&nbsp; The only proper way to use an uploaded process program file
+is to download it using the same host software that uploaded it.</b><a NAME="ReportDefine"></a></td>
+</tr>
+
+<tr>
+<td>int <b>ReportDefine</b>(int rptID, int [] varIDs)</td>
+
+<td>This method is optionally used to update, create, or delete an event
+report definition.&nbsp; If the varIDs array argument is null or empty,
+the report configuration is deleted.&nbsp; The return values are: 0 - a
+new report created, 1 - an existing report updated, 2 - report deleted,
+-2 unknown variable ID, -3 invalid rptID , -1 unexpected transaction error.&nbsp;
+Any unsigned number can be used for a report ID (rptID) value.&nbsp; (Unsigned
+integer types are not supported by the Microsoft Common Language Specification.)
+<p>Manual editing of event reports, or the creation of built-in event reports&nbsp;
+is not required by GEM since dynamic reporting is provided.&nbsp;&nbsp;
+We recommend that you do not provide predefined, built-in reports.&nbsp;
+Let the host configure the reporting that is desired.&nbsp; If you do provide
+built-in reports, you have a complex situation since GEM specifies that
+the state of event reporting setup by the host is persistent.&nbsp; This
+means the saved and restored reports can delete your predefined ones.&nbsp;
+If you choose to implement built-in reports, we recommend that you add
+an equipment parameter (ECV) and make the user choose between having the
+built-in reports or having the saved reports defined at startup.&nbsp;
+Do one of the following to insure built-in reports are available:&nbsp;
+(1) Set the property <a href="#ReportsAreSaved">ReportsAreSaved</a> to
+false to prevent your built-in reports from being replaced by the restore
+logic, or (2) Call <a href="#ReportsRestore">ReportsRestore</a> after your
+events and variables are defined, and then add your built-in reports after
+the restore logic has run.<a NAME="ReportDelete"></a></td>
+</tr>
+
+<tr>
+<td>void <b>ReportDelete</b>(int rptID)</td>
+
+<td>Delete an event report definition.&nbsp; ReportsClear can be used to
+delete all of the event reports.<a NAME="ReportGetDef"></a></td>
+</tr>
+
+<tr>
+<td>int [] <b>ReportGetDef</b>(int rptID)</td>
+
+<td>Returns an array of the variable IDs in an event report definition.&nbsp;
+An empty array is returned if the report does not exist.&nbsp;<a NAME="ReportGetInfo"></a></td>
+</tr>
+
+<tr>
+<td>System.Collections.ArrayList <b>ReportGetInfo</b>(int rptID)</td>
+
+<td>Returns a list of <a href="#VariableInfo">VariableInfo</a> structures
+for the variables in an event report definition.&nbsp; An empty list is
+returned if the report does not exist.<a NAME="ReportLink"></a></td>
+</tr>
+
+<tr>
+<td>int <b>ReportLink</b>(int rptID, int CEID)</td>
+
+<td>This method supports optional manual editing of the event report configuration
+or providing for built-in event reports linked to specified events.&nbsp;
+The method is used to link or associate a report definition to an event
+type, causing the report to be sent as part of the event report message.&nbsp;
+Both the report and the event type should exist at the time the method
+is called.&nbsp; The return values are: 0 success, -2 invalid rptID, -3
+invalid CEID, -1 unexpected internal error.<a NAME="ReportUnlink"></a></td>
+</tr>
+
+<tr>
+<td>void <b>ReportUnlink</b>(int rptID, int CEID)
+<br>void <b>ReportUnlink</b>(int rptID)</td>
+
+<td>This overloaded method is used to remove the link or association of
+a report and an event type.&nbsp; If just the rptID is specified, the report
+is unlinked from all event types.<a NAME="ReportsClear"></a></td>
+</tr>
+
+<tr>
+<td>void <b>ReportsClear</b>()</td>
+
+<td>This method erases any existing event report definitions, unlinks the
+event reports from event types, and disables the event reports that were
+linked to the deleted reports.&nbsp; The call also deletes any saved event
+report data, so it can be used to prevent or nullify the restoring of event
+reports from the previous saved session.&nbsp; The method is not usually
+called since saving and restoring the dynamic event report configuration
+is standard GEM behavior.<a NAME="ReportsList"></a></td>
+</tr>
+
+<tr>
+<td>int [] <b>ReportsList</b>()</td>
+
+<td>The method returns an array of the report ID values for the current
+report definitions.<a NAME="ReportsRestore"></a></td>
+</tr>
+
+<tr>
+<td>void <b>ReportsRestore</b>()</td>
+
+<td>ReportsRestore gets called automatically when you first enable communication
+if property <a href="#ReportsAreSaved">ReportsAreSaved</a> is true, and
+ReportsRestore has not already been called.&nbsp; The call restores the
+state of event reporting from the last session, and it initializes saving
+for the current session.&nbsp; Restoring overwrites the existing event
+report definitions.&nbsp; There is logic so that restoring only occurs
+once.&nbsp; It is useful to make this call if you want to force the restore
+action to occur before communication is enabled.&nbsp; For example, this
+could support viewing the event report configuration before communication
+is enabled.&nbsp; A connection type should be set and the variables and
+event types should be defined before calling this method.<a NAME="SecsPort"></a></td>
+</tr>
+
+<tr>
+<td>void <b>SecsPort</b>()&nbsp;
+<p>void <b>SecsPort</b>(string spname, string dmhGroup)
+<p>void <b>SecsPort</b>(System.ComponentModel.Icontainer c)</td>
+
+<td>The constructor.&nbsp; The <i>spname</i> argument becomes the name
+of a global data item and a Tcl command in the SECS Server process.&nbsp;
+It needs to be unique for each SecsPort instance, and not coincide with
+a keyword in the Tcl programming language.&nbsp; The default value of <i>spname</i>
+is similar to <b>equip0</b>.&nbsp; The example application uses the <i>spname</i>
+value, <b>eqsim</b>.&nbsp; The name should be a single alphanumeric token.&nbsp;
+<p>The <i>dmhGroup</i> argument becomes the DMH message system group name
+used by the SecsPort and SECS Server process.&nbsp; If you are instantiating
+more than one SecsPort instance in your process, construct each instance
+using the same <i>dmhGroup</i> name argument so that the SECS Server process
+is shared.&nbsp; The groupname chosen needs to be unique among other DMH
+server instances on the computer where the SecsPort is executing.&nbsp;
+The default value is <b>GEM</b>.&nbsp; This value does not conflict with
+the default value for Hume Datahub instances which is <b>mbx</b>.&nbsp;
+The name should be a single alphanumeric token.&nbsp;
+<p>The SecsPort SECS Server process can be debugged remotely by connecting
+to the DMH mailbox SERVER_RPC@<i>hostname</i>:<i>dmhGroup</i> using the
+<a href="../man1/dmh_inspect.html">Inspect
+application</a> or using the DMH mailbox SERVER_SQL@hostname:dmhGroup by
+the <a href="../man1/hubclient.html">hubclient application</a>.<a NAME="SendAbort"></a></td>
+</tr>
+
+<tr>
+<td>void <b>SendAbort</b>(int stream, int primaryFunction)</td>
+
+<td>This method is used to send an F0 abort message in lieu of a proper
+reply.&nbsp; It is used to indicate that the received message is not appropriate
+in the current context.&nbsp;&nbsp; For example, when the control state
+is ON-LINE LOCAL, the abort reply should be sent to a host message that
+would affect processing.<a NAME="SendReply"></a></td>
+</tr>
+
+<tr>
+<td>void <b>SendReply</b>(int stream, int function, int transactionID)
+<p>void <b>SendReply</b>(int stream, int function, int transactionID, string
+TSN_data)</td>
+
+<td>This method is used by your custom SECS message handling logic to send
+reply messages either with or without data.&nbsp; The reply data is formatted
+as <a href="../mann/TSN.html">Tcl Secs Notation </a>text.<a NAME="SendS9"></a></td>
+</tr>
+
+<tr>
+<td>void <b>SendS9</b>(int function, string header)</td>
+
+<td>This method is used to indicate an error condition response to a received
+message - it is sent in lieu of a normal reply.&nbsp; The SecsPort software
+takes care of many of the possible error conditions automatically, including,
+1- bad Device ID, 3 - bad stream, 5 - bad function, and 9 - T3 timeout.&nbsp;
+You will not receive a message type, unless you register for it.&nbsp;
+Therefore, you will mostly send the function value 7 to indicate improper
+data.
+<br><a NAME="SendSecsMsg"></a><a NAME="SendSecsMsgRcResult"></a></td>
+</tr>
+
+<tr>
+<td>string <b>SendSecsMsg</b>(int stream, int function, bool reply_wanted,
+string TSN_data, bool wait4reply)
+<p>RcResult <b>SendSecsMsgRcResult</b>(int stream, int function, bool reply_wanted,
+string TSN_data, bool wait4reply)
+<p>struct RcResult {
+<br>&nbsp;&nbsp; int rc;&nbsp; // return code
+<br>&nbsp;&nbsp; string result;
+<br>&nbsp;&nbsp; }</td>
+
+<td>These methods are used to send a primary SECS message, optionally indicating
+a reply is wanted, and optionally indicating that the call should wait
+for a reply. The methods differ in how the return value data is presented.&nbsp;
+The <b>SendSecsMsg</b>() return value is a string which is structured as
+a two element list consisting of an integer return code and a string result.&nbsp;
+The string result is typically parsed with the ListElement(), ListSplit(),
+or string.startsWith() methods.&nbsp; The <b>SendSecsMsgRcResult()</b>
+returns the same data already parsed into a structure that has an integer
+return code and a result string.&nbsp; The possible return values are:
+<dl>
+<dt>
+-1</dt>
+
+<dd>
+<i>errorMessage</i>&nbsp; - the error message starts with "ERROR" and describes
+the fault</dd>
+
+<dt>
+-2</dt>
+
+<dd>
+DISABLED&nbsp;&nbsp; - communication is disabled so the message could not
+be sent</dd>
+
+<dt>
+-3&nbsp;</dt>
+
+<dd>
+OFF-LINE&nbsp;&nbsp; - the control state is OFF-LINE and per GEM only S1F1,
+S1F13, and S9FX are sendable.</dd>
+
+<dt>
+-4&nbsp;</dt>
+
+<dd>
+DISCARDED&nbsp;&nbsp; - spooling is active and this message type is not
+spooled.&nbsp; Usually the connection is down.&nbsp; But this result can
+also occur for a newly established connection before the host has purged
+or finished unloading the spool.</dd>
+
+<dt>
+-5&nbsp;</dt>
+
+<dd>
+BUSY&nbsp;&nbsp; - an eq_send call is currently active.&nbsp; You should
+not see this error, since by design send commands are serialized using
+DMH messages to the connection's command mailbox.</dd>
+
+<dt>
+1&nbsp;</dt>
+
+<dd>
+SPOOLED&nbsp;&nbsp;&nbsp; Your message has been spooled for later sending.&nbsp;
+Even if you specify waiting for the reply result you receive this instead
+of the reply data if the message is spooled.&nbsp; We recommend you not
+allowing spooling of message types where you care about the reply.</dd>
+
+<dt>
+0&nbsp;</dt>
+
+<dd>
+SENT_NO_REPLY&nbsp; - sent successfully no reply requested</dd>
+
+<dt>
+0&nbsp;</dt>
+
+<dd>
+SENT_NO_REPLY_WAIT&nbsp; - sent successfully, a reply was indicated, not
+waiting for the reply was indicated.&nbsp; The reply will be ignored when
+it arrives.</dd>
+
+<dt>
+0&nbsp;</dt>
+
+<dd>
+<i>ReplyTsnData</i>&nbsp;&nbsp; -sent ok, reply requested and received.</dd>
+
+<dt>
+-6&nbsp;</dt>
+
+<dd>
+TIMEOUT&nbsp; - sent ok, reply requested, no reply, T3 timeout.&nbsp;</dd>
+
+<dt>
+-7&nbsp;</dt>
+
+<dd>
+ABORTED&nbsp; - sent ok, F0 abort reply received.</dd>
+
+<dt>
+-8&nbsp;</dt>
+
+<dd>
+REJECTED&nbsp; - sent ok, Stream 9 error message "reply".<a NAME="ServerSQLCmd"></a></dd>
+</dl>
+</td>
+</tr>
+
+<tr>
+<td>static void <b>ServerSQLCmd</b>(string sql)</td>
+
+<td>Send an SQL command to the SECS Server process without waiting for
+a reply.&nbsp; This method is used by the SecsPort software and made public
+in case of custom requirements.<a NAME="ServerSQLReply"></a></td>
+</tr>
+
+<tr>
+<td>static string <b>ServerSQLReply</b>(string sql)</td>
+
+<td>Send an SQL command to the SECS Server process and wait for the reply.&nbsp;
+This method is used by the SecsPort software and made public in case of
+custom requirements.&nbsp; The return values vary by SQL statement type
+and they are described in the <a href="../man1/datahub.html" target="blank">Datahub</a>
+documentation.<a NAME="ServerTclCmd"></a></td>
+</tr>
+
+<tr>
+<td>static void <b>ServerTclCmd</b>(string tclCommand);</td>
+
+<td>Send a Tcl command to the SECS Server process without waiting for a
+reply.&nbsp; This method is used by the SecsPort software and made public
+in case of custom requirements.&nbsp; After a SecsPort instance has been
+constructed and the connection type set, the TclCmd( ) method should be
+used instead of this method for commands that are directed to a particular
+interface instance.&nbsp; Why?&nbsp; Doing so serializes the commands for
+a particular interface, and provides re-entrant execution protection.<a NAME="ServerTclReply"></a></td>
+</tr>
+
+<tr>
+<td>static string <b>ServerTclReply</b>(string tclCommand);</td>
+
+<td>Send a Tcl command to the SECS Server process and wait for the reply
+message.&nbsp; This call is used by the SecsPort software and made public
+in case of custom requirements.&nbsp; After a SecsPort instance has been
+constructed and the connection type set, the TclReply( ) method should
+be used instead of this method for commands that are directed to a particular
+interface instance.<a NAME="SpoolPurge"></a></td>
+</tr>
+
+<tr>
+<td>void <b>SpoolPurge</b>()</td>
+
+<td>This method discards any spooled messages that are queued for the host.<a NAME="SpoolStop"></a></td>
+</tr>
+
+<tr>
+<td>void <b>SpoolStop</b>()</td>
+
+<td>This method sets the messages types that are enabled for spooling to
+an empty string, thus, further spooling is stopped.<a NAME="SpoolStreamFns"></a></td>
+</tr>
+
+<tr>
+<td>void <b>SpoolStreamFns</b>()
+<br>void <b>SpoolStreamFns</b>(string StreamFns)</td>
+
+<td>The method is used to set the spooled message types.&nbsp; If called
+with no arguments, the streams that are allowed for the host to enable
+(property <a href="#SpoolingAllow">SpoolingAllow</a>) are enabled.&nbsp;
+If called with an argument, the call bypasses the SpoolingAllow property
+and enables spooling for the S&lt;s> and S&lt;s>F&lt;f> message types that
+are specified in the input string.<a NAME="TclCmd"></a></td>
+</tr>
+
+<tr>
+<td>void <b>TclCmd</b>(string tcl)</td>
+
+<td>This method is used to send Tcl code to the SECS server command mailbox
+for the connection.&nbsp; It is used by the SecsPort software and made
+public to support custom requirements.<a NAME="TclReply"></a><a NAME="TclReplyRcResult"></a></td>
+</tr>
+
+<tr>
+<td>string <b>TclReply</b>(string tcl)
+<p>RcResult <b>TclReplyRcResult</b>(string tcl)
+<p>struct RcResult {
+<br>&nbsp;&nbsp; int rc;&nbsp; // return code
+<br>&nbsp;&nbsp; string result;
+<br>&nbsp;&nbsp; }</td>
+
+<td>These methods are used to send Tcl code to the SECS server command
+mailbox for the connection and wait for the evaluation result.&nbsp; The
+methods are used by the SecsPort software and made public to support custom
+requirements.&nbsp; With <b>TclReply</b>() the string return value is structured
+as a list and may be parsed using
+<a href="#ListSplit">ListSplit</a> or
+<a href="#ListElement">ListElement</a>.&nbsp;
+The first element is a return code for the evaluation with 0 meaning success.&nbsp;
+The second element is the return value from the executed Tcl code, or an
+error message if the return code is not 0.&nbsp; With <b>TclReplyRcResult</b>(
+) the same data has been parsed and is returned as separate fields in the
+RcResult data structure.<a NAME="TerminalDisplayAck"></a></td>
+</tr>
+
+<tr>
+<td>void <b>TerminalDisplayAck</b>()</td>
+
+<td>Calling this method posts GEM event 4100 which is used by the equipment
+to indicate acknowledgment of a host Terminal Display.<a NAME="Tracewin"></a></td>
+</tr>
+
+<tr>
+<td>void <b>Tracewin</b>(bool show);</td>
+
+<td>The SecsPort is able to instantiate and manage a Form window class,
+Tracewin, which provides a controllable display of the data being exchanged
+across the SECS interface.&nbsp; The argument is set to true to display
+the window, or false to close the window.&nbsp; There are menu options
+to provide hex dump formatting of the data, or higher level descriptive
+formatting.&nbsp; There are also menu actions to save the displayed data
+to the file system.&nbsp;<a NAME="TsnI8Value"></a></td>
+</tr>
+
+<tr>
+<td>string <b>TsnI8Value</b>(long int64bit)</td>
+
+<td>Format a Tcl SECS Notation (TSN) I8 (signed 8 byte) integer value using
+hexadecimal notation.&nbsp; The C# body of this method is just:
+<p>return "0x" + int64bit.ToString("x16");
+<p>A similar method would be defined for unsigned 8 byte integer values
+except that the ulong data type is not supported by the .NET Common Language
+Specification.&nbsp;&nbsp; The C# code for formatting a TSN U8 value is:
+<p>return "0x" + uint64bit.ToString("x16");<a NAME="TsnTypeIsOk"></a>
+<br>&nbsp;</td>
+</tr>
+
+<tr>
+<td>bool <b>TsnTypeIsOk</b>(string value_TSN)</td>
+
+<td>This method is used to check value_TSN argument values that you pass
+to the various Add methods.<a NAME="VariableAdd"></a></td>
+</tr>
+
+<tr>
+<td>void <b>VariableAdd</b>(int varID, string varname, string description,
+string varClass, string value_TSN, string varmethod, string initialValue,
+string units)</td>
+
+<td>Use this method to add a Status Value variable (varClass == "SV") or
+a Data Value variable (varClass == "DVVAL").&nbsp; Both classes of variables
+are available for the host to configure in event reports.&nbsp; A DVVAL
+does not need to have a valid value, for example the alarm ID of the latest
+alarm when there have been no alarms.&nbsp; Use varID values between 1000
+and 1999 to have your variables sort before the built-in variables, or
+use varID values between 9000 and 9999 to have them sort after the built-in
+variables.&nbsp; Leave the varmethod argument as null or an empty string
+if the variable value will be represented in the ei_variable table, or
+you will subsequently call <b>VariableMethodSet</b> to specify an evaluation
+callback.&nbsp;<a NAME="VariableGet"></a></td>
+</tr>
+
+<tr>
+<td>string <b>VariableGet</b>(int varID)</td>
+
+<td>This method is used to get the current value of a variable.&nbsp; It
+uses the same access logic that host requests use so it can test your custom
+value logic.&nbsp; The return value is null if there is an error.<a NAME="VariableGetInfo"></a></td>
+</tr>
+
+<tr>
+<td>VariableInfo <b>VariableGetInfo</b>(int varID)
+<p>struct<a NAME="VariableInfo"></a> <b>VariableInfo</b> {
+<br>&nbsp; int varID;
+<br>&nbsp; string varname;
+<br>&nbsp; string description;
+<br>&nbsp; string varClass;
+<br>&nbsp; string value_TSN;
+<br>&nbsp; string varmethod;
+<br>&nbsp; string units;
+<br>&nbsp; string minValue;
+<br>&nbsp; string maxValue;
+<br>&nbsp; string defaultValue;
+<br>&nbsp; }<a NAME="VariableSet"></a></td>
+
+<td>This method returns the configuration information of a variable or
+Equipment Constant Variable (ECV).&nbsp;</td>
+</tr>
+
+<tr>
+<td>string <b>VariableSet</b>(int varID)</td>
+
+<td>This method is used to update the value of a Status or Data Value variable
+whose current value is represented in the ei_variable table.<a NAME="VariableMethodSet"></a></td>
+</tr>
+
+<tr>
+<td>void <b>VariableMethodSet</b>(int varID, VarValueDelegate callback)
+<p>delegate string <b>EqVarValueDelegate</b>(int varID);</td>
+
+<td>You use this method to register a callback that is executed by the
+SecsPort software when the value of a Status Value or Data Value variable
+is needed.&nbsp; The callback is executed by a different thread than your
+main GUI thread, so be sure to use threadsafe programming techniques such
+as lock( ) statements, or mutexes.&nbsp; See the application example.</td>
+</tr>
+</table>
+
+<h2>
+SecsPort Built-in SECS Features</h2>
+
+<p><br>This section of the document has information on the built-in features
+of the SecsPort software in regards to the SEMI E5 and GEM standards.
+<p>There are no built-in alarm types.&nbsp; The example application creates
+example alarm definitions to show how it is done.&nbsp; The Equipment developer
+is expected to provide definitions suitable for his own equipment.
+<br>&nbsp;
+<h3>
+<a NAME="BuiltInVariables"></a>Built-In SECS Variables</h3>
+These variable definitions are specified by the SEMI standards, and are
+created by the SecsPort when the connection type is set.&nbsp; Once the
+definitions exist, you are able to customize the values, or value methods.&nbsp;
+Even if a definition is not appropriate for your equipment, you should
+not delete it, since its existence is called out by the standards.
+<h3>
+Built-In SecsPort Variables</h3>
+
+<table BORDER id="BuiltInVariables" >
+<tr>
+<th>varID</th>
+
+<th>varname</th>
+
+<th>description</th>
+
+<th>varclass</th>
+
+<th>value_TSN</th>
+</tr>
+
+<tr>
+<td>200</td>
+
+<td>AlarmsEnabled</td>
+
+<td>the list of alarm ALIDs enabled for reporting via S5</td>
+
+<td>SV</td>
+
+<td>L</td>
+</tr>
+
+<tr>
+<td>201</td>
+
+<td>AlarmID</td>
+
+<td>the current alarm identifier ALID at the setting or clearing of an
+alarm irrespective of reporting</td>
+
+<td>DVVAL</td>
+
+<td>U4</td>
+</tr>
+
+<tr>
+<td>202</td>
+
+<td>AlarmsSet</td>
+
+<td>the list of alarm ALIDs in the set state, irrespective of reporting</td>
+
+<td>SV</td>
+
+<td>L</td>
+</tr>
+
+<tr>
+<td>220</td>
+
+<td>AnnotateEventReports</td>
+
+<td>send annotated event reports as S6F13 instead of S6F11</td>
+
+<td>ECV</td>
+
+<td>TF</td>
+</tr>
+
+<tr>
+<td>250</td>
+
+<td>Clock</td>
+
+<td>the value of the equipment's clock</td>
+
+<td>SV</td>
+
+<td>A:16</td>
+</tr>
+
+<tr>
+<td>300</td>
+
+<td>ControlMode</td>
+
+<td>0=Local, 1=Remote (aka E5-95 ControlState 2nd definition)</td>
+
+<td>SV</td>
+
+<td>U1</td>
+</tr>
+
+<tr>
+<td>301</td>
+
+<td>ControlState</td>
+
+<td>1=off-line/eq off-line 2=off/seek on 3=off/host off 4=on/local 5=on/remote</td>
+
+<td>SV</td>
+
+<td>B</td>
+</tr>
+
+<tr>
+<td>330</td>
+
+<td>DvvalList</td>
+
+<td>A list of the DVVAL variables, their IDs and names (L [L:2 &lt;VID>
+&lt;DVNAME>]+).&nbsp; This variable is standard for Hume implementations,
+but is not specified by SEMI standards.&nbsp; The variable fills a gap
+in SECS functionality - there is no standard means for the host to ask
+about DVVAL variables.</td>
+
+<td>SV</td>
+
+<td>L</td>
+</tr>
+
+<tr>
+<td>350</td>
+
+<td>ECIDChangeName</td>
+
+<td>The equipment constant, ECID, last updated independent of the host</td>
+
+<td>DVVAL</td>
+
+<td>U4</td>
+</tr>
+
+<tr>
+<td>375</td>
+
+<td>EstablishCommunicationsTimeout</td>
+
+<td>the length of time in seconds between S1F13 attempts when initializing
+communications</td>
+
+<td>ECV</td>
+
+<td>U4</td>
+</tr>
+
+<tr>
+<td>400</td>
+
+<td>EventsEnabled</td>
+
+<td>the list of event CEIDs enabled for reporting via S6</td>
+
+<td>SV</td>
+
+<td>L</td>
+</tr>
+
+<tr>
+<td>410</td>
+
+<td>EventDescriptions</td>
+
+<td>A list of all event CEIDs and their descriptions.&nbsp; This variable
+is standard for Hume implementations, but is not specified by SEMI standards.&nbsp;
+The variable fills a gap in SECS functionality - there is no standard means
+for the host to ask about event types.</td>
+
+<td>SV</td>
+
+<td>L</td>
+</tr>
+
+<tr>
+<td>500</td>
+
+<td>LimitVariable</td>
+
+<td>contains the VID for the variable whose value changed monitoring zones</td>
+
+<td>DVVAL</td>
+
+<td>U4</td>
+</tr>
+
+<tr>
+<td>501</td>
+
+<td>EventLimit</td>
+
+<td>contains LIMITID(s) of the limit reached by LimitVariable(s)</td>
+
+<td>DVVAL</td>
+
+<td>L</td>
+</tr>
+
+<tr>
+<td>502</td>
+
+<td>TransitionType</td>
+
+<td>the direction of limits zone transition 0=low2hi, 1=hi2low</td>
+
+<td>DVVAL</td>
+
+<td>B</td>
+</tr>
+
+<tr>
+<td>600</td>
+
+<td>MDLN</td>
+
+<td>Equipment Model Type</td>
+
+<td>SV</td>
+
+<td>A:6</td>
+</tr>
+
+<tr>
+<td>650</td>
+
+<td>OperatorCommand</td>
+
+<td>The last operator command issued during control_mode of REMOTE</td>
+
+<td>DVVAL</td>
+
+<td>A</td>
+</tr>
+
+<tr>
+<td>700</td>
+
+<td>PPChangeName</td>
+
+<td>The Process Program ID, PPID, affected by the creation, edit, or delete
+local to the equipment</td>
+
+<td>DVVAL</td>
+
+<td>A</td>
+</tr>
+
+<tr>
+<td>710</td>
+
+<td>PPChangeStatus</td>
+
+<td>The action taken on PPChangeName, 1=create, 2=edit, 3=deleted</td>
+
+<td>DVVAL</td>
+
+<td>U1</td>
+</tr>
+
+<tr>
+<td>715</td>
+
+<td>PPError</td>
+
+<td>Contains information about a failure to verify a process program</td>
+
+<td>DVVAL</td>
+
+<td>A</td>
+</tr>
+
+<tr>
+<td>720</td>
+
+<td>PPExecName</td>
+
+<td>the PPID(s) of the selected Process Program(s)</td>
+
+<td>SV</td>
+
+<td>A</td>
+</tr>
+
+<tr>
+<td>725</td>
+
+<td>PPFormat</td>
+
+<td>Indicates the type or types of process programs and recipes supported,
+1 = unformatted PPs</td>
+
+<td>SV</td>
+
+<td>U1</td>
+</tr>
+
+<tr>
+<td>800</td>
+
+<td>PreviousProcessState</td>
+
+<td>the previous processing state</td>
+
+<td>SV</td>
+
+<td>U1</td>
+</tr>
+
+<tr>
+<td>810</td>
+
+<td>ProcessState</td>
+
+<td>the current processing state</td>
+
+<td>SV</td>
+
+<td>U1</td>
+</tr>
+
+<tr>
+<td>820</td>
+
+<td>RcpChangeName</td>
+
+<td>The identifier of the Stream 15 recipe affected by creation, editing,
+or deletion</td>
+
+<td>DVVAL</td>
+
+<td>A</td>
+</tr>
+
+<tr>
+<td>825</td>
+
+<td>RcpChangeStatus</td>
+
+<td>the type of change for RcpChangeName</td>
+
+<td>DVVAL</td>
+
+<td>U1</td>
+</tr>
+
+<tr>
+<td>830</td>
+
+<td>RcpExecName</td>
+
+<td>the identifier of the currently selected Stream 15 recipe</td>
+
+<td>SV</td>
+
+<td>A</td>
+</tr>
+
+<tr>
+<td>850</td>
+
+<td>SOFTREV</td>
+
+<td>Equipment Software Revision ID</td>
+
+<td>SV</td>
+
+<td>A:6</td>
+</tr>
+
+<tr>
+<td>870</td>
+
+<td>SpoolCountActual</td>
+
+<td>the actual # of msgs queued</td>
+
+<td>SV</td>
+
+<td>U4</td>
+</tr>
+
+<tr>
+<td>871</td>
+
+<td>SpoolCountTotal</td>
+
+<td>the total # of msgs spooled and/or discarded</td>
+
+<td>SV</td>
+
+<td>U4</td>
+</tr>
+
+<tr>
+<td>872</td>
+
+<td>SpoolFullTime</td>
+
+<td>the Clock from the time the spool last became full</td>
+
+<td>SV</td>
+
+<td>A:16</td>
+</tr>
+
+<tr>
+<td>873</td>
+
+<td>SpoolStartTime</td>
+
+<td>the Clock from the time spooling last became active</td>
+
+<td>SV</td>
+
+<td>A:16</td>
+</tr>
+
+<tr>
+<td>874</td>
+
+<td>MaxSpoolTransmit</td>
+
+<td>max. # of spooled msgs per S6F23 reply, 0=no limit</td>
+
+<td>ECV</td>
+
+<td>U4</td>
+</tr>
+
+<tr>
+<td>875</td>
+
+<td>SpoolMax</td>
+
+<td>max number of messages spooled</td>
+
+<td>ECV</td>
+
+<td>U4</td>
+</tr>
+
+<tr>
+<td>876</td>
+
+<td>OverWriteSpool</td>
+
+<td>true=circular spool buffering, false=stop spooling when buffer full</td>
+
+<td>ECV</td>
+
+<td>TF</td>
+</tr>
+
+<tr>
+<td>877</td>
+
+<td>SpoolStreamFns</td>
+
+<td>the list of SnFm message types that are spooled, set by S2F43</td>
+
+<td>SV</td>
+
+<td>A</td>
+</tr>
+
+<tr>
+<td>900</td>
+
+<td>TimeFormat</td>
+
+<td>0==YYMMDDHHMMSScc 1==YYYYMMDDHHMMSScc in S2F18, S2F31, S6F1</td>
+
+<td>ECV</td>
+
+<td>U4</td>
+</tr>
+
+<tr>
+<td>920</td>
+
+<td>UseMultiBlockInquire</td>
+
+<td>If true, S6F5 is used before sending multiblock event reports.&nbsp;
+The default value is true for SECS-I and false for HSMS.</td>
+
+<td>ECV</td>
+
+<td>TF</td>
+</tr>
+</table>
+
+<h3>
+<a NAME="BuiltInMessages"></a></h3>
+
+<h3>
+Built-in Handling of SECS Message Types</h3>
+The E5 standard identifies data items used in message items with all uppercase
+letters such as CEID.&nbsp; Typically, the standard allows for different
+data types to be used for a particular message item.&nbsp; If we show a
+message data item in lowercase, we are showing the preferred data type
+of our implementation, and using the lowercase term to indicate a value
+of the indicated data type.&nbsp; For example, we use type U4 to pass CEID
+values.&nbsp; So our shorthand way of specifying this is to write "{U4
+&lt;ceid>}" instead of &lt;CEID>.&nbsp; Historically, the host software
+has been required to know and use the specific data types that the equipment
+implements when the standard allows for different data types.&nbsp; This
+has never been the case with Hume SECS/GEM implementations.&nbsp; For most
+message types, the software accepts any data type for a message data item
+as long as the value is equivalent.&nbsp; For example, the S1F3R message
+data to obtain the value of the Clock variable, SVID = 250, is usually
+sent by the host as "L {U4 250}" since our implementation uses type U4
+to send SVID values.&nbsp; But the host could use type A, type U2, type
+U1, type I4, or type I2 for the data type of the SVID value to make this
+same request.&nbsp; The value passed by the host only needs to be equal
+when compared as a string.&nbsp; If the standard identifies a single data
+type for an item, only the specified type should be used.&nbsp; For example,
+for control of spooling, S2F43, only type U1 should be used to indicate
+streams and functions.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Type</b></td>
+
+<td><b>Sender</b></td>
+
+<td><b>Data Format</b></td>
+
+<td><b>Comments</b></td>
+</tr>
+
+<tr>
+<td>S1F1R</td>
+
+<td>H, E</td>
+
+<td>&nbsp;</td>
+
+<td>"Are You There?"</td>
+</tr>
+
+<tr>
+<td>S1F2</td>
+
+<td>E</td>
+
+<td>L:2 &lt;MODLN> &lt;SOFTREV>
+<br>&lt;MODLN> := {A &lt;mdln>}
+<br>&lt;SOFTREV> := {A &lt;softrev>}</td>
+
+<td>"On Line Data"
+<br>MODLN and SOFTREV data are property values.</td>
+</tr>
+
+<tr>
+<td>S1F3R</td>
+
+<td>H</td>
+
+<td>L [&lt;SVID>]*
+<br>&lt;SVID>&nbsp; := {U4 &lt;varID>}</td>
+
+<td>"Selected Equipment Status Request"&nbsp;
+<br>If the host sends a 0 length list, the host gets all possible values,
+but he doesn't know what they represent!&nbsp; So there is an unwritten
+rule that the ordering of the L:0 reply matches the ordering of the S1F12
+reply.</td>
+</tr>
+
+<tr>
+<td>S1F4</td>
+
+<td>E</td>
+
+<td>L [&lt;SV>]*</td>
+
+<td>"Selected Equipment Status Data"
+<br>The data type of the SV value depends on the variable.</td>
+</tr>
+
+<tr>
+<td>S1F11R</td>
+
+<td>H</td>
+
+<td>L [&lt;SVID>]*</td>
+
+<td>&nbsp;"Status Variable Namelist Request"</td>
+</tr>
+
+<tr>
+<td>S1F12</td>
+
+<td>E</td>
+
+<td>L [{L:3 &lt;SVID> &lt;SVNAME> &lt;UNITS>}]+</td>
+
+<td>&nbsp;"Status Variable Namelist Reply"</td>
+</tr>
+
+<tr>
+<td>S1F13R</td>
+
+<td>H,E</td>
+
+<td>L:2 &lt;MODLN> &lt;SOFTREV></td>
+
+<td>&nbsp;"Establish Communications Request"</td>
+</tr>
+
+<tr>
+<td>S1F14</td>
+
+<td>E</td>
+
+<td>L:2 &lt;COMMACK> {L:2 &lt;MODLN> &lt;SOFTREV>}
+<br>&lt;COMMACK> := {B 0}</td>
+
+<td>&nbsp;"Establish Communications Request Acknowledge"</td>
+</tr>
+
+<tr>
+<td>S1F15R</td>
+
+<td>H</td>
+
+<td>&nbsp;</td>
+
+<td>"Request OFF-LINE"</td>
+</tr>
+
+<tr>
+<td>S1F16</td>
+
+<td>E</td>
+
+<td>B 0</td>
+
+<td>"OFF-LINE Acknowledge"
+<br>causes transition to OFF-LINE Host control state</td>
+</tr>
+
+<tr>
+<td>S1F17R</td>
+
+<td>H</td>
+
+<td>&nbsp;</td>
+
+<td>"Request ON-LINE"</td>
+</tr>
+
+<tr>
+<td>S1F18</td>
+
+<td>E</td>
+
+<td>&lt;ONLACK> := {B &lt;onlack>}</td>
+
+<td>"ON-LINE Acknowledge"
+<br>{B 1} is sent if we have an offline control intent,
+<br>{B 2} is sent if we are already online
+<br>If we have an online control intent, {B 1} is sent in the unlikely
+case we are in the OFF-LINE Seekonline state, since the GEM standard does
+not show an online transition for this state because of S1F17R.&nbsp; The
+usual case if we have an online control intent is to send {B 0}and transition
+to online control</td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td>S2F13</td>
+
+<td>H</td>
+
+<td>L [&lt;ECID>]*</td>
+
+<td>"Equipment Constant Request"</td>
+</tr>
+
+<tr>
+<td>S2F14</td>
+
+<td>E</td>
+
+<td>L [&lt;ECV>]*</td>
+
+<td>"Equipment Constant Data"
+<br>if L:0 is input, the reply order matches S2F30.</td>
+</tr>
+
+<tr>
+<td>S2F15R</td>
+
+<td>H</td>
+
+<td>L [{L:2 &lt;ECID> &lt;ECV>}]*</td>
+
+<td>"New Equipment Constant Send"</td>
+</tr>
+
+<tr>
+<td>S2F16</td>
+
+<td>E</td>
+
+<td>B &lt;rc></td>
+
+<td>"New Equipment Constant Ack"</td>
+</tr>
+
+<tr>
+<td>S2F17R</td>
+
+<td>H</td>
+
+<td>&nbsp;</td>
+
+<td>"Date and Time Request"</td>
+</tr>
+
+<tr>
+<td>S2F18</td>
+
+<td>E</td>
+
+<td>A:16 YYYYMMDDHHMMSScc&nbsp;
+<br>A:12 YYMMDDHHMMSS</td>
+
+<td>"Date and Time Data"
+<br>TimeFormat ECV, varID 900, sets the reply format, 1 is the default
+<br>0==YYMMDDHHMMSS 1==YYYYMMDDHHMMSScc in S2F18, S2F31, S6F1</td>
+</tr>
+
+<tr>
+<td>S2F21R</td>
+
+<td>H</td>
+
+<td>&lt;RCMD>
+<br>&lt;RCMD>&nbsp; :=&nbsp; {A &lt;rcmd>}</td>
+
+<td>"Remote Command Send"</td>
+</tr>
+
+<tr>
+<td>S2F22</td>
+
+<td>&nbsp;</td>
+
+<td>U1 &lt;rc></td>
+
+<td>"Remote Command Acknowledge"
+<br>&lt;rc> value is set by application callback</td>
+</tr>
+
+<tr>
+<td>S2F23R</td>
+
+<td>H</td>
+
+<td>L:5 &lt;TRID> &lt;DSPER> &lt;TOTSMP> &lt;REPGSZ> {L [&lt;SVID>]+}</td>
+
+<td>&nbsp;"Trace Initialize Send"</td>
+</tr>
+
+<tr>
+<td>S2F24</td>
+
+<td>E</td>
+
+<td>B &lt;rc></td>
+
+<td>"Trace Initialize Acknowledge"
+<br>The SecsPort handles trace reports.</td>
+</tr>
+
+<tr>
+<td>S2F25R</td>
+
+<td>H,E</td>
+
+<td>B [&lt;b>]*</td>
+
+<td>"Loopback Diagnostic Request"</td>
+</tr>
+
+<tr>
+<td>S2F26</td>
+
+<td>E</td>
+
+<td>B [&lt;b>]*</td>
+
+<td>&nbsp;"Loopback Diagnostic Data"</td>
+</tr>
+
+<tr>
+<td>S2F29R</td>
+
+<td>H</td>
+
+<td>L [&lt;ECID>]*</td>
+
+<td>"Equipment Constant Namelist Request"</td>
+</tr>
+
+<tr>
+<td>S2F30</td>
+
+<td>E</td>
+
+<td>L [L:6 &lt;ECID> &lt;ECNAME> &lt;ECMIN> &lt;ECMAX> &lt;ECDEF> &lt;UNITS>]+</td>
+
+<td>&nbsp;"Equipment Constant Namelist"</td>
+</tr>
+
+<tr>
+<td>S2F31R</td>
+
+<td>H</td>
+
+<td>A:16 YYYYMMDDHHMMSScc&nbsp;
+<br>A:12 YYMMDDHHMMSS</td>
+
+<td>"Date and Time Set Request"</td>
+</tr>
+
+<tr>
+<td>S2F32</td>
+
+<td>E</td>
+
+<td>B &lt;rc></td>
+
+<td>"Date and Time Set Acknowledge"
+<br>The SecsPort calculates and uses a clock offset value.</td>
+</tr>
+
+<tr>
+<td>S2F33R</td>
+
+<td>H</td>
+
+<td>L:2 &lt;DATAID> {L [{L:2 &lt;RPTID> {L [&lt;VID>]*}]*}</td>
+
+<td>"Define Report"</td>
+</tr>
+
+<tr>
+<td>S2F34</td>
+
+<td>E</td>
+
+<td>B &lt;rc></td>
+
+<td>"Define Report Acknowledge"</td>
+</tr>
+
+<tr>
+<td>S2F35R</td>
+
+<td>H</td>
+
+<td>L:2 &lt;DATAID> {L [&lt;CEID> {L [&lt;RPTID>]*}]*}</td>
+
+<td>"Link Event Report"</td>
+</tr>
+
+<tr>
+<td>S2F36</td>
+
+<td>E</td>
+
+<td>B &lt;rc></td>
+
+<td>"Link Event Report Acknowledge"</td>
+</tr>
+
+<tr>
+<td>S2F37R</td>
+
+<td>H</td>
+
+<td>L:2 &lt;CEED> {L [&lt;CEID>]*}</td>
+
+<td>"Enable/Disable Event Report"</td>
+</tr>
+
+<tr>
+<td>S2F38</td>
+
+<td>&nbsp;</td>
+
+<td>B &lt;rc></td>
+
+<td>"Enable/Disable Event Report Acknowledge"</td>
+</tr>
+
+<tr>
+<td>S2F39R</td>
+
+<td>H</td>
+
+<td>L:2 &lt;DATAID> &lt;DATALENGTH></td>
+
+<td>"Multi-block Inquire"
+<br>The implementation does not care what type or value the &lt;DATAID>
+is.</td>
+</tr>
+
+<tr>
+<td>S2F40</td>
+
+<td>E</td>
+
+<td>B 0</td>
+
+<td>"Multi-block Grant"</td>
+</tr>
+
+<tr>
+<td>S2F41R</td>
+
+<td>H</td>
+
+<td>L:2 &lt;RCMD> {L [{L:2 &lt;CPNAME> &lt;CPVAL>]*}</td>
+
+<td>"Host Command Send"</td>
+</tr>
+
+<tr>
+<td>S2F42</td>
+
+<td>E</td>
+
+<td>L:2 &lt;HCACK> {L [{L:2 &lt;CPNAME> &lt;CPACK>]*}</td>
+
+<td>"Host Command Acknowledge"
+<br>sent by your callback logic&nbsp; in the application -see example</td>
+</tr>
+
+<tr>
+<td>S2F43R</td>
+
+<td>H</td>
+
+<td>L [{L:2 {U1 &lt;strid>} {L [{U1 &lt;fcnid>}]*}]*&nbsp;</td>
+
+<td>"Configure Spooling"</td>
+</tr>
+
+<tr>
+<td>S2F44</td>
+
+<td>E</td>
+
+<td>L:2 {B &lt;rsack>} {L [{L:3 {U1 &lt;strid>} {B &lt;strack>} {L [{U1
+&lt;fcnid>}]*}}]*}</td>
+
+<td>"Configure Spooling Acknowledge"
+<br>property <a href="#SpoolingAllow">SpoolingAllow</a> is consulted</td>
+</tr>
+
+<tr>
+<td>S2F49R</td>
+
+<td>H</td>
+
+<td>&nbsp;</td>
+
+<td>"Enhanced Remote Command"
+<br>handled by example application code</td>
+</tr>
+
+<tr>
+<td>S2F50</td>
+
+<td>E</td>
+
+<td>&nbsp;</td>
+
+<td>"Enhanced Remote Command Acknowledge"</td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td>S5F1</td>
+
+<td>E</td>
+
+<td>L:3 {B &lt;alcd>} {U4 &lt;alid>} {A &lt;altx>}</td>
+
+<td>"Alarm Report Send"
+<br>the SecPort does not request a reply</td>
+</tr>
+
+<tr>
+<td>S5F3R</td>
+
+<td>H</td>
+
+<td>L:2 {B &lt;aled>} {U4 &lt;alid>}</td>
+
+<td>"Enable/Disable Alarm Send"</td>
+</tr>
+
+<tr>
+<td>S5F4</td>
+
+<td>E</td>
+
+<td>B &lt;rc></td>
+
+<td>"Enable/Disable Alarm Ack"</td>
+</tr>
+
+<tr>
+<td>S5F5R</td>
+
+<td>H</td>
+
+<td>&lt;ALID vector></td>
+
+<td>"List Alarms Request"</td>
+</tr>
+
+<tr>
+<td>S5F6</td>
+
+<td>E</td>
+
+<td>L [{L:3 {B &lt;alcd>} {U4 &lt;alid>} {A &lt;altx>}}]*</td>
+
+<td>"List Alarm Data"</td>
+</tr>
+
+<tr>
+<td>S5F7R</td>
+
+<td>H</td>
+
+<td>&nbsp;</td>
+
+<td>"List Enabled Alarm Request"</td>
+</tr>
+
+<tr>
+<td>S5F8</td>
+
+<td>E</td>
+
+<td>L [{L:3 {B &lt;alcd>} {U4 &lt;alid>} {A &lt;altx>}}]*</td>
+
+<td>"List Enabled Alarm Data"</td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td>S6F1</td>
+
+<td>E</td>
+
+<td>L:4 &lt;TRID> {U4 &lt;smpln>} &lt;STIME> {L [&lt;SV>]+}</td>
+
+<td>"Trace Data Send"
+<br>The SecsPort does not ask for replies.&nbsp; &lt;STIME> is formatted
+per the TimeFormat ECV setting.&nbsp; &lt;TRID> is whatever type and value
+the host sends in S2F23R.</td>
+</tr>
+
+<tr>
+<td>S6F5R</td>
+
+<td>E</td>
+
+<td>L:2 &lt;DATAID> &lt;DATALENGTH></td>
+
+<td>"Multi-block Data Send Inquire"</td>
+</tr>
+
+<tr>
+<td>S6F6</td>
+
+<td>H</td>
+
+<td>&lt;GRANT6></td>
+
+<td>"Multi-block Grant"</td>
+</tr>
+
+<tr>
+<td>S6F11R</td>
+
+<td>E</td>
+
+<td>L:3 {U4 &lt;dataid>} {U4 &lt;ceid>} {L [{L:2 {U4 &lt;rptid>} {L [&lt;V>]+}}]+}</td>
+
+<td>"Event Report Send"
+<br>ECV AnnotateEventReports, varID 220, controls whether S6F11R is sent
+or S6F13R is sent.&nbsp; S6F13R is the default.</td>
+</tr>
+
+<tr>
+<td>S6F12</td>
+
+<td>H</td>
+
+<td>&lt;ACKC6></td>
+
+<td>"Event Report Ack"</td>
+</tr>
+
+<tr>
+<td>S6F13R</td>
+
+<td>E</td>
+
+<td>L:3 {U4 &lt;dataid>} {U4 &lt;ceid>} {L [{L:2 {U4 &lt;rptid>} {L [{L:2
+{U4 &lt;vid>} &lt;V>}]+}}]+}</td>
+
+<td>"Annotated Event Report Send"</td>
+</tr>
+
+<tr>
+<td>S6F14</td>
+
+<td>H</td>
+
+<td>&lt;ACKC6></td>
+
+<td>"Annotated Event Report Ack"</td>
+</tr>
+
+<tr>
+<td>S6F15R</td>
+
+<td>H</td>
+
+<td>&lt;CEID></td>
+
+<td>"Event Report Request"</td>
+</tr>
+
+<tr>
+<td>S6F16</td>
+
+<td>E</td>
+
+<td>S6F11 data</td>
+
+<td>"Event Report Data"</td>
+</tr>
+
+<tr>
+<td>S6F17R</td>
+
+<td>H</td>
+
+<td>&lt;CEID></td>
+
+<td>"Annotated Event Report Request"</td>
+</tr>
+
+<tr>
+<td>S6F18</td>
+
+<td>E</td>
+
+<td>S6F13 data</td>
+
+<td>"Annotated Event Report Data"</td>
+</tr>
+
+<tr>
+<td>S6F19R</td>
+
+<td>H</td>
+
+<td>&lt;RPTID></td>
+
+<td>"Individual Report Request"</td>
+</tr>
+
+<tr>
+<td>S6F20</td>
+
+<td>E</td>
+
+<td>L [&lt;V>]*</td>
+
+<td>"Individual Report Data"</td>
+</tr>
+
+<tr>
+<td>S6F21R</td>
+
+<td>H</td>
+
+<td>&lt;RPTID></td>
+
+<td>"Annotated Individual Report Request"</td>
+</tr>
+
+<tr>
+<td>S6F22</td>
+
+<td>E</td>
+
+<td>L [{L:2 {U4 &lt;varID>} &lt;V>}]*</td>
+
+<td>"Annotated Individual Report Data"</td>
+</tr>
+
+<tr>
+<td>S6F23R</td>
+
+<td>H</td>
+
+<td>&lt;RSDC></td>
+
+<td>"Request or Purge Spooled Data"</td>
+</tr>
+
+<tr>
+<td>S6F24</td>
+
+<td>E</td>
+
+<td>&lt;RSDA></td>
+
+<td>"Request or Purge Spooled Data Ack"</td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td>S7F1R</td>
+
+<td>H, E</td>
+
+<td>L:2 &lt;PPID> &lt;LENGTH></td>
+
+<td>"Process Program Load Inquire"</td>
+</tr>
+
+<tr>
+<td>S7F2</td>
+
+<td>E, H</td>
+
+<td>&lt;PPGNT></td>
+
+<td>"Process Program Load Grant" - The SecsPort always sends B 0.</td>
+</tr>
+
+<tr>
+<td>S7F3R</td>
+
+<td>H, E</td>
+
+<td>L:2 {A &lt;ppid>} &lt;PPBODY></td>
+
+<td>"Process Program Download"
+<br>property <a href="#RecipesAreBinary">RecipesAreBinary</a> configures
+whether PPBODY is type B or A</td>
+</tr>
+
+<tr>
+<td>S7F4</td>
+
+<td>E, H</td>
+
+<td>B &lt;rc></td>
+
+<td>"Process Program Download Acknowledge"</td>
+</tr>
+
+<tr>
+<td>S7F5R</td>
+
+<td>H, E</td>
+
+<td>A &lt;ppid></td>
+
+<td>"Process Program Upload Request"</td>
+</tr>
+
+<tr>
+<td>S7F6</td>
+
+<td>E, H</td>
+
+<td>L:2 {A &lt;ppid>} &lt;PPBODY></td>
+
+<td>"Process Program Upload Data"
+<br>property <a href="#RecipesAreBinary">RecipesAreBinary</a> configures
+whether PPBODY is type B or A</td>
+</tr>
+
+<tr>
+<td>S7F17R</td>
+
+<td>H</td>
+
+<td>L [{A &lt;ppid>}]*</td>
+
+<td>"Delete Process Program Send"</td>
+</tr>
+
+<tr>
+<td>S7F18</td>
+
+<td>E</td>
+
+<td>B &lt;rc></td>
+
+<td>"Delete Process Program Acknowledge"</td>
+</tr>
+
+<tr>
+<td>S7F19R</td>
+
+<td>H</td>
+
+<td>&nbsp;</td>
+
+<td>"Current Process Program Dir Request"</td>
+</tr>
+
+<tr>
+<td>S7F20</td>
+
+<td>E</td>
+
+<td>L [{A &lt;ppid>}]*</td>
+
+<td>"Current Process Program Data"</td>
+</tr>
+
+<tr>
+<td>S*F0</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>abort replies are handled as a special case of reply</td>
+</tr>
+
+<tr>
+<td>S9F1</td>
+
+<td>E</td>
+
+<td>&lt;MHEAD></td>
+
+<td>"Unknown Device ID"
+<br>sent automatically per the standard</td>
+</tr>
+
+<tr>
+<td>S9F3</td>
+
+<td>E,H</td>
+
+<td>&lt;MHEAD></td>
+
+<td>"Unknown Stream"</td>
+</tr>
+
+<tr>
+<td>S9F5</td>
+
+<td>E,H</td>
+
+<td>&lt;MHEAD></td>
+
+<td>"Unknown Function"</td>
+</tr>
+
+<tr>
+<td>S9F7</td>
+
+<td>E,H</td>
+
+<td>&lt;MHEAD></td>
+
+<td>"Illegal Data"</td>
+</tr>
+
+<tr>
+<td>S9F9</td>
+
+<td>E,H</td>
+
+<td>&lt;MHEAD></td>
+
+<td>"Transaction Timeout"
+<br>T3 timeout</td>
+</tr>
+
+<tr>
+<td>S9F11</td>
+
+<td>E</td>
+
+<td>&lt;MHEAD></td>
+
+<td>"Data Too Long" - your application can send this</td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td>S10F1</td>
+
+<td>E</td>
+
+<td>L:2 {B 0} {A &lt;text>}</td>
+
+<td>"Terminal Request"
+<br>the example application sends this</td>
+</tr>
+
+<tr>
+<td>S10F3R</td>
+
+<td>H</td>
+
+<td>L:2 &lt;TID> {A &lt;text>}</td>
+
+<td>"Terminal Display, Single"</td>
+</tr>
+
+<tr>
+<td>S10F4</td>
+
+<td>E</td>
+
+<td>B &lt;rc></td>
+
+<td>"Terminal Display, Single Acknowledge"
+<br>&lt;rc> is set by your application callback</td>
+</tr>
+
+<tr>
+<td>S10F5R</td>
+
+<td>H</td>
+
+<td>L:n &lt;TID> {L [{A &lt;text>}]*}</td>
+
+<td>&nbsp;"Terminal Display, Multi-Block"</td>
+</tr>
+
+<tr>
+<td>S10F6</td>
+
+<td>E</td>
+
+<td>B &lt;rc></td>
+
+<td>"Terminal Display, Multi-Block Acknowledge"
+<br>&lt;rc> is set by your application callback</td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h3>
+Built-In&nbsp;<a NAME="BuiltInEvents"></a>Event Report Definitions</h3>
+&nbsp;
+<table BORDER id="ei_event" >
+<tr>
+<th>CEID</th>
+
+<th>Description</th>
+</tr>
+
+<tr>
+<td>1000-2999</td>
+
+<td>Alarm Set == ALID,&nbsp; Alarm Clear == ALID+1</td>
+</tr>
+
+<tr>
+<td>4000</td>
+
+<td>Control State OFF-LINE</td>
+</tr>
+
+<tr>
+<td>4001</td>
+
+<td>Control State LOCAL</td>
+</tr>
+
+<tr>
+<td>4002</td>
+
+<td>Control State REMOTE</td>
+</tr>
+
+<tr>
+<td>4005</td>
+
+<td>Material Received</td>
+</tr>
+
+<tr>
+<td>4006</td>
+
+<td>Material Removed</td>
+</tr>
+
+<tr>
+<td>4015</td>
+
+<td>Operator Command Issued</td>
+</tr>
+
+<tr>
+<td>4020</td>
+
+<td>Operator Equipment Constant Change</td>
+</tr>
+
+<tr>
+<td>4030</td>
+
+<td>Process Program Change</td>
+</tr>
+
+<tr>
+<td>4035</td>
+
+<td>Process Program Invalid</td>
+</tr>
+
+<tr>
+<td>4040</td>
+
+<td>Process Program Selected</td>
+</tr>
+
+<tr>
+<td>4047</td>
+
+<td>Processing Started</td>
+</tr>
+
+<tr>
+<td>4048</td>
+
+<td>Processing Completed</td>
+</tr>
+
+<tr>
+<td>4049</td>
+
+<td>Processing Stopped</td>
+</tr>
+
+<tr>
+<td>4050</td>
+
+<td>Process State Update</td>
+</tr>
+
+<tr>
+<td>4080</td>
+
+<td>Spooling Activated</td>
+</tr>
+
+<tr>
+<td>4081</td>
+
+<td>Spooling Deactivated</td>
+</tr>
+
+<tr>
+<td>4083</td>
+
+<td>Spool Transmit Failure</td>
+</tr>
+
+<tr>
+<td>4091</td>
+
+<td>Stream 15 Execution Recipe - New</td>
+</tr>
+
+<tr>
+<td>4093</td>
+
+<td>Stream 15 Execution Recipe - Change</td>
+</tr>
+
+<tr>
+<td>4100</td>
+
+<td>Terminal Services Operator Display Acknowledge</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%"><a NAME="LicenseTerms"></a>
+<h2>
+License Terms</h2>
+Subject to Change Without Notice
+<p>The Hume .NET SecsPort software is licensed for development and runtime
+use at no additional charge for computers that are licensed for development
+use of the Hume Integration Datahub SDK.
+<p>Hume Integration is also pleased to offer separate runtime licenses
+for using the SecsPort software on systems that are not licensed as development
+systems.&nbsp; Contact Hume Integration for information on the Resale Licensing
+program.
+<p>
+<hr WIDTH="100%">
+<h2>
+<a NAME="DocVersion"></a>Document Version</h2>
+Date of last revision: $Date: 2005/04/06 13:55:53 $.
+</body>
+</html>

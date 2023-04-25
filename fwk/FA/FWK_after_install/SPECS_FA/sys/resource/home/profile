@@ -1,0 +1,27 @@
+#!/usr/bin/sh
+
+# Set up SPECS_FA environment
+
+	SPECS_FA_PATH=/opt/SPECS_FA; export SPECS_FA_PATH
+	DMH_DIR=/opt/SPECS_FA/dmh; export DMH_DIR
+
+# Set up dmh Environment
+
+	DMH_BIN=$DMH_DIR/bin; export DMH_BIN
+	PATH=$PATH:$DMH_BIN; export PATH
+	SHLIB_PATH=$DMH_DIR/lib; export SHLIB_PATH
+
+	if [ `uname -s` = "HP-UX" ]; then
+		DMH_LIBRARY=$DMH_DIR/lib/dmh83; export DMH_LIBRARY
+		TK_LIBRARY=$DMH_DIR/lib/tk8.3; export TK_LIBRARY
+		TCL_LIBRARY=$DMH_DIR/lib/tcl8.3; export TCL_LIBRARY
+	else
+		DMH_LIBRARY=$DMH_DIR/lib/dmh84; export DMH_LIBRARY
+		TK_LIBRARY=$DMH_DIR/lib/tk8.4; export TK_LIBRARY
+		TCL_LIBRARY=$DMH_DIR/lib/tcl8.4; export TCL_LIBRARY
+		if [ -n "$LD_LIBRARY_PATH" ]; then
+			LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/SPECS_FA/dmh/lib; export LD_LIBRARY_PATH
+		else
+			LD_LIBRARY_PATH=/opt/SPECS_FA/dmh/lib; export LD_LIBRARY_PATH
+		fi
+	fi

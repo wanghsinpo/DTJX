@@ -1,0 +1,3257 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Edward C. Hume, III">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <title>Gem Equipment Interface Applications</title>
+</head>
+<body>
+
+<h1>
+The GEM Equipment Interface Applications</h1>
+
+<hr WIDTH="100%">
+<h2>
+Contents</h2>
+
+<ul><a href="#Introduction">Introduction</a>
+<p><a href="#Installation">Installation</a>
+<p><a href="#SEMI Standards">The SEMI Standards</a>
+<p><a href="#Using gem apps">Using the Gemhost and Gemsim Applications</a>
+<ul><a href="#Gemsim Command Line">The Gemsim Command Line</a>
+<br><a href="#Gemsim UI">The Gemsim User Interface</a>
+<br><a href="#Understanding gemsim">Understanding the Gemsim Application</a>
+<br><a href="#Gemhost Command Line">The Gemhost Command Line</a>
+<br><a href="#Gemhost UI">The Gemhost User Interface</a>
+<br><a href="#Gemhost DMH">Gemhost Message System Integration</a>
+<br><a href="#Gemhost understanding">Understanding the Gemhost Application</a>
+<br><a href="#Supervisor">The GEM Supervisor Application</a></ul>
+
+<p><br><a href="#Building Equipment">Building Equipment Interfaces</a>
+<p><a href="#SQL Table">SQL Table Schema</a>
+<p><a href="#Document Version">Document Version</a></ul>
+
+<hr WIDTH="100%">
+<pre>(C)Copyright 2001, 2005 Hume Integration Software
+All Rights Reserved</pre>
+<i>This document may not be reproduced or redistributed without prior written
+permission of Hume Integration Software.&nbsp; Licensed users of HIS provided
+software have permission to reproduce or electronically distribute this
+document to support their usage of the HIS software.</i>
+<hr>
+<hr>
+<h2>
+<a NAME="Introduction"></a>Introduction</h2>
+This document describes the configurable GEM Equipment Interface Applications
+provided by Hume Integration as part of its Datahub SDK product.&nbsp;
+"GEM" refers to Generic Equipment Model, a standard model for the communication
+interface to Semiconductor and Electronics manufacturing equipment.&nbsp;
+GEM describes usage of a subset of the SECS-II protocol - the Semiconductor
+Equipment Communication Standard that deals with message content.
+<p>Hume provides a GEM compliant equipment simulator application, <b>gemsim</b>,
+which is a starting point for developing GEM interfaces for real equipment,
+as well as a useful tool for developing, demonstrating, and testing host
+software.&nbsp; An equipment manufacturer deploys a GEM interface by revising
+and extending the <b>gemsim</b> application using Tcl programming, or by
+using the GEM application as a background process, and controlling it from
+his own application software.&nbsp; Hume Integration has developed several
+examples demonstrating how this can be done from different programming
+environments.&nbsp; The newest example is the <a href="../indexes/SecsPort.html" target="blank">.NET
+SecsPort Component</a> which can be used from any of the .NET languages
+including C#, Visual Basic, extended C++, and Java.&nbsp; The SecsPort
+Component exposes all of the usual GEM equipment capabilities in a native
+.NET CLS-compliant API.&nbsp; The SecsPort Component documentation has
+more detailed information on the built-in SECS/GEM message handling and
+data items than are presented in this document.&nbsp; This document is
+mostly oriented towards the Host developer, whereas the SecsPort Component
+document is exclusively for the Equipment developer.  In addition to the .NET SecsPort,
+there is also the <a href="../indexes/VBSecsEquip.html" target="blank">Visual Basic
+Active-X SecsEquip Control</a> and the 
+<a href="../indexes/VCSecsEquip.html" target="blank">Visual C++ SecsEquip library</a>
+which offer nearly the same comprehensive feature set as the .NET component
+for the established Visual platforms.
+<p>The&nbsp; Host GEM-EI Applications, <b>gemhost</b> and <b>supervisor</b>,
+are designed to interface with equipment that conforms to the GEM standard
+without any custom coding.&nbsp;&nbsp; Configuration information is obtained
+dynamically through communication with the equipment, and saved in SQL
+data tables.&nbsp; A graphical user interface is provided for defining
+and managing event reports,&nbsp; alarm reports, initiating remote commands,
+and&nbsp; managing recipes.&nbsp;&nbsp; The Host GEM-EI Applications also
+feature the ability&nbsp; to accept and output SEMATECH VFEI messages for
+factories that use this standard as an interface for equipment drivers.&nbsp;
+But not all SECS equipment is GEM compliant. <b>The Host GEM-EI Applications
+are also designed to accommodate non-GEM equipment, often with little or
+no custom Tcl code needed.</b>&nbsp; The basic functions such as capturing
+event reports and alarms, and managing recipes, will work for any equipment
+that supports the underlying SECS messages.&nbsp; When custom code is needed,
+whether to accommodate equipment variations, or to fulfill custom integration
+requirements, the GEM-EI software provides a well designed framework for
+organizing and accomplishing the effort.&nbsp; A directory is provided
+for user written custom logic that can replace or supplement the provided
+code.
+<p>The GEM-EI applications can use any of the SECS connection variations
+supported by the Datahub SDK:
+<ul>
+<li>
+HSMS on ethernet LANs</li>
+
+<li>
+SECS-I using RS-232 ports</li>
+
+<li>
+SECS-I with direct connections to TCP/IP terminal servers</li>
+</ul>
+The Host GEM-EI software is easily integrated into a factory system using
+the DMH message system.&nbsp; This enables the Host GEM-EI software to
+communicate equipment events to higher level software, to receive equipment
+control commands, or to respond to remote inspection using the <a href="dmh_inspect.html">inspect</a>
+tool.&nbsp; When the Host software is started as a member of a DMH message
+group,&nbsp; the following mailboxes are used where <i><b>name</b> </i>represents
+the name given to the particular equipment interface.
+<ul>
+<li>
+VFEI 2.2 command messages are accepted in mailbox <b><i>name_</i>VFEI</b>.</li>
+
+<li>
+SQL commands are accepted in mailbox <b><i>name_</i>SQL</b> for remote
+data access.</li>
+
+<li>
+Tcl language commands are accepted in mailbox <b><i>name_</i>RPC</b> which
+enables remote inspection or remote interaction with the EI.</li>
+
+<li>
+Asynchronous VFEI messages such as alarm and event reports are sent to
+a configurable mailbox destination.&nbsp; This has been a useful mechanism
+to tie the Host EI drivers into higher level software such as the <a href="../indexes/lnkEPC.html" target="blank">Hume
+Event Processing Component</a> for the purpose of controlling production
+activities and monitoring equipment utilization.&nbsp; With a small amount
+of customization, a different format, for example XML, could be used for
+the notification messages.</li>
+</ul>
+The Host software can be tied into other factory systems using any of the
+facilities provided with Tcl, or available from third parties.&nbsp; Hume
+Integration also provides software components to use the DMH message system
+from non-Tcl programming environments such as .NET, POSIX C/C++, Visual
+Basic, Visual C++, or Java.
+<p>The integrator can create subscriptions to SQL data tables that are
+activated when new equipment events occur and the table data is changed.&nbsp;
+The subscription mechanism provides an elegant interface such that the
+integrator does not need to change the GEM and SECS logic that acquires
+the equipment data in order to use it in new ways.&nbsp; Some possibilities
+include:
+<ul>
+<li>
+Integrating with <a href="../indexes/lnkDMHdotnet.html" target="blank">.NET</a>,
+<a href="../indexes/DMHocx.html">Visual Basic</a>,
+<a href="../indexes/HISjava.html">Java</a>,
+or <a href="../indexes/DMHclient.html">Visual C++</a> applications using
+the DMH message system.&nbsp; The <a href="../indexes/posix_DMH.html">POSIX
+C DMH client</a> is also available for applications that are portable between
+POSIX systems such as Linux and HP-UX, and Windows.</li>
+
+<li>
+Using the Tcl&nbsp; <a href="../mann/socket.html">socket
+</a>command, or
+the Tcl <a href="../mann/comm.html">comm</a> command as a high level interface
+to TCP/IP or to a serial device.</li>
+
+<li>
+Creating text files, and using the Tcl <a href="../mann/exec.html">exec</a>
+command to activate another program.</li>
+
+<li>
+On Windows systems, using the Tcl <a href="../mann/odbc.html">odbc</a>
+command to integrate with a ODBC database.</li>
+
+<li>
+Using third party or custom Tcl extensions to interoperate with other messages
+systems or protocols such as XML-RPC, or SOAP.&nbsp; Extensions can be
+dynamically loaded into dmh_wish, or the Hume provided GEM-EI features
+can be dynamically loaded into your custom Tcl/Tk executable.</li>
+</ul>
+
+<hr WIDTH="100%">
+<h2>
+<a NAME="Installation"></a>Installation</h2>
+&nbsp;The GEM-EI application files are usually installed using the SETUP
+program that comes with the Datahub SDK.&nbsp; The SETUP program unpacks
+the gem.zip archive into a set of directories underneath /usr/local/gem
+if your chosen installation path is /usr/local.&nbsp; On Windows NT, program
+items are created to invoke the GEM Equipment Simulator,&nbsp; the GEM
+Supervisor, and the GEM Host Interface from the Start Menu.&nbsp; The directories
+do not need to be located in the same installation directory as the DMH
+package.&nbsp; You may choose to manually unzip the gem.zip archive in
+a directory of your own choice.&nbsp;&nbsp; Here are the directories that
+are created, and their contents:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Directory</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>.../gem/host</td>
+
+<td>This directory contains the <b>gemhost</b>&nbsp; application, and other
+files that support the host side of the SECS protocol.&nbsp; The <b>gemhost</b>
+application can be started on the command line.&nbsp; By default it will
+use the HSMS protocol and connect to the <b>gemsim</b> application running
+on the same computer.&nbsp; You can use command line arguments to have
+the <b>gemhost</b> connect to different equipment.&nbsp; You can also use
+the <b>gemsystem</b> command to start&nbsp; the gemhost application as
+a client of a DMH message group server.&nbsp;
+<p>This directory also contains the <b>supervisor </b>application, which
+is used to configure and manage the startup of multiple equipment interfaces.&nbsp;
+The <b>supervisor </b>application has the ability to copy interface configurations.&nbsp;
+This makes it simple to integrate multiple instances of similar equipment.</td>
+</tr>
+
+<tr>
+<td>.../gem/equip</td>
+
+<td>This directory contains the <b>gemsim</b> GEM compliant equipment simulator.&nbsp;
+This application is used as a suitable target for the gemhost application
+for demonstration, learning, testing, and development.&nbsp; The application
+is also designed to be used as a starting point for an equipment manufacturer.&nbsp;
+The gemsim application will by default offer an HSMS connection on port
+5555, with device ID 0.&nbsp; By providing command line arguments, other
+connection types are possible.</td>
+</tr>
+
+<tr>
+<td>.../gem/lib</td>
+
+<td>This directory contains Tcl files that are shared between both the
+host and equipment applications.&nbsp; You may be interested in the secs_xact.tcl
+file that provides for synchronous style SECS transactions.</td>
+</tr>
+
+<tr>
+<td>.../gem/client</td>
+
+<td>In this directory you will find the <b>ei_client</b> application.&nbsp;
+This application uses the DMH message system to communicate with equipment
+drivers that are running in background, or running on remote computers.&nbsp;
+The target application must be listening for Tcl commands in a DMH mailbox.&nbsp;
+The ei_client application is able to create local trace windows for secsport,
+hsms, or comm equipment interfaces.&nbsp; Also, the utility can launch
+the <b>inspect</b> or <b>hubclient</b> programs attached to the same target
+application.&nbsp; In combination, these utilities let you debug and control
+your equipment interfaces from any seat on your local area network!</td>
+</tr>
+
+<tr>
+<td>.../gem/custom</td>
+
+<td>This directory is a place for you to develop and deploy your own equipment
+interfaces or custom versions of the provided application code.&nbsp; This
+directory is added to the <a href="../mann/library.html">auto_path</a>
+variable of the gemhost or the supervisor application Tcl interpreter before
+the directories that contain the HIS distributed files.&nbsp; If you create
+custom procedures in this directory, they will be found and used instead
+of the HIS distributed procedures of the same name.&nbsp;
+<p>If you are getting started with the GEM application, and are creating
+a small number of equipment interfaces, this directory will be adequate
+to hold your custom software.&nbsp; If you are deploying many equipment
+interfaces, you will probably wish to create multiple directories similar
+to this one.&nbsp; You may wish to create your own directories for specific
+types of equipment interfaces.&nbsp; You can put your shared procedures
+in this directory, and put your equipment specific code in a separate directory
+that you create for each kind of equipment.&nbsp; You either need to keep
+the equipment specific code in separate directories, or give the equipment
+specific code unique procedure names.&nbsp; Look at the ../host/gemhost
+script for an example startup script that sets up the auto_path.&nbsp;
+You will want to use the auto_path variable to control which directories
+the Tcl interpreter uses to find procedures.&nbsp;
+<p>If you will be using the custom directory to develop new interfaces,
+you need to make sure that the security permissions allow you and your
+co-developers to create and modify new files in this directory.&nbsp;</td>
+</tr>
+
+<tr>
+<td>.../gem/CVS, .../gem/*/CVS</td>
+
+<td>HIS uses the freely available cvs version management system to track
+changes to the GEM package files.&nbsp; The CVS subdirectories are created
+by this tool to hold version information about the files.</td>
+</tr>
+
+<tr>
+<td>.../gem/tests</td>
+
+<td>This directory is used for HIS or customer developed regression tests.&nbsp;
+The core Tcl/Tk distributions come with regression tests to verify proper
+operation of the Tcl/Tk features.&nbsp; This directory contains the files
+needed to run similar regression tests on the GEM application software.&nbsp;</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<h2>
+<a NAME="SEMI Standards"></a>The SEMI Standards</h2>
+The Semiconductor Equipment and Materials International&nbsp; organization
+(SEMI) has developed the following standards for equipment communication
+upon which this software is based.
+<ul>
+<li>
+SEMI E4 - SEMI Equipment Communication Standard 1 - Message Transport (SECS-I)</li>
+
+<li>
+SEMI E5 - SEMI Equipment Communication Standard 2 - Message Content (SECS-II)</li>
+
+<li>
+SEMI E30 - Generic Model for Communications and&nbsp; Control of SEMI Equipment
+(GEM)</li>
+
+<li>
+SEMI E37 - High-Speed SECS Message Services (HSMS) Generic Services</li>
+
+<li>
+SEMI E37.1 - High-Speed SECS Message Services Single-Session Mode (HSMS-SS)</li>
+</ul>
+The SEMI standards are available through <a href="http://www.semi.org/">http://www.semi.org</a>.&nbsp;
+The E5 standard is the most important one - it describes the use of SECS
+messages.&nbsp; The GEM model is described in E30.&nbsp; The lower level
+protocols are described in E4 (SECS-I) and E37.1 (HSMS-SS). 
+<p>The SEMATECH Virtual Factory Equipment Interface Version 2.2 standard
+is available through <a href="http://www.sematech.org/">SEMATECH</a> as
+Technology Transfer document 95113016A-TR.&nbsp; VFEI describes a text
+message based programming interface to integrate semiconductor manufacturing
+equipment into factory information systems.
+<br>&nbsp;
+<h3>
+<a NAME="SECS Basics"></a>SECS Basics</h3>
+Here is a mix of facts and advice to help get you started with SECS equipment.&nbsp;
+This is no substitute for reading the standards.
+<p>To communicate with the equipment, you have to know the connection information.&nbsp;
+For a SECS-I RS-232 cable connection, you need the baud rate, and the equipment's
+device ID.&nbsp; Use a break-out box or other RS-232 tools to make sure
+your cable connection is proper;&nbsp; you only need to connect lines 2,
+3 and 7.&nbsp; You may need to swap lines 2 and 3.&nbsp;&nbsp; For an HSMS
+LAN connection, you need to know the IP address of the equipment, the TCP/IP
+port number, and the device ID.&nbsp; Always try to ping the IP address
+or hostname to establish that the network is functioning properly.
+<p>Equipment expects to see its own device ID in messages that are directed
+to it.&nbsp; You should know what it is or configure it to a known value.&nbsp;
+You set the device ID in the gemhost software by setting the array element
+DEVID.&nbsp; You can set this on the command line, or in your custom version
+of the gemhost script as explained later.&nbsp; Newer versions of the
+Hume GEM Host software have logic to automatically correct the DEVID value,
+if the equipment implements standard error messages.
+<p>Each data item in a SECS messages is a specific low level type such
+as a 2 byte unsigned integer.&nbsp; There are variations is the specific
+data types used, and the specific message formats used.&nbsp; Your driver
+application should readily accommodate this, by not being fussy about the
+type codes in received messages.&nbsp; You should elevate yourself and
+work with data items as strings.&nbsp; You can work with data values such
+as "2" or "0" in your application logic, and then supply the proper type
+code when you format messages to the equipment.
+<p>For many command messages, SECS defines multiple replies indicating
+different reasons for failure.&nbsp; We suggest that you avoid coding for
+different failure reasons as much as possible.&nbsp; It is difficult to
+test intricate conditional logic.&nbsp; Write straightforward, maintainable
+code - the transaction either succeeds or fails.&nbsp; For the things that
+fail, leave log messages that can be viewed after the fact.
+<br>
+<hr WIDTH="100%">
+<h2>
+Using the&nbsp;<a NAME="Using gem apps"></a>Gemhost and Gemsim Applications</h2>
+For demonstration and learning, you can immediately begin running the gemhost
+and gemsim applications as an example host interface and equipment, respectively.&nbsp;
+The information in this section will coach you on starting the applications,
+on using them, and on understanding them.&nbsp; Also, you can successfully
+use the gemhost or supervisor application to communicate with your own
+equipment.&nbsp; You can use the graphical user interface to specify the
+collection of data in event reports, to manage the reporting of alarms,
+to upload and download recipes, etc.&nbsp; The example gemhost script starts
+a single equipment interface with the name "gemhost".&nbsp; The supervisor
+application can start multiple equipment interfaces using custom connection
+specifications.&nbsp; If you have more than one piece of equipment,&nbsp;
+you should use the supervisor application to create the interfaces that
+you need.&nbsp; You will want to give your interfaces names of your own
+choosing.&nbsp; We will discuss customization at this level in the next
+section.
+<p>Most users of this package will want to focus more on understanding
+the gemhost application than the equipment role.&nbsp; Because of the requirements
+of GEM, the gemsim equipment logic is a little more complex than the host
+side.&nbsp; The equipment needs to respond differently to messages depending
+on whether its offline, online in local control, or online in remote control.&nbsp;
+Whether your focus is the host or the equipment role, we suggest you get
+comfortable with the following resources.
+<ul>
+<li>
+The user interfaces of the gemhost or gemsim applications.&nbsp; For both
+applications, three separate windows are provided that offer different
+views of the application.&nbsp; Follow the instructions below to get the
+applications running and communicating.&nbsp; Then spend some time exploring
+the Trace windows, the Data Table window, and the User Interface windows.&nbsp;
+Be sure to explore the Tracing menu on the Trace windows.&nbsp; Being able
+to dynamically change the detail of traced information is invaluable when
+it comes to building and debugging your own applications.</li>
+
+<li>
+The online documentation.&nbsp; Most HTML browsers will let you open several
+browser windows so you can easily view multiple documents at once.&nbsp;
+If you are new to Tcl, the syntax of the language is summarized in <a href="../mann/Tcl.html">.../mann/Tcl.html</a>.&nbsp;
+The secsport and hsms commands are explained in the <a href="../mann/secsport.html">.../mann/secsport.html</a>
+document.&nbsp; These commands are used to create and manage SECS protocol
+communication connections.&nbsp; The <a href="../mann/TSN.html">.../mann/TSN.html</a>
+document describes Tcl SECS Notation.&nbsp; This is the text representation
+of SECS binary messages that is used for sending or receiving SECS messages
+from Tcl code.</li>
+
+<li>
+The <a href="dmh_inspect.html">inspect</a> application.&nbsp; This application
+can attach to an interpreter running on the same display, or can attach
+to an interpreter that is receiving messages from the DMH message system
+and executing them as Tcl statements.&nbsp; Inspect gives you the means
+to dynamically examine and change the Tcl procedures and global data items
+of the attached application.&nbsp; You can also use inspect to execute
+manually entered Tcl statements in the target application.&nbsp; This is
+commonly used during development to <a href="../mann/source.html">source</a>
+a revised version of the Tcl application code.</li>
+
+<li>
+The pertinent SEMI and SEMATECH standards.</li>
+</ul>
+
+<h3>
+The&nbsp;<a NAME="Gemsim Command Line"></a>Gemsim Command Line</h3>
+In your factory, the equipment is usually powered up and running, and available
+for SECS interface connections.&nbsp; We will parallel your factory equipment
+by starting the gemsim equipment simulator first.&nbsp;&nbsp; On Windows
+NT, the usual SETUP installation results in a program item named "Gem Equipment"
+which you can activate to start the <b>gemsim</b> application.&nbsp; On
+UNIX systems, you need to navigate to the /usr/local/gem/equip directory.&nbsp;
+With X-Windows running, you should invoke "gemsim &amp;" to run the gemsim
+application as a background process that is not attached to your console
+window.&nbsp; The default startup of <b>gemsim </b>creates the equipment
+as an HSMS server ("a passive listener") on port 5555.&nbsp; If you have
+not licensed the HSMS software features with your DMH package, you will
+need to specify information on the command line to tell the gemsim application
+to use a serial communication port, or to offer a TCP/IP server connection
+that uses SECS-I.&nbsp; The latter possibility may seem non-standard, but
+in fact it simulates the common situation of connecting SECS-I equipment
+to a terminal server, and then connecting directly to the terminal server
+using TCP/IP.&nbsp; The direct use of TCP/IP terminal servers is a standard
+feature of the <a href="../mann/secsport.html">secsport</a> command, and
+it is widely used by HIS customers.&nbsp; The <b>gemsim</b> application
+will execute command line arguments as Tcl statements.&nbsp; Also, if the
+global variable <b>PORT </b>specifies a different connection, the gemsim
+application will use it instead of its default HSMS port.&nbsp; Putting
+these facts together, an example command line such as:
+<pre><tt>$ gemsim "set PORT /dev/tty01" &amp;</tt></pre>
+will start the gemsim application connected to the system /dev/tty01 serial
+port.&nbsp; You probably do not want to mess around with serial ports and
+a crossover cable just to run the demo applications.&nbsp; If you cannot
+use HSMS, start the application on Windows NT with:
+<pre><tt>C:\usr\local\gem\equip> gemsim "set PORT :5556,S"</tt></pre>
+or on UNIX with:
+<pre><tt>$&nbsp; gemsim "set PORT :5556,S" &amp;</tt></pre>
+With this command line, the gemsim application will offer a TCP/IP server
+connection on port 5556.&nbsp; The <a href="../mann/secsport.html">secsport</a>
+command documentation explains the possible types of connections that we
+are assigning to the global variable PORT. The gemsim script assumes that
+an HSMS connection is intended if a simple integer is used for the PORT
+value and it calls the hsms Tcl command during initialization. If the PORT
+value is not a simple integer, the secport command is called.
+<p>The gemsim application also recognizes the global variables PASSIVE
+and HOST which can be used from the command line to specify the HSMS active
+role. Usually HSMS equipment is a passive listener on the default network
+interface of the computer that it is running on. To start the gemsim application
+so that it actively attempts to connect to a passive host, a command line
+such as the following may be used:
+<pre>gemsim "set PORT 5555" "set PASSIVE 0" "set HOST 192.168.2.14" &amp;</pre>
+&nbsp;
+<h3>
+The&nbsp;<a NAME="Gemsim UI"></a>Gemsim User Interface</h3>
+With the gemsim application started, you will see three windows; the "<a href="gemsim_ctrl.jpg">GEM
+Equipment User Interface</a>", the "<a href="gemsim_trace.jpg">gemsim Trace</a>"
+window, and the "<a href="gemsim_tabs.jpg">gemsim Data Tables</a>" window.&nbsp;
+The last window is probably iconified.&nbsp; Here is a brief overview of
+the menues and features of these windows.
+<br>&nbsp;
+<dl>
+<dt>
+<a href="gemsim_ctrl.jpg">GEM Equipment User Interface</a></dt>
+
+<dd>
+This window provides an operational user interface for the equipment.&nbsp;
+The window is divided into sub panels each of which controls different
+aspects of the equipment.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dl>The Communications panel gives you two push buttons to enable or disable
+communications.&nbsp; The current communication state is shown.&nbsp; Upon
+startup, before the host connects, the state will be "ENABLED {NOT COMMUNICATING}".</dl>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Control panel provides switches that conform to the GEM control model.&nbsp;
+With GEM, the Communications state indicates the ability for the host and
+the equipment to communicate, but the Control state characterizes the equipment's
+responsibility to act upon the received messages.&nbsp;&nbsp; The operator
+can choose for the Control state to be Off-line or On-line.&nbsp; In the
+Off-line control state, the use of messaging for automation purposes is
+severely restricted.&nbsp;&nbsp; If the operator choose to go online, the
+gemsim application will not respond to further presses of the On-line/Off-line
+radio buttons until the communication attempt to the host has succeeded
+or failed.&nbsp; With HSMS, the button can seem stuck on Off-line because
+the communication attempt fails immediately if the host is not connected.&nbsp;
+The local and remote pushbuttons affect the On-line control state.&nbsp;
+With real equipment, the local and remote choices affect the degree to
+which the operator or the host interface is in charge of processing.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Alarms panel provides buttons to Enable, Disable, Set, Clear, or Add
+alarms.&nbsp; Alarms will be reported when they transition from Set to
+Clear, or from Clear to Set, if they are Enabled for reporting.&nbsp; The
+panel shows which alarms have been defined, and what their current Enable/Disable
+and their current Set/Clear states are.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Processing panel allows the operator to select a PPExecName (a Process
+Program Name or "recipe"), and then choose to Start running it.&nbsp; While
+the process program is running, other buttons can be used to Pause, Stop,
+or Abort.&nbsp; A Paused process run can be Resumed using another button.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Terminal Services panel allows the equipment operator to send a message
+to the host, and to view and acknowledge a message that the host has sent
+the equipment.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Spooling panel shows you the status of SECS message spooling.&nbsp;
+The "Spooled Msg Types" indicates the SECS streams or streams and functions
+that have been configured to be spooled and corresponds to the status variable
+SpoolStreamFns.&nbsp; The host configures this value using S2F43.&nbsp;
+The operator can clear this value using the "Stop Spooling" button, or
+choose specific streams using the "Configure..." button.&nbsp;&nbsp; The
+"In Spool" count corresponds to the status variable "SpoolCountActual"
+which is a measure of the number of messages currently spooled.&nbsp; The
+"Max In Spool" count corresponds to the equipment parameter "SpoolMax"
+which is the limit on the number of messages that can be spooled.&nbsp;
+The "Input Total" count corresponds to the status variable "SpoolCountTotal'
+which is the count of messages handled by the spooling logic since spooling
+last began.&nbsp; If this value is bigger than "Max In Spool" it indicates
+that the spool was filled and data was lost.&nbsp; The "Purge Spool" button
+empties the spool.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dt>
+<a NAME="gemsim Trace"></a><a href="gemsim_trace.jpg">gemsim Trace window</a></dt>
+
+<dd>
+This window is the usual trace window that can be displayed for any secsport
+or hsms communication connection.&nbsp; The window is used to display the
+messages that the gemsim application sends and receives.&nbsp; Also, trouble-shooting
+information such as displaying communication attempts and low level protocol
+state changes are available, if you check the corresponding item choices
+under the <b>Tracing</b> menu button.&nbsp; The <b>Send</b> menu can also
+be handy - you can cause the binary echo message to be sent, or the S1F1
+"Are you online?" query to be sent.&nbsp; The items under the <b>Object</b>
+menu let you Reset the state of the connection.&nbsp; The Reset action
+causes the interface to stop expecting any outstanding replies, and to
+discard any messages that have become queued for sending.&nbsp; Also under
+the Object menu, the Show action will display the data items stored in
+the gemsim array.&nbsp;&nbsp; Under the <b>Replay</b> menu there are actions
+to re-send or re-receive SECS messages. There is also the Window... action
+to bring up a separate Replay Window. The replay actions are extremely
+useful during development; you can update your Tcl logic on the fly, and
+artificially cause a previous message to be re-received or re-sent. The
+Replay window has actions to save and restore message conversations as
+well as re-send or re-receive selected displayed messages. Under the <b>Window</b>
+menu button, there are actions to save the current window data to a file,
+to append the current data to a file, to clear the current data from the
+window display, to dismiss the window, or to Exit the program.&nbsp; If
+you dismiss the window and later want to recreate it, you need to have
+the gemsim Tcl interpreter execute the command "gemsim tracewin".&nbsp;
+You can get a Tcl command prompt using the window described next, or by
+attaching to the gemsim interpreter using the inspect application.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dt>
+<a NAME="gemsim Data"></a><a href="gemsim_tabs.jpg">gemsim Data Tables</a></dt>
+
+<dd>
+The Data Table window is the same user interface obtained by running the
+Datahub application.&nbsp; The gemsim application uses in-memory SQL tables
+to manage its data.&nbsp; You can use this windowing interface to interactively
+examine or modify any of the table data.&nbsp; Under the File menu button,
+select the Refresh action to see the list of tables that are currently
+in use, and the number of data rows in each table.&nbsp; Also under the
+File button, there are actions that provide additional windows for the
+execution of SQL statements or Tcl commands.&nbsp; Other menu items are
+available to execute files that contain Tcl statements or SQL statements,
+or to Exit the program.&nbsp; The Table menu has action items to display
+the schema or data of the tables that are selected in the list on the Data
+Table window.</dd>
+</dl>
+
+<h3>
+<a NAME="Understanding gemsim"></a>Understanding the Gemsim Application</h3>
+Most of the communication and control state logic is in the file .../gem/equip/equip.tcl.&nbsp;
+You will see logic in this file that uses the <a href="../mann/secsport.html">secsport
+or hsms whenmsg or whenever</a> commands dynamically to setup or change
+the handling of received messages.&nbsp; The .../gem/equip/eq_ui.tcl file
+contains the code that creates the "GEM Equipment User Interface" window,
+and supports its actions.&nbsp; After you get the host side started (directions
+below) you can use the Trace window to see what SECS messages and data
+are being communicated.&nbsp; The <b>inspect</b> application is probably
+the most convenient way to view the data items in the gemsim application
+while it runs.&nbsp; You can inspect the global array gemsim to get an
+inside look at the status of the communication connection.&nbsp; The Data
+Table window lets you look at the table data used to manage alarms, reports,&nbsp;
+events, and variables.
+<p>If you are creating a GEM interface for your equipment, you want to
+understand how to add your own alarms and events to these tables, and then
+how to initiate alarm reports and event reports from the appropriate contexts
+in your control software.&nbsp; According to GEM, the setting and clearing
+of an alarm are reportable events in their own right.&nbsp; The simulator
+design is to number alarm ID's from 1000 by two's.&nbsp; Even numbers are
+used for both the alarm ID (ALID) and the alarm set event ID (CEID).&nbsp;
+The odd numbers are used for the alarm clear event ID.&nbsp; Therefore
+for each alarm type, there is one record in the <a href="#ei_alarm">ei_alarm</a>
+table and two records in the <a href="#ei_event">ei_event </a>table.&nbsp;
+The <a href="#ei_report">ei_report</a> and <a href="#ei_event_report">ei_event_report
+</a>tables
+get populated when the host side uses SECS messages to define data collection
+reports, and to link defined reports to events.&nbsp; At startup, both
+these tables are empty.
+<p>The data items that the equipment manages are configured in table <a href="#ei_variable">ei_variable</a>.&nbsp;
+The data items are distinguished by class as represented in the varclass
+field.&nbsp; Class "SV" data items are Status Variables.&nbsp; From the
+standpoint of the host, these are read-only variables whose values can
+be reported in event reports or individually queried.&nbsp; They should
+always have a valid value.&nbsp; Typical process equipment Status Variables
+are observable quantities such as temperatures and pressures.&nbsp; Another
+class is "ECV" is the acronym for Equipment Constant Variable.&nbsp; These
+variables can have their values set or queried by messages from the host.&nbsp;
+Each ECV type variable has a minimum, maximum, and default value, as configured
+in the fields ECMIN, ECMAX, and ECDEF.&nbsp; These variables are used for
+configurable operation parameters such as setpoints or processing options.&nbsp;
+The ECV variables are usually independent of the processing characteristics
+that are controlled from information in Process Programs (recipes).&nbsp;
+The remaining class is "DVVAL",&nbsp; representing Data Value Variables.&nbsp;
+These are similar to SV items except they may not always have a valid value.&nbsp;
+An example would be the "AlarmID" variable whose value is the current alarm
+identifier (ALID) at the time an alarm is set or cleared.&nbsp; The host
+interface could ask for this variable in a report to be sent with an alarm
+set or alarm clear event report.&nbsp; However, it makes little sense for
+the host to ask for the value of this variable whenever the process state
+change event is reported.
+<p>To support your own variable definition, add a row to the ei_variable
+table following an example of one of the rows that is already there.&nbsp;
+You can add the row manually using the Data Table user interface, or you
+can add an SQL insert statement to the Tcl code.&nbsp; In the varmethod
+column, you supply the Tcl code to be executed to obtain the current value
+of the variable.&nbsp; The Tcl code "return $varvalue" indicates that the
+value of the variable is obtained by using the current value stored in
+the field varvalue.&nbsp; This is adequate for relatively static data whose
+value is maintained in the table.&nbsp; A dynamic item such as the Clock
+variable is configured to call a procedure to obtain the current value.
+<br>&nbsp;
+<h3>
+The&nbsp;<a NAME="Gemhost Command Line"></a>Gemhost Command Line</h3>
+In the above section we discussed starting the gemsim application.&nbsp;
+When the gemhost application starts, if the communication parameters are
+properly matched, you will see a lot of activity in the Trace windows of
+both applications within a minute or so.&nbsp; If you are licensed to use
+HSMS software, you may start the gemhost application by activating the
+Windows program item, or executing gemhost on the command line from the
+/usr/local/gem/host directory.&nbsp; By default, the gemhost will attempt
+a client HSMS connection on port 5555 of the computer on which it runs.&nbsp;
+If you are not licensed for HSMS, start the gemhost application by indicating
+a SECS-I, TCP/IP client connection that matches the server connection you
+used above.&nbsp; So for Windows, you enter:
+<pre>c:\usr\local\gem\host> gemhost "set PORT :5556"</pre>
+and for UNIX your invocation looks like:
+<pre>$ gemhost "set PORT :5556" &amp;</pre>
+If you are running the simulator or other equipment on a different host,
+you specify the hostname or IP address on the command line as well.&nbsp;
+If you set a value for the PORT variable on the command line, the program
+assumes that HSMS will not be used.&nbsp; So, it you want to use HSMS,
+with a custom value for PORT, you need to also use the statement, "set
+HSMS 1".&nbsp; Note that the use of the PORT value is slightly different
+from the gemsim application script. Here is an example of starting an HSMS
+connection to an equipment at a specified IP address and port:
+<pre>$ gemhost "set PORT 192.168.2.4:5555" "set HSMS 1" &amp;</pre>
+Equipment expects to see its own device ID in the messages that the gemhost
+sends to it.&nbsp; The default value is 0.&nbsp; You can specify a device
+ID on the gemhost command line by assigning it to the global data item
+DEVID:
+<pre>$ gemhost "set PORT 192.168.2.4:5555" "set HSMS 1" "set DEVID 5" &amp;</pre>
+If you use an incorrect device ID, you may see an&nbsp; S9F1 "Unknown Device
+ID" message in the Trace Window.&nbsp; Newer gemhost versions respond to
+this message by extractng the correct device ID value from the error message,
+and carrying on with the corrected device ID value.&nbsp; You can use the
+Trace window to display the detailed header information and see the actual
+device ID in use.
+<p>When using HSMS, the host side typically plays the active role, using
+network communication calls to actively find and connect to the passive
+equipment. The passive and active roles can be reversed if needed. You
+can specify the passive role for the host using the global data item PASSIVE:
+<pre>$ gemhost "set PORT localhost:5555" "set HSMS 1" "set PASSIVE 1" &amp;</pre>
+&nbsp;
+<h3>
+The&nbsp;<a NAME="Gemhost UI"></a>Gemhost User Interface</h3>
+When the gemhost application is started, three toplevel windows are created.&nbsp;
+The window titles are Host Equipment Interface - "gemhost", gemhost Trace,
+and EI Data Tables.&nbsp; These windows are similar to the three windows
+that the gemsim application creates.
+<dl>
+<dt>
+<a href="gemhost_ctrl.jpg">Host Equipment Interface - "gemhost"</a></dt>
+
+<dd>
+The Host Equipment Interface window is divided into five panels; Communications
+&amp; Control, Alarms, VFEI Reports, Processing &amp; Process Programs,
+and Terminal Services.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Communications &amp; Control panel shows the current communication
+and control states.&nbsp; When you start the application, the communication
+state will be "ENABLED {NOT COMMUNICATING}".&nbsp; When the gemhost connects
+successfully to the equipment you see "COMMUNICATING".&nbsp; The control
+state of the equipment, ON-LINE or OFF-LINE is also displayed.&nbsp; There
+are two buttons to request that the equipment go ON-LINE or go OFF-LINE.&nbsp;
+These buttons cause the S1F17 or S1F15 request messages to be sent.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Alarms panel has a list of the alarm types that are known to the host
+interface, and whether they are enabled or disabled for reporting, and
+whether they are currently Set or Clear.&nbsp; Buttons are provided to
+enable or disable selected alarms.&nbsp; There is also a Save button that
+records which alarms you have enabled or disabled in a file.&nbsp; When
+you perform an initialization, the interface enables or disables the alarms
+according to what you have configured.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Processing &amp; Process Programs displays the current Process State,
+and the current PPExecName (Process Program Name or "recipe") .&nbsp; The
+Refresh button is used to query the equipment for these items as well as
+for the resident process programs which are then displayed in a list.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+If the Refresh button does not show this information for your equipment,
+your equipment may not support it, or you may need customize the pertinent
+queries.&nbsp; The code driving the window is in the file .../gem/host/host_ui.tcl.&nbsp;
+The Process State and PPExecName items are displayed by subscribing to
+variable items in the ei_variable table where the VFEIname is PP_EXEC_NAME
+or PROCESS_STATE.&nbsp; You can fix the display of these items by assigning
+these VFEIname values to the rows in the ei_variable table that have the
+corresponding data items but were named differently by your equipment manufacturer.&nbsp;
+In other words, update just the VFEIname fields of the data items that
+represent the process state and the PPExecName to the standard VFEI names
+PROCESS_STATE and PP_EXEC_NAME.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Select button is used to change the current PPExecName to the one selected
+in the Process Programs list.&nbsp; Ordinarily you cannot do this unless
+the equipment is idle.&nbsp; The Upload and Download buttons are used to
+upload and download Process Programs using the Tcl procedures defined in
+file ei_recipes.tcl.&nbsp; Finally there is a row of buttons named Start,
+Pause, Resume, Stop, and Abort.&nbsp; These buttons cause the corresponding
+remote commands to be issued to your equipment.&nbsp; The configuration
+of the remote commands is represented as corresponding rows in the <a href="#ei_variable">ei_variable</a>
+table.&nbsp; It is likely that you will need to update the varvalue fields
+for these commands to make them correspond to the SECS commands used by
+your equipment.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The Terminal Services panel is used to send a text message for display
+at the machine, and to display messages that are sent by the equipment
+to the host.&nbsp; If the equipment supports the operator acknowledging
+the message, per GEM it comes up as an event report.&nbsp; The gemsim application
+sends acknowledgments with the event ID (CEID) of 4100.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+The VFEI Reports panel is used to create, edit, and save report definitions
+as well as perform related online actions.&nbsp; The "Initialize" button
+causes the configured event reports and alarm configuration to be setup
+at the equipment.&nbsp; The "Enable Events" button requests that the equipment
+enable and report all of its events.&nbsp; The "Data Refresh" button is
+used to query the equipment about the variables that it supports.&nbsp;
+Usually this action occurs automatically when the gemhost software first
+obtains an online control state with the equipment.&nbsp; The "Event Discovery"
+button attempts to determine which events the equipment reports by enabling
+all of them, and then querying for the value of the "EventsEnabled" variable.&nbsp;
+GEM equipment is supposed to support this Status Variable, but the equipment
+manufacturer is free to use a different name.&nbsp; If the equipment uses
+a different name, update the variable's entry in the <a href="#ei_variable">ei_variable</a>
+table, and give it the VFEIname EVENTS_ENABLED before using the "Event
+Discovery" button.&nbsp;&nbsp; You only need to execute "Event Discovery"
+once to determine the events.&nbsp; If your equipment does not support
+the "EventsEnabled" variable, use the "Enable Events" button to make sure
+the reports are enabled, then you work with the equipment to cause it to
+create events and send them.&nbsp; The gemhost software receives the events,
+and stores the event identifiers in the <a href="#ei_event">ei_event</a>
+table.&nbsp; Using the manufacturer's documentation, you can then update
+the ei_event table to provide descriptions of the reported events.&nbsp;
+These descriptions are seen when you configure event reports, so the time
+it takes is well spent.&nbsp; After you have updated the event descriptions,
+you should press the Save button on this panel to save your work.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dd>
+To setup a VFEI report, you press the Create button and choose the event
+that you wish to base the report on.&nbsp; Some of the events are created
+by the gemhost software, such as the COM_DISABLE event which is signaled
+whenever communication with the equipment is lost.&nbsp; The Create button
+creates an empty event report - one with no variables attached.&nbsp; You
+select the Event Report from the list, and press the Edit button to attach
+variables to the report.&nbsp; After configuring your reports, you will
+want to press the Save button to preserve your work for future sessions.&nbsp;
+Next, press the Initialize button to have the reports that you have configured
+be setup at the equipment.&nbsp; From this point forward, you should get
+the event reports that you have configured, created as VFEI messages in
+the <a href="#ei_vfei_output">ei_vfei_output</a> table.&nbsp; If you are
+running as part of a DMH message group, the VFEI event report messages
+will be deleted from this table after they have been transferred to the
+<i>VFEI_OUTPUT_MAILBOX</i>,
+a configurable parameter that is specified in the <a href="#ei_variable">ei_variable</a>
+table.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dt>
+<a href="gemhost_trace.jpg">gemhost Trace Window</a></dt>
+
+<dd>
+This window is the same type as in the gemsim application, <a href="#gemsim Trace">described
+above</a>.</dd>
+
+<dd>
+&nbsp;</dd>
+
+<dt>
+<a href="gemhost_tabs.jpg">EI Data Tables Window</a></dt>
+
+<dd>
+As with the gemsim application, the gemhost provides the user interface
+of the <a href="datahub.html">datahub</a> application for your convenience
+in managing the SQL tables that are used by the equipment interface logic.&nbsp;
+See the <a href="#gemsim Data">description above</a>.</dd>
+</dl>
+
+<h3>
+<a NAME="Gemhost DMH"></a>Gemhost Message System Integration</h3>
+If you specify a DMH message group name on the command line by assigning
+it to the global variable MB_GROUP, the gemhost will connect to the message
+system during startup.&nbsp; When the software is used with the message
+system, you can use the <b>inspect</b> application to debug it from any
+seat on your network.&nbsp; Also, other software in your factory system
+can send command messages to the equipment interface, or receive alarm
+and event reports from the equipment interface.&nbsp; In general, you want
+to start the message group server first, before starting processes that
+will connect to it.&nbsp; For example, to start a message server with the
+group name "gem" and to connect to it:
+<pre>$&nbsp; dmh_server gem &amp;</pre>
+
+<pre>$&nbsp; gemhost "set MB_GROUP gem" &amp;</pre>
+In general, you do not need to have an external DMH server process.&nbsp;
+The same Tcl/Tk process that executes the SECS logic for one or more interfaces,
+either host or equipment or both, can also serve as a DMH server, and have
+multiple attached DMH clients.
+<p>The gemhost script and the host.tcl scripts setup the following message
+system functionality by default.&nbsp; First, the gemhost process will
+receive from the mailbox <b>gemhost_SQL</b>.&nbsp; Messages that are received
+in this mailbox will be treated as SQL commands just as if the gemhost
+application is a <a href="datahub.html">datahub</a>.&nbsp; You can use
+the hubclient application with the target of this mailbox and the DMH group
+to remotely inspect the data tables of the application.&nbsp; For example
+if the gem server was running on the host, cimdev:
+<pre>$ hub84client gemhost_SQL@cimdev:gem &amp;</pre>
+Next, the gemhost will open the mailbox <b>gemhost_RPC</b> to process received
+commands as Tcl statements.&nbsp; This mailbox lets you use inspect for
+remote debugging, as in:
+<pre>$ inspect gemhost_RPC@gem &amp;</pre>
+The <b>_RPC</b> mailbox also makes it possible for an external process
+to control the GEM host process using DMH messages that are Tcl commands.&nbsp;
+Since DMH client software is available for many programming environments,
+this is a common scenario for the customer who is integrating with external
+applications.&nbsp; The GEM host logic uses the <a href="../mann/mbx_RPC.html">mbx_RPC</a>
+command to send reply messages that contain the return code and result
+of executing the received Tcl code messages.&nbsp; There is also a Tcl
+procedure, <b>secs_dmh_reply</b>, that can be called to send a SECS primary
+message, and have the SECS reply forwarded as the DMH reply message.&nbsp;
+The usual success result is to receive the SECS reply message in <a href="../mann/TSN.html">Tcl
+Secs Notation</a>.&nbsp; The procedure has the logic needed to handle the
+failure cases of not being able to send the primary message, receiving
+an abort message, receiving a Stream 9 reply, or having a T3 timeout occur.&nbsp;
+The failure cases cause an appropriate message to be sent to the DMH reply
+mailbox, namely "TIMEOUT BAD_SEND", "TIMEOUT ABORTED", "TIMEOUT REJECTED",
+or "TIMEOUT NO_REPLY".&nbsp; The calling signature of the <b>secs_dmh_reply</b>
+procedure is:
+<blockquote><b><tt>secs_DMH_reply <i>spname sfr</i> {<i>tsn</i> {}} {<i>replybox</i>
+@defaulted@}</tt></b></blockquote>
+where <i>spname</i> is the interface name, <i>sfr</i> indicates a stream
+and function such as S1F1R, <i>tsn</i> is the optional body of a message
+in <a href="../mann/TSN.html">Tcl Secs Notation</a>, and <i>replybox</i>
+is the DMH reply mailbox which defaults to the reply mailbox of the latest
+received DMH message.&nbsp; You may review the logic and details of the
+<b>secs_dmh_reply</b>
+procedure by examing its source code in the gem/lib directory.&nbsp; This
+procedure and the DMH integration techniques are also useable for the Hume
+provided GEM Equipment software.
+<p>The GEM host application will also open the <b>gemhost_VFEI</b> mailbox
+to receive VFEI commands.&nbsp; When your factory system software sends
+a command, it can optionally specify a mailbox name where the reply message
+is to be sent.&nbsp; Look at the documentation for the <a href="../mann/mbx.html">mbx
+putr</a> Tcl command or commands such as <a href="../mann/mbx_cmds.html">mbx_do_xact</a>
+that build upon the mbx command..&nbsp; Sending the INITIALIZE command
+from your factory system software might look something like this:
+<br>&nbsp;
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mid_vfei_init gemhost</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # initialize the specified
+machine</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proc mid_vfei_init {mid} {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; global
+transaction_id</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; incr
+transaction_id</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set
+cmd "CMD/A=\"INITIALIZE\" MID/A=\"$mid\" MTY/A=\"C\" TID/U4=$transaction_id"</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return
+[do_vfei_cmd $mid $cmd $transaction_id]</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # perform the requested VFEI
+command hiding the details from the caller</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proc do_vfei_cmd {mid cmd
+tid {TIMEOUT 120000} {MB_REPLY CELLMGR_XACT} } {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set
+reply [lindex [mbx_do_xact ${mid}_VFEI $cmd $MB_REPLY $TIMEOUT] 0]</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if
+{ $reply == "TIMEOUT" } {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+# no response received</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+# make it look like VFEI COMM_TIMEOUT</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+catch { mbx put TRACE "TIMEOUT on ${mid}_VFEI $cmd" }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return "CMD/A=\"CMD_ACK\" MID/A=\"$mid\" MTY/A=\"R\"\</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+TID/U4=$tid ECD/U4=40028 ETX/A=\"COMM_TIMEOUT\""</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+# the normal reply</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return $reply</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</tt>
+<p>VFEI does make for awkward text constructions because it fails to escape
+the drudgery of specifying data item types.&nbsp; However, it is a standard,
+and the <a href="../mann/vfei_2_array.html">vfei_2_array</a> command can
+be used to efficiently extract the data item values.&nbsp; Maybe we shouldn't
+tell you this but the vfei_2_array command, and the gemhost software allow
+you to get away without specifying the data item types.&nbsp; Also the
+quotation marks around the value field are optional if the text does not
+contain white space.&nbsp; In other words, the INITIALIZE command example
+above could have been simplified to the non-standard form:
+<ul><tt>set cmd "CMD=INITIALIZE MID=$mid MTY=C TID=$transaction_ID"</tt></ul>
+The original VFEI specification was closer to this format - a simple but
+standard means of expressing equipment integration commands in text.
+<br>&nbsp;
+<h3>
+<a NAME="Gemhost understanding"></a>Understanding the Gemhost Application</h3>
+The gemhost script processes the command line and defaults, and gets the
+application started.&nbsp; This file is probably a starting point for you
+to review the application code.&nbsp; The communication and control state
+logic is mostly in host.tcl.&nbsp; The logic that drives the Host Equipment
+UI is in host_ui.tcl.
+<p>The gemhost application is layered so that all of the SECS functionality
+can be used without VFEI.&nbsp; The VFEI logic is in separate files, and
+not inter-mixed with the SECS interface logic.&nbsp; Synchronous procedures
+are provided to perform a specific SECS transaction, and return the acknowledgment
+code of the reply message.&nbsp; These procedures typically use the <b>secs_xact
+</b>procedure
+that is found in ../gem/lib/secs_xact.tcl.&nbsp; Usually the literal string
+<b>TIMEOUT</b>
+is returned if there is no reply, if the transaction was aborted, if a
+stream 9 error reply was obtained, or if the connection was down.&nbsp;
+Your application code can determine the underlying reason for the last
+<b>TIMEOUT</b>
+by calling <b>secs_xact_failure</b>.
+<p>Here is an alphabetical list of the files in the gem/host directory,
+with a description of each file's contribution to the application.&nbsp;
+Important procedures that you can use in your custom code are mentioned.&nbsp;
+We expect you to look at the source code of a procedure and the comments
+in the source code to see the details of how to use it.&nbsp; The data
+item names and return code values are called out by the SECS-II standard.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td>alarms.tcl</td>
+
+<td>Contains code to deal with Alarm Reports. The <b>ei_alarms_init</b>
+procedure is called early in the application to setup the <a href="#ei_alarm">ei_alarm</a>
+table, and to synchronize with current alarm status.&nbsp;&nbsp; The procedure
+<b>ei_alarm_enable</b>
+is called to enable specified or all alarm messages.&nbsp; The procedure
+<b>ei_alarm_setup</b>
+is called to setup the reporting of alarms according to the configuration
+information that is in table ei_alarm.&nbsp; When the equipment reports
+an alarm, the <b>ei_alarm_report</b> procedure in this file gets called
+to process it.&nbsp; The gemhost application tries to deduce the type code
+used for alarm identifiers and can usually succeed.&nbsp; The logic for
+this is in the <b>ei_ALID_type</b> procedure.</td>
+</tr>
+
+<tr>
+<td>display.tcl&nbsp;</td>
+
+<td>This file contains the <b>ei_terminal_display</b> procedure which is
+called to display a message and return the acknowledgment code (ACKC10)
+or TIMEOUT.&nbsp;&nbsp; An empty message is the usual way to clear the
+display.</td>
+</tr>
+
+<tr>
+<td>ei_DATAID.tcl</td>
+
+<td>When the code needs to generate a new DATAID (data item identifier)
+the procedure <b>ei_dataid</b> in this file is called.&nbsp; The type code
+used for DATAID's is configured in the <a href="#ei_variable">ei_variable</a>
+table, value_TSN field where the varID is 'DATAID'.</td>
+</tr>
+
+<tr>
+<td>ei_RPTID.tcl</td>
+
+<td>The <b>ei_RPTID_new</b> procedure is called to create a report ID (RPTID)
+when setting up a VFEI event report.&nbsp; If choosing the CEID of the
+event does not work for your situation, you need to copy this file and
+create your own version in the custom directory.&nbsp; The <b>ei_RPTID_TSN</b>
+procedure is also defined to provide the type code used for RPTID's.&nbsp;
+The type code for RPTID's is configured in the ei_variable table, value_TSN
+field, where the varID is 'RPTID'.</td>
+</tr>
+
+<tr>
+<td>ei_defaults.tcl</td>
+
+<td>The ei_defaults procedure is used to provide default values for miscellaneous
+data items, including the alarm, event, and variable tables.</td>
+</tr>
+
+<tr>
+<td>ei_dvval.tcl</td>
+
+<td>The <b>ei_discrete_data</b> procedure in this file is called to process
+a S6F3 discrete data report.</td>
+</tr>
+
+<tr>
+<td>ei_multiblock_check.tcl</td>
+
+<td>The procedure <b>ei_multiblock_check</b> in this file is called when
+sending a S2F39 or a S6F5.&nbsp; If the message would require more than
+one SECS-I block to transmit, the call obtains permission to send it.&nbsp;</td>
+</tr>
+
+<tr>
+<td>ei_recipes.tcl</td>
+
+<td>Process program manipulation.&nbsp; The <b>ei_recipe_dir</b> procedure
+sends S7F19 to obtain the current recipe directory.&nbsp; The <b>ei_recipe_delete</b>
+procedure is used to delete specified recipes or all recipes.&nbsp; The
+<b>ei_recipe_get
+</b>procedure
+uses S7F5 to upload a recipe, and the <b>ei_recipe_put
+</b>uses S7F3 to
+download a recipe.</td>
+</tr>
+
+<tr>
+<td>events.tcl</td>
+
+<td>Code for setting up event reports and processing them when they come
+in.&nbsp; The following procedures are used to setup event reporting: <b>ei_event_enable</b>,
+<b>ei_event_disable</b>,
+<b>ei_report_define</b>,
+<b>ei_report_link</b>,
+and <b>ei_reports_setup</b>.&nbsp; The procedure
+<b>ei_driver_event</b>
+is called by the driver software to synthesize an event such as COM_DISABLE.&nbsp;
+When the equipment event reports are received, they are processed by the
+<b>ei_event_ann_rpt</b>
+or the <b>ei_event_report</b> procedures.</td>
+</tr>
+
+<tr>
+<td>gemhost&nbsp;
+<br>gemhost.cmd</td>
+
+<td>The gemhost script processes the command line and defaults, and gets
+the application started.</td>
+</tr>
+
+<tr>
+<td>gemsystem&nbsp;
+<br>gemsystem.cmd</td>
+
+<td>The gemsystem script is an example invocation of the gemhost application
+as a client of a DMH message server.</td>
+</tr>
+
+<tr>
+<td>host.tcl</td>
+
+<td>The core host side control and communication state logic is in this
+file.&nbsp; When you write your own startup scripts similar to gemhost,
+you can call the <b>ei_init</b> procedure in this file to start your interfaces.</td>
+</tr>
+
+<tr>
+<td>host_ui.tcl</td>
+
+<td>This file contains the logic to draw and manage the <a href="gemhost_ctrl.jpg">Host
+Equipment Interface window</a>.&nbsp; You call the <b>ei_ui</b> procedure
+to create an instance of this window for your equipment interface.</td>
+</tr>
+
+<tr>
+<td>initialize.tcl</td>
+
+<td>This <b>ei_initialize</b> procedure in this file performs a sequence
+of transactions with the equipment to:&nbsp;
+<br>establish communications, obtain the online control state, query the
+status of alarms and variables, synchronize the equipment clock, set any
+configured equipment constants, setup event reporting as you have configured
+it, and setup alarm reporting as you have configured it.</td>
+</tr>
+
+<tr>
+<td>Makefile</td>
+
+<td>This file is used with make or nmake to make sure the tclIndex file
+is up-to-date.</td>
+</tr>
+
+<tr>
+<td>rcmd.tcl</td>
+
+<td>The ei_rcmd procedure in this file is used to execute remote commands
+such as START or STOP.&nbsp; The format used for the remote commands has
+to be configured in the <a href="#ei_variable">ei_variable</a> table and
+is described with the table schema.</td>
+</tr>
+
+<tr>
+<td>tclIndex</td>
+
+<td>This is used by the <a href="../mann/library.html">Tcl interpreter
+auto_load mechanism</a> so that procedures in this directory can be automatically
+found when used.</td>
+</tr>
+
+<tr>
+<td>trace.tcl</td>
+
+<td>The procedure <b>ei_trace_setup</b> is used to setup and start trace
+data reports or to disable them.&nbsp; When the reports are received, the
+procedure <b>ei_trace_data</b> processes them and creates corresponding
+event reports with the CEID of TRACE_REPORT.&nbsp; This lets you use the
+same software to process trace data and event reports.&nbsp; The data item
+types used to setup trace data reports cannot be detected automatically.&nbsp;
+You may need to configure the TRID, TOTSMP, and REPGSZ items in the <a href="#ei_variable">ei_variable</a>
+table to indicate the proper value_TSN type code.</td>
+</tr>
+
+<tr>
+<td>vfei.tcl&nbsp;
+<br>vfei_mach_cmd.tcl&nbsp;
+<br>vfei_move.tcl&nbsp;
+<br>vfei_resource.tcl</td>
+
+<td>The procedure <b>ei_vfei_cmd</b> in the vfei.tcl file is used to execute
+VFEI command strings.&nbsp;&nbsp; The return value of the procedure is
+the VFEI formatted reply.&nbsp; Other procedures in this file, and the
+files that start with vfei_ support executing the different VFEI commands.&nbsp;
+Users of VFEI should call the ei_vfei_cmd procedure to execute VFEI commands
+from the driver process.&nbsp; VFEI commands from other processes should
+be directed to the DMH VFEI input mailbox for the particular equipment
+connection as <a href="#Gemhost DMH">described above</a>.</td>
+</tr>
+
+<tr>
+<td>vfei_output.tcl&nbsp;</td>
+
+<td>The logic for managing asynchronous VFEI output, namely alarm reports,
+and event reports, is in this file.&nbsp; A VFEI message is added to the
+output by calling the <b>ei_vfei_output</b> procedure.&nbsp; The usual
+VFEI initialization sets up subscriptions to the <a href="#ei_alarm_log">ei_alarm_log</a>
+and <a href="#ei_event_log">ei_event_log</a> tables to create VFEI output
+messages for these events.&nbsp; The VFEI output gets staged in the <a href="#ei_vfei_output">ei_vfei_output</a>
+table.&nbsp; The <b>ei_vfei_send</b> procedure gets activated by subscription,
+and after the VFEI output message is transferred to its DMH mailbox destination,
+it is deleted from the ei_vfei_output table.&nbsp; The VFEI output mailbox
+is configured by the value of the VFEI_OUTPUT_MAILBOX record in the <a href="#ei_variable">ei_variable</a>
+table.</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<h3>
+The GEM&nbsp;<a NAME="Supervisor"></a>Supervisor Application</h3>
+The supervisor application is used to configure and manage the startup
+of multiple equipment interfaces.&nbsp; When the application is first executed,
+a default configuration exists that will start the gemhost equipment interface.&nbsp;
+Using the supervisor, you can create new equipment interfaces with names
+of your own choice.&nbsp; You can specify whether the equipment interfaces
+should be started automatically when the supervisor script is started.&nbsp;
+The custom connection information that the gemhost application accepts
+on its command line, can be defined and saved.&nbsp; When the supervisor
+starts an equipment interface, the same windows that the gemhost application
+creates are created - the Trace window and the Host Equipment Interface
+Window.
+<p>The supervisor application accepts the same command line arguments as
+the gemhost application.&nbsp; If connection specific items such as PORT,
+HSMS, PASSIVE, and DEVID are specified, they are used if you only have
+a single equipment startup configured.&nbsp; As you configure the startup
+of your own interfaces, you supply all of the connection parameters in
+a dialog, and the command line arguments are not needed.&nbsp; As discussed
+with the gemhost application, you can optionally specify MB_GROUP on the
+command line to indicate a DMH message system connection.
+<br>&nbsp;
+<h3>
+The GEM Supervisor User Interface</h3>
+When the supervisor application is started in foreground, a single window
+entitled "<a href="gem_supervisor.jpg">Equipment Interface Supervisor</a>"
+is created.&nbsp;&nbsp; The main portion of the window shows a list of
+equipment interfaces.&nbsp; For each interface, the associated network
+connection or serial device is shown, and the status information indicates
+whether the interface is running.&nbsp; There are three rows of action
+buttons.
+<p>The row of buttons labeled "Startup Configuration" includes the following:
+<dl>
+<dl>
+<dt>
+New...</dt>
+
+<dd>
+This button is used to create a startup configuration for a new interface.&nbsp;
+The configuration dialog is discussed under Edit... below.&nbsp; Once you
+have created a startup configuration, you can Start it.&nbsp; As discussed
+with the gemhost application, most of the important configuration data
+such as the variables supported by the equipment, will be discovered dynamically.</dd>
+
+<dt>
+Edit...</dt>
+
+<dd>
+This button supports revising the startup record.&nbsp; The "<a href="gem_startcfg.jpg">EI
+Startup Configuration</a>" dialog is presented.&nbsp; This dialog is used
+to configure the basic information needed to connect to SECS equipment,
+including the SECS Device ID, and the connection type. Additionally, there
+are checkboxes to disable the queries that normally occur during initialization.</dd>
+
+<br>&nbsp;
+<dl>First, consider the connection type. If you choose a SECS-I serial
+connection type, you need to supply&nbsp; a serial device name such "COM1"
+or "/dev/ttya".&nbsp; If the BAUD field is left blank, the default value
+of&nbsp; 9600 is used.&nbsp; Other connection types are TCP/IP based.&nbsp;
+For these cases, you need to supply a TCP/IP port value, sometimes called
+a socket.&nbsp; You optionally specify a hostname or IP address for the
+equipment or terminal server.&nbsp; If the hostname field is left blank
+or set to localhost, the software will attempt to connect on the host where
+it runs. HSMS connection types can be passive or active. Usually the passive
+checkbox is left unchecked, and the host side plays the active role.
+<p>Now consider the options to customize the usual initialization logic.
+The default choice is for all of the custom initialization checkboxes to
+be selected and this works fine in most situations. You may have equipment
+that has a very large number of status variables, equipment constants,
+or alarm types. If you are connecting to this equipment through a slow
+SECS-I link, you may want to disable querying for the definitions of these
+items, or querying for their values during the initialization because it
+takes too much time. In these situations, we recommend that you have all
+of the queries enabled once, that you capture and save the table information,
+and thereafter startup with the queries disabled.
+<p>Modern GEM equipment uses S1F13 to initiate communications. Most of
+the equipment that does not use S1F13 will reject the message using Stream
+9. In this case, the logic of this application will gracefully substitute
+using S1F1 instead. The option to disable S1F13 completely is for defective
+equipment that does not use S1F13 to initiate communications, and furthermore
+has problems if it receives S1F13.</dl>
+
+<dt>
+Copy...</dt>
+
+<dd>
+Use this button to copy (clone) an interface configuration to a new name.&nbsp;
+You will need to Edit... the startup configuration to point to another
+connection.&nbsp; The copied data is not saved by this action - it only
+exists in memory.&nbsp; Use the "Save Tables" button to save the data.</dd>
+
+<dt>
+Delete...</dt>
+
+<dd>
+After confirmation, the selected interface configurations are deleted from
+the in-memory database.</dd>
+</dl>
+
+<p><br>The buttons in the row labeled "Equipment Interface Actions" are:
+<br>&nbsp;
+<dl>
+<dt>
+Start</dt>
+
+<dd>
+This action starts the interface running.&nbsp; You will see the Trace
+and UI windows appear.</dd>
+
+<dt>
+Stop</dt>
+
+<dd>
+This action does a shutdown of the equipment interface.&nbsp; The associated
+windows are destroyed.</dd>
+
+<dt>
+Raise Windows</dt>
+
+<dd>
+This action raises or re-creates the Trace and UI windows of the selected
+interfaces.</dd>
+</dl>
+
+<p><br>Last, the row of buttons labeled "Supervisor Actions" includes:
+<br>&nbsp;
+<dl>
+<dt>
+Save Tables</dt>
+
+<dd>
+This button brings up a dialog that provides a choice to save all of the
+in memory data, or to just save the startup table.&nbsp; You need to be
+careful when saving data because it overwrites the previously saved files.&nbsp;
+If you have not started any interfaces, you may have data in previously
+saved files that has not been reloaded into the supervisor program.&nbsp;
+You should start an equipment interface to cause the saved files to be
+read.</dd>
+
+<dt>
+Reconnect VFEI Output</dt>
+
+<dd>
+When this button is pressed, the application attempts to connect to the
+DMH message group named by the global variable MB_GROUP, and restore the
+feed of VFEI output messages.&nbsp; Typically, you specify MB_GROUP on
+the command line of the supervisor program:</dd>
+
+<dl>
+<dl>
+<pre>supervisor "set MB_GROUP gem" &amp;</pre>
+</dl>
+</dl>
+
+<dd>
+This button can be used if the DMH message group has been brought down
+and then restarted.&nbsp; Typically in production you are running in background
+and do not have a button to press.&nbsp; You can programmatically accomplish
+the same result by writing your own mh_app_lostserver procedure as commented
+out at the bottom of the gemhost script.</dd>
+
+<dt>
+Refresh</dt>
+
+<dd>
+This button is used to refresh the status information in the list of equipment
+interfaces.&nbsp; You are able to determine which equipment connections
+are running and what their communication state is.</dd>
+
+<dt>
+Exit</dt>
+
+<dd>
+After confirmation this action stops all the equipment interfaces and terminates
+the program.</dd>
+</dl>
+
+<dl>&nbsp;</dl>
+</dl>
+
+<hr WIDTH="100%">
+<h2>
+<a NAME="Building Equipment"></a>Building Equipment Interfaces</h2>
+&nbsp;In the description of the gemhost application, we described how to
+customize to the connection parameters on the command line and how to create
+and save event report and alarm configurations.&nbsp; In some of the detailed
+descriptions, and in the description of the <a href="#ei_variable">ei_variable</a>
+table, we indicated data parameters that you can update for your particular
+equipment.&nbsp; In this section we go deeper - we will consider how to
+create and start multiple equipment connections, and how to customize the
+Tcl logic to work around non-standard equipment or special requirements.&nbsp;
+If you use the approach described in the gemhost application discussion,&nbsp;
+your interface is named gemhost.&nbsp; The supervisor application provides
+you with a convenient way to start interfaces of your own name, and run
+them all from the same directory.
+<p>First, give each equipment interface a unique, memorable name instead
+of the default&nbsp; name gemhost that we have been using.&nbsp; If you
+have already been configuring the interface using the gemhost name, use
+the supervisor application to copy the interface to a new name of your
+choice.&nbsp; You can then delete the gemhost interface.&nbsp; Use the
+supervisor application to configure the startup of as many equipment interfaces
+as you want.&nbsp; Start them with the names of your choice, and do the
+configuration effort.&nbsp; When you have multiple machines of the same
+type, configure the first one, and then copy the configuration to different
+names for the others.
+<p>You can run dozens of equipment interfaces from a single process on
+a Unix workstation without any performance problems.&nbsp; You can run
+multiple interfaces on Windows as well, although other things being equal,
+Windows is not as efficient with context switching or exec'ing child processes.&nbsp;
+You will probably want to distribute your equipment interfaces across different
+processes and different computer systems from the standpoint of risk management.
+<p>You may wish to develop your own custom startup script based on the
+gemhost or supervisor scripts.&nbsp; If you choose to do so, copy the gemhost
+or supervisor script to the gem/custom directory.&nbsp; You can execute
+your modified startup script from the gem/custom directory, or from another
+directory that is a subdirectory of the gem directory.&nbsp; The logic
+that sets up the <a href="../mann/library.html">auto_path</a> variable
+in the stock gemhost or supervisor script was written to accomodate these
+variations.&nbsp; You may want to create specific directories underneath
+gem that start sets of related interfaces, and contain the custom code
+for the particular set(s).&nbsp;&nbsp; One of the key ideas of having your
+own directories, or using the custom directory, is that you keep your custom
+code, and custom file versions separate from the files distributed by Hume
+Integration.&nbsp; It is easier for you to synchronize with newer versions
+of the GEM-EI - you can install the latest version in its normal place
+without the installation overwriting any customization that you have done.&nbsp;
+The auto_path mechanism works well with the custom directory scheme.&nbsp;
+The auto_path variable is set so that procedures which are defined in the
+custom directory or the startup directory are found and used instead of
+the stock versions supplied by Hume Integration.&nbsp; When you need to
+customize a procedure, you copy the whole file that it is defined in to
+your custom directory.&nbsp; You can then edit it to your liking.&nbsp;
+You type "make" or otherwise insure that the tclIndex file in your custom
+directory is up-to-date with respect to the Tcl files contained in the
+directory.&nbsp; If you fail to copy the whole file, the stock version
+may be sourced when one of the other procedures in the file is used.
+<p>It is common to want to customize the initialization of the equipment
+that the host performs. Here we are primarily referring to the logic found
+in the file host/initialize.tcl and in the procedure
+<b>ei_initialize</b>.
+Most of the behavior is controlled by the configuration data held in the
+SQL tables; for example setting equipment parameters, defining dynamic
+reports, or selectively enabling various alarms. The data-driven configuration
+logic is satisfactory for most circumstances. There also is a call made
+to the procedure name <b>ei_custom_init</b> occuring at the end of initialization.
+This is a procedure that does not exist unless you provide your own procedure
+definition, so the procedure call is done in a catch statement. The procedure
+is called with a single argument, the name of the equipment connection.
+If you write this custom procedure, your code should return 0 to indicate
+success, or any other positive integer to signify an error result. The
+intention of providing this call is to make it easy for you to add custom
+initialization and setup logic. The default configuration executes the
+initialization logic every time the equipment transitions into an online
+control state.
+<p>In general, you want to run development applications in foreground with
+all of the windows usable (like we have been doing), and you want to run
+production applications disconnected from the window system, so they are
+not stopped by user logouts or window system problems. On Windows NT you
+can install the production equipment interface logic to run as a service.&nbsp;
+This means that the interface will be started when the system reboots,
+and no one has to login.&nbsp; You can do this using the <a href="srvany.html">SRVANY</a>
+program that comes with the Microsoft Windows Resource kit.&nbsp; On Unix,
+you can edit your startup scripts to run the equipment interfaces upon
+reboot.&nbsp; The <a href="dmh_wish.html">-notk</a> option should be specified
+on the command line to tell the dmh_wish interpreter not to use X-windows.
+<p>Here are the steps in constructing your custom interface(s).
+<ol>
+<li>
+Start your interface with your chosen connection name and connection parameters.</li>
+
+<li>
+Hopefully your equipment is standard enough to report most of its variables.&nbsp;
+If not, you need to manually add the ones you'll work with to the ei_variable
+table.&nbsp; Use the gemhost/gemsim data as examples.&nbsp; You can use
+the Datahub UI or edit the SQL statements in the saved .tab file.</li>
+
+<li>
+Use the application UI to characterize the useful data and event notifications
+that come from the equipment.&nbsp;&nbsp; Update the parameters in ei_variable
+table as needed.&nbsp; Use the "Event Discovery" button or the "Enable
+Events" button, collect events, and update the event descriptions as needed.&nbsp;
+Whenever you change the configuration tables, be sure to save them.</li>
+
+<li>
+Enable/Disable alarm reporting to your liking.</li>
+
+<li>
+Create and Edit the event reports to your liking.</li>
+
+<li>
+Discover your need for customization and deploy your changes.</li>
+</ol>
+You may discover that the equipment does not give you the events that you
+want, or that certain alarms should be event reports or vice versa.&nbsp;
+Your driver software can map alarms to events or vice-versa by opening
+a subscription to the ei_alarm_log or ei_event_log table, and when your
+procedure subscription is activated upon the insert of a new row, you can
+call ei_driver_event or insert a row into the alarm_log table.
+<p>You can replace an equipment variable or supplement the equipment variables
+by supplying your own logic.&nbsp; Suppose you do not like the SECS standard
+format of the CLOCK variable.&nbsp; You can update the CLOCK row in ei_variable
+and change the varclass field from "EQ" to "SECS_DRVR".&nbsp; This tells
+the software that the value is not obtained from the equipment, it is obtained
+from the SECS driver software.&nbsp; Update the varmethod field to "localtime
+9" and whenever the CLOCK value is used in events, the value will be formatted
+as "YYYY-MM-DD HH:MM:SS".
+<p>You may find that a few stock application procedures need changes.&nbsp;
+Copy the affected files into your custom directory, make your changes,
+and then rebuild your tclIndex.
+<p>We suggest that you limit driver software functionality to forwarding
+VFEI event and alarm messages to higher level software, and accepting VFEI
+commands from higher level software.&nbsp; This gives you maximum re-use
+of your equipment drivers.&nbsp; In the higher level software you can build
+elaborate state machine configuration tools, utilization tracking, MTTA,
+MTBF reporting, business rule engines, and the like.&nbsp; Your drivers
+can be "plugged" and "unplugged" as supported by attaching or unattaching
+to the DMH message system.&nbsp; Because of the way you have partitioned
+the driver level, the higher level tools can easily be applied across all
+of your equipment.
+<br>&nbsp;
+<p>
+<hr WIDTH="100%">
+<h2>
+<a NAME="SQL Table"></a>SQL Table Schema</h2>
+The following database tables are used by the GEM-EI application.&nbsp;
+We emphasize the usage of these tables from the perspective of the software
+running on the host since this is the usual situation.&nbsp; However, the
+gemsim equipment simulator uses the same tables, with minor schema variations
+for the equipment role.
+<p>Most of the tables are loaded from the file system during the application
+startup.&nbsp; As the application runs, new rows may be added, or rows
+may be updated.&nbsp; By default, there is no logic to save the table data
+before shutting down.&nbsp; Typically, if you make changes, you need to
+explicitly press a save button on the configuration user interface to preserve
+your changes for next time.&nbsp; You can also save the data tables programmatically
+by using the <a href="datahub.html#WRITE">SQL write</a> command.
+<br>&nbsp;
+<h3>
+Table Directory</h3>
+
+<ul><tt><a href="#ei_alarm">ei_alarm&nbsp;</a> ............. <b>Alarm Configuration
+and Status Data</b></tt>
+<p><tt><a href="#ei_alarm_log">ei_alarm_log</a> .......... <b>Alarm Instance
+Data (Host Only)</b></tt>
+<p><tt><a href="#ei_event">ei_event</a> .............. <b>Event Configuration
+Data</b></tt>
+<p><tt><a href="#ei_event_log">ei_event_log</a> .......... <b>Event Report
+Instance Data (Host Only)</b></tt>
+<p><tt><a href="#ei_event_report">ei_event_report</a> ....... <b>In-use
+Event Report Associations</b></tt>
+<p><tt><a href="#ei_event_report_cfg">ei_event_report_cfg</a> ... <b>Configured
+Event Report Associations (Host Only)</b></tt>
+<p><tt><a href="#ei_report">ei_report</a> ............. <b>In-use Report
+Definitions</b></tt>
+<p><tt><a href="#ei_report_cfg">ei_report_cfg</a> ......... <b>Configured
+Report Definitions (Host Only)</b></tt>
+<p><tt><a href="#ei_spool_data">ei_spool_data</a> <b>......... Messages
+Spooled for Host Retrieval (Equipment Only)</b></tt>
+<p><tt><a href="#ei_startup">ei_startup</a> ............<b> Configuration
+of Equipment Interface Startups (Host Only)</b></tt>
+<p><tt><a href="#ei_trace_active">ei_trace_active</a> <b>....... Active
+Trace Data Collection (Equipment Only)</b></tt>
+<p><tt><a href="#ei_trace_setup">ei_trace_setup</a> <b>........ Trace Data
+Collection Configuration (Host Only)</b></tt>
+<p><tt><a href="#ei_variable">ei_variable</a> ........... <b>Data Item
+Configuration and Status</b></tt>
+<p><tt><a href="#ei_vfei_output">ei_vfei_output</a> ........ <b>VFEI Output
+Message Data (Host Only)</b></tt>
+<br>&nbsp;</ul>
+
+<h3>
+Schema Notes</h3>
+
+<dl>
+<dl>
+<dt>
+Boolean Values</dt>
+
+<dd>
+Boolean values are usually stored as integers (also referred to as int).&nbsp;
+In this convention, 0 indicates false and 1 is the preferred value of true.&nbsp;
+However it is usually the case that any non-zero value is acceptable as
+true.</dd>
+
+<dt>
+<b>Key</b> column</dt>
+
+<dd>
+Under <b>Key</b> the abbreviation <b>PK </b>indicates that the field is
+a primary key of the table.</dd>
+
+<dd>
+The abbreviation <b>PCK</b> indicates that the field is part of a primary
+composite key for the table.&nbsp; In other words, the field and one or
+more other fields, taken together, are the primary key for the table.&nbsp;
+There can not be multiple rows in a table that have the same value of the
+primary key.</dd>
+</dl>
+</dl>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_alarm"></a><b><font size=+1>ei_alarm&nbsp;&nbsp;&nbsp;
+Alarm Configuration and Status Data</font></b>
+<p>The host populates this table by asking the equipment which alarms are
+enabled using S5F7, and what the alarms are using S5F5.&nbsp; This happens
+in the procedure ei_alarms_init in the file .../host/alarms.tcl.&nbsp;
+The host is able to find out all of the alarm information by asking, or
+by saving each alarm when it is reported if S5F5 and S5F7 are not supported.&nbsp;
+You can supply your own alarm descriptions in the field ALTX for equipment
+that reports blank alarm descriptions.
+<p>The equipment GEM software uses this table to manage alarm reporting.
+The data in the table can be loaded at startup from a file of SQL statements
+such as created by the <a href="datahub.html#WRITE">SQL write </a>command.
+A convenience procedure, eq_alarm_add, defined in file gem/equip/eq_alarms.tcl,
+is also available to add new alarms using Tcl code. Equipment software
+reports alarm set or clear conditions by updating the <b>is_set</b> field
+for the particular alarm using the SQL update statement. The GEM equipment
+software is then triggered by a table subscription, and it takes care of
+sending the alarm report and the associated GEM data collection event to
+the host. The reporting logic allows for the possibility that the alarm
+or event are possibly disabled, or that the communication may be broken
+and the reports need to be spooled. The reporting logic is also found in
+the gem/equip/eq_alarms.tcl file.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>ALID</td>
+
+<td>PCK</td>
+
+<td>varchar(20)</td>
+
+<td>A unique identifier for the alarm defined by the equipment.&nbsp; It
+is usually an integer, but it is saved and manipulated as a text string.</td>
+</tr>
+
+<tr>
+<td>ID_TSN</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(8)</td>
+
+<td>The Tcl SECS Notation type code for the ALID data item when passed
+in a SECS-II message.&nbsp; The host discovers the ID_TSN from equipment
+originated messages.&nbsp; An example would be I4, signifying a signed
+4 byte integer.&nbsp; See the <a href="../mann/TSN.html">TSN</a> reference
+documentation.</td>
+</tr>
+
+<tr>
+<td>category</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Alarm category.&nbsp; The value 0 means category is not used.&nbsp;
+The GEM standard does not use the encoding of category in alarm reports.</td>
+</tr>
+
+<tr>
+<td>is_enabled</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>This field is used to store the current alarm setup state; whether
+the alarm is enabled for reporting or disabled.</td>
+</tr>
+
+<tr>
+<td>is_set</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>This field is used to store the current status of the alarm - whether
+it is set (1) or clear (0).</td>
+</tr>
+
+<tr>
+<td>ALTX</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(40)</td>
+
+<td>This is the alarm description which is usually reported by the equipment
+when reporting an alarm.&nbsp; If the equipment does not report the ALTX
+(the reported value is blank),&nbsp; the host GEM-EI software will check
+this table for a possible description.&nbsp;</td>
+</tr>
+
+<tr>
+<td>host_managed</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Host usage only. If this field is non-zero, it means that the host
+should either enable or disable the alarm when performing the equipment
+initizalization.</td>
+</tr>
+
+<tr>
+<td>host_wants_enabled</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Host usage only. The value in this field indicates whether the alarm
+should be enabled (1) or disabled (0) if the host_managed field is non-zero.</td>
+</tr>
+
+<tr>
+<td>set_CEID</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Equipment usage only. Per GEM, the setting of an alarm causes a data
+collection event. This field holds the CEID, collection event ID, which
+is fired when the alarm is set.&nbsp;</td>
+</tr>
+
+<tr>
+<td>clear_CEID</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Equipment usage only. Per GEM, the clearing of an alarm causes a data
+collection event. This field holds the CEID, collection event ID, which
+is fired when the alarm is cleared.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_alarm_log"></a><b><font size=+1>ei_alarm_log&nbsp;&nbsp;&nbsp;
+Alarm Instance Data (Host Only)</font></b>
+<p>The host inserts a new row into this table every time an alarm report
+is received.&nbsp; The is_set value represents whether the alarm was reported
+as set or clear.
+<p>If you are using VFEI, the data in this table is deleted after the VFEI
+message representing the alarm report is successfully forwarded to your
+VFEI output mailbox, or is inserted into the ei_vfei_output table.&nbsp;
+The VFEI logic is activated by subscription to the ei_alarm_log table.&nbsp;
+The ei_vfei_outsub procedure is called which is coded in&nbsp; .../host/vfei_output.tcl.
+<p>If you are not using VFEI, you need to supply your own logic to prune
+the rows in this table.&nbsp; You will typically want to delete a row after
+successfully passing it on to the higher level software, or code a limit
+to the number of rows, or age of rows kept in memory.&nbsp; If you do not
+limit the memory use, the application will eventually crash.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>clock</td>
+
+<td>PCK</td>
+
+<td>varchar(16)</td>
+
+<td>The time of the alarm report formatted as YYYYMMDDHHMMSScc.&nbsp; This
+value will be unique for the particular spname.</td>
+</tr>
+
+<tr>
+<td>ALID</td>
+
+<td>PCK</td>
+
+<td>varchar(20)</td>
+
+<td>A unique identifier for the alarm defined by the equipment.&nbsp; It
+is usually an integer, but it is saved and manipulated as a text string.</td>
+</tr>
+
+<tr>
+<td>is_set</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The reported status of the alarm - whether it is set (1) or clear (0).</td>
+</tr>
+
+<tr>
+<td>ALTX</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(40)</td>
+
+<td>The alarm description provided by the equipment with the report, or
+the text from the ei_alarm record.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_event"></a><b><font size=+1>ei_event&nbsp;&nbsp; Event
+Configuration Data</font></b>
+<p>The host populates this table as it encounters new event reports from
+S6F11 or S6F13.&nbsp; In general there is no way for the host to deduce
+meaningful names or descriptions for the equipment originated events.&nbsp;
+In the case of Hume-based equipment interfaces, the status variable EventDescriptions
+may exist in which case the host will use the provided&nbsp; list of all
+the events and their descriptions.&nbsp; Otherwise, event descriptions
+are created by manually updating this table using information provided
+by the equipment vendor.&nbsp; When descriptions are available, the creation
+and maintenance of event reports is made easier.&nbsp;&nbsp; The integrator
+may also wish to provide VFEI names for events by manually editing the
+table.
+<p>Some event records such as COMM_DISABLE represent events that are created
+by the host driver software instead of the equipment.
+<br>The following events are currently defined by the host GEM-EI software:
+<dl>
+<dt>
+AUTO_SECS_INIT</dt>
+
+<dt>
+AUTO_VFEI_INIT</dt>
+
+<dd>
+When the host interface is started, or it is seen that the equipment has
+transitioned from an offline to online state, the host interface software
+will attempt an initialization sequence, if the AUTO_SECS_INIT or AUTO_VFEI_INIT
+parameter stored in the ei_variable table is configured true.&nbsp; If
+the AUTO_VFEI_INIT parameter is true, only the VFEI initialize command
+will be attempted.&nbsp; If the AUTO_VFEI_INIT parameter is false, the
+SECS level initialization will be attempted if the AUTO_SECS_INIT parameter
+is true.&nbsp; When the initialization sequence is completed, the corresponding
+event is signalled.&nbsp; The success or failure of the initialization
+can be determined using the AUTO_INIT_RESULT variable.&nbsp; Typically
+an event report is defined so that the CLOCK and AUTO_INIT_RESULT are reported
+with the AUTO_VFEI_INIT event.</dd>
+
+<dt>
+COM_DISABLE</dt>
+
+<dd>
+This event is reported when communication with the equipment is lost.&nbsp;
+The latter is detected by a broken TCP/IP connection, or a broken SECS-I
+transaction.</dd>
+
+<dt>
+COM_ENABLE</dt>
+
+<dd>
+This event is reported when communication with the equipment is successfully
+established.</dd>
+
+<dt>
+TRACE_REPORT</dt>
+
+<dd>
+This event is reported when a S6F1 Trace Report message is received.&nbsp;
+You can define event reports based on the TRACE_REPORT event to pass the
+trace data into the same software that is used for event reports.</dd>
+</dl>
+The GEM equipment software uses this table to manage the configuration
+and reporting of data collection events. The developer of equipment software
+creates a new type of event by adding a record to this table. Per GEM,
+the CEIDs should be unsigned 4 byte integers (ID_TSN='U4'). It is suggested
+to use values from 5000-9999 but the requirement is to not conflict with
+the CEID's that are associated with the setting and clearing of alarms.
+At startup, the event definitions are usually loaded from the a file of
+SQL statements. At runtime, an event is reported by calling the Tcl procedure
+<b>eq_gem_event</b>
+with the connection name and CEID as arguments. The Hume provided software
+takes care of creating and sending the event reports that have been configured
+by the host. See file gem/equip/eq_events.tcl.
+<table BORDER WIDTH="100%" >
+<tr>
+<td>Column Name</td>
+
+<td>Key</td>
+
+<td>Type</td>
+
+<td>Description</td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>CEID</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The identifier for the event. For equipment events the CEID is defined
+by the equipment, and almost always integers are used.&nbsp; Events that
+are created in the driver software can be given more descriptive identifiers
+such as COMM_ENABLE.</td>
+</tr>
+
+<tr>
+<td>VFEIname</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(32)</td>
+
+<td>Host usage only.&nbsp; A name for the event which is used for VFEI
+event report and event setup messages.&nbsp; When an event record is inserted,
+the VFEIname defaults to the CEID.&nbsp; The integrator can update the
+record and provide a more descriptive name.</td>
+</tr>
+
+<tr>
+<td>host_managed</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Host usage only.&nbsp; If true, the reporting of this event is enabled
+or disabled during the initialization sequence.</td>
+</tr>
+
+<tr>
+<td>host_wants_enabled</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Host usage only.&nbsp; This field indicates whether the reporting of
+this event should be enabled or disabled if the host_managed value is true.</td>
+</tr>
+
+<tr>
+<td>event_class</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(10)</td>
+
+<td>Host usage only.&nbsp; The class that the event belongs to.&nbsp; Events
+that are reported by the equipment are given the event_class <b>EQ. </b>Events
+that are created by the GEM-EI and could be used without VFEI are given
+the class, <b>SECS_DRVR</b>.&nbsp; Events that are created and used by
+the VFEI level software are given the class, <b>VFEI_DRVR</b>.</td>
+</tr>
+
+<tr>
+<td>ID_TSN</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(4)</td>
+
+<td>This is the TSN data type code for the CEID value.&nbsp; It is not
+necessarily the same for all of the events of a particular spname.</td>
+</tr>
+
+<tr>
+<td>is_reported</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>This field is set to reflect whether the equipment event is actually
+enabled for reporting.&nbsp; For events that are created in the Host logic,
+using the ei_driver_event procedure, this field determines whether the
+event is actually reported to higher level software by being inserted into
+the ei_event_log table.</td>
+</tr>
+
+<tr>
+<td>description</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(120)</td>
+
+<td>If the integrator supplies a description for the event, it is seen
+when creating event reports using the configuration user interface.&nbsp;
+There is no GEM or SECS mechanism for the host to determine event descriptions.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_event_log"></a><b><font size=+1>ei_event_log&nbsp;&nbsp;&nbsp;
+Event Report Instance Data (Host Only)</font></b>
+<p>When an event report is received, the included data values are used
+to update corresponding fields in the ei_variable table.&nbsp; Then a new
+row is added to the ei_event_log table.
+<p>If you are using VFEI, a subscription to the ei_event_log table sees
+that the event has occurred and pulls together the configured VFEI report.&nbsp;
+The VFEI report may use different data items than the set provided in the
+event report.&nbsp; In any case, after the VFEI message is created, the
+original ei_event_log record is deleted.
+<p>If you are not using VFEI, you need to supply your own logic to limit
+the number of rows stored in this table.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>clock</td>
+
+<td>PCK</td>
+
+<td>varchar(16)</td>
+
+<td>The time of the event report formatted as YYYYMMDDHHMMSScc.&nbsp; This
+value will be unique for the particular spname.</td>
+</tr>
+
+<tr>
+<td>CEID</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The identifier for the event.&nbsp;</td>
+</tr>
+
+<tr>
+<td>data</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(20000)</td>
+
+<td>A proper Tcl list containing {name value} pairs for the variable values
+received in the event report.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_event_report"></a><b><font size=+1>ei_event_report&nbsp;&nbsp;&nbsp;
+In-use Event Report Associations</font></b>
+<p>This table is used to store the actual, in-use association of events
+and data reports.&nbsp; It is used to help implement procedures that configure
+reports, and link them to data collection events.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>CEID</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The identifier for the event.&nbsp;</td>
+</tr>
+
+<tr>
+<td>RPTID</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>An identifier for a SECS level report - A report is an ordered set
+of variables whose values can be reported in association with an event.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_event_report_cfg"></a><b><font size=+1>ei_event_report_cfg&nbsp;&nbsp;&nbsp;&nbsp;
+Configured Event Report Associations (Host Only)</font></b>
+<p>This table is used to store the configured association of events and
+data reports.&nbsp; The GEM configuration user interface simplifies the
+configuration of event reports by hiding the existence of low-level reports
+and the possibility of linking multiple reports to data collection events.&nbsp;
+The interface creates only a single report with the RPTID equal to the
+CEID.&nbsp; The RPTID is configured to have the equipment supported variables
+(class EQ) that are desired for the specific event.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>CEID</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The identifier for the event.&nbsp;</td>
+</tr>
+
+<tr>
+<td>RPTID</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>An identifier for a SECS level report.&nbsp;</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<br><a NAME="ei_report"></a><b><font size=+1>ei_report&nbsp;&nbsp;&nbsp;
+In-use Report Definitions</font></b>
+<p>This table is used to store the actual report definitions that are currently
+setup on the equipment or that are currently in use for VFEI event reports
+created by the driver software. The rows in this table are usually added
+after the successful initialization of configured event reports.&nbsp;
+Basically a report is an ordered set of variables.&nbsp; The reports are
+linked to data collection events, and when those events occur, the current
+values of the report variables are obtained.
+<p>The VFEI report definitions have RPTID values that start with the character
+sequence "vfei_" as a prefix to the actual CEID used by the equipment or
+created by the driver software.&nbsp; For example, a RPTID value of vfei_4050&nbsp;
+is used to represent a VFEI event report that is reported in the wake of
+an equipment event with the CEID of 4050.&nbsp; A VFEI report that is tied
+to COMM_DISABLE is given a CEID of vfei_COM_DISABLE.
+<p>Report definitions that are not like 'vfei_%' represent actual reports
+that are setup or have been received from the equipment.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>RPTID</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>An identifier for the report.</td>
+</tr>
+
+<tr>
+<td>VIDs</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(1000)</td>
+
+<td>An ordered list of the varID's from table ei_variable for equipment
+based reports.&nbsp; An ordered list of VFEIname's from table ei_variable
+for VFEI reports.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<br><a NAME="ei_report_cfg"></a><b><font size=+1>ei_report_cfg&nbsp;&nbsp;&nbsp;&nbsp;
+Configured Report Definitions (Host Only)</font></b>
+<p>This table is used to store the configured report definitions that are
+typically defined using the configuration user interface.&nbsp; The rows
+in this table are used during the initialization of the equipment.&nbsp;
+The initization logic attempts to make the actual, in-use configuration
+of reports mirror the data in this configuration table.&nbsp; If the initialization
+logic is not performed, the configured event reports are not setup, and
+the specified reports are not obtained.&nbsp; Also, if this table, and
+related configuration tables are not saved after configuration changes
+are made, the configuration changes are not present during the next session.
+<p>The VFEI report definitions have RPTID values that start with the character
+sequence "vfei_" as a prefix to the actual CEID used by the equipment or
+created by the driver software.&nbsp; For example, a RPTID value of vfei_4050&nbsp;
+is used to represent a VFEI event report that is reported in the wake of
+an equipment event with the CEID of 4050.&nbsp; A VFEI report that is tied
+to COMM_DISABLE is given a CEID of vfei_COM_DISABLE.
+<p>Report definitions that are not like 'vfei_%' represent actual reports
+that can be setup on the equipment.&nbsp; The configuration logic creates
+reports that have the same RPTID as the CEID that the report is tied to.&nbsp;
+The user's simplified configuration model is that he directly associates
+a set of variables to be collected for a given event.&nbsp; The existence
+of reports as a separate entity is hidden.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>RPTID</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>An identifier for the report.</td>
+</tr>
+
+<tr>
+<td>VIDs</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(1000)</td>
+
+<td>An ordered list of the varID's from table ei_variable for equipment
+based reports.&nbsp; An ordered list of VFEIname's from table ei_variable
+for VFEI reports.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<br><a NAME="ei_spool_data"></a><b><font size=+1>ei_spool_data&nbsp;&nbsp;&nbsp;&nbsp;
+Messages Spooled for Host Retrieval (Equipment Only)</font></b>
+<p>This table is used&nbsp; by the equipment&nbsp; for the purpose of spooling
+messages.
+<p>This table should not be edited directly by software or by manual actions.&nbsp;
+Doing so risks breaking the spooling logic.&nbsp; The procedure eq_spool_purge
+may be called to purge the spool.
+<p>The spooling logic attempts to keep the contents of this table saved
+on the file system in the subdirectory "spooldata", using the filename
+"spooldata.sql".&nbsp; This file is read during startup so the state of
+spooling is persistent from one session to the next.
+<p>Spooling can be enabled by the host using S2F43, or using the User Interface.&nbsp;
+Once spooling is enabled, the host needs to purge or unload the spool everytime
+communication is established in order for the SECS interface to behave
+normally.&nbsp; If the spool is not purged or unloaded, and it is active
+when the host is communicating with the equipment, the host does not receive
+any primary messages originated by the equipment except for Stream 1.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>ts</td>
+
+<td>PCK</td>
+
+<td>varchar(26)</td>
+
+<td>The "localtime 15" timestamp when the message was spooled.&nbsp; This
+information is not required by GEM, and not used by the software.&nbsp;
+It is stored to help decide when purging the spool is appropriate.&nbsp;
+The presence of the field as a key also insures that views of the table
+data are ordered as expected.</td>
+</tr>
+
+<tr>
+<td>sequence</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The spooling logic uses this field as an index to determine the ordering
+of spooled messages.</td>
+</tr>
+
+<tr>
+<td>sfr</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(10)</td>
+
+<td>The stream, function, and optional reply flag of the spooled message,
+such as "S5F1R"</td>
+</tr>
+
+<tr>
+<td>data</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(100000)</td>
+
+<td>The SECS-II data of the message in <a href="../mann/TSN.html">TSN</a>
+notation.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_startup"></a><b><font size=+1>ei_startup&nbsp;&nbsp;&nbsp;
+Configuration of Equipment Interface Startups (Host Only)</font></b>
+<p>This table is only created and used when you run the supervisor application.&nbsp;
+The supervisor also provides a user interface to configure the records
+in this table.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>status</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(60)</td>
+
+<td>Used to indicate the EI connection status on the supervisor display
+list.</td>
+</tr>
+
+<tr>
+<td>port</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(200)</td>
+
+<td>rs232 device name for serial connections or the [hostname:]port for
+terminal server or HSMS connections</td>
+</tr>
+
+<tr>
+<td>auto_start</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>If true, the interface is started when the supervisor application starts.</td>
+</tr>
+
+<tr>
+<td>DEVID</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The SECS-I Device ID of the equipment..</td>
+</tr>
+
+<tr>
+<td>hsms_PROTOCOL</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 0 for non-HSMS connections, set to 1995 for standard HSMS, or
+to1993 for non-standard "1993 Draft" interfaces.</td>
+</tr>
+
+<tr>
+<td>BAUD</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>For serial connections set to the desired baud rate.&nbsp; The value
+9600 is typical.</td>
+</tr>
+
+<tr>
+<td>MULT</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the equipment can handle more than one reply at a time.</td>
+</tr>
+
+<tr>
+<td>use_s1f3</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the initialization logic should use S1F3 to query current
+Status Variable values. After initialization, subsequent value changes
+are ordinarily known to the host by being received in event reports. The
+default value is 1.</td>
+</tr>
+
+<tr>
+<td>use_s1f11</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the initialization logic should use S1F11 to determine
+the Status Variables that are used by the equipment. The default value
+is 1. Since the set of variables does not ordinarily change, and can be
+loaded from saved table images, the initialization query can be disabled
+if it is timeconsuming.</td>
+</tr>
+
+<tr>
+<td>use_s1f13</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the initialization logic should use S1F13 to initiate communications.
+The default value is 1, and is almost always appropriate since the logic
+will use S1F1 if S1F13 is rejected. However, there is some defective equipment
+in use that gets confused if it receives S1F13.</td>
+</tr>
+
+<tr>
+<td>use_s1f17</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the initialization logic should use S1F17 to request that
+the equipment transition to an Online control state.</td>
+</tr>
+
+<tr>
+<td>use_s2f13</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the initialization logic should use S2F13 to query equipment
+constant values during initialization. The default value is 1.</td>
+</tr>
+
+<tr>
+<td>use_s2f29</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the initialization logic should use S2F29 to determine
+the equipment constants that are used by the equipment. The default value
+is 1. Since the set of constants does not ordinarily change, and can be
+loaded from saved table images, the initialization query can be disabled
+if it is timeconsuming.</td>
+</tr>
+
+<tr>
+<td>use_s2f31</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the initialization logic should attempt to synchronize
+the equipment's clock to the host's value using S2F31.</td>
+</tr>
+
+<tr>
+<td>use_s5f5</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the initialization logic should use S5F5 to determine the
+alarm types. The default value is 1. This query is not used during every
+initialization. It is only used if the logic sees an enabled alarm type
+that it does not already know about.</td>
+</tr>
+
+<tr>
+<td>use_s5f7</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the initialization logic should use S5F7 to query which
+alarm types are enabled for reporting. The default value is 1.</td>
+</tr>
+
+<tr>
+<td>hsms_passive</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>Set to 1 if the passive mode for HSMS communications should be used
+when initializing the hsms connection. Usually the equipment plays the
+passive role, and the host plays the active role. It can be useful to reverse
+the usual situation if the equipment is often offline, so the host does
+not waste time trying to connect. The default value is 0.&nbsp;</td>
+</tr>
+
+<tr>
+<td>post_startup_code</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(2000)</td>
+
+<td>Tcl code which is evaluated just after starting an interface.&nbsp;
+You can set timeout parameters, etc.&nbsp; For example "set gemhost(T3)
+80000".</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_trace_active"></a><b><font size=+1>ei_trace_active&nbsp;&nbsp;&nbsp;&nbsp;
+Active Trace Data Collection (Equipment Only)</font></b>
+<p>The records in this table are used to manage time based Trace Data Collection.
+The implementation logic is in file .../gem/trace.tcl. A row is inserted
+in the table at the time trace data collection is initiated by the receiving
+of a S2F23 message from the host. When the last S6F1 Trace Data Report
+message is sent, the corresponding row is deleted.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>trace_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The <a href="../mann/TSN.html">TSN</a> type code and identifier assigned
+by the host in the S2F23 initialization message. The equipment software
+does not care what type code is used.</td>
+</tr>
+
+<tr>
+<td>period_mecs</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The sampling period in milliseconds. The default logic accepts a minimum
+period of 1000 milliseconds. The value is computed from the S2F23 DSPER
+data item.</td>
+</tr>
+
+<tr>
+<td>sample_n</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>A count of the number of trace reports sent. The value is updated every
+sampling period.</td>
+</tr>
+
+<tr>
+<td>sample_n_max</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The total number of samples to be captured (TOTSMP).</td>
+</tr>
+
+<tr>
+<td>report_ct</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>A count of the number of samples taken without a report being sent.&nbsp;</td>
+</tr>
+
+<tr>
+<td>report_ct_max</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>The number of samples to be reported in each trace report, also known
+as the report group size (REPGSZ).</td>
+</tr>
+
+<tr>
+<td>timer_handle</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(12)</td>
+
+<td>The handle value returned by the Tcl <a href="../mann/after.html">after</a>
+command which is used if the trace is cancelled.</td>
+</tr>
+
+<tr>
+<td>SVIDs</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(1000)</td>
+
+<td>A list of the Status Variable IDs (varID in table ei_variable) desired
+in the trace data report.</td>
+</tr>
+
+<tr>
+<td>data</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(32000)</td>
+
+<td>The TSN formatted list of Status Variable values which is appended
+to with every sampling, sent in the trace report message, and then reset
+for the next report. The Tcl SQL command only uses as much memory as is
+actually needed so the large varchar size is not an issue.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_trace_setup"></a><b><font size=+1>ei_trace_setup&nbsp;&nbsp;&nbsp;
+Trace Data Collection Configuration (Host Only)</font></b>
+<p>This table is created dynamically to manage Trace Reports if the Host
+Tcl procedure, ei_trace_setup, in file .../host/trace.tcl is used successfully.
+The rows are used to correlate the data received in S6F1 Trace Reports
+with the requested items.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>trace_id</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>An identifier such as "1" assigned by the host and passed in the S2F23
+initialization message.&nbsp;</td>
+</tr>
+
+<tr>
+<td>period_secs</td>
+
+<td>&nbsp;</td>
+
+<td>float</td>
+
+<td>The sample period in seconds for the trace data.</td>
+</tr>
+
+<tr>
+<td>SVIDs</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(1000)</td>
+
+<td>A list of the Status Variable IDs whose values are requested in the
+trace data reports</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_variable"></a><b><font size=+1>ei_variable&nbsp;&nbsp;&nbsp;
+Data Item Configuration and Status</font></b>
+<p>This table holds configuration and value information on data items that
+are used by the host driver software and on variables that are supported
+by the equipment.&nbsp; For GEM compliant equipment, the driver can populate
+this table with all of the Status Variables and Equipment Constant Variables
+by querying the equipment.&nbsp; Unfortunately, there is no way to determine
+Data Value Variables, but fortunately their use is not as common in modern
+equipment.
+<p>Certain data items used by the host driver cannot be detected, and must
+be configured if the default values are not appropriate.&nbsp; The following
+data items are used to configure TSN data item format codes in the value_TSN
+field for the SECS-II data items of the same name:&nbsp; <b>PPID, RPTID,&nbsp;
+DATAID,&nbsp; TRID, TOTSMP, REPGSZ</b> , <b>DATALENGTH,</b> and<b> LENGTH.
+</b>The
+default value of PPID is A, and the rest of the items default to U4.
+<p>A variable named <b>CEID_OFFLINE</b> also exists in the host's records
+for the purpose of configuring which event report CEID means that the equipment
+is transitioning to an offline control state. If the varvalue field has
+the correct CEID value for the equipment, the logic is able to keep the
+host's knowledge of the control state accurate. The value is read once
+early in the initialization logic so it is typical to need to stop and
+restart the host interface to use an updated value.
+<p>Similarly, the RCMD remote commands are not standardized, and the following
+data item varvalue fields may need to be updated in the host's records
+for your equipment: <b>RCMD_ABORT</b>,
+<b>RCMD_PAUSE</b>,
+<b>RCMD_PP-SELECT</b>,
+<b>RCMD_RESUME</b>,
+and <b>RCMD_STOP.</b>
+<p>If you are using VFEI, you will see the required variable items <b>VFEI_CMDS</b>,
+<b>VFEI_REL</b>,
+and <b>VFEI_VER </b>as entries in this table.&nbsp; In addition to these
+standard items, we have added the following variables;
+<b>VFEI_ALARMS</b>,
+<b>VFEI_EVENTS</b>,
+and <b>VFEI_MACH_CMDS</b>.&nbsp; Using the VFEI STATUS_QUERY command, upper
+level software can obtain lists of the known alarms, events, and machine
+commands supported by the driver.&nbsp; The variable values are actually
+lists of pairs; each pair is the identifier and its description.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>varID</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(32)</td>
+
+<td>An identifier for the data item.&nbsp; The SVID, ECID, or DVNAME for
+Status Variables, Equipment Constants, or Data Value Variables.</td>
+</tr>
+
+<tr>
+<td>ID_TSN</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(8)</td>
+
+<td>The TSN format type code for the varID as used by the equipment.&nbsp;</td>
+</tr>
+
+<tr>
+<td>varname</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(256)</td>
+
+<td>A name for the data&nbsp; item.&nbsp; The SVNAME, ECNAME, or DVNAME
+for Status Variables, Equipment Constants, or Data Value Variables.</td>
+</tr>
+
+<tr>
+<td>VFEIname</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(256)</td>
+
+<td>A name for the variable in the context of VFEI messages.</td>
+</tr>
+
+<tr>
+<td>description</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(200)</td>
+
+<td>Usage notes and/or a description of the data item.</td>
+</tr>
+
+<tr>
+<td>varclass</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(10)</td>
+
+<td>The class of the data item.&nbsp;
+<br><b>SV</b> = Status Variable.&nbsp; These are variables maintained by
+the equipment whose values can be queried by the host.&nbsp;
+<br><b>ECV</b> = Equipment Constant Variable.&nbsp; These are parameters
+maintained by the equipment whose values can be set by the host.&nbsp;
+<br><b>DVVAL</b> = Data Value Variable.&nbsp; These are variables maintained
+by the equipment whose values may be reported in certain fixed format event
+reports.&nbsp;
+<br><b>SECS_DRVR</b> = SECS Driver Variables.&nbsp; These are variables
+or parameters that are created and maintained by the host interface driver
+software.&nbsp;
+<br><b>VFEI_DRVR</b> = VFEI Driver Variables.&nbsp; These are variables
+or parameters that are created and maintained by the VFEI host interface
+driver software.&nbsp; They are similar to the <b>SECS_DRVR</b> items,
+except they are only used if you are using VFEI..&nbsp;
+<br><b>VFEI_MCMD</b>=VFEI Machine Commands.&nbsp; The VFEIname field is
+used to specify the CMD_TYPE of a machine command (MACH_CMD) supported
+by the driver.&nbsp; The driver developer usually sets the varname and
+varID to the same value and supplies a description for the upper level
+software.&nbsp; The varID field can be set to some other value if needed
+in order to create a unique row entry.</td>
+</tr>
+
+<tr>
+<td>value_TSN</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(8)</td>
+
+<td>The TSN format type code for the variable value used by equipment.&nbsp;
+A VFEI_DRVR value can be <b>VFEI_NTV</b> which indicates that the varvalue
+is one or more name/type=value items.</td>
+</tr>
+
+<tr>
+<td>varmethod</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(2000)</td>
+
+<td>Tcl code to compute the current value of the data item.&nbsp; If blank
+or equal to "return $varvalue" the value in the varvalue field is used.</td>
+</tr>
+
+<tr>
+<td>varvalue</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(20000)</td>
+
+<td>The latest value of the variable, possibly updated from receiving a
+SECS message such as an event report, or a status query reply. The host
+has logic to save and use status variable values that are actually larger
+than the varvalue fieldsize; in this situation, a varmethod entry is created
+to access the value from the global $spname array.</td>
+</tr>
+
+<tr>
+<td>host_setval</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(200)</td>
+
+<td>The desired value of an ECV variable.&nbsp;</td>
+</tr>
+
+<tr>
+<td>host_managed</td>
+
+<td>&nbsp;</td>
+
+<td>int</td>
+
+<td>If true, the ECV value is set to the host_setval value during initialization.</td>
+</tr>
+
+<tr>
+<td>t_latest</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(16)</td>
+
+<td>The YYYYMMDDhhmmsscc timestamp when varvalue was last updated.</td>
+</tr>
+
+<tr>
+<td>units</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(10)</td>
+
+<td>The default of an empty string means a pure number without units.&nbsp;
+Reference E5-9.</td>
+</tr>
+
+<tr>
+<td>ECMIN</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(32)</td>
+
+<td>The minimum value of an Equipment Constant Variable.</td>
+</tr>
+
+<tr>
+<td>ECMAX</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(32)</td>
+
+<td>The maximum value of an Equipment Constant Variable.</td>
+</tr>
+
+<tr>
+<td>ECDEF</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(32)</td>
+
+<td>The default value of an Equipment Constant Variable.</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><a NAME="ei_vfei_output"></a><b><font size=+1>ei_vfei_output&nbsp;&nbsp;&nbsp;&nbsp;
+VFEI Output Message Data (Host Only)</font></b>
+<p>VFEI output messages that are not command replies such as ALARM_REPORT's
+or EVENT_REPORT's are inserted into this table.&nbsp; If the GEM-EI software
+is made part of a DMH message group, the output message record is deleted
+after the message is successfully transferred to the <i>VFEI_OUTPUT_MAILBOX</i>
+as configured in the ei_variable table.&nbsp; If the message system is
+disconnected, the output messages will continue to be inserted into this
+table.&nbsp; If the message system is reconnected, having the driver perform
+a VFEI initialization will transfer the queued output messages to the <i>VFEI_OUTPUT_MAILBOX</i>
+and restore the usual forward and delete behavior.
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td><b>Column Name</b></td>
+
+<td><b>Key</b></td>
+
+<td><b>Type</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>spname</td>
+
+<td>PCK</td>
+
+<td>varchar(32)</td>
+
+<td>The secsport or hsms connection name that a particular row is associated
+with.</td>
+</tr>
+
+<tr>
+<td>clock</td>
+
+<td>PCK</td>
+
+<td>varchar(16)</td>
+
+<td>The time of the output message formatted as YYYYMMDDHHMMSScc.&nbsp;
+This value may be used to correlate the record with the event_log or alarm_log
+record that was its precursor.&nbsp;</td>
+</tr>
+
+<tr>
+<td>vfei_msg</td>
+
+<td>&nbsp;</td>
+
+<td>varchar(20000)</td>
+
+<td>A VFEI 2.2 formatted text message representing the asynchronous EVENT_REPORT
+or ALARM_REPORT (see <a href="http://www.sematech.org/">SEMATECH</a> 95113016A-TR)</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<h2>
+<a NAME="Document Version"></a>Document Version</h2>
+Date of last revision: $Date: 2005/01/14 21:39:48 $
+<p>This document describes the configurable GEM Equipment Interface Applications
+provided by <a href="http://www.hume.com">Hume Integration Software</a>
+as part of its Datahub SDK.&nbsp; The document
+is current for the Tcl 8.4/Tk 8.4 versions for UNIX and Windows NT.&nbsp;
+<hr>Leave this document and go to the <a href="../index.html" target="_top">Tcl/Tk
+Resource Index</a>
+</body>
+</html>

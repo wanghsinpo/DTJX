@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="substr_cmds_"></A>
+<TITLE>substr Tcl Command</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ substr - parse a substring <P>
+<H2>SYNOPSIS</H2>
+ <B>dmh::substr  <I>string  left  right</B></I>  <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command is used to extract the first substring in input string <B><I>string</B></I> that is bounded on the left by the token <B><I>left</B></I> and on the right by <B><I>right</B></I>. If either <B><I>left</B></I> or <B><I>right</B></I> is not found in the string, an empty result is returned.  If the <B><I>right</B></I> is an empty string, everything after the <B><I>left</B></I> argument  is returned.  Also, an empty string may be used for the <B><I>left</I></B> argument
+to match the beginning of a string.  For example: <PRE>
+set title "Notepad - substr.n"
+set filename [substr $title "Notepad - " ""]
+set appname [substr $title "" " -"]
+</PRE>
+<P>
+<P>
+<H2>AUTHOR</H2>
+ Ed Hume, Hume Integration Software <P>
+<H2>KEYWORDS</H2>
+ string, substring 
+</BODY>
+</HTML>

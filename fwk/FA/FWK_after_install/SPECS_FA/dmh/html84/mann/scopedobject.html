@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="scopedobject_iwid_"></A>
+<TITLE>scopedobjectSection iwid</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ scopedobject - Create and manipulate a scoped \[incr Tcl\] class object. <P>
+<H2>SYNOPSIS</H2>
+ <B>scopedobject<I> objName </B></I>?<I>options</I>? <P>
+<H2>INHERITANCE</H2>
+ None <P>
+<H2>STANDARD OPTIONS</H2>
+ <P>
+
+Name:	<B>enterscopecommand:</B>
+Command-Line Switch:	<B>-enterscopecommand</B>
+ 
+<DD> Specifies a Tcl command to invoke when an object enters scope (i.e. when it is created..). The default is {}. <P>
+
+Name:	<B>enterscopecommand:</B>
+Command-Line Switch:	<B>-enterscopecommand</B>
+ 
+<DD> Specifies a Tcl command to invoke when an object exits scope (i.e. when it is deleted..). The default is {}. <P>
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+The <B>scopedobject</B> command creates a base class for defining Itcl classes which posses scoped behavior like Tcl variables. The objects are only accessible within the procedure in which they are instantiated and are deleted when the procedure returns. This class was designed to be a general purpose base class for supporting scoped incr Tcl classes.  The options include the execute a Tcl script command when an object enters and exits its scope. <P>
+<H2>METHODS</H2>
+ <P>
+The <B>scopedobject</B> command creates a new Tcl command whose name is <I>pathName</I>.  This command may be used to invoke various operations on the object. It has the following general form: <PRE>
+<I>pathName option </I>?<I>arg arg ...</I>?
+</PRE>
+<I>Option</I> and the <I>arg</I>s determine the exact behavior of the command.  The following commands are possible for scopedobject objects: <P>
+<H2>OBJECT-SPECIFIC METHODS</H2>
+ 
+<DT><I>pathName <B>cget</B></I> <I>option</I>
+<DD>Returns the current value of the configuration option given by <I>option</I>. <I>Option</I> may have any of the values accepted by the <B>scopedobject</B> command. 
+<DT><I>pathName</I> <B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?
+<DD>Query or modify the configuration options of the object. If no <I>option</I> is specified, returns a list describing all of the available options for <I>pathName</I>.  If <I>option</I> is specified with no <I>value</I>, then the command returns a list describing the one named option (this list will be identical to the corresponding sublist of the value returned if no <I>option</I> is specified).  If one or more <I>option-value</I> pairs are specified, then the command modifies the given objects option(s) to have the given value(s);  in this case the command returns an empty string. <I>Option</I> may have any of the values accepted by the <B>scopedobject</B> command. <P>
+<P>
+<H2>EXAMPLE</H2>
+ 
+<DD> The scopedobject was primarily meant to be a base class.  The following is an example of usage without inheritance: <P>
+<PRE>
+  proc scopedobject_demo {} {
+    iwidgets::scopedobject #auto \
+        -exitscopecommand {puts "enter scopedobject_demo"} \
+        -exitscopecommand {puts "exit scopedobject_demo"}
+  }
+<P>
+  scopedobject_demo
+<P>
+</PRE>
+<P>
+<H2>AUTHOR</H2>
+ John A. Tucker <P>
+<H2>KEYWORDS</H2>
+ scopedobject, object 
+</BODY>
+</HTML>

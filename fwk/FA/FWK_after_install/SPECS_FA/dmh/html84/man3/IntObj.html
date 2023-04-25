@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_IntObj_Tcl_8_0"></A>
+<TITLE>Tcl_IntObj Tcl Library Procedures 8.0</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_NewIntObj, Tcl_NewLongObj, Tcl_NewWideIntObj, Tcl_SetIntObj, Tcl_SetLongObj, Tcl_SetWideIntObj, Tcl_GetIntFromObj, Tcl_GetLongFromObj, Tcl_GetWideIntFromObj - manipulate Tcl objects as integers and wide integers <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+Tcl_Obj *
+<B>Tcl_NewIntObj</B>(<I>intValue</I>)
+<P>
+Tcl_Obj *
+<B>Tcl_NewLongObj</B>(<I>longValue</I>)
+<P>
+Tcl_Obj *
+<B>Tcl_NewWideIntObj</B>(<I>wideValue</I>)
+<P>
+<B>Tcl_SetIntObj</B>(<I>objPtr, intValue</I>)
+<P>
+<B>Tcl_SetLongObj</B>(<I>objPtr, longValue</I>)
+<P>
+<B>Tcl_SetWideIntObj</B>(<I>objPtr, wideValue</I>)
+<P>
+int
+<B>Tcl_GetIntFromObj</B>(<I>interp, objPtr, intPtr</I>)
+<P>
+int
+<B>Tcl_GetLongFromObj</B>(<I>interp, objPtr, longPtr</I>)
+<P>
+int
+<B>Tcl_GetWideIntFromObj</B>(<I>interp, objPtr, widePtr</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>int <I>intValue</I></B> (in)
+<DD>Integer value used to initialize or set an integer object.
+<P><DT><B>long <I>longValue</I></B> (in)
+<DD>Long integer value used to initialize or set an integer object.
+<P><DT><B>Tcl_WideInt <I>wideValue</I></B> (in)
+<DD>Wide integer value (minimum 64-bits wide where supported by the
+compiler) used to initialize or set a wide integer object.
+<P><DT><B>Tcl_Obj <I>*objPtr</I></B> (in/out)
+<DD>For <B>Tcl_SetIntObj</B>, <B>Tcl_SetLongObj</B>, and
+<B>Tcl_SetWideIntObj</B>, this points to the object to be converted to
+integer type.  For <B>Tcl_GetIntFromObj</B>, <B>Tcl_GetLongFromObj</B>,
+and <B>Tcl_GetWideIntFromObj</B>, this refers to the object from which
+to get an integer or long integer value; if <I>objPtr</I> does not
+already point to an integer object (or a wide integer object in the
+case of <B>Tcl_SetWideIntObj</B> and <B>Tcl_GetWideIntFromObj</B>,) an
+attempt will be made to convert it to one.
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in/out)
+<DD>If an error occurs during conversion,
+an error message is left in the interpreter's result object
+unless <I>interp</I> is NULL.
+<P><DT><B>int <I>*intPtr</I></B> (out)
+<DD>Points to place to store the integer value
+obtained by <B>Tcl_GetIntFromObj</B> from <I>objPtr</I>.
+<P><DT><B>long <I>*longPtr</I></B> (out)
+<DD>Points to place to store the long integer value
+obtained by <B>Tcl_GetLongFromObj</B> from <I>objPtr</I>.
+<P><DT><B>Tcl_WideInt <I>*widePtr</I></B> (out)
+<DD>Points to place to store the wide integer value
+obtained by <B>Tcl_GetWideIntFromObj</B> from <I>objPtr</I>.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+These procedures are used to create, modify, and read
+integer and wide integer Tcl objects from C code.
+<B>Tcl_NewIntObj</B>, <B>Tcl_NewLongObj</B>,
+<B>Tcl_SetIntObj</B>, and <B>Tcl_SetLongObj</B>
+create a new object of integer type
+or modify an existing object to have integer type,
+and <B>Tcl_NewWideIntObj</B> and <B>Tcl_SetWideIntObj</B> create a new
+object of wide integer type or modify an existing object to have wide
+integer type. 
+<B>Tcl_NewIntObj</B> and <B>Tcl_SetIntObj</B> set the object to have the
+integer value given by <I>intValue</I>,
+<B>Tcl_NewLongObj</B> and <B>Tcl_SetLongObj</B>
+set the object to have the
+long integer value given by <I>longValue</I>,
+and <B>Tcl_NewWideIntObj</B> and <B>Tcl_SetWideIntObj</B> set the object
+to have the wide integer value given by <I>wideValue</I>.
+<B>Tcl_NewIntObj</B>, <B>Tcl_NewLongObj</B> and <B>Tcl_NewWideIntObj</B>
+return a pointer to a newly created object with reference count zero.
+These procedures set the object's type to be integer
+and assign the integer value to the object's internal representation
+<I>longValue</I> or <I>wideValue</I> member (as appropriate).
+<B>Tcl_SetIntObj</B>, <B>Tcl_SetLongObj</B>
+and <B>Tcl_SetWideIntObj</B>
+invalidate any old string representation and,
+if the object is not already an integer object,
+free any old internal representation.
+<P>
+<B>Tcl_GetIntFromObj</B> and <B>Tcl_GetLongFromObj</B>
+attempt to return an integer value from the Tcl object <I>objPtr</I>,
+and <B>Tcl_GetWideIntFromObj</B> attempts to return a wide integer
+value from the Tcl object <I>objPtr</I>.
+If the object is not already an integer object,
+or a wide integer object in the case of <B>Tcl_GetWideIntFromObj</B>
+they will attempt to convert it to one.
+If an error occurs during conversion, they return <B>TCL_ERROR</B>
+and leave an error message in the interpreter's result object
+unless <I>interp</I> is NULL.
+Also, if the long integer held in the object's internal representation
+<I>longValue</I> member can not be represented in a (non-long) integer,
+<B>Tcl_GetIntFromObj</B> returns <B>TCL_ERROR</B>
+and leaves an error message in the interpreter's result object
+unless <I>interp</I> is NULL.
+Otherwise, all three procedures return <B>TCL_OK</B> and
+store the integer, long integer value
+or wide integer in the address given by <I>intPtr</I>, <I>longPtr</I>
+and <I>widePtr</I>
+respectively.  If the object is not already an integer or wide integer
+object, the conversion will free any old internal representation.
+<P>
+<P>
+<H2>SEE ALSO</H2>
+
+Tcl_NewObj, Tcl_DecrRefCount, Tcl_IncrRefCount, Tcl_GetObjResult
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+integer, integer object, integer type, internal representation, object, object type, string representation
+
+</BODY>
+</HTML>

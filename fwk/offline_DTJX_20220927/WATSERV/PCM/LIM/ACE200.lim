@@ -1,0 +1,845 @@
+#Format	1
+#Date	07/01/1998
+#Test Plan	/opt/SPECS/demo/ACE200.tpl
+#Description	Sample Limit File for ACE200
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VTX640	BAX044	INV	S0	WIDTH	Width		1	0.2	0.9									1	1	2	-	+											90		1	1	0	0	0	0
+VTX640	BAX044	INV	S-	WIDTH	Width		1	0.2	0.9									1	1	2	-	+											90		1	1	0	0	0	0
+VTX640	BAX044	INV	S+	WIDTH	Width		1	0.2	0.9									1	1	2	-	+											90		1	1	0	0	0	0
+VTX640	BAX044	NWEL	R1	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	NWEL	R2	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	NWEL	R3	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	NWEL	R4	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	NWEL	R5	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	NWEL	R6	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	PWEL	R1	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	PWEL	R2	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	PWEL	R3	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	PWEL	R4	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	PWEL	R5	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	PWEL	R6	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+VTX640	BAX044	CON100	100	BRIDGE	Ibridge		0	0	0.100									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	CON100	100_REV	BRIDGE	Ibridge		0	0	0.100									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	CON500	500	BRIDGE	Ibridge		0	0	0.100									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	CON500	500_REV	BRIDGE	Ibridge		0	0	0.100									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOA	M0	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOA	M0	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOA	M0	CAPM	Tox		0											0																	0	0	0	0	0	0
+VTX640	BAX044	ISOA	M1	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOA	M1	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOA	M1	CAPM	Tox		0											0																	0	0	0	0	0	0
+VTX640	BAX044	ISOB	M0	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOB	M0	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOB	M0	CAPM	Tox		0											0																	0	0	0	0	0	0
+VTX640	BAX044	ISOB	M1	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOB	M1	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VTX640	BAX044	ISOB	M1	CAPM	Tox		0											0																	0	0	0	0	0	0
+VTX640	BAX044	ISOC	M0	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOC	M0	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOC	M0	CAPM	Tox		0											0																	0	0	0	0	0	0
+VTX640	BAX044	ISOC	M1	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOC	M1	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOC	M1	CAPM	Tox		0											0																	0	0	0	0	0	0
+VTX640	BAX044	ISOD	M0	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOD	M0	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOD	M0	CAPM	Tox		0											0																	0	0	0	0	0	0
+VTX640	BAX044	ISOD	M1	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOD	M1	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	ISOD	M1	CAPM	Tox		0											0																	0	0	0	0	0	0
+VTX640	BAX044	2MTL	0.01	LDX	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	0.01	LDX	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	0.01	LDY	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	0.01	LDY	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	0.5	LDX	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	0.5	LDX	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	0.5	LDY	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	0.5	LDY	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	1.0	LDX	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	1.0	LDX	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	1.0	LDY	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	1.0	LDY	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	10.0	LDX	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	10.0	LDX	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	10.0	LDY	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+VTX640	BAX044	2MTL	10.0	LDY	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VTX640	BAX044	NCHMOS	N1	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N1	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N2	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VTX640	BAX044	NCHMOS	N3	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N3	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NCHMOS	N4	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P1	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VTX640	BAX044	PCHMOS	P2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P2	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P3	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PCHMOS	P4	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	1MTL	Z+	EM	Rserp		0	0										0																	1	1	0	0	0	0
+VTX640	BAX044	1MTL	Z-	EM	Rserp		0											0																	1	1	0	0	0	0
+VTX640	BAX044	VD		IVGS	IVgs		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VTX640	BAX044	VO		IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	VS		IVGS	IVgs		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NWELCON		FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VTX640	BAX044	NWELCON		FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	NWELCON		LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NWELCON		LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NWELCON		LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NWELCON		LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NWELCON		LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	NWELCON		LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PWELCON		FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VTX640	BAX044	PWELCON		FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VTX640	BAX044	PWELCON		LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PWELCON		LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PWELCON		LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PWELCON		LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PWELCON		LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	PWELCON		LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VTX640	BAX044	LEFF	1	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VTX640	BAX044	LEFF	2	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VTX640	BAX044	LEFF	3	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VTX640	BAX044	LEFF	4	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VTX640	BAX044	LEFF	4	DELL	DeltaL		0											0																	1	1	0	0	0	0
+VTX640	BAX044	WEFF	1	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VTX640	BAX044	WEFF	2	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VTX640	BAX044	WEFF	3	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VTX640	BAX044	WEFF	4	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VTX640	BAX044	WEFF	4	DELW	DeltaW		0											0																	1	1	0	0	0	0
+VTX640	BAX044	SILC		R	Rmeas		0											0																	1	1	0	0	0	0
+VTX640	BAX044	FIN1		CSTR	Rcon		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VTX640	BAX044	FIN1		CSTR	Istlk		0											0																	1	1	0	0	0	0
+VTX640	BAX044	FIN2		CSTR	Rcon		0											0																	1	1	0	0	0	0
+VTX640	BAX044	FIN2		CSTR	Istlk		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS14	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS14	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS14	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS14	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS15	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS15	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS15	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS15	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS16	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS16	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS16	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS16	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS17	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS17	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS17	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CS17	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NPOLYMT1A		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PPOLYMT1A		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	NPOLYMT1B		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	PPOLYMT1B		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C01	100	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C01	100	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C01	110	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C01	110	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C01	150	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C01	150	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C01	200	CAP	C		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VTX640	BAX044	C01	200	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C02	100	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C02	100	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C02	110	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C02	110	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C02	150	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C02	150	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C02	200	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C02	200	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C03	100	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C03	100	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C03	110	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C03	110	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C03	150	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C03	150	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C03	200	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C03	200	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C04	100	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C04	100	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C04	110	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C04	110	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C04	150	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C04	150	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C04	200	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	C04	200	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPH	H+1	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPH	H+1	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPH	H-1	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPH	H-1	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPH	HL	CAP	C		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VTX640	BAX044	CAPH	HL	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPL	H+1	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPL	H+1	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPL	H-1	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPL	H-1	CAP	G		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPL	HL	CAP	C		0											0																	1	1	0	0	0	0
+VTX640	BAX044	CAPL	HL	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	INV	S0	WIDTH	Width		1	0.2	0.9									1	1	2	-	+											90		1	1	0	0	0	0
+V9X640	BAX030	INV	S-	WIDTH	Width		1	0.2	0.9									1	1	2	-	+											90		1	1	0	0	0	0
+V9X640	BAX030	INV	S+	WIDTH	Width		1	0.2	0.9									1	1	2	-	+											90		1	1	0	0	0	0
+V9X640	BAX030	NWEL	R1	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	NWEL	R2	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	NWEL	R3	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	NWEL	R4	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	NWEL	R5	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	NWEL	R6	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	PWEL	R1	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	PWEL	R2	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	PWEL	R3	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	PWEL	R4	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	PWEL	R5	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	PWEL	R6	BRIDGE	Ibridge		0	0.002	0.003	0.007	0.010							0	2	3	1	4											50		1	1	0	0	0	0
+V9X640	BAX030	CON100	100	BRIDGE	Ibridge		0	0	0.100									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	CON100	100_REV	BRIDGE	Ibridge		0	0	0.100									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	CON500	500	BRIDGE	Ibridge		0	0	0.100									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	CON500	500_REV	BRIDGE	Ibridge		0	0	0.100									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOA	M0	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOA	M0	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOA	M0	CAPM	Tox		0											0																	0	0	0	0	0	0
+V9X640	BAX030	ISOA	M1	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V9X640	BAX030	ISOA	M1	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOA	M1	CAPM	Tox		0											0																	0	0	0	0	0	0
+V9X640	BAX030	ISOB	M0	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOB	M0	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOB	M0	CAPM	Tox		0											0																	0	0	0	0	0	0
+V9X640	BAX030	ISOB	M1	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOB	M1	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOB	M1	CAPM	Tox		0											0																	0	0	0	0	0	0
+V9X640	BAX030	ISOC	M0	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOC	M0	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOC	M0	CAPM	Tox		0											0																	0	0	0	0	0	0
+V9X640	BAX030	ISOC	M1	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOC	M1	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOC	M1	CAPM	Tox		0											0																	0	0	0	0	0	0
+V9X640	BAX030	ISOD	M0	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOD	M0	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOD	M0	CAPM	Tox		0											0																	0	0	0	0	0	0
+V9X640	BAX030	ISOD	M1	CAPM	C		0	2e-12	10E-12									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOD	M1	CAPM	G		0	2e-07	1E-6									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	ISOD	M1	CAPM	Tox		0											0																	0	0	0	0	0	0
+V9X640	BAX030	2MTL	0.01	LDX	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	0.01	LDX	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	0.01	LDY	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	0.01	LDY	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	0.5	LDX	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	0.5	LDX	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	0.5	LDY	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	0.5	LDY	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	1.0	LDX	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	1.0	LDX	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V9X640	BAX030	2MTL	1.0	LDY	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	1.0	LDY	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	10.0	LDX	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	10.0	LDX	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	10.0	LDY	Ld		0	4e-07	0.4E-6	0.6E-6	0.8E-6							0	2	3	1	4											100		1	1	0	0	0	0
+V9X640	BAX030	2MTL	10.0	LDY	Mobility		0	0	0.8									0	1	2													100		1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	VTF2	Vtf		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N1	IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	VTF2	Vtf		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N2	IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V9X640	BAX030	NCHMOS	N3	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	VTF2	Vtf		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N3	IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	VTF2	Vtf		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NCHMOS	N4	IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P1	VTF2	Vtf		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V9X640	BAX030	PCHMOS	P1	IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	VTF2	Vtf		0											0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P2	IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	VTF2	Vtf		0											0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P3	IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V9X640	BAX030	PCHMOS	P4	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	VGS3	Vgs		0	-198	-40	-10	10	40	99					0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	VTF2	Vtf		0											0																	1	1	0	0	0	0
+V9X640	BAX030	PCHMOS	P4	IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	1MTL	Z+	EM	Rserp		0	0										0																	1	1	0	0	0	0
+V9X640	BAX030	1MTL	Z-	EM	Rserp		0											0																	1	1	0	0	0	0
+V9X640	BAX030	VD		IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	VO		IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	VS		IVGS	IVgs		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NWELCON		FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	NWELCON		FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+V9X640	BAX030	NWELCON		LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NWELCON		LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NWELCON		LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NWELCON		LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NWELCON		LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	NWELCON		LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PWELCON		FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+V9X640	BAX030	PWELCON		FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+V9X640	BAX030	PWELCON		LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PWELCON		LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PWELCON		LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PWELCON		LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PWELCON		LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	PWELCON		LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V9X640	BAX030	LEFF	1	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+V9X640	BAX030	LEFF	2	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+V9X640	BAX030	LEFF	3	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+V9X640	BAX030	LEFF	4	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+V9X640	BAX030	LEFF	4	DELL	DeltaL		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V9X640	BAX030	WEFF	1	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+V9X640	BAX030	WEFF	2	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+V9X640	BAX030	WEFF	3	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+V9X640	BAX030	WEFF	4	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+V9X640	BAX030	WEFF	4	DELW	DeltaW		0											0																	1	1	0	0	0	0
+V9X640	BAX030	SILC		R	Rmeas		0											0																	1	1	0	0	0	0
+V9X640	BAX030	FIN1		CSTR	Rcon		0											0																	1	1	0	0	0	0
+V9X640	BAX030	FIN1		CSTR	Istlk		0											0																	1	1	0	0	0	0
+V9X640	BAX030	FIN2		CSTR	Rcon		0											0																	1	1	0	0	0	0
+V9X640	BAX030	FIN2		CSTR	Istlk		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS14	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS14	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS14	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS14	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS15	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS15	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS15	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS15	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS16	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS16	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS16	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS16	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS17	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS17	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS17	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CS17	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NPOLYMT1A		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	PPOLYMT1A		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	NPOLYMT1B		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+V9X640	BAX030	PPOLYMT1B		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V9X640	BAX030	C01	100	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C01	100	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C01	110	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C01	110	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C01	150	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C01	150	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C01	200	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C01	200	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C02	100	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C02	100	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C02	110	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C02	110	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C02	150	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C02	150	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C02	200	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C02	200	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C03	100	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C03	100	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C03	110	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C03	110	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C03	150	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C03	150	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C03	200	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C03	200	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C04	100	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C04	100	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C04	110	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C04	110	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C04	150	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C04	150	CAP	G		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V9X640	BAX030	C04	200	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	C04	200	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPH	H+1	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPH	H+1	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPH	H-1	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPH	H-1	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPH	HL	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPH	HL	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPL	H+1	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPL	H+1	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPL	H-1	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPL	H-1	CAP	G		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPL	HL	CAP	C		0											0																	1	1	0	0	0	0
+V9X640	BAX030	CAPL	HL	CAP	G		0											0																	1	1	0	0	0	0
+V1X640	REX024	INA	A	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A+	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A+	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A+	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A+	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A+	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INA	A+	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A/1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A/1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A/1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A/1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V1X640	REX024	IN1A	A/1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A/1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A+/1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A+/1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A+/1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A+/1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A+/1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1A	A+/1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A/2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A/2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A/2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A/2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A/2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A/2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A+/2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A+/2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A+/2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A+/2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A+/2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2A	A+/2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B+	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B+	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B+	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B+	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+V1X640	REX024	INB	B+	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	INB	B+	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B/1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B/1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B/1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B/1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B/1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B/1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B+/1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B+/1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B+/1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B+/1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B+/1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN1B	B+/1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B/2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B/2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B/2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B/2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B/2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B/2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B+/2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B+/2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B+/2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B+/2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B+/2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+V1X640	REX024	IN2B	B+/2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	INV	S0	WIDTH	Width		0											0																	1	1	0	0	0	0
+VOX712	BAX081	INV	S-	WIDTH	Width		0											0																	1	1	0	0	0	0
+VOX712	BAX081	INV	S+	WIDTH	Width		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NWEL	R1	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VOX712	BAX081	NWEL	R2	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NWEL	R3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NWEL	R4	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NWEL	R5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NWEL	R6	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PWEL	R1	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PWEL	R2	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PWEL	R3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PWEL	R4	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PWEL	R5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PWEL	R6	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CON100	100	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CON100	100_REV	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CON500	500	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CON500	500_REV	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOA	M0	CAPM	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOA	M0	CAPM	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOA	M0	CAPM	Tox		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOA	M1	CAPM	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOA	M1	CAPM	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOA	M1	CAPM	Tox		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOB	M0	CAPM	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOB	M0	CAPM	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOB	M0	CAPM	Tox		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOB	M1	CAPM	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOB	M1	CAPM	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOB	M1	CAPM	Tox		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOC	M0	CAPM	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOC	M0	CAPM	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOC	M0	CAPM	Tox		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VOX712	BAX081	ISOC	M1	CAPM	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOC	M1	CAPM	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOC	M1	CAPM	Tox		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOD	M0	CAPM	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOD	M0	CAPM	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOD	M0	CAPM	Tox		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOD	M1	CAPM	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOD	M1	CAPM	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	ISOD	M1	CAPM	Tox		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	0.01	LDX	Ld		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	0.01	LDX	Mobility		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	0.01	LDY	Ld		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	0.01	LDY	Mobility		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	0.5	LDX	Ld		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	0.5	LDX	Mobility		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	0.5	LDY	Ld		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	0.5	LDY	Mobility		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	1.0	LDX	Ld		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	1.0	LDX	Mobility		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	1.0	LDY	Ld		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	1.0	LDY	Mobility		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	10.0	LDX	Ld		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	10.0	LDX	Mobility		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	10.0	LDY	Ld		0											0																	1	1	0	0	0	0
+VOX712	BAX081	2MTL	10.0	LDY	Mobility		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VOX712	BAX081	NCHMOS	N1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	VGS3	Vgs		0	-198	10	10	10	10	99					0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N1	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	VGS3	Vgs		0	-198	10	10	10	10	99					0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N2	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	VGS3	Vgs		0	-198	10	10	10	10	99					0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N3	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VOX712	BAX081	NCHMOS	N4	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	VGS3	Vgs		0	-198	10	10	10	10	99					0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NCHMOS	N4	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	VGS3	Vgs		0	-198	10	10	10	10	99					0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P1	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	VGS3	Vgs		0	-198	10	10	10	10	99					0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P2	VTF2	Vtf		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VOX712	BAX081	PCHMOS	P2	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	VGS3	Vgs		0	-198	10	10	10	10	99					0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P3	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	VGS3	Vgs		0	-198	10	10	10	10	99					0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	VTF2	Vtf		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PCHMOS	P4	IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	1MTL	Z+	EM	Rserp		0											0																	1	1	0	0	0	0
+VOX712	BAX081	1MTL	Z-	EM	Rserp		0											0																	1	1	0	0	0	0
+VOX712	BAX081	VD		IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	VO		IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	VS		IVGS	IVgs		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NWELCON		FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	NWELCON		FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VOX712	BAX081	NWELCON		LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NWELCON		LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NWELCON		LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NWELCON		LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NWELCON		LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	NWELCON		LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PWELCON		FETCHK	Idoff		0	2e-12	0.001									0																	1	1	0	0	0	0
+VOX712	BAX081	PWELCON		FETCHK	Idon		0	2e-12	0.05									0																	1	1	0	0	0	0
+VOX712	BAX081	PWELCON		LEAKCHK	Igsd		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PWELCON		LEAKCHK	Igsbm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PWELCON		LEAKCHK	Igsbp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PWELCON		LEAKCHK	Isdsb		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PWELCON		LEAKCHK	Igsdm		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	PWELCON		LEAKCHK	Igsdp		0	-28	-6									0																	1	1	0	0	0	0
+VOX712	BAX081	LEFF	1	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VOX712	BAX081	LEFF	2	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VOX712	BAX081	LEFF	3	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VOX712	BAX081	LEFF	4	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VOX712	BAX081	LEFF	4	DELL	DeltaL		0											0																	1	1	0	0	0	0
+VOX712	BAX081	WEFF	1	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VOX712	BAX081	WEFF	2	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VOX712	BAX081	WEFF	3	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VOX712	BAX081	WEFF	4	VT	Vt		0	-100	50									0																	1	1	0	0	0	0
+VOX712	BAX081	WEFF	4	DELW	DeltaW		0											0																	1	1	0	0	0	0
+VOX712	BAX081	SILC		R	Rmeas		0											0																	1	1	0	0	0	0
+VOX712	BAX081	FIN1		CSTR	Rcon		0											0																	1	1	0	0	0	0
+VOX712	BAX081	FIN1		CSTR	Istlk		0											0																	1	1	0	0	0	0
+VOX712	BAX081	FIN2		CSTR	Rcon		0											0																	1	1	0	0	0	0
+VOX712	BAX081	FIN2		CSTR	Istlk		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS14	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VOX712	BAX081	CS14	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS14	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS14	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS15	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS15	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS15	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS15	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS16	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS16	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS16	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS16	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS17	0.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS17	0.8/1.0	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS17	1.0/0.5	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CS17	1.5/0.3	BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NPOLYMT1A		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PPOLYMT1A		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	NPOLYMT1B		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	PPOLYMT1B		BRIDGE	Ibridge		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C01	100	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C01	100	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C01	110	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C01	110	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C01	150	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C01	150	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C01	200	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C01	200	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C02	100	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C02	100	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C02	110	CAP	C		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VOX712	BAX081	C02	110	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C02	150	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C02	150	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C02	200	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C02	200	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C03	100	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C03	100	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C03	110	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C03	110	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C03	150	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C03	150	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C03	200	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C03	200	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C04	100	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C04	100	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C04	110	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C04	110	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C04	150	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C04	150	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C04	200	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	C04	200	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPH	H+1	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPH	H+1	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPH	H-1	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPH	H-1	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPH	HL	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPH	HL	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPL	H+1	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPL	H+1	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPL	H-1	CAP	C		0											0																	1	1	0	0	0	0
+#DIE	TEST	MODULE	DEVICE	ALGORITHM	VARIABLE	OUTPUT	MINREAL	LIMIT 1	LIMIT 2	LIMIT 3	LIMIT 4	LIMIT 5	LIMIT 6	LIMIT 7	LIMIT 8	LIMIT 9	LIMIT 10	MAXREAL	UBIN 1 LO	UBIN 1 HI	UBIN 2 LO	UBIN 2 HI	UBIN 3 LO	UBIN 3 HI	UBIN 4 LO	UBIN 4 HI	UBIN 5 LO	UBIN 5 HI	UBIN 6 LO	UBIN 6 HI	YIELD NUM	YIELD DEN	YIELD TGT	CENTER	DISP FLAG	LOG FLAG	USER 1	USER 2	USER 3	USER 4
+VOX712	BAX081	CAPL	H-1	CAP	G		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPL	HL	CAP	C		0											0																	1	1	0	0	0	0
+VOX712	BAX081	CAPL	HL	CAP	G		0											0																	1	1	0	0	0	0

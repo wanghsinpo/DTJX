@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="array_Tcl_8_3"></A>
+<TITLE>array Tcl Built-In Commands 8.3</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ array - Manipulate array variables <P>
+<H2>SYNOPSIS</H2>
+ <B>array <I>option arrayName</B></I> ?<I>arg arg ...</I>? <HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+ <P>
+This command performs one of several operations on the variable given by <I>arrayName</I>. Unless otherwise specified for individual commands below, <I>arrayName</I> must be the name of an existing array variable. The <I>option</I> argument determines what action is carried out by the command. The legal <I>options</I> (which may be abbreviated) are: 
+<DT><B>array anymore <I>arrayName searchId</B></I>
+<DD>Returns 1 if there are any more elements left to be processed in an array search, 0 if all elements have already been returned. <I>SearchId</I> indicates which search on <I>arrayName</I> to check, and must have been the return value from a previous invocation of <B>array startsearch</B>. This option is particularly useful if an array has an element with an empty name, since the return value from <B>array nextelement</B> won't indicate whether the search has been completed. 
+<DT><B>array donesearch <I>arrayName searchId</B></I>
+<DD>This command terminates an array search and destroys all the state associated with that search.  <I>SearchId</I> indicates which search on <I>arrayName</I> to destroy, and must have been the return value from a previous invocation of <B>array startsearch</B>.  Returns an empty string. 
+<DT><B>array exists <I>arrayName</B></I>
+<DD>Returns 1 if <I>arrayName</I> is an array variable, 0 if there is no variable by that name or if it is a scalar variable. 
+<DT><B>array get <I>arrayName</B></I> ?<I>pattern</I>?
+<DD>Returns a list containing pairs of elements.  The first element in each pair is the name of an element in <I>arrayName</I> and the second element of each pair is the value of the array element.  The order of the pairs is undefined. If <I>pattern</I> is not specified, then all of the elements of the array are included in the result. If <I>pattern</I> is specified, then only those elements whose names match <I>pattern</I> (using the matching rules of <B>string match</B>) are included. If <I>arrayName</I> isn't the name of an array variable, or if the array contains no elements, then an empty list is returned. 
+<DT><B>array names <I>arrayName</B></I> ?<I>mode</I>? ?<I>pattern</I>?
+<DD>Returns a list containing the names of all of the elements in the array that match <I>pattern</I>.  <I>Mode</I> may be one of <B>-exact</B>, <B>-glob</B>, or <B>-regexp</B>.  If specified, <I>mode</I> designates which matching rules to use to match <I>pattern</I> against the names of the elements in the array.  If not specified, <I>mode</I> defaults to <B>-glob</B>.  See the documentation for <B>string match</B> for information on glob style matching, and the documentation for <B>regexp</B> for information on regexp matching. If <I>pattern</I> is omitted then the command returns all of the element names in the array.  If there are no (matching) elements in the array, or if <I>arrayName</I> isn't the name of an array variable, then an empty string is returned. 
+<DT><B>array nextelement <I>arrayName searchId</B></I>
+<DD>Returns the name of the next element in <I>arrayName</I>, or an empty string if all elements of <I>arrayName</I> have already been returned in this search.  The <I>searchId</I> argument identifies the search, and must have been the return value of an <B>array startsearch</B> command. Warning:  if elements are added to or deleted from the array, then all searches are automatically terminated just as if <B>array donesearch</B> had been invoked; this will cause <B>array nextelement</B> operations to fail for those searches. 
+<DT><B>array set <I>arrayName list</B></I>
+<DD>Sets the values of one or more elements in <I>arrayName</I>. <I>list</I> must have a form like that returned by <B>array get</B>, consisting of an even number of elements. Each odd-numbered element in <I>list</I> is treated as an element name within <I>arrayName</I>, and the following element in <I>list</I> is used as a new value for that array element. If the variable <I>arrayName</I> does not already exist and <I>list</I> is empty, <I>arrayName</I> is created with an empty array value. 
+<DT><B>array size <I>arrayName</B></I>
+<DD>Returns a decimal string giving the number of elements in the array. If <I>arrayName</I> isn't the name of an array then 0 is returned. 
+<DT><B>array startsearch <I>arrayName</B></I>
+<DD>This command initializes an element-by-element search through the array given by <I>arrayName</I>, such that invocations of the <B>array nextelement</B> command will return the names of the individual elements in the array. When the search has been completed, the <B>array donesearch</B> command should be invoked. The return value is a search identifier that must be used in <B>array nextelement</B> and <B>array donesearch</B> commands; it allows multiple searches to be underway simultaneously for the same array. It is currently more efficient and easier to use either the <B>array get</B> or <B>array names</B>, together with <B>foreach</B>, to iterate over all but very large arrays.  See the examples below for how to do this. 
+<DT><B>array statistics <I>arrayName</B></I>
+<DD>Returns statistics about the distribution of data within the hashtable that represents the array.  This information includes the number of entries in the table, the number of buckets, and the utilization of the buckets. 
+<DT><B>array unset <I>arrayName</B></I> ?<I>pattern</I>?
+<DD>Unsets all of the elements in the array that match <I>pattern</I> (using the matching rules of <B>string match</B>).  If <I>arrayName</I> isn't the name of an array variable or there are no matching elements in the array, no error will be raised.  If <I>pattern</I> is omitted and <I>arrayName</I> is an array variable, then the command unsets the entire array. The command always returns an empty string. <P>
+<P>
+<H2>EXAMPLES</H2>
+ <PRE>
+array set colorcount {
+    red   1
+    green 5
+    blue  4
+    white 9
+}
+<P>
+foreach {color count} [array get colorcount] {
+    puts "Color: $color Count: $count" 
+}
+ =&gt; Color: blue Count: 4
+    Color: white Count: 9
+    Color: green Count: 5
+    Color: red Count: 1
+<P>
+foreach color [array names colorcount] {
+    puts "Color: $color Count: $colorcount($color)" 
+}
+ =&gt; Color: blue Count: 4
+    Color: white Count: 9
+    Color: green Count: 5
+    Color: red Count: 1
+<P>
+foreach color [lsort [array names colorcount]] {
+    puts "Color: $color Count: $colorcount($color)" 
+}
+ =&gt; Color: blue Count: 4
+    Color: green Count: 5
+    Color: red Count: 1
+    Color: white Count: 9
+<P>
+array statistics colorcount
+ =&gt; 4 entries in table, 4 buckets
+    number of buckets with 0 entries: 1
+    number of buckets with 1 entries: 2
+    number of buckets with 2 entries: 1
+    number of buckets with 3 entries: 0
+    number of buckets with 4 entries: 0
+    number of buckets with 5 entries: 0
+    number of buckets with 6 entries: 0
+    number of buckets with 7 entries: 0
+    number of buckets with 8 entries: 0
+    number of buckets with 9 entries: 0
+    number of buckets with 10 or more entries: 0
+    average search distance for entry: 1.2
+</PRE>
+<P>
+<P>
+<H2>SEE ALSO</H2>
+ <a href="../mann/list.html">list</a>, <a href="../mann/string.html">string</a>, <a href="../mann/variable.html">variable</a>, <a href="../mann/trace.html">trace</a>, <a href="../mann/foreach.html">foreach</a> <P>
+<P>
+<H2>KEYWORDS</H2>
+ array, element names, search 
+</BODY>
+</HTML>

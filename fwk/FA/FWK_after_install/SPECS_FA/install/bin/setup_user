@@ -1,0 +1,72 @@
+#!/usr/bin/ksh
+trap "" 23
+
+ECHO=print
+INSDIR=/opt/SPECS/install/bin
+
+$ECHO "SPECS User Environment Setup..."
+$ECHO 
+
+USER=`id -un`
+OS=`uname -s`
+if [ "$OS" = "HP-UX" -a "$USER" = "root" ]; then
+    if [ $# -eq 0 ]; then
+        $ECHO "Enter user name to customize user environment."
+        $ECHO "Default = '$USER'. [quit='q'] : \c"
+        read USER
+        $ECHO
+
+        if [ "$USER" = "q" ]; then
+            exit
+        fi
+    else
+        USER=$1
+    fi
+
+    RTNVAL=`$INSDIR/check_user $USER`
+    if [ "$RTNVAL" = 0 ]; then
+        $ECHO "ERROR: User '$USER' is not found."
+        exit
+    fi
+
+    GROUP=`$INSDIR/get_usrgrp $USER`
+    HMDIR=`$INSDIR/get_homedir $USER`
+
+    if [ ! -d $HMDIR ]; then
+        $ECHO "Cannot find home directory. Create now..."
+        $ECHO
+        mkdir -m 755 $HMDIR
+    fi
+    chmod 755 $HMDIR
+    chown $USER:$GROUP $HMDIR
+else
+    $ECHO "Customize user environment for '$USER'?"
+    $ECHO "Type c (continue) or q (quit), then press Return."
+    $ECHO "Default = 'c'. : \c"
+    read REPLY
+    $ECHO
+
+    if [ "$REPLY" = "" ]; then
+        REPLY="c"
+    fi
+
+    case $REPLY in
+    c) ;;
+    q) exit ;;
+    *) $ECHO "ERROR: Unknown character '$REPLAY'.  Customization canceled."
+       exit ;;
+    esac
+
+    GROUP=`$INSDIR/get_usrgrp $USER`
+    HMDIR=`$INSDIR/get_homedir $USER`
+
+    if [ ! -d $HMDIR ]; then
+        $ECHO "ERROR: Home directory '$HMDIR' is not found."
+        exit
+    fi
+fi
+
+
+/opt/SPECS_FA/install/bin/specs_fa.sh $USER $GROUP $HMDIR
+$ECHO
+$ECHO "Customization completed."

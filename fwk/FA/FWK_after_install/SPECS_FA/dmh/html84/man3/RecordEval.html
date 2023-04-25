@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<A NAME="Tcl_RecordAndEval_Tcl_7_4"></A>
+<TITLE>Tcl_RecordAndEval Tcl Library Procedures 7.4</TITLE></HEAD>
+<BODY>
+<HR>
+<P>
+<H2>NAME</H2>
+ Tcl_RecordAndEval - save command on history list before evaluating <P>
+<H2>SYNOPSIS</H2>
+ 
+<B>#include &lt;tcl.h&gt;</B>
+<P>
+int
+<B>Tcl_RecordAndEval</B>(<I>interp, cmd, flags</I>)
+<P>
+<H2>ARGUMENTS</H2>
+
+<P><DT><B>Tcl_Interp <I>*interp</I></B> (in)
+<DD>Tcl interpreter in which to evaluate command.
+<P><DT><B>CONST char <I>*cmd</I></B> (in)
+<DD>Command (or sequence of commands) to execute.
+<P><DT><B>int <I>flags</I></B> (in)
+<DD>An OR'ed combination of flag bits.  TCL_NO_EVAL means record the
+command but don't evaluate it.  TCL_EVAL_GLOBAL means evaluate
+the command at global level instead of the current stack level.
+<HR>
+<P>
+<P>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>Tcl_RecordAndEval</B> is invoked to record a command as an event
+on the history list and then execute it using <B>Tcl_Eval</B>
+(or <B>Tcl_GlobalEval</B> if the TCL_EVAL_GLOBAL bit is set in <I>flags</I>).
+It returns a completion code such as TCL_OK just like <B>Tcl_Eval</B>
+and it leaves information in the interpreter's result.
+If you don't want the command recorded on the history list then
+you should invoke <B>Tcl_Eval</B> instead of <B>Tcl_RecordAndEval</B>.
+Normally <B>Tcl_RecordAndEval</B> is only called with top-level
+commands typed by the user, since the purpose of history is to
+allow the user to re-issue recently-invoked commands.
+If the <I>flags</I> argument contains the TCL_NO_EVAL bit then
+the command is recorded without being evaluated.
+<P>
+Note that <B>Tcl_RecordAndEval</B> has been largely replaced by the
+object-based procedure <B>Tcl_RecordAndEvalObj</B>.
+That object-based procedure records and optionally executes
+a command held in a Tcl object instead of a string.
+<P>
+<P>
+<H2>SEE ALSO</H2>
+
+Tcl_RecordAndEvalObj
+<P>
+<P>
+<H2>KEYWORDS</H2>
+
+command, event, execute, history, interpreter, record
+
+</BODY>
+</HTML>
